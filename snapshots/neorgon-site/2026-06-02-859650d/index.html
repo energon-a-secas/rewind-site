@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTF349S8R5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTF349S8R5');
+  </script>
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net https://www.youtube.com https://www.youtube-nocookie.com https://s.ytimg.com https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://i.ytimg.com https://yt3.ggpht.com https://www.google-analytics.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev; connect-src https://awesomesites.neorgon.com https://www.youtube.com https://www.youtube-nocookie.com https://youtubei.googleapis.com https://*.googlevideo.com https://www.google-analytics.com https://www.googletagmanager.com ws://localhost:* http://localhost:*; frame-src https://www.youtube.com https://www.youtube-nocookie.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <title>Neorgon | Made for Real Problems</title>
+  <meta name="description" content="We made 24 tools and forgot to add a paywall. Open-source, no signup, no nonsense.">
+  <meta property="og:title" content="Neorgon: Made for Real Problems">
+  <meta property="og:description" content="We made 24 tools and forgot to add a paywall.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Neorgon: Made for Real Problems">
+  <meta name="twitter:description" content="We made 24 tools and forgot to add a paywall.">
+  <meta name="twitter:image" content="https://neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#000912">
+  <meta property="og:image" content="https://neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <!-- Privacy-first analytics -->
+  <script defer data-domain="neorgon.com" src="https://plausible.io/js/script.js"></script>
+  <link rel="icon" type="image/x-icon" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/favicon.ico" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Neorgon",
+    "url": "https://neorgon.com/",
+    "description": "We made 24 tools and forgot to add a paywall. Open-source, no signup, no nonsense.",
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+  <link rel="stylesheet" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/styles/base.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Starfield -->
+<canvas id="starfield"></canvas>
+<canvas id="matrixCanvas"></canvas>
+<canvas id="interventionCanvas"></canvas>
+<canvas id="evangelionCanvas"></canvas>
+<div id="eggBackground" class="video-background"></div>
+
+<!-- NERV Warning Overlay -->
+<div class="nerv-warning-overlay" id="nervWarningOverlay">
+  <div class="nerv-bar nerv-bar-top"></div>
+  <div class="nerv-warning-center">
+    <div class="nerv-warning-label">警告</div>
+    <div class="nerv-warning-sub">WARNING</div>
+    <div class="nerv-warning-type">PATTERN BLUE — ANGEL DETECTED</div>
+  </div>
+  <div class="nerv-bar nerv-bar-bottom"></div>
+</div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="warp-toast" id="warpToast">Warp Engaged</div>
+<div class="cheat-toast" id="cheatToast"></div>
+<div class="sega-flash" id="segaFlash"><div class="sega-text">NEORGON</div></div>
+<div class="arrival-toast" id="arrivalToast">
+  <div class="arrival-label">Now arriving at</div>
+  <div class="arrival-dest" id="arrivalDest"></div>
+</div>
+
+<!-- Ambient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Grid -->
+<div class="grid-bg"></div>
+
+<div class="page">
+
+  <a class="skip-link" href="#tools">Skip to tools</a>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a class="logo-wrap" href="https://neorgon.com/">
+      <picture>
+        <source srcset="energon-classic-logo.webp" type="image/webp">
+        <img src="energon-classic-logo.png" class="logo-img" alt="Energon" width="36" height="36">
+      </picture>
+      <span class="logo-name">Neorgon</span>
+    </a>
+    <nav class="header-links">
+      <a class="header-link" href="https://github.com/energon-a-secas" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
+        <svg width="26" height="26" viewBox="0 0 98 96" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot" aria-hidden="true"></span>
+      <span id="badgeText">Built different · Shipped anyway</span>
+    </div>
+    <h1 class="hero-heading">
+      Made for<br>
+      <span class="neon-word" id="heroTyping"></span><span class="typing-cursor" id="typingCursor"></span>
+    </h1>
+    <p class="hero-sub">
+      We made <span id="toolCount">24</span> tools and forgot to add a paywall.
+    </p>
+    <div class="hero-search-wrap">
+      <input class="hero-search" id="heroSearch" type="text" placeholder="Search tools, tags, or keywords…" aria-label="Search tools" autocomplete="off" spellcheck="false">
+      <svg class="hero-search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <button class="hero-search-clear" id="searchClear" aria-label="Clear search">&times;</button>
+      <span class="search-hint">/</span>
+    </div>
+    <div class="constellation-box" id="constellationBox">
+      <canvas class="constellation-canvas" id="constellationCanvas"></canvas>
+    </div>
+  </section>
+  <script src="js/hero.js"></script>
+
+  <!-- Sites -->
+  <main class="sites-section" id="tools" aria-labelledby="catalog-heading">
+    <h2 id="catalog-heading" class="visually-hidden">Tool catalog</h2>
+    <div class="search-no-results" id="searchNoResults" role="status">No tools match your search.</div>
+    <div class="search-count" id="searchCount" aria-live="polite"></div>
+
+    <!-- Single combined grid while search is active (cards reparented via JS) -->
+    <div id="catalogSearchMerged" class="card-group catalog-search-merge catalog-merge-empty" style="--group-color: #818cf8" aria-labelledby="catalog-search-merge-heading">
+      <h2 id="catalog-search-merge-heading" class="group-label"><span class="group-dot"></span> Matches</h2>
+      <div class="sites-grid" id="catalogSearchMergedGrid"></div>
+    </div>
+
+    <!-- ── Planning ────────────────────────────────────────────── -->
+    <div class="card-group" data-group="planning" style="--group-color: #4ade80">
+      <h2 class="group-label"><span class="group-dot"></span> Planning</h2>
+      <div class="sites-grid">
+
+      <!-- Pathfinder (featured) -->
+      <a class="site-card" data-card-id="pathfinder"
+         href="https://pathfinder.neorgon.com/"
+         style="--card-glow: rgba(74,222,128,.3); --card-glow-border: rgba(74,222,128,.35); --card-accent: #4ade80;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/pathfinder.svg" class="card-site-icon" alt="Pathfinder" width="36" height="36" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">pathfinder.neorgon.com</div>
+          <h3 class="card-name">Pathfinder</h3>
+          <div class="card-desc">Map goals, problems, risks, and gaps on an infinite canvas. Export a structured AI prompt with your entire plan baked in.</div>
+          <div class="card-tags">
+            <span class="card-tag">Planning</span>
+            <span class="card-tag">Visual Canvas</span>
+            <span class="card-tag">Export</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Skill Map -->
+      <a class="site-card" data-card-id="skillmap"
+         href="https://skillmap.neorgon.com/"
+         style="--card-glow: rgba(167,139,250,.3); --card-glow-border: rgba(167,139,250,.35); --card-accent: #a78bfa;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/skill-roadmap.svg" class="card-site-icon" alt="Skill Map" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">skillmap.neorgon.com</div>
+          <h3 class="card-name">Skill Map</h3>
+          <div class="card-desc">Plot your learning path on a visual grid. See what's blocked, what's done, and what to tackle next.</div>
+          <div class="card-tags">
+            <span class="card-tag">Planning</span>
+            <span class="card-tag">Learning</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+    <!-- ── DevOps ──────────────────────────────────────────────── -->
+    <div class="card-group" data-group="devops" style="--group-color: #fbbf24">
+      <h2 class="group-label"><span class="group-dot"></span> DevOps</h2>
+      <div class="sites-grid">
+
+      <!-- Infra Drills -->
+      <a class="site-card" data-card-id="infradrills"
+         href="https://infradrills.neorgon.com/"
+         style="--card-glow: rgba(245,158,11,.3); --card-glow-border: rgba(245,158,11,.35); --card-accent: #fbbf24;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/local-drills.svg" class="card-site-icon" alt="Infra Drills" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">infradrills.neorgon.com</div>
+          <h3 class="card-name">Infra Drills</h3>
+          <div class="card-desc">Real-world break-fix challenges for AWS, Kubernetes, and GitLab CI/CD. Runs entirely on your machine.</div>
+          <div class="card-tags">
+            <span class="card-tag">DevOps</span>
+            <span class="card-tag">Challenges</span>
+            <span class="card-tag">CLI</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Snippets -->
+      <a class="site-card" data-card-id="snippets"
+         href="https://snippets.neorgon.com/"
+         style="--card-glow: rgba(250,204,21,.3); --card-glow-border: rgba(250,204,21,.35); --card-accent: #facc15;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/snippets.svg" class="card-site-icon" alt="Snippets" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">snippets.neorgon.com</div>
+          <h3 class="card-name">Snippets</h3>
+          <div class="card-desc">141 shell commands, DevOps recipes, and config snippets. Searching is faster than prompting.</div>
+          <div class="card-tags">
+            <span class="card-tag">DevOps</span>
+            <span class="card-tag">Cheatsheet</span>
+            <span class="card-tag">Search</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- SafeGuard -->
+      <a class="site-card" data-card-id="safeguard"
+         href="https://safeguard.neorgon.com/"
+         style="--card-glow: rgba(248,113,113,.3); --card-glow-border: rgba(248,113,113,.35); --card-accent: #f87171;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/safeguard.svg" class="card-site-icon" alt="SafeGuard" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">safeguard.neorgon.com</div>
+          <h3 class="card-name">SafeGuard</h3>
+          <div class="card-desc">Step-by-step guides to harden your Apple, Google, and mobile accounts. Bilingual EN/ES.</div>
+          <div class="card-tags">
+            <span class="card-tag">Security</span>
+            <span class="card-tag">Guides</span>
+            <span class="card-tag">Bilingual</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Lockdown -->
+      <a class="site-card" data-card-id="lockdown"
+         href="https://lockdown.neorgon.com/"
+         style="--card-glow: rgba(249,115,22,.3); --card-glow-border: rgba(249,115,22,.35); --card-accent: #f97316;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/lockdown.svg" class="card-site-icon" alt="Lockdown" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">lockdown.neorgon.com</div>
+          <h3 class="card-name">Lockdown</h3>
+          <div class="card-desc">Scan any site for exposed endpoints, missing headers, and security gaps. Download a hardening report.</div>
+          <div class="card-tags">
+            <span class="card-tag">Security</span>
+            <span class="card-tag">Scanner</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+    <!-- ── Data ────────────────────────────────────────────────── -->
+    <div class="card-group" data-group="data" style="--group-color: #2dd4bf">
+      <h2 class="group-label"><span class="group-dot"></span> Data</h2>
+      <div class="sites-grid">
+
+      <!-- JSON Studio -->
+      <div class="site-card multi-tool" data-card-id="jsonstudio"
+           data-href="https://jsonstudio.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(45,212,191,.3); --card-glow-border: rgba(45,212,191,.35); --card-accent: #2dd4bf;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/json-builder.svg" class="card-site-icon" alt="JSON Studio" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">jsonstudio.neorgon.com</div>
+          <h3 class="card-name">JSON Studio</h3>
+          <div class="card-desc">Build JSON by dragging blocks, explore datasets with filters and pivots, or scramble values for safe sharing.</div>
+          <div class="card-tags">
+            <span class="card-tag">Data</span>
+            <span class="card-tag">Editor</span>
+            <span class="card-tag">Privacy</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://jsonstudio.neorgon.com/" title="Build JSON with drag-and-drop blocks">
+            <span class="subtool-name">JSON Builder</span>
+            <span class="subtool-desc">Visual block-based JSON schema editor</span>
+          </a>
+          <a class="subtool-item" href="https://jsonstudio.neorgon.com/visualizer/" title="Explore, filter, and pivot JSON in a table">
+            <span class="subtool-name">JSON Visualizer</span>
+            <span class="subtool-desc">Explore, filter, and pivot any JSON dataset</span>
+          </a>
+          <a class="subtool-item" href="https://jsonstudio.neorgon.com/scrambler/" title="Anonymise JSON for safe sharing">
+            <span class="subtool-name">Data Scrambler</span>
+            <span class="subtool-desc">Type-preserving JSON anonymiser for safe sharing</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Reference Matrix -->
+      <div class="site-card multi-tool" data-card-id="references"
+           data-href="https://references.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(244,114,182,.3); --card-glow-border: rgba(244,114,182,.35); --card-accent: #f472b6;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/reference-matrix.svg" class="card-site-icon" alt="Reference Matrix" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">references.neorgon.com</div>
+          <h3 class="card-name">Reference Matrix</h3>
+          <div class="card-desc">37 cultural references from the Enerbot Slack bot, with a live regex playground and JSON API.</div>
+          <div class="card-tags">
+            <span class="card-tag">Data</span>
+            <span class="card-tag">API</span>
+            <span class="card-tag">Search</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://references.neorgon.com/">
+            <span class="subtool-name">Reference Matrix</span>
+            <span class="subtool-desc">Browse all references with live regex playground</span>
+          </a>
+          <a class="subtool-item" href="https://github.com/energon-a-secas/reference-site/issues/new?template=new-reference.yml" target="_blank" rel="noopener noreferrer">
+            <span class="subtool-name">Submit a Reference</span>
+            <span class="subtool-desc">Propose one via GitHub, get credited on merge</span>
+          </a>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <!-- ── Productivity ────────────────────────────────────────── -->
+    <div class="card-group" data-group="productivity" style="--group-color: #a78bfa">
+      <h2 class="group-label"><span class="group-dot"></span> Productivity</h2>
+      <div class="sites-grid">
+
+      <!-- Presentation Sage -->
+      <a class="site-card" data-card-id="slides"
+         href="https://slides.neorgon.com/"
+         style="--card-glow: rgba(251,146,60,.3); --card-glow-border: rgba(251,146,60,.35); --card-accent: #fb923c;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/presentation-sage.svg" class="card-site-icon" alt="Presentation Sage" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">slides.neorgon.com</div>
+          <h3 class="card-name">Presentation Sage</h3>
+          <div class="card-desc">Write decks as structured YAML, export to PPTX, HTML, or Marp. A built-in auditor flags pacing and flow issues.</div>
+          <div class="card-tags">
+            <span class="card-tag">Slides</span>
+            <span class="card-tag">Export</span>
+            <span class="card-tag">Audit</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- OG Studio -->
+      <a class="site-card" data-card-id="ogstudio"
+         href="https://ogstudio.neorgon.com/"
+         style="--card-glow: rgba(163,230,53,.3); --card-glow-border: rgba(163,230,53,.35); --card-accent: #a3e635;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/og-studio.svg" class="card-site-icon" alt="OG Studio" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">ogstudio.neorgon.com</div>
+          <h3 class="card-name">OG Studio</h3>
+          <div class="card-desc">Generate social preview images for Neorgon tools or anything you want. Pick a pattern, match your colors, download as PNG.</div>
+          <div class="card-tags">
+            <span class="card-tag">Productivity</span>
+            <span class="card-tag">Design</span>
+            <span class="card-tag">Generator</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Agent Lore -->
+      <div class="site-card multi-tool" data-card-id="agentlore"
+           data-href="https://agentlore.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(96,165,250,.3); --card-glow-border: rgba(96,165,250,.35); --card-accent: #60a5fa;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/agentlore.svg" class="card-site-icon" alt="Agent Lore" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">agentlore.neorgon.com</div>
+          <h3 class="card-name">Agent Lore</h3>
+          <div class="card-desc">AI agent tutorial hub for Claude and Cursor. Browse skills, commands, MCPs, and diagrams, or follow a guided learning path.</div>
+          <div class="card-tags">
+            <span class="card-tag">Learning</span>
+            <span class="card-tag">Tutorials</span>
+            <span class="card-tag">AI</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://agentlore.neorgon.com/" title="Browse all tutorials">
+            <span class="subtool-name">Browse tutorials</span>
+            <span class="subtool-desc">Search and filter by category, tool, and difficulty</span>
+          </a>
+          <a class="subtool-item" href="https://agentlore.neorgon.com/path/" title="Guided learning path">
+            <span class="subtool-name">Learning path</span>
+            <span class="subtool-desc">Step-by-step path for Claude Code and Cursor</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- UI Anatomy -->
+      <a class="site-card" data-card-id="anatomy"
+         href="https://anatomy.neorgon.com/"
+         style="--card-glow: rgba(125,211,252,.3); --card-glow-border: rgba(125,211,252,.35); --card-accent: #7dd3fc;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/anatomy.svg" class="card-site-icon" alt="UI Anatomy" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">anatomy.neorgon.com</div>
+          <h3 class="card-name">UI Anatomy</h3>
+          <div class="card-desc">Hover interactive wireframes to learn UI component names. Master the vocabulary for AI design prompts.</div>
+          <div class="card-tags">
+            <span class="card-tag">Learning</span>
+            <span class="card-tag">UI/UX</span>
+            <span class="card-tag">Wireframes</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Resume Forge -->
+      <a class="site-card" data-card-id="resume-forge"
+         href="https://resume.neorgon.com/"
+         style="--card-glow: rgba(139,92,246,.3); --card-glow-border: rgba(139,92,246,.35); --card-accent: #8b5cf6;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/resume-forge.svg" class="card-site-icon" alt="Resume Forge" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">resume.neorgon.com</div>
+          <h3 class="card-name">Resume Forge</h3>
+          <div class="card-desc">Build gaming-inspired resumes with heart-rated skills, live PSN trophies, Steam stats, and custom themes. Export as PDF.</div>
+          <div class="card-tags">
+            <span class="card-tag">PDF</span>
+            <span class="card-tag">Gaming</span>
+            <span class="card-tag">Resume</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Stack Rank -->
+      <a class="site-card" data-card-id="stackrank"
+         href="https://stackrank.neorgon.com/"
+         style="--card-glow: rgba(245,158,11,.3); --card-glow-border: rgba(245,158,11,.35); --card-accent: #f59e0b;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/stackrank.svg" class="card-site-icon" alt="Stack Rank" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">stackrank.neorgon.com</div>
+          <h3 class="card-name">Stack Rank</h3>
+          <div class="card-desc">Drag-and-drop shared priority lists. Changes sync to URLs instantly. No signup, just share the link.</div>
+          <div class="card-tags">
+            <span class="card-tag">Productivity</span>
+            <span class="card-tag">Collaboration</span>
+            <span class="card-tag">Lists</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Awesome Sites -->
+      <a class="site-card" data-card-id="awesomesites"
+         href="https://awesomesites.neorgon.com/"
+         style="--card-glow: rgba(249,115,22,.3); --card-glow-border: rgba(249,115,22,.35); --card-accent: #f97316;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/awesomesites.svg" class="card-site-icon" alt="Awesome Sites" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">awesomesites.neorgon.com</div>
+          <h3 class="card-name">Awesome Sites</h3>
+          <div class="card-desc">Curated external tabs with labeled lists. JSON API feeds featured picks on the hub.</div>
+          <div class="card-tags">
+            <span class="card-tag">Curated</span>
+            <span class="card-tag">Bookmarks</span>
+            <span class="card-tag">API</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+    <!-- ── Fun ─────────────────────────────────────────────────── -->
+    <div class="card-group" data-group="fun" style="--group-color: #f472b6">
+      <h2 class="group-label"><span class="group-dot"></span> Fun</h2>
+      <div class="sites-grid">
+
+      <!-- Decision Wheel -->
+      <div class="site-card multi-tool" data-card-id="decisionwheel"
+           data-href="https://decisionwheel.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(52,211,153,.3); --card-glow-border: rgba(52,211,153,.35); --card-accent: #34d399;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/spin-the-wheel.svg" class="card-site-icon" alt="Decision Wheel" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">decisionwheel.neorgon.com</div>
+          <h3 class="card-name">Decision Wheel</h3>
+          <div class="card-desc">Spin to pick a winner, blame a team, or settle any debate. Build your own wheel from scratch.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Randomizer</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://decisionwheel.neorgon.com/">
+            <span class="subtool-name">🎯 Blame Game</span>
+            <span class="subtool-desc">Spin the wheel to find out who's responsible today</span>
+          </a>
+          <a class="subtool-item" href="https://decisionwheel.neorgon.com/?settings">
+            <span class="subtool-name">🛠️ Make Your Own</span>
+            <span class="subtool-desc">Build a custom wheel with your own options and messages</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Meme Vault -->
+      <a class="site-card" data-card-id="memes"
+         href="https://memes.neorgon.com/"
+         style="--card-glow: rgba(244,63,94,.3); --card-glow-border: rgba(244,63,94,.35); --card-accent: #f43f5e;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/memes.svg" class="card-site-icon" alt="Meme Vault" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">memes.neorgon.com</div>
+          <h3 class="card-name">Meme Vault</h3>
+          <div class="card-desc">All your favorite memes in one place. Search, grab, and drop them into any conversation.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Community</span>
+            <span class="card-tag">Upload</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Client Says -->
+      <div class="site-card multi-tool" data-card-id="clientsays"
+           data-href="https://clientsays.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(236,72,153,.3); --card-glow-border: rgba(236,72,153,.35); --card-accent: #f472b6;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/client-says.svg" class="card-site-icon" alt="Client Says" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">clientsays.neorgon.com</div>
+          <h3 class="card-name">Client Says</h3>
+          <div class="card-desc">Timezone converter for remote teams, plus a corporate jargon translator. Because "let's circle back" actually means "no."</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Timezone</span>
+            <span class="card-tag">Translator</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://clientsays.neorgon.com/">
+            <span class="subtool-name">Client Says</span>
+            <span class="subtool-desc">Timezone converter for remote teams</span>
+          </a>
+          <a class="subtool-item" href="https://clientsays.neorgon.com/jargon/">
+            <span class="subtool-name">Decoded</span>
+            <span class="subtool-desc">Corporate jargon translator</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Emoji Archive -->
+      <div class="site-card multi-tool" data-card-id="emojis",
+           data-href="https://emojis.neorgon.com/"
+           role="button" tabindex="0"
+           style="--card-glow: rgba(34,211,238,.3); --card-glow-border: rgba(34,211,238,.35); --card-accent: #22d3ee;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/emojis.svg" class="card-site-icon" alt="Emoji Archive" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">emojis.neorgon.com</div>
+          <h3 class="card-name">Emoji Archive</h3>
+          <div class="card-desc">The chat emojis we love, all in one place. Search by name or category, click to copy.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Search</span>
+          </div>
+        </div>
+        <div class="card-subtool-popup">
+          <a class="subtool-item" href="https://emojis.neorgon.com/">
+            <span class="subtool-name">Emoji Archive</span>
+            <span class="subtool-desc">Browse, search and download all 202 emojis</span>
+          </a>
+          <a class="subtool-item" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer">
+            <span class="subtool-name">Submit an Emoji</span>
+            <span class="subtool-desc">Propose one via GitHub, get credited on merge</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Guild Hall -->
+      <a class="site-card" data-card-id="guildhall"
+         href="https://guildhall.neorgon.com/"
+         style="--card-glow: rgba(251,146,60,.3); --card-glow-border: rgba(251,146,60,.35); --card-accent: #fb923c;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/guild-hub.svg" class="card-site-icon" alt="Guild Hall" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">guildhall.neorgon.com</div>
+          <h3 class="card-name">Guild Hall</h3>
+          <div class="card-desc">Post quests, track contributors, and unlock rewards on a Monster Hunter-inspired guild board. Gamified feature tracking for teams.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Quests</span>
+            <span class="card-tag">Teams</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Team Play -->
+      <a class="site-card" data-card-id="teamplay"
+         href="https://teamplay.neorgon.com/"
+         style="--card-glow: rgba(13,148,136,.3); --card-glow-border: rgba(13,148,136,.35); --card-accent: #0d9488;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/team-play.svg" class="card-site-icon" alt="Team Play" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">teamplay.neorgon.com</div>
+          <h3 class="card-name">Team Play</h3>
+          <div class="card-desc">Curated games, icebreakers, and retro activities for team building and virtual meetups. Previews and links in one place.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Team building</span>
+            <span class="card-tag">Retros</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- GameBin -->
+      <a class="site-card" data-card-id="gamebin"
+         href="https://gamebin.neorgon.com/"
+         style="--card-glow: rgba(0,99,229,.3); --card-glow-border: rgba(0,99,229,.35); --card-accent: #0063e5;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/gamebin.svg" class="card-site-icon" alt="GameBin" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">gamebin.neorgon.com</div>
+          <h3 class="card-name">GameBin</h3>
+          <div class="card-desc">Curate and share visual game lists with Steam integration. Add games by URL, organize with categories, and customize your profile.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Games</span>
+            <span class="card-tag">Community</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- YouTube Memes -->
+      <a class="site-card external-card" data-card-id="youtube"
+         href="https://www.youtube.com/@energon-hq/" target="_blank" rel="noopener noreferrer"
+         style="--card-glow: rgba(255,0,0,.25); --card-glow-border: rgba(255,0,0,.3); --card-accent: #ff4444;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/youtube.svg" class="card-site-icon" alt="YouTube" width="28" height="28" loading="lazy"></div>
+            <span class="external-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>External</span>
+          </div>
+          <div class="card-domain">youtube.com/@energon-hq</div>
+          <h3 class="card-name">Meme Overflow</h3>
+          <div class="card-desc">Video memes that haven't made it to Meme Vault yet. The backlog of clips, edits, and inside jokes we keep finding.</div>
+          <div class="card-tags">
+            <span class="card-tag">Fun</span>
+            <span class="card-tag">Memes</span>
+            <span class="card-tag">Videos</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+    <!-- ── Social ──────────────────────────────────────────────── -->
+    <div class="card-group" data-group="social" style="--group-color: #38bdf8">
+      <h2 class="group-label"><span class="group-dot"></span> Social</h2>
+      <div class="sites-grid">
+
+      <!-- Vibe Check -->
+      <a class="site-card" data-card-id="vibecheck"
+         href="https://interviews.neorgon.com/"
+         style="--card-glow: rgba(56,189,248,.3); --card-glow-border: rgba(56,189,248,.35); --card-accent: #38bdf8;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/interviews.svg" class="card-site-icon" alt="Vibe Check" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">interviews.neorgon.com</div>
+          <h3 class="card-name">Vibe Check</h3>
+          <div class="card-desc">Score behavioral interviews in real time. 18 questions across 6 categories, with a candidate archetype at the end.</div>
+          <div class="card-tags">
+            <span class="card-tag">Interviews</span>
+            <span class="card-tag">Scoring</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Character Sheet -->
+      <a class="site-card" data-card-id="charactersheet"
+         href="https://charactersheet.neorgon.com/"
+         style="--card-glow: rgba(232,121,249,.3); --card-glow-border: rgba(232,121,249,.35); --card-accent: #e879f9;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/character-sheet.svg" class="card-site-icon" alt="Character Sheet" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">charactersheet.neorgon.com</div>
+          <h3 class="card-name">Character Sheet</h3>
+          <div class="card-desc">Know thyself. Answer questions about your tastes, habits, and hot takes, then export a card you can actually share.</div>
+          <div class="card-tags">
+            <span class="card-tag">Social</span>
+            <span class="card-tag">Personality</span>
+            <span class="card-tag">Export</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Parla -->
+      <a class="site-card" data-card-id="parla"
+         href="https://parla.neorgon.com/"
+         style="--card-glow: rgba(52,211,153,.3); --card-glow-border: rgba(52,211,153,.35); --card-accent: #34d399;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/parla.svg" class="card-site-icon" alt="Parla" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">parla.neorgon.com</div>
+          <h3 class="card-name">Parla</h3>
+          <div class="card-desc">Search Latin American slang and see equivalents across 6 countries in a visual diagram. Static JSON API included.</div>
+          <div class="card-tags">
+            <span class="card-tag">Social</span>
+            <span class="card-tag">Slang</span>
+            <span class="card-tag">LatAm</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Playbook -->
+      <a class="site-card" data-card-id="playbook"
+         href="https://playbook.neorgon.com/"
+         style="--card-glow: rgba(16,185,129,.3); --card-glow-border: rgba(16,185,129,.35); --card-accent: #10b981;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/playbook.svg" class="card-site-icon" alt="Playbook" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">playbook.neorgon.com</div>
+          <h3 class="card-name">Playbook</h3>
+          <div class="card-desc">Career advice for people in tech and people getting in. Interview prep, job hunting, and tech roles explained in ES/EN.</div>
+          <div class="card-tags">
+            <span class="card-tag">Career</span>
+            <span class="card-tag">Interviews</span>
+            <span class="card-tag">Bilingual</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- TubeStack -->
+      <a class="site-card" data-card-id="tubestack"
+         href="https://tubestack.neorgon.com/"
+         style="--card-glow: rgba(103,232,249,.3); --card-glow-border: rgba(103,232,249,.35); --card-accent: #67e8f9;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/tubestack.svg" class="card-site-icon" alt="TubeStack" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">tubestack.neorgon.com</div>
+          <h3 class="card-name">TubeStack</h3>
+          <div class="card-desc">YouTube channel discovery for engineers. Curate your stacks, browse what peers watch, find channels through match scores.</div>
+          <div class="card-tags">
+            <span class="card-tag">YouTube</span>
+            <span class="card-tag">Discovery</span>
+            <span class="card-tag">Community</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+    <!-- ── Lifehacks ───────────────────────────────────────────── -->
+    <div class="card-group" data-group="lifehacks" style="--group-color: #f59e0b">
+      <h2 class="group-label"><span class="group-dot"></span> Lifehacks</h2>
+      <div class="sites-grid">
+
+      <!-- BuyHacks -->
+      <a class="site-card" data-card-id="buyhacks"
+         href="https://buyhacks.neorgon.com/"
+         style="--card-glow: rgba(245,158,11,.3); --card-glow-border: rgba(245,158,11,.35); --card-accent: #f59e0b;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/buyhacks.svg" class="card-site-icon" alt="BuyHacks" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">buyhacks.neorgon.com</div>
+          <h3 class="card-name">BuyHacks</h3>
+          <div class="card-desc">Products we've actually tested, with community votes and life-hack tips. Vote love, own, or want.</div>
+          <div class="card-tags">
+            <span class="card-tag">Lifehacks</span>
+            <span class="card-tag">Community</span>
+            <span class="card-tag">Reviews</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+
+    <!-- ── Awesome Sites (API feed) ──────────────────────────────── -->
+    <div id="awesomeSitesHubGroup" class="card-group" data-group="awesome-sites" style="--group-color: #f97316" hidden>
+      <h2 class="group-label"><span class="group-dot"></span> Awesome Sites</h2>
+      <div class="sites-grid" id="awesomeSitesHubGrid"></div>
+    </div>
+
+    <!-- ── Platforms ─────────────────────────────────────────────── -->
+    <div class="card-group" data-group="platforms" style="--group-color: #64748b">
+      <h2 class="group-label"><span class="group-dot"></span> Platforms</h2>
+      <div class="sites-grid">
+
+      <!-- GitHub -->
+      <a class="site-card external-card" data-card-id="github"
+         href="https://github.com/energon-a-secas/" target="_blank" rel="noopener noreferrer"
+         style="--card-glow: rgba(139,148,158,.3); --card-glow-border: rgba(139,148,158,.35); --card-accent: #8b949e;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/github.svg" class="card-site-icon" alt="GitHub" width="28" height="28" loading="lazy"></div>
+            <span class="external-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>External</span>
+          </div>
+          <div class="card-domain">github.com/energon-a-secas</div>
+          <h3 class="card-name">GitHub</h3>
+          <div class="card-desc">Open-source repos, issues, and pull requests. Where most of the code lives and contributions happen.</div>
+          <div class="card-tags">
+            <span class="card-tag">Code</span>
+            <span class="card-tag">Open Source</span>
+            <span class="card-tag">Repos</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- GitLab -->
+      <a class="site-card external-card" data-card-id="gitlab"
+         href="https://gitlab.com/energonhq/" target="_blank" rel="noopener noreferrer"
+         style="--card-glow: rgba(252,109,38,.25); --card-glow-border: rgba(252,109,38,.3); --card-accent: #fc6d26;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/gitlab.svg" class="card-site-icon" alt="GitLab" width="28" height="28" loading="lazy"></div>
+            <span class="external-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>External</span>
+          </div>
+          <div class="card-domain">gitlab.com/energonhq</div>
+          <h3 class="card-name">GitLab</h3>
+          <div class="card-desc">Private repos, CI pipelines, and internal tooling. The quieter side of the operation.</div>
+          <div class="card-tags">
+            <span class="card-tag">Private</span>
+            <span class="card-tag">CI/CD</span>
+            <span class="card-tag">Pipelines</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Docker Hub -->
+      <a class="site-card external-card" data-card-id="dockerhub"
+         href="https://hub.docker.com/u/energonhq/" target="_blank" rel="noopener noreferrer"
+         style="--card-glow: rgba(36,150,237,.25); --card-glow-border: rgba(36,150,237,.3); --card-accent: #2496ed;">
+        <div class="card-content">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/docker.svg" class="card-site-icon" alt="Docker Hub" width="28" height="28" loading="lazy"></div>
+            <span class="external-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>External</span>
+          </div>
+          <div class="card-domain">hub.docker.com/u/energonhq</div>
+          <h3 class="card-name">Docker Hub</h3>
+          <div class="card-desc">Container images for CI pipelines, local dev environments, and production. Pre-built and ready to pull.</div>
+          <div class="card-tags">
+            <span class="card-tag">Containers</span>
+            <span class="card-tag">Images</span>
+            <span class="card-tag">CI/CD</span>
+          </div>
+        </div>
+      </a>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Secret trigger -->
+  <div class="secret-trigger">
+    <button class="secret-btn" id="secretToggle" aria-label="Show more tools" aria-expanded="false" aria-controls="secretSection">
+      <span class="scanner-ring" aria-hidden="true"></span>
+      <span class="discovery-burst" aria-hidden="true"></span>
+      <img class="icon-warning" src="assets/icons/warning.svg" alt="" width="22" height="22">
+      <img class="icon-planet" src="assets/icons/earth.svg" alt="" width="32" height="32">
+    </button>
+  </div>
+
+  <!-- Secret section -->
+  <div class="secret-section sites-section" id="secretSection">
+    <h2 class="section-label">Internal</h2>
+    <div class="sites-grid">
+
+      <!-- Ghost card — Autopilot -->
+      <div class="site-card ghost-card" data-card-id="autopilot" role="button" tabindex="0" aria-disabled="true"
+           style="--card-glow: rgba(251,191,36,.25); --card-glow-border: rgba(251,191,36,.3); --card-accent: #fbbf24;">
+        <div class="ghost-locked">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <a class="card-content ghost-revealed" href="https://autopilot.neorgon.com/" style="text-decoration:none;color:inherit;">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/autopilot.svg" class="card-site-icon" alt="Autopilot" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">autopilot.neorgon.com</div>
+          <h3 class="card-name">Autopilot</h3>
+          <div class="card-desc">Chain active, idle, and away blocks on a timeline. Generates the shell commands so you don't have to.</div>
+          <div class="card-tags">
+            <span class="card-tag">macOS</span>
+            <span class="card-tag">Scheduler</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Ghost card — Rush Q Cards -->
+      <div class="site-card ghost-card" data-card-id="rushq" role="button" tabindex="0" aria-disabled="true"
+           style="--card-glow: rgba(251,191,36,.25); --card-glow-border: rgba(251,191,36,.3); --card-accent: #fbbf24;">
+        <div class="ghost-locked">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <a class="card-content ghost-revealed" href="https://rushq.neorgon.com/" style="text-decoration:none;color:inherit;">
+          <div class="card-top">
+            <div class="card-icon-wrap"><img src="assets/icons/rush-q-cards.svg" class="card-site-icon" alt="Rush Q Cards" width="28" height="28" loading="lazy"></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">internal</div>
+          <h3 class="card-name">Rush Q Cards</h3>
+          <div class="card-desc">Corporate strategy card game. Hire, build, and outmaneuver AI opponents across 8 quarters.</div>
+          <div class="card-tags">
+            <span class="card-tag">Game</span>
+            <span class="card-tag">Strategy</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Ghost card — Energon HQ -->
+      <div class="site-card ghost-card" data-card-id="ehq" role="button" tabindex="0" aria-disabled="true"
+           style="--card-glow: rgba(99,102,241,.25); --card-glow-border: rgba(99,102,241,.3); --card-accent: #818cf8;">
+        <div class="ghost-locked">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <a class="card-content ghost-revealed" href="https://ehq.cl/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
+          <div class="card-top">
+            <div class="card-icon-wrap"><picture><source srcset="assets/icons/energon-logo.webp" type="image/webp"><img src="assets/icons/energon-logo.png" class="card-site-icon" alt="Energon" width="40" height="40" loading="lazy" style="width:40px;height:40px;"></picture></div>
+            <svg class="card-arrow" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <div class="card-domain">ehq.cl</div>
+          <h3 class="card-name">Energon HQ</h3>
+          <div class="card-desc">Command center for Energon tools, docs, and team resources.</div>
+          <div class="card-tags">
+            <span class="card-tag">Platform</span>
+            <span class="card-tag">Hub</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Neorgon · Tools for Engineers ·
+    <a class="footer-link" href="/about.html">About</a>
+    &nbsp;·&nbsp;
+    <a class="footer-link" href="/blog/">Blog</a>
+    &nbsp;·&nbsp;
+    <a class="footer-link" href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">ehq.cl</a>
+    &nbsp;·&nbsp;
+    <a class="footer-link" href="https://github.com/energon-a-secas" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </footer>
+
+<!-- Konami input HUD -->
+<div class="konami-hud" id="konamiHud"></div>
+<div class="cheat-hud" id="cheatHud">
+  <div class="cheat-hud-label" id="cheatHudLabel"></div>
+  <div class="cheat-hud-keys" id="cheatHudKeys"></div>
+</div>
+
+<!-- Ambient music toggle -->
+<button class="music-toggle" id="musicToggle" aria-label="Toggle ambient music" title="Ambient music">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18V5l12-2v13"/>
+    <circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+  </svg>
+</button>
+
+<!-- Settings -->
+<button class="settings-btn" id="settingsBtn" aria-label="Settings" title="Settings">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-title">Settings</div>
+  <div class="settings-row">
+    <span class="settings-label">Sound effects</span>
+    <button class="settings-toggle on" id="togSound" role="switch" aria-checked="true" aria-label="Toggle sound"></button>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Cursor glow</span>
+    <button class="settings-toggle on" id="togGlow" role="switch" aria-checked="true" aria-label="Toggle glow"></button>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Card previews</span>
+    <button class="settings-toggle" id="togPreviews" role="switch" aria-checked="false" aria-label="Toggle card previews"></button>
+  </div>
+  <div class="settings-divider"></div>
+  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+    <span class="settings-label">Background</span>
+    <div class="settings-seg" id="bgPicker">
+      <button data-bg="stars" class="active">Stars</button>
+      <button data-bg="matrix">Matrix</button>
+      <button data-bg="intervention">L</button>
+      <button data-bg="evangelion">EVA</button>
+      <button data-bg="egg">Egg</button>
+    </div>
+  </div>
+  <div class="settings-divider"></div>
+  <div class="settings-row">
+    <span class="settings-label">Auto-match music</span>
+    <button class="settings-toggle on" id="togMusicMatch" role="switch" aria-checked="true" aria-label="Toggle auto-match music to theme"></button>
+  </div>
+  <div class="settings-row" id="musicTrackRow" style="flex-direction:column;align-items:stretch;gap:8px;display:none;">
+    <span class="settings-label">Music track</span>
+    <div class="settings-seg" id="musicPicker">
+      <button data-track="stars">Cosmic</button>
+      <button data-track="matrix">Digital</button>
+      <button data-track="intervention">L</button>
+      <button data-track="evangelion">EVA</button>
+      <button data-track="egg">Egg</button>
+    </div>
+  </div>
+  <div class="settings-divider"></div>
+  <div class="settings-hint">
+    <kbd>M</kbd> Music &nbsp;·&nbsp; <kbd>,</kbd> Settings<br>
+    <kbd>Esc</kbd> <kbd>Esc</kbd> Terminal<br>
+    <kbd>↑↑↓↓←→←→BA</kbd> Warp drive<br>
+    Terminal: <kbd>matrix</kbd> <kbd>nerv</kbd> <kbd>warp</kbd> <kbd>help</kbd>
+  </div>
+</div>
+
+<!-- Terminal -->
+<div class="term-overlay" id="termOverlay">
+  <div class="term-box">
+    <div class="term-titlebar">
+      <span class="term-dot term-dot-r"></span>
+      <span class="term-dot term-dot-y"></span>
+      <span class="term-dot term-dot-g"></span>
+      <span class="term-title">neorgon — terminal</span>
+    </div>
+    <div class="term-body" id="termBody">
+      <div class="term-line sys">Welcome to Neorgon Terminal. Type "help" for commands.</div>
+      <div class="term-input-row">
+        <span class="term-prompt">~ ❯ </span>
+        <input class="term-input" id="termInput" type="text" aria-label="Terminal command" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="js/starfield.js"></script>
+<script src="js/codes.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/secret.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/cursor.js"></script>
+<script src="js/entrance.js"></script>
+<script src="js/awesome-sites-hub.js"></script>
+<script src="js/search.js"></script>
+<div id="ytMusicPlayer" style="position:fixed;left:-9999px;width:1px;height:1px;pointer-events:none;" aria-hidden="true"></div>
+<script src="js/music.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="js/matrix.js"></script>
+<script src="js/intervention.js"></script>
+<script src="js/evangelion.js"></script>
+<script src="js/egg.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/previews.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js" integrity="sha384-HZZ/fukV+9G8gwTNjN7zQDG0Sp7MsZy5DDN6VfY3Be7V9dvQpEpR2jF2HlyFUUjU" crossorigin="anonymous"></script>
+<script defer src="js/sortable.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var count = document.querySelectorAll('.site-card:not(.external-card):not(.ghost-card)').length;
+    var el = document.getElementById('toolCount');
+    if (el && count > 0) el.textContent = count;
+  });
+</script>
+</body>
+</html>

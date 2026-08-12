@@ -1,0 +1,57 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#0f172a"
+    primaryTextColor: "#e2e8f0"
+    primaryBorderColor: "#0063e5"
+    lineColor: "#38bdf8"
+    secondaryColor: "#1e293b"
+    tertiaryColor: "#1e293b"
+    clusterBkg: "#f0f7ff"
+    clusterBorder: "#bfdbfe"
+    edgeLabelBackground: "#e8f0ff"
+    mainBkg: "#0f172a"
+    nodeBorder: "#0063e5"
+    titleColor: "#1e1b4b"
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, sans-serif"
+    fontSize: "13px"
+---
+flowchart TB
+    User([User]) --> HTML["index.html\nApp shell"]
+
+    subgraph App["Viewer (ES Modules)"]
+        HTML --> app["app.js\nEntry point"]
+        app --> state["state.js\nSelection + timeline merge"]
+        app --> render["render.js\nRail, filmstrip, stage"]
+        app --> events["events.js\nScrubbing, compare, capture flows"]
+        app --> data["data.js\nManifest fetch + IndexedDB"]
+        app --> capture["capture.js\nIn-browser capture engine"]
+    end
+
+    subgraph Archive["Committed archive (generated)"]
+        manifest[("data/manifest.json\nsnapshot index")]
+        snaps[("snapshots/site/stamp/\nworking page trees")]
+        shots[("shots/*.jpg\nfilmstrip screenshots")]
+    end
+
+    subgraph CLI["tools/capture.py"]
+        gitmode["git mode\ntrees from commit history"]
+        livemode["live mode\nmirrored live page"]
+        shotmode["shot mode\nheadless Chrome"]
+    end
+
+    Repos[("Project git repos")] --> gitmode
+    Web[("Live sites")] --> livemode
+    gitmode --> snaps
+    livemode --> snaps
+    snaps --> shotmode
+    shotmode --> shots
+    gitmode & livemode & shotmode --> manifest
+
+    data -->|"fetch"| manifest
+    render -->|"iframe src"| snaps
+    render -->|"card thumbs"| shots
+    Web -->|"CORS fetch"| capture
+    capture --> IDB[("IndexedDB\nbrowser captures")]
+    data --> IDB

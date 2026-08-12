@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTF349S8R5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTF349S8R5');
+  </script>
+  <meta name="color-scheme" content="dark">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://esm.sh cdn.jsdelivr.net cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.convex.cloud https://img.clerk.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev https://i.ytimg.com https://yt3.ggpht.com https://www.google-analytics.com; connect-src 'self' https://*.convex.cloud https://*.clerk.accounts.dev https://*.accounts.dev https://clerk-telemetry.com https://api.clerk.com https://challenges.cloudflare.com https://*.workers.dev https://www.google-analytics.com https://www.googletagmanager.com https://plausible.io; frame-src 'self' https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.accounts.dev https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Neorgon Blog | Engineering, Design, and Open Source</title>
+  <meta name="description" content="Engineering decisions, design patterns, and the stories behind building 31 open-source tools">
+  <meta property="og:title" content="Neorgon Blog">
+  <meta property="og:description" content="Engineering decisions and stories behind Neorgon's open-source tools">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neorgon.com/blog/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Neorgon Blog">
+  <meta name="twitter:description" content="Engineering decisions and stories behind Neorgon's open-source tools">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://neorgon.com/blog/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#000912">
+  <meta property="og:image" content="https://neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- RSS/Atom Feeds -->
+  <link rel="alternate" type="application/rss+xml" title="Neorgon Blog" href="/blog/feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="Neorgon Blog" href="/blog/atom.xml">
+
+  <!-- Privacy-first analytics -->
+  <script defer data-domain="neorgon.com" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Neorgon Engineering Blog",
+    "description": "Engineering decisions, design patterns, and open-source stories",
+    "url": "https://neorgon.com/blog/",
+    "publisher": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .blog-header {
+      padding: 60px 40px 40px;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .blog-title {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #B015B0 0%, #3D0080 45%, #080010 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .blog-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .blog-content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 40px 100px;
+    }
+    .posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .post-item {
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: all .2s ease;
+    }
+    .post-item:hover {
+      border-color: rgba(176,21,176,.3);
+      background: rgba(255,255,255,.05);
+    }
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .post-date {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .post-category {
+      padding: 4px 12px;
+      background: rgba(176,21,176,.12);
+      border: 1px solid rgba(176,21,176,.2);
+      border-radius: 12px;
+      color: #B015B0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .post-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .post-title:hover {
+      color: #B015B0;
+    }
+    .post-excerpt {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .post-link {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #B015B0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .post-link:hover {
+      gap: 8px;
+    }
+    .post-link svg {
+      width: 14px;
+      height: 14px;
+    }
+    .footer-feed-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .feed-link {
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .feed-link:hover {
+      background: var(--surface-hover);
+      border-color: rgba(176,21,176,.3);
+      color: var(--text-primary);
+    }
+    .feed-link svg {
+      width: 12px;
+      height: 12px;
+    }
+    .nav-back {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 20;
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all .2s ease;
+    }
+    .back-button:hover {
+      background: var(--surface-hover);
+      border-color: rgba(176,21,176,.5);
+      color: var(--text-primary);
+    }
+    .back-button svg {
+      width: 16px;
+      height: 16px;
+    }
+    @media (max-width: 768px) {
+      .blog-title { font-size: 2.5rem; }
+      .blog-header { padding: 40px 20px 30px; }
+      .blog-content { padding: 0 20px 80px; }
+      .post-item { padding: 24px; }
+      .post-title { font-size: 1.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .post-item:hover {
+        border-color: var(--border);
+        background: var(--surface);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Starfield -->
+<canvas id="starfield"></canvas>
+
+<!-- Ambient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="page">
+  <!-- Navigation -->
+  <nav class="nav-back">
+    <a href="/" class="back-button" aria-label="Back to Neorgon Hub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Tools
+    </a>
+  </nav>
+
+  <!-- Header -->
+  <header class="blog-header">
+    <h1 class="blog-title">Engineering Blog</h1>
+    <p class="blog-subtitle">
+      Engineering decisions, design patterns, and the stories behind building 31 open-source tools.<br>
+      No fluff. Just build notes and lessons learned.
+    </p>
+  </header>
+
+  <!-- Posts -->
+  <main class="blog-content">
+    <div class="posts-list">
+
+      <!-- Latest Post: When Search Breaks -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-14">2026-03-14</time>
+          <span class="post-category">Engineering</span>
+        </div>
+        <h2><a href="/blog/search-functionality-bug-fixes.html" class="post-title">When Search Breaks: The Physics of Moving Cards on Our Open-Source Hub</a></h2>
+        <p class="post-excerpt">
+          How we fixed a race-condition bug in our search functionality that was causing cards to disappear when clearing the search. Lessons in DOM manipulation and state management when you have 31 tools and no JavaScript framework.
+        </p>
+        <a href="/blog/search-functionality-bug-fixes.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Latest Post: Why We Care About Motion -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-14">2026-03-14</time>
+          <span class="post-category">Engineering</span>
+        </div>
+        <h2><a href="/blog/why-we-care-about-motion-accessibility.html" class="post-title">Why We Built Prefers-Reduced-Motion Into Every Animation</a></h2>
+        <p class="post-excerpt">
+          Motion-heavy UIs are everywhere. Starfields, physics simulations, pulsing glows—they look great, but they can make some users dizzy, nauseous, or worse. Here's how we built a comprehensive reduced-motion mode into Neorgon's hub, why it matters, and what we learned about accessibility-first engineering.
+        </p>
+        <a href="/blog/why-we-care-about-motion-accessibility.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Post 2: Google Analytics Setup -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-14">2026-03-14</time>
+          <span class="post-category">Engineering</span>
+        </div>
+        <h2><a href="/blog/how-we-setup-google-analytics.html" class="post-title">How We Set Up Google Analytics for Privacy-First Tracking</a></h2>
+        <p class="post-excerpt">
+          A complete guide to implementing Google Analytics with Content Security Policy, privacy considerations, and dual tracking with Plausible Analytics.
+        </p>
+        <a href="/blog/how-we-setup-google-analytics.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Post 3: Physics Simulation -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-14">2026-03-14</time>
+          <span class="post-category">Engineering</span>
+        </div>
+        <h2><a href="/blog/the-physics-behind-floating-pills.html" class="post-title">The Physics Behind Those Floating Category Pills</a></h2>
+        <p class="post-excerpt">
+          Deep dive into Neorgon's physics-simulated search category pills: spring physics, collision detection, and performance optimization in vanilla JavaScript.
+        </p>
+        <a href="/blog/the-physics-behind-floating-pills.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Post 4: Monorepo Architecture -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-13">2026-03-13</time>
+          <span class="post-category">Architecture</span>
+        </div>
+        <h2><a href="/blog/monorepo-architecture-18-tools.html" class="post-title">Building 31 Tools: A Monorepo Architecture That Actually Works</a></h2>
+        <p class="post-excerpt">
+          How we structured a 21-tool monorepo with zero shared dependencies, modular ES modules, and a template system that makes new tools take 2 hours, not 2 days.
+        </p>
+        <a href="/blog/monorepo-architecture-18-tools.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Post 5: Glassmorphism Design -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-12">2026-03-12</time>
+          <span class="post-category">Design</span>
+        </div>
+        <h2><a href="/blog/glassmorphism-design-accessibility.html" class="post-title">Why We Chose Glassmorphism (And How to Implement It Accessibly)</a></h2>
+        <p class="post-excerpt">
+          Glassmorphism looks cool, but it's tricky to get right. Here's how we implemented it across 31 tools while maintaining color contrast, readability, and reduced-motion support.
+        </p>
+        <a href="/blog/glassmorphism-design-accessibility.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- Post 6: Build Process -->
+      <article class="post-item">
+        <div class="post-meta">
+          <time class="post-date" datetime="2026-03-11">2026-03-11</time>
+          <span class="post-category">Process</span>
+        </div>
+        <h2><a href="/blog/from-idea-to-tool-in-48-hours.html" class="post-title">From Idea to Tool in 48 Hours: The Neorgon Build Process</a></h2>
+        <p class="post-excerpt">
+          How we ship new tools fast: a repeatable 48-hour process from idea validation to deployment, documentation, and hub registration.
+        </p>
+        <a href="/blog/from-idea-to-tool-in-48-hours.html" class="post-link">
+          Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17L17 7M7 7h10v10"/>
+          </svg>
+        </a>
+      </article>
+
+    </div>
+
+    <!-- RSS/Atom Feeds -->
+    <div class="footer-feed-links">
+      <a href="/blog/feed.xml" class="feed-link" rel="alternate" type="application/rss+xml">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 11a9 9 0 0 1 9 9"></path>
+          <path d="M4 4a16 16 0 0 1 16 16"></path>
+          <circle cx="5" cy="19" r="1"></circle>
+        </svg>
+        RSS Feed
+      </a>
+      <a href="/blog/atom.xml" class="feed-link" rel="alternate" type="application/atom+xml">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 11a9 9 0 0 1 9 9"></path>
+          <path d="M4 4a16 16 0 0 1 16 16"></path>
+          <circle cx="5" cy="19" r="1"></circle>
+        </svg>
+        Atom Feed
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-line"></div>
+    <div class="footer-content">
+      <div class="footer-left">
+        <a href="https://ehq.cl/" class="footer-logo" aria-label="Energon Hub">
+          <img src="/assets/icons/energon-logo.png" alt="Energon" width="24" height="24">
+          <span>Neorgon</span>
+        </a>
+        <span class="footer-tagline">Made for Real Problems</span>
+      </div>
+      <div class="footer-right">
+        <a href="/" class="footer-link">Tools</a>
+        <a href="/about.html" class="footer-link">About</a>
+        <a href="/blog/" class="footer-link">Blog</a>
+        <a href="https://github.com/lucianoadonis/neorgon" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- JavaScript for starfield -->
+<script src="/js/starfield.js"></script>
+
+</body>
+</html>
