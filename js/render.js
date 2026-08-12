@@ -30,7 +30,8 @@ function badge(snap) {
 
 function thumb(snap) {
   if (snap.shot) {
-    return `<img src="${escHtml(snap.shot)}" alt="" loading="lazy" decoding="async">`;
+    const gif = snap.gif ? ` data-gif="${escHtml(snap.gif)}" data-still="${escHtml(snap.shot)}"` : '';
+    return `<img src="${escHtml(snap.shot)}" alt="" loading="lazy" decoding="async"${gif}>`;
   }
   const initial = (snap.site[0] || '?').toUpperCase();
   return `<span class="rw-thumb-ph" aria-hidden="true"><b>${escHtml(initial)}</b>${escHtml(fmtDate(snap.date))}</span>`;

@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-11T23:47:40-04:00",
+ "generated": "2026-08-12T00:15:35-04:00",
  "sites": {
   "neorgon-site": {
    "title": "Neorgon",
@@ -18,7 +18,8 @@
    "path": "snapshots/neorgon-site/2026-02-28-bd7d9f7/index.html",
    "shot": "shots/neorgon-site/2026-02-28-bd7d9f7.jpg",
    "bytes": 857340,
-   "files": 12
+   "files": 12,
+   "gif": "shots/neorgon-site/2026-02-28-bd7d9f7.gif"
   },
   {
    "id": "neorgon-site/2026-03-03-c392a8d",

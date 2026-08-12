@@ -66,6 +66,7 @@ Build or extend the archive with the capture CLI (Python 3 stdlib, no installs):
 python3 tools/capture.py git neorgon-site --shots    # backfill from git history
 python3 tools/capture.py live neorgon.com --shots    # mirror the live page
 python3 tools/capture.py shot --missing              # screenshot anything new
+python3 tools/capture.py gif <snapshot-id>           # animated demo; card plays it on hover
 python3 tools/capture.py fleet --shots               # baseline every live site
 python3 tools/capture.py list                        # inspect the manifest
 ```

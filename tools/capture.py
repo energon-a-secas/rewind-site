@@ -7,6 +7,8 @@ Modes:
   live <site|url>    mirror a live page: same-host assets + cdn.neorgon.org are
                      downloaded and re-pointed, everything else stays absolute
   shot [ids]         screenshot snapshots through headless Chrome (JPEG via sips)
+  gif <id|site>      record an animated demo of a snapshot (scroll-through) via
+                     og-studio's record-gif.mjs; filmstrip cards play it on hover
   adopt <file.html>  promote a browser-exported capture into the archive
   fleet              live-capture every registry site (filtered by --lifecycle)
   list / rm          inspect or delete manifest entries
@@ -512,6 +514,40 @@ def cmd_shot(a):
     do_shots(ids, a.width, a.height)
 
 
+# ── gif mode ─────────────────────────────────────────────────────────────────
+
+RECORDER = MONO / 'projects' / 'og-studio-site' / 'scripts' / 'record-gif.mjs'
+
+
+def cmd_gif(a):
+    m = load_manifest()
+    snap = next((s for s in m['snapshots'] if s['id'] == a.target), None)
+    if snap is None:                                   # site name -> latest snapshot
+        candidates = [s for s in m['snapshots'] if s['site'] in (a.target, f'{a.target}-site')]
+        snap = candidates[-1] if candidates else None
+    if snap is None:
+        sys.exit(f'no snapshot matches "{a.target}" — try: capture.py list')
+    if not RECORDER.exists():
+        sys.exit(f'recorder not found: {RECORDER} (og-studio owns it)')
+    stamp = snap['id'].split('/', 1)[1]
+    out = SHOT_DIR / snap['site'] / f'{stamp}.gif'
+    out.parent.mkdir(parents=True, exist_ok=True)
+    srv, port = serve_root()
+    try:
+        cmd = ['node', str(RECORDER), f'http://127.0.0.1:{port}/{snap["path"]}',
+               '--out', str(out), '--fps', str(a.fps), '--size', a.size]
+        if a.scenario:
+            cmd += ['--scenario', a.scenario]
+        r = subprocess.run(cmd, text=True)
+        if r.returncode != 0 or not out.exists():
+            sys.exit('recording failed')
+    finally:
+        srv.shutdown()
+    snap['gif'] = (PurePosixPath('shots') / snap['site'] / out.name).as_posix()
+    save_manifest(m)
+    print(f'  🎞 {snap["id"]} -> {snap["gif"]} ({out.stat().st_size // 1024} KB)')
+
+
 # ── adopt / fleet / list / rm ────────────────────────────────────────────────
 
 def cmd_adopt(a):
@@ -619,6 +655,13 @@ def main():
     p.add_argument('--width', type=int, default=1440)
     p.add_argument('--height', type=int, default=900)
     p.set_defaults(fn=cmd_shot, missing_default=True)
+
+    p = sub.add_parser('gif', help='record an animated demo of a snapshot')
+    p.add_argument('target', help='snapshot id, or a site name (uses its latest snapshot)')
+    p.add_argument('--fps', type=int, default=10)
+    p.add_argument('--size', default='646x300')
+    p.add_argument('--scenario', help='JSON step file passed through to record-gif.mjs')
+    p.set_defaults(fn=cmd_gif)
 
     p = sub.add_parser('adopt', help='import a browser-exported capture')
     p.add_argument('file')

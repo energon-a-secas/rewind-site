@@ -288,8 +288,20 @@ function fillCaptureDatalist() {
 export function bindEvents(_state) {
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onModalClick);
-  document.getElementById('main').addEventListener('click', onMainClick);
-  document.getElementById('main').addEventListener('change', onCompareSelect);
+  const main = document.getElementById('main');
+  main.addEventListener('click', onMainClick);
+  main.addEventListener('change', onCompareSelect);
+  // Filmstrip cards with a recorded demo play it on hover, still frame otherwise.
+  main.addEventListener('mouseover', (e) => {
+    const img = e.target.closest('.rw-card')?.querySelector('img[data-gif]');
+    if (img && !img.src.endsWith(img.dataset.gif)) img.src = img.dataset.gif;
+  });
+  main.addEventListener('mouseout', (e) => {
+    const card = e.target.closest('.rw-card');
+    if (!card || card.contains(e.relatedTarget)) return;
+    const img = card.querySelector('img[data-gif]');
+    if (img) img.src = img.dataset.still;
+  });
 
   $('captureBtn')?.addEventListener('click', () => {
     fillCaptureDatalist();
