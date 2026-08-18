@@ -19,3 +19,15 @@ package-lock.json
 .env.*
 # …but the credentials TEMPLATE is repo content: a fresh clone needs it
 !.env.example
+
+# ── Neorgon base (enforced by smoke check 20) ─────────────────────────────────
+.forge/
+__pycache__/
+*.py[cod]
+skills-archived/
+*.log
+
+# ── Archive exception ─────────────────────────────────────────────────────────
+# Snapshots are the product here. Each captured version keeps the server.log it
+# was taken with, so the base `*.log` rule must not swallow them.
+!snapshots/**/*.log
