@@ -46,6 +46,44 @@ SHOT_DIR = ROOT / 'shots'
 # and metadata that has no business inside a rendered snapshot.
 PRUNE_DIRS = ('assets/previews', 'node_modules', '.github', 'docs')
 SPAN_HOSTS = {'cdn.neorgon.org'}                       # cross-host assets worth localizing
+
+# An archive must not phone home. Every captured page has its analytics beacons
+# stripped: old git snapshots carried Google Analytics and Plausible, and the
+# live header kit carries GoatCounter and Cloudflare. Tracking is not the design.
+ANALYTICS_HOSTS = ('googletagmanager.com', 'google-analytics.com', 'plausible.io',
+                   'gc.zgo.at', 'goatcounter.com', 'cloudflareinsights.com')
+_SCRIPT_RE = re.compile(r'<script\b[^>]*>.*?</script\s*>', re.I | re.S)
+
+def _is_analytics_script(tag):
+    low = tag.lower()
+    if any(h in low for h in ANALYTICS_HOSTS):
+        return True
+    head = low.split('>', 1)[0]
+    # Inline gtag / dataLayer / plausible / goatcounter bootstraps (no external src)
+    return 'src=' not in head and bool(re.search(r'\b(gtag|datalayer|goatcounter|plausible)\b', low))
+
+def sanitize_html(html):
+    out = _SCRIPT_RE.sub(lambda m: '' if _is_analytics_script(m.group(0)) else m.group(0), html)
+    # The vendored header kit self-initialises analytics on *.neorgon.com, so a
+    # snapshot served under rewind.neorgon.com would fire it. Its documented
+    # opt-out is a meta tag; set it as a belt beside stripping the scripts.
+    if 'neorgon-header' in out.lower() and 'neo-analytics' not in out.lower():
+        out = re.sub(r'(<head\b[^>]*>)', r'\1\n  <meta name="neo-analytics" content="off">',
+                     out, count=1, flags=re.I)
+    return out
+
+def sanitize_dir(dest):
+    n = 0
+    for f in dest.rglob('*.html'):
+        try:
+            src = f.read_text(encoding='utf-8', errors='replace')
+            cleaned = sanitize_html(src)
+            if cleaned != src:
+                f.write_text(cleaned)
+                n += 1
+        except Exception as e:
+            warn(f'sanitize skipped {f}: {e}')
+    return n
 UA = 'Mozilla/5.0 (Macintosh) RewindCapture/1.0 (+https://rewind.neorgon.com)'
 GIT_PATHSPECS = ['*.html', 'css', 'js', 'assets', 'styles', 'img', 'images', 'data']
 MAX_ASSETS = 300
@@ -194,6 +232,7 @@ def cmd_git(a):
         if dest.exists():
             shutil.rmtree(dest)
         extract_tree(repo, sha, dest)
+        sanitize_dir(dest)
         page = entry_html(dest)
         if not page:
             warn(f'{stamp}: no HTML file in tree, skipping')
@@ -384,6 +423,7 @@ def capture_live(url, dest):
         for q in ('"', "'"):
             html = html.replace(f'{q}{raw}{q}', f'{q}{new}{q}')
         html = html.replace(f'({raw})', f'({new})')
+    html = sanitize_html(html)
     stamp_note = f'<!-- Rewind capture of {url} on {now_iso()} -->\n'
     dest.mkdir(parents=True, exist_ok=True)
     (dest / 'index.html').write_text(stamp_note + html)

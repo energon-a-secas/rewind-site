@@ -2,6 +2,12 @@
 
 Rewind: design-history archive: capture.py extracts snapshots from each project's git history or mirrors the live page, headless-Chrome screenshots feed a filmstrip timeline, every snapshot replays as a working page in the stage with era compare; in-browser capture to IndexedDB with export/adopt loop (rewind.neorgon.com)
 
+Captured pages are analytics-stripped: `sanitize_html()` in `tools/capture.py` removes
+Google Analytics, Plausible, GoatCounter and Cloudflare beacons from every snapshot (git
+and live) and sets the header kit's `neo-analytics: off` meta, so an archived page served
+under rewind.neorgon.com does not fire live tracking. Existing snapshots captured before
+2026-08-21 predate this and keep their original beacons; they are dated records.
+
 **Live:** rewind.neorgon.com · **Port:** 8862
 
 ## Run
