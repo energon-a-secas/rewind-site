@@ -1,4 +1,4 @@
-# Rewind — product one-pager
+# Rewind: product one-pager
 
 **What it is:** Browse every site's design history as replayable snapshots
 

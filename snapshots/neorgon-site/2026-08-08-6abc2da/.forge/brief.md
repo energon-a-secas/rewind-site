@@ -1,4 +1,4 @@
-# Brief — neorgon-site hub: no recency surface, 12 flat categories with no navigation, dead links and stale counts
+# Brief: neorgon-site hub: no recency surface, 12 flat categories with no navigation, dead links and stale counts
 
 Started 2026-08-08 10:24. Maintained by the `task` skill; read by `debrief` and `writeup`.
 
@@ -13,7 +13,7 @@ neorgon-site hub: no recency surface, 12 flat categories with no navigation, dea
 ## Approach
 
 Five changes to the hub, in dependency order. (1) Give every card a `data-added="YYYY-MM-DD"`
-attribute — this is the missing data model; the hub currently has no concept of recency at all.
+attribute: this is the missing data model; the hub currently has no concept of recency at all.
 (2) Build a "Recently Shipped" rail above the categories that reads those dates, renders the
 newest 6 as clones, and stamps a self-expiring NEW badge (~30 days) so the badge decays without
 anyone maintaining a list. (3) Add a sticky category rail under the header with live counts and
@@ -41,7 +41,7 @@ rotate the list. Dates expire on their own.
 
 **Reusing the floating category pills as the navigation.** They already exist and already filter.
 But they live inside the hero, scroll away immediately, and their physics simulation makes them
-imprecise click targets — wrong tool for "jump to a section 3000px down". The sticky rail is a
+imprecise click targets: wrong tool for "jump to a section 3000px down". The sticky rail is a
 separate, boring, reliable surface.
 
 ## Decisions
@@ -56,13 +56,13 @@ separate, boring, reliable surface.
 
 - `2026-08-08 10:26` Tool count contradicts itself in 4 places: hero HTML hardcodes 40, inline JS computes 43 at DOMContentLoaded (so it visibly flips), and title/meta description/OG/twitter/JSON-LD all hardcode 'We made 40 tools'.
 
-- `2026-08-08 10:27` stream **data model** done — 50 cards stamped. Two dates are proxies, marked inline: memes-site git history starts 2024-08-24 (repo bootstrap) and pieza-site's remote points at an unrelated repo so its git history is not this project's.
+- `2026-08-08 10:27` stream **data model** done: 50 cards stamped. Two dates are proxies, marked inline: memes-site git history starts 2024-08-24 (repo bootstrap) and pieza-site's remote points at an unrelated repo so its git history is not this project's.
 
-- `2026-08-08 10:36` stream **recent rail** done — 6-card rail + self-expiring NEW badge; clones use data-echo-id so search/previews/sortable skip them
+- `2026-08-08 10:36` stream **recent rail** done: 6-card rail + self-expiring NEW badge; clones use data-echo-id so search/previews/sortable skip them
 
-- `2026-08-08 10:36` stream **category nav** done — 11 sticky chips with live counts, IO scroll-spy, suppressed while searching, #group- deep links
+- `2026-08-08 10:36` stream **category nav** done: 11 sticky chips with live counts, IO scroll-spy, suppressed while searching, #group- deep links
 
-- `2026-08-08 10:36` stream **search + palette** done — Cmd+K palette (fuzzy ladder, recency tie-break); Enter-to-open + arrow walking in hero search; all 11 pills now 1:1 with DOM groups
+- `2026-08-08 10:36` stream **search + palette** done: Cmd+K palette (fuzzy ladder, recency tie-break); Enter-to-open + arrow walking in hero search; all 11 pills now 1:1 with DOM groups
 
 - `2026-08-08 10:36` Pill/group drift was worse than a label mismatch: the 'Learning' pill matched no DOM group at all and 'Game' pointed only at the locked ghost rushq, so clicking it filtered the catalog to zero results. Also found teamplay, stash, safeguard and pieza present in the DOM but absent from every pill ids array - unreachable by pill. Verified post-fix with a script comparing pill ids to group membership: 11/11 aligned, only the 3 ghost cards intentionally pill-less.
 
@@ -76,9 +76,9 @@ separate, boring, reliable surface.
 
 - `2026-08-08 10:57` Roughly 8 turns were lost to Chrome's disk cache replaying the committed pre-edit terminal.js through F5, ?cachebust=, #hash, touch and a full server restart, with no service worker registered. Diagnosed via performance.getEntriesByType('resource'): transferSize 0, decodedBodySize 15875, exactly matching 'git show HEAD:js/terminal.js | wc -c'. Serving on a fresh port is the reliable workaround.
 
-- `2026-08-08 10:57` stream **terminal** done — DOM-driven catalog replaces the hardcoded list, so a new card is reachable by every command with no terminal edit. 12 commands added (tools/categories/goto/open/search/new/random/whois/stats/theme/fortune + Tab completion). theme only sets the visitor cookie via NeoHeader.setTheme; fleet-wide CDN default deliberately not exposed - that belongs in an ops console, not a page anyone can open.
+- `2026-08-08 10:57` stream **terminal** done: DOM-driven catalog replaces the hardcoded list, so a new card is reachable by every command with no terminal edit. 12 commands added (tools/categories/goto/open/search/new/random/whois/stats/theme/fortune + Tab completion). theme only sets the visitor cookie via NeoHeader.setTheme; fleet-wide CDN default deliberately not exposed - that belongs in an ops console, not a page anyone can open.
 
-- `2026-08-08 10:57` stream **fixes** done — Removed the duplicate legacy footer; single-sourced the tool count (43) from the DOM in hero + all meta/OG/JSON-LD; fixed 3 CSP directives incl. the two that made the terminal's Convex login impossible in prod; fixed the scroll-spy and deep-link offset. Console errors 8 -> 3, both remaining benign (meta frame-ancestors warning, awesomesites:8831 not running locally). Dead links pieza/cardforge diagnosed but NOT fixed - DNS and TLS, outside this repo.
+- `2026-08-08 10:57` stream **fixes** done: Removed the duplicate legacy footer; single-sourced the tool count (43) from the DOM in hero + all meta/OG/JSON-LD; fixed 3 CSP directives incl. the two that made the terminal's Convex login impossible in prod; fixed the scroll-spy and deep-link offset. Console errors 8 -> 3, both remaining benign (meta frame-ancestors warning, awesomesites:8831 not running locally). Dead links pieza/cardforge diagnosed but NOT fixed - DNS and TLS, outside this repo.
 
 - `2026-08-08 11:11` Mobile defects found only by resizing to 390px, all fixed: (1) the recent rail stacked 6 cards vertically = 1670px / 1.98 screens, pushing the catalog to y=2228 - now a snap-scrolling row at 0.48 screens with the catalog at y=964; (2) snap alignment needs scroll-padding-inline, not padding-inline, or the first card snaps 18px out of line with its own heading; (3) the rail's sticky top was a hardcoded 62px against a 68px header, so 12px slid underneath - now --cat-rail-top from the live measurement.
 
@@ -112,13 +112,13 @@ All figures below were read out of a live page via `browser_evaluate` against
 The 3 remaining console messages are all benign: the `frame-ancestors`-via-meta
 warning (Chrome ignores that directive in a `<meta>` tag by design), and two from
 `awesome-sites-hub.js` trying `localhost:8831` because that sibling site is not
-running locally — production uses `awesomesites.neorgon.com`, which `connect-src`
+running locally: production uses `awesomesites.neorgon.com`, which `connect-src`
 allows.
 
 ## Open
 
 **Two hub cards are dead links right now, and both are infra, not this repo.**
-`pieza.neorgon.com` has no DNS record at all (`dig CNAME` empty) — the card
+`pieza.neorgon.com` has no DNS record at all (`dig CNAME` empty): the card
 shipped before the subdomain existed. `cardforge.neorgon.com` answers 200 over
 HTTP but 000 over HTTPS because GitHub Pages has not provisioned its
 certificate; re-asserting the CNAME left `cert: null`, and the API returns 422 or
@@ -128,7 +128,7 @@ fixing before that site can be published at all.
 
 **Registry disagrees with reality on five sites.** `battlecard` and `hwinfo` are
 live with no hub card; `tickbox`, `failsafe` and `fitprofile` return 000 but are
-marked `has_hub_card: true`. Not touched — reconciling the registry is an ops
+marked `has_hub_card: true`. Not touched: reconciling the registry is an ops
 task, and guessing which side is wrong per site would be worse than leaving it
 visible.
 
@@ -140,7 +140,7 @@ to order the rail correctly today, but they are not ship dates.
 **Deferred deliberately, with the reasoning:** the Footer Kit migration (the hub
 still uses `.site-footer` rather than `.neo-footer`; worth doing, but it is a
 fleet-wide change with its own runbook, not a hub edit); and CDN/header control
-from the terminal, which the user explicitly reassigned to an ops console — the
+from the terminal, which the user explicitly reassigned to an ops console. The
 terminal only sets the visitor's own `neo_theme` cookie.
 
 _Closed 2026-08-08 11:12._

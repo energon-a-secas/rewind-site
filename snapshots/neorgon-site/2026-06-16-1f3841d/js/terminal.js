@@ -117,38 +117,38 @@
   const publicCommands = {
     help() {
       addLine('Commands:', 'sys');
-      addLine('  help         — show this message', 'sys');
-      addLine('  clear        — clear terminal', 'sys');
-      addLine('  warp         — engage warp drive', 'sys');
-      addLine('  tools        — list all tools', 'sys');
-      addLine('  goto <site>  — open a tool site', 'sys');
-      addLine('  whoami       — who are you?', 'sys');
-      addLine('  date         — current date', 'sys');
-      addLine('  login <u> <p>— authenticate', 'sys');
-      addLine('  reset-layout — restore default card order', 'sys');
-      addLine('  export-layout— copy layout JSON to clipboard', 'sys');
-      addLine('  matrix       — toggle matrix rain (stays in terminal)', 'sys');
-      addLine('  matrix background — toggle matrix & close terminal', 'sys');
-      addLine('  nerv [level] — trigger NERV warning (blue/red/orange)', 'sys');
-      addLine('  exit         — close terminal', 'sys');
+      addLine('  help: show this message', 'sys');
+      addLine('  clear: clear terminal', 'sys');
+      addLine('  warp: engage warp drive', 'sys');
+      addLine('  tools: list all tools', 'sys');
+      addLine('  goto <site>: open a tool site', 'sys');
+      addLine('  whoami: who are you?', 'sys');
+      addLine('  date: current date', 'sys');
+      addLine('  login <u> <p>authenticate', 'sys');
+      addLine('  reset-layout: restore default card order', 'sys');
+      addLine('  export-layoutcopy layout JSON to clipboard', 'sys');
+      addLine('  matrix: toggle matrix rain (stays in terminal)', 'sys');
+      addLine('  matrix background: toggle matrix & close terminal', 'sys');
+      addLine('  nerv [level]: trigger NERV warning (blue/red/orange)', 'sys');
+      addLine('  exit: close terminal', 'sys');
       addLine('', 'sys');
       addLine('Cheat codes (type anywhere):', 'sys');
-      addLine('  ↑↑↓↓←→←→BA  — Konami Code (warp drive)', 'sys');
-      addLine('  IDDQD        — Doom god mode', 'sys');
-      addLine('  ABACABB      — Mortal Kombat blood code', 'sys');
-      addLine('  JUSTINBAILEY — Metroid suit mode', 'sys');
-      addLine('  HESOYAM      — GTA San Andreas $$$', 'sys');
-      addLine('  SEGA         — you know the sound', 'sys');
+      addLine('  ↑↑↓↓←→←→BA: Konami Code (warp drive)', 'sys');
+      addLine('  IDDQD: Doom god mode', 'sys');
+      addLine('  ABACABB: Mortal Kombat blood code', 'sys');
+      addLine('  JUSTINBAILEY: Metroid suit mode', 'sys');
+      addLine('  HESOYAM: GTA San Andreas $$$', 'sys');
+      addLine('  SEGA: you know the sound', 'sys');
       if (authedUser) {
         addLine('', 'sys');
         addLine('Authenticated commands:', 'sys');
-        addLine('  status       — auth status', 'sys');
-        addLine('  unlock       — reveal secret section', 'sys');
-        addLine('  ghost <id>   — hide/show a card by ID', 'sys');
-        addLine('  ghost list   — show hidden cards', 'sys');
-        addLine('  ghost reset  — restore all hidden cards', 'sys');
-        addLine('  broadcast <m>— show toast on page', 'sys');
-        addLine('  logout       — end session', 'sys');
+        addLine('  status: auth status', 'sys');
+        addLine('  unlock: reveal secret section', 'sys');
+        addLine('  ghost <id>: hide/show a card by ID', 'sys');
+        addLine('  ghost list: show hidden cards', 'sys');
+        addLine('  ghost reset: restore all hidden cards', 'sys');
+        addLine('  broadcast <m>show toast on page', 'sys');
+        addLine('  logout: end session', 'sys');
       }
     },
     clear() {
@@ -252,7 +252,7 @@
         const json = window.exportCardOrder();
         navigator.clipboard.writeText(json).then(
           () => addLine('Layout JSON copied to clipboard.', 'sys'),
-          () => { addLine(json, 'sys'); addLine('(Copy manually — clipboard blocked)', 'sys'); }
+          () => { addLine(json, 'sys'); addLine('(Copy manually: clipboard blocked)', 'sys'); }
         );
       } else {
         addLine('Layout system not loaded.', 'err');
@@ -345,9 +345,9 @@
     ghost(args) {
       const arg = (args || '').trim().toLowerCase();
       if (!arg) {
-        addLine('Usage: ghost <cardId> — toggle card visibility', 'err');
-        addLine('       ghost list    — show hidden cards', 'err');
-        addLine('       ghost reset   — restore all cards', 'err');
+        addLine('Usage: ghost <cardId>, toggle card visibility', 'err');
+        addLine('       ghost list: show hidden cards', 'err');
+        addLine('       ghost reset: restore all cards', 'err');
         return;
       }
       if (arg === 'list') {

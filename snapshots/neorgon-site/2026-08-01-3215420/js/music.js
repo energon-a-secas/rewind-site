@@ -138,7 +138,7 @@
           currentVideoId = null;
           console.warn('[music] YouTube player error code:', e.data,
             e.data === 101 || e.data === 150
-              ? '— embedding disabled for this video'
+              ? 'embedding disabled for this video'
               : '');
         }
       }

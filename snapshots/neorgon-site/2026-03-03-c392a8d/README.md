@@ -50,7 +50,7 @@ A minimal, neon-space landing page that links to every Neorgon site with a short
 | Client Says | [clientsays.neorgon.com](https://clientsays.neorgon.com/) | Timezone converter + jargon translator |
 | Spin the Wheel | [wheel.neorgon.com](https://wheel.neorgon.com/) | Customizable decision wheel |
 | JSON Builder | [jsonbuilder.neorgon.com](https://jsonbuilder.neorgon.com/) | Visual JSON schema builder + JIRA adjuster |
-| Reference Matrix | [references.neorgon.com](https://references.neorgon.com/) | Enerbot meme references — live regex playground + JSON API |
+| Reference Matrix | [references.neorgon.com](https://references.neorgon.com/) | Enerbot meme references, live regex playground + JSON API |
 
 ---
 
@@ -74,7 +74,7 @@ python3 -m http.server 8080
 # open http://localhost:8080
 ```
 
-Or open `index.html` directly — no dependencies, no install.
+Or open `index.html` directly: no dependencies, no install.
 
 ---
 

@@ -11,7 +11,7 @@ make stop           # Kill the dev server
 npx convex dev      # Run Convex backend (required for terminal auth features)
 ```
 
-No build step — open `index.html` directly or serve via `make serve`. ES modules are not used here; all scripts are plain `<script>` tags loaded in `index.html`.
+No build step: open `index.html` directly or serve via `make serve`. ES modules are not used here; all scripts are plain `<script>` tags loaded in `index.html`.
 
 ## Architecture
 
@@ -21,16 +21,16 @@ Single-page hub at `neorgon.com` listing all Neorgon tools. The page is a single
 
 | File | Purpose |
 |------|---------|
-| `starfield.js` | Animated canvas starfield (200 stars) — default background |
-| `matrix.js` | Matrix rain canvas — alternate background mode |
-| `intervention.js` | "Death Note L" CRT broadcast takeover — third background mode |
+| `starfield.js` | Animated canvas starfield (200 stars): default background |
+| `matrix.js` | Matrix rain canvas: alternate background mode |
+| `intervention.js` | "Death Note L" CRT broadcast takeover: third background mode |
 | `settings.js` | Settings panel: toggles for sound/glow/previews, background picker. Persists to `localStorage` under key `neorgon-prefs` |
 | `search.js` | Hero search bar with floating category pills (physics simulation on canvas), card filtering, and constellation drawing connecting matched cards |
 | `cards.js` | Multi-tool card popup (for cards with sub-tools) and ghost card unlock logic |
-| `previews.js` | GIF previews on card hover after 1.2s delay — enabled only when `window._neoPreviewsEnabled` is true |
+| `previews.js` | GIF previews on card hover after 1.2s delay: enabled only when `window._neoPreviewsEnabled` is true |
 | `sortable.js` | Per-group card drag-reorder using SortableJS CDN. `window.exportCardOrder()` / `window.importCardOrder()` helpers available in console |
 | `music.js` | Web Audio API ambient music synced to background mode (stars/matrix/intervention) |
-| `sound.js` | UI sound effects — exposes `window._neoSound` with `.dragStart()`, `.dropCard()`, `.unlock()`, and `window._neoSoundPing(freq, vol)`, `window._neoSoundDiscover()` |
+| `sound.js` | UI sound effects: exposes `window._neoSound` with `.dragStart()`, `.dropCard()`, `.unlock()`, and `window._neoSoundPing(freq, vol)`, `window._neoSoundDiscover()` |
 | `cursor.js` | Custom cursor glow element |
 | `entrance.js` | Page entrance animation |
 | `hero.js` | Hero section typewriter / tagline animation |
@@ -40,14 +40,14 @@ Single-page hub at `neorgon.com` listing all Neorgon tools. The page is a single
 
 ### Global window flags (cross-module communication)
 
-- `window._neoSoundEnabled` — boolean, set by settings.js
-- `window._neoPreviewsEnabled` — boolean, set by settings.js
-- `window._neoSound` — sound effect object from sound.js
-- `window._neoSoundPing(freq, vol)` — from sound.js
-- `window._neoSoundDiscover()` — from sound.js
-- `window._neoMusicSwitch(mode)` — from music.js, called by settings.js when background changes
-- `window._neoBgSync(mode)` — from settings.js, called by terminal.js to sync picker state
-- `window.matrixOn/Off/Kill`, `window.interventionOn/Off/Kill` — canvas control from matrix.js / intervention.js
+- `window._neoSoundEnabled`: boolean, set by settings.js
+- `window._neoPreviewsEnabled`: boolean, set by settings.js
+- `window._neoSound`: sound effect object from sound.js
+- `window._neoSoundPing(freq, vol)`: from sound.js
+- `window._neoSoundDiscover()`: from sound.js
+- `window._neoMusicSwitch(mode)`: from music.js, called by settings.js when background changes
+- `window._neoBgSync(mode)`: from settings.js, called by terminal.js to sync picker state
+- `window.matrixOn/Off/Kill`, `window.interventionOn/Off/Kill`: canvas control from matrix.js / intervention.js
 
 ### Convex backend
 
@@ -60,9 +60,9 @@ The Convex HTTP client is lazy-loaded via `esm.sh` only when the terminal is ope
 ### Card data model
 
 Each tool card in HTML has:
-- `data-card-id` — unique slug matching `PREVIEW_MAP` in previews.js and `CATEGORIES` in search.js
-- `.card-name`, `.card-desc`, `.card-domain`, `.card-tag` — searchable text fields
-- `--card-glow` / `--card-accent` CSS custom properties — per-card neon colour
+- `data-card-id`: unique slug matching `PREVIEW_MAP` in previews.js and `CATEGORIES` in search.js
+- `.card-name`, `.card-desc`, `.card-domain`, `.card-tag`: searchable text fields
+- `--card-glow` / `--card-accent` CSS custom properties: per-card neon colour
 
 Multi-tool cards (`.site-card.multi-tool`) show a `.card-subtool-popup` on click. Ghost cards (`.ghost-card`) are locked until clicked, then play an unlock sound.
 
