@@ -1,0 +1,187 @@
+<!-- Rewind capture of https://pixeldoll.neorgon.com/ on 2026-08-30T18:20:17-04:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixeldoll | Pixel Character Builder</title>
+  <meta name="description" content="Build a 16x16 pixel character, unlock rare parts, and take it across every Neorgon site as a code or a cookie">
+  <meta property="og:title" content="Pixeldoll | Pixel Character Builder">
+  <meta property="og:description" content="Build a pixel character and take it across Neorgon">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pixeldoll.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pixeldoll | Pixel Character Builder">
+  <meta name="twitter:description" content="Build a pixel character and take it across Neorgon">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://pixeldoll.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://pixeldoll.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pixeldoll">
+  <meta name="twitter:image" content="https://pixeldoll.neorgon.com/og-preview.jpg">
+  <link rel="icon" type="image/x-icon" href="_ext/cdn.neorgon.org/v1.0.0/favicon.ico" />
+  <!-- Fleet design tokens: canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/pixeldoll-site">
+  <meta name="neo-version" content="1.0.0">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css: the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
+       Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Pixeldoll",
+    "description": "Build a 16x16 pixel character, unlock rare parts, and take it across every Neorgon site as a code or a cookie",
+    "url": "https://pixeldoll.neorgon.com/",
+    "applicationCategory": "EntertainmentApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Neorgon Header Kit contract (packages/neorgon-ui/header/README.md).
+       data-header-mode: hub (glass) | content (sticky gradient) | app (slim, auto-hides on scroll).
+       Pick content for learning/content sites, app for tool-dense sites. -->
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="https://pixeldoll.neorgon.com/" class="header-title-link">
+        <img src="_ext/cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Pixeldoll</h1>
+        <div class="header-subtitle">Build a pixel character, take it across Neorgon</div>
+      
+        </div>
+      </a>
+    </div>
+
+    <!-- .header-right owns margin-left:auto; home icon is always last. -->
+    <div class="header-right">
+      <div class="header-actions">
+        <button type="button" class="nav-link" data-action="shuffle" data-keep-mobile title="A random look from what you have unlocked">Shuffle</button>
+        <button type="button" class="nav-link nav-link--badge" id="secretsBtn" data-action="toggle-secrets" aria-pressed="false" data-keep-mobile>Secrets <span class="insight-badge" id="secretsBadge">0/6</span></button>
+        <a class="nav-link" href="https://floorplan.neorgon.com/" target="_blank" rel="noopener" title="Team maps that use these characters">Floorplan ↗</a>
+      </div>
+
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.4"/>
+          <ellipse cx="12" cy="12" rx="8.4" ry="3" transform="rotate(-18 12 12)"/>
+          <g class="nh-orbit">
+            <path d="M17.5 4.2 14.2 2.7l.9 1.4-.6 1.1z" fill="currentColor" stroke="none"/>
+            <circle cx="12.6" cy="3" r=".7" fill="currentColor" stroke="none" opacity=".55"/>
+            <circle cx="11.1" cy="3.3" r=".55" fill="currentColor" stroke="none" opacity=".35"/>
+            <circle cx="9.8" cy="3.7" r=".4" fill="currentColor" stroke="none" opacity=".2"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!--
+  <div class="auth-panel" id="authPanel">
+    <div class="auth-panel-inner">
+      <div id="authGate">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Log In</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        <div class="auth-form" id="authLoginForm">
+          <input type="text" id="authLoginUser" placeholder="Username" autocomplete="username" maxlength="20">
+          <input type="password" id="authLoginPass" placeholder="Password" autocomplete="current-password">
+          <button class="auth-submit" id="authLoginBtn">Log In</button>
+        </div>
+        <div class="auth-form" id="authRegisterForm" hidden>
+          <input type="text" id="authRegUser" placeholder="Choose a username" autocomplete="username" maxlength="20">
+          <input type="password" id="authRegPass" placeholder="Choose a password" autocomplete="new-password">
+          <button class="auth-submit" id="authRegBtn">Register</button>
+        </div>
+      </div>
+      <div id="authUser" hidden>
+        <span class="auth-username" id="authUsername"></span>
+        <button class="auth-logout" id="authLogout">Log out</button>
+      </div>
+    </div>
+  </div>
+  <div class="auth-divider"></div>
+  -->
+
+  <main id="main">
+    <div class="shared-bar" id="sharedBar" hidden>
+      <img id="sharedImg" class="px" width="32" height="32" alt=""> Someone shared <strong id="sharedName">a character</strong> with you.
+      <button type="button" class="btn btn--primary btn--sm" data-action="use-shared">Edit it</button>
+      <button type="button" class="btn btn--ghost btn--sm" data-action="dismiss-shared">Keep mine</button>
+    </div>
+    <div class="studio">
+
+      <aside class="preview" aria-label="Preview">
+        <canvas id="hero" class="hero px" width="128" height="128" aria-label="Your character, large"></canvas>
+        <div class="sizes" aria-label="As other sites draw it">
+          <div class="size"><img id="size64" class="px" width="64" height="64" alt=""><span>64</span></div>
+          <div class="size seat-mock"><img id="size32" class="px" width="32" height="32" alt=""><span class="seat-name" id="seatName">You</span><span>Floorplan seat</span></div>
+          <div class="size"><img id="size16" class="px" width="16" height="16" alt=""><span>16</span></div>
+        </div>
+        <label class="field"><span>Name</span><input type="text" id="charName" placeholder="Who is this?" maxlength="40" autocomplete="off"></label>
+        <button type="button" class="btn btn--primary" id="saveMine" data-action="save-mine">Save as my character</button>
+        <p class="status" id="mineStatus"></p>
+        <div class="toolbar">
+          <button type="button" class="btn btn--secondary btn--sm" data-action="copy-code">Copy code</button>
+          <button type="button" class="btn btn--secondary btn--sm" data-action="copy-link">Copy link</button>
+          <button type="button" class="btn btn--secondary btn--sm" data-action="png" data-scale="16">PNG 256</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="png" data-scale="4">PNG 64</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="reset">Reset</button>
+        </div>
+        <code class="code-out" id="codeOut" title="The character as a code"></code>
+        <p class="hint">The code is the character. Paste it into Floorplan's person sheet, or save it as yours and Floorplan offers "Use my character".</p>
+      </aside>
+
+      <section class="wardrobe" aria-label="Wardrobe">
+        <div class="tabs" id="tabs" role="tablist"></div>
+        <div class="grid" id="grid" role="list"></div>
+        <p class="hint" id="gridHint"></p>
+        <div class="colors" id="colors"></div>
+      </section>
+
+      <aside class="secrets" id="secrets" aria-label="Secrets" hidden>
+        <h2>Secrets</h2>
+        <p class="hint">Rare and legendary parts unlock by doing things. Unlocks live in your Neorgon cookie, so they follow you.</p>
+        <form id="secretForm" class="secret-form" autocomplete="off">
+          <input type="text" id="secretCode" placeholder="A word, a name, a sound" aria-label="Secret code">
+          <button type="submit" class="btn btn--primary btn--sm">Try</button>
+        </form>
+        <ul class="secret-list" id="secretsList"></ul>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Neorgon Footer Kit contract. data-footer-mode: minimal (default) | content | app.
+       Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
+       the text entirely; the kit appends "Part of Neorgon" and any version stamps. -->
+  <footer class="neo-footer" data-footer-mode="app">
+    Your character lives in your browser and in a neorgon.com cookie you control; nothing is sent anywhere.
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

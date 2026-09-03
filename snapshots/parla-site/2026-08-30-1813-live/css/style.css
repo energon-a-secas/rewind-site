@@ -1,0 +1,1539 @@
+/* -- Reset & base -- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { height: 100%; }
+
+:root {
+  --bg: #040714;
+  --surface-1: rgba(255,255,255,.03);
+  --surface-2: rgba(255,255,255,.06);
+  --surface-3: rgba(255,255,255,.09);
+  --border-subtle: rgba(255,255,255,.07);
+  --border: rgba(255,255,255,.1);
+  --border-strong: rgba(255,255,255,.22);
+  --text-primary: #f9f9f9;
+  --text-secondary: #cacaca;
+  --text-muted: rgba(255,255,255,.45);
+  --accent: #c084fc;
+  --accent-bright: #d8b4fe;
+  --accent-dim: rgba(192,132,252,.12);
+  --accent-glow: rgba(192,132,252,.06);
+  --font: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.5rem;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px;
+  --radius-sm: 6px; --radius: 10px; --radius-lg: 15px;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --surface-solid: #0a0d1c;
+  --dur-fast: 120ms; --dur: 200ms;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  min-height: 100%;
+  color: var(--text-primary);
+  display: flex; flex-direction: column;
+  overflow-x: hidden;
+}
+
+main#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* -- Layout -- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hidden { display: none !important; }
+
+
+/* -- Globe stage --
+   The 3D canvas fills the stage and sits behind every interactive layer.
+   It is aria-hidden and click-through except for the canvas itself, which
+   owns rotation, zoom and country picking. */
+.globe-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.globe-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;   /* OrbitControls needs the gestures */
+}
+
+.globe-card {
+  position: fixed;
+  z-index: 2;
+  max-width: 280px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.globe-card-head {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.globe-card-terms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.globe-card-terms li {
+  padding: 6px 0;
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.globe-card-terms li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.globe-card-term {
+  display: block;
+  font-weight: 600;
+  color: var(--accent-bright);
+  margin-bottom: 2px;
+}
+
+.globe-card-meaning {
+  display: block;
+  color: var(--text-muted);
+}
+
+/* -- Command bar (search + sheet toggle) -- */
+.command-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: rgba(4, 7, 20, 0.55);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  /* Glass Sparingly: the header and this field are the whole budget. */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex: 0 0 auto;
+}
+
+.command-search {
+  position: relative;
+  flex: 1.4;
+  min-width: 0;
+}
+
+.command-search .search-icon {
+  left: 14px;
+  width: 18px;
+  height: 18px;
+}
+
+.command-search .search-input {
+  padding: 12px 40px 12px 42px;
+  font-size: var(--text-base);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.command-search .search-input:focus {
+  box-shadow: 0 0 0 2px var(--accent-dim);
+}
+
+.command-search:focus-within .search-icon {
+  color: var(--accent);
+}
+
+.command-search .search-clear {
+  right: 4px;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.command-bar .filter-select {
+  flex: 0 1 160px;
+  min-width: 0;
+  padding: 10px 28px 10px 12px;
+  font-size: var(--text-xs);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* -- Word of the day dialog -- */
+.wod-dialog {
+  margin: auto;
+  padding: 0;
+  border: none;
+  max-width: min(420px, calc(100vw - 32px));
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.wod-dialog::backdrop {
+  background: rgba(4, 7, 20, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.wod-dialog.open {
+  display: block;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 300;
+}
+
+.wod-dialog-inner {
+  padding: var(--space-6);
+  background: var(--surface-solid);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), 0 0 48px rgba(192, 132, 252, 0.08);
+  text-align: center;
+  animation: fadeIn 0.35s var(--ease-out) both;
+}
+
+.wod-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: var(--space-3);
+}
+
+.wod-hint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-3);
+}
+
+.wod-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.wod-btn {
+  font: inherit;
+  font-size: var(--text-sm);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--dur), background var(--dur), color var(--dur);
+}
+
+.wod-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.wod-btn-primary {
+  border-color: rgba(192, 132, 252, 0.35);
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+}
+
+.wod-btn-primary:hover {
+  border-color: var(--accent);
+  background: rgba(192, 132, 252, 0.18);
+}
+
+.wod-term-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: inherit;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  border-radius: var(--radius);
+  background: var(--accent-dim);
+  color: inherit;
+  transition: border-color var(--dur), transform var(--dur), box-shadow var(--dur);
+}
+
+.wod-term-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(192, 132, 252, 0.12);
+  transform: translateY(-1px);
+}
+
+.wod-prompt {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+
+.wod-term {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--accent-bright);
+  letter-spacing: 0.5px;
+}
+
+.wod-flag {
+  font-size: var(--text-lg);
+}
+
+.wod-meaning {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+  line-height: 1.45;
+}
+
+/* -- Search area -- */
+.search-area {
+  margin-bottom: var(--space-4);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.02em;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-wrap {
+  position: relative;
+  margin-bottom: var(--space-3);
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--dur);
+}
+
+.search-input:focus ~ .search-icon,
+.search-wrap:focus-within .search-icon { color: var(--accent); }
+
+.search-input {
+  width: 100%;
+  padding: 18px 52px 18px 52px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font: inherit;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--dur), box-shadow var(--dur), background var(--dur);
+}
+
+.search-input::placeholder { color: var(--text-muted); }
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim), 0 8px 32px rgba(192,132,252,0.08);
+  background: rgba(255,255,255,.05);
+}
+
+.search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-2);
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2em;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur), background var(--dur);
+  line-height: 1;
+}
+.search-clear:hover { color: var(--text-primary); background: var(--surface-3); }
+
+/* -- Filter bar -- */
+.filter-bar {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.filter-select {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--dur);
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.45)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.filter-select:focus {
+  border-color: var(--accent);
+}
+
+.filter-select option {
+  background: var(--surface-solid);
+  color: var(--text-primary);
+}
+
+/* -- Intro state -- */
+.intro-state {
+  text-align: center;
+  padding: var(--space-4) 0 var(--space-6);
+}
+
+.intro-text {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-6);
+  line-height: 1.6;
+}
+
+.intro-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.example-pill {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface-solid);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--dur), background var(--dur), transform var(--dur), box-shadow var(--dur);
+}
+
+.example-pill:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192,132,252,0.12);
+}
+
+/* -- Result cards (multiple matches) -- */
+.result-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-4) var(--space-6);
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-3);
+  cursor: pointer;
+  font: inherit;
+  color: var(--text-primary);
+  transition: border-color var(--dur), background var(--dur), transform var(--dur), box-shadow var(--dur);
+  animation: fadeIn 0.25s ease-out both;
+}
+
+.result-card:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.result-body { flex: 1; }
+
+.result-term {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.result-flags {
+  font-size: var(--text-base);
+  margin-left: var(--space-2);
+}
+
+.result-meaning {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: 4px;
+}
+
+.result-category {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.result-arrow {
+  color: var(--text-muted);
+  font-size: 1.2em;
+  margin-top: 6px;
+  transition: transform var(--dur), color var(--dur);
+}
+
+.result-card:hover .result-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* -- No results -- */
+.no-results {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-8) 0;
+  font-size: var(--text-base);
+}
+
+/* -- Diagram -- */
+.diagram-area {
+  position: relative;
+  width: 100%;
+  min-height: min(52vh, 480px);
+  flex: 1;
+  margin: 0;
+  padding: 0 var(--space-4);
+  z-index: 1;
+}
+
+.diagram-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.diagram-line {
+  animation: lineIn 0.5s ease-out both;
+}
+
+@keyframes lineIn {
+  from { stroke-dashoffset: 200; opacity: 0; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* -- Diagram center node -- */
+.diagram-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  background: var(--surface-solid);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 16px 24px 14px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(192,132,252,0.1), inset 0 0 20px rgba(192,132,252,0.03);
+  animation: centerIn 0.4s var(--ease-out) both;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@keyframes centerIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.center-term {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.center-meaning {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.center-category {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* -- Diagram nodes -- */
+.diagram-nodes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.diagram-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: var(--surface-solid);
+  border: 1px solid var(--node-color, var(--border));
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  text-align: left;
+  min-width: 100px;
+  max-width: 170px;
+  cursor: default;
+  transition: transform var(--dur), box-shadow var(--dur), border-color var(--dur);
+  animation: nodeIn 0.4s var(--ease-out) both;
+}
+
+.diagram-node:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--node-color) 20%, transparent);
+  z-index: 10;
+  border-color: var(--node-color);
+}
+
+.diagram-node.matched {
+  border-width: 2px;
+  background: color-mix(in srgb, var(--node-color) 8%, var(--surface-solid));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--node-color) 15%, transparent);
+}
+
+@keyframes nodeIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.6) translateY(8px); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); }
+}
+
+.node-flags {
+  font-size: var(--text-sm);
+  margin-bottom: 3px;
+  letter-spacing: 2px;
+}
+
+.node-term {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.node-countries {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+.node-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+/* -- Diagram controls (back + share, inside center card) -- */
+.diagram-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.diagram-back,
+.diagram-share {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: color var(--dur), border-color var(--dur), background var(--dur), transform 0.25s var(--ease-out);
+}
+
+.diagram-back:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: scale(1.04);
+}
+
+.diagram-share:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: scale(1.04);
+}
+
+.diagram-share.copied {
+  color: #4ade80;
+  border-color: #4ade80;
+  background: rgba(74,222,128,0.1);
+}
+
+.diagram-back svg,
+.diagram-share svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur);
+}
+
+.center-flag {
+  font-size: var(--text-lg);
+  margin-left: 4px;
+}
+
+/* -- Browse section -- */
+.browse-area {
+  margin-top: var(--space-4);
+}
+
+.browse-section {
+  margin-bottom: var(--space-8);
+}
+
+.browse-heading {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cat-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.browse-expand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  margin-top: var(--space-2);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all var(--dur);
+}
+
+.browse-expand:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.browse-expand svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur);
+}
+
+.browse-expand.expanded svg {
+  transform: rotate(180deg);
+}
+
+.browse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: var(--space-3);
+}
+
+.browse-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-4);
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  color: var(--text-primary);
+  transition: border-color var(--dur), background var(--dur), transform var(--dur), box-shadow var(--dur);
+}
+
+.browse-card:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.browse-hero {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+.browse-hero-flag {
+  font-size: var(--text-base);
+  margin-left: 4px;
+}
+
+.browse-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-3);
+}
+
+.browse-term {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface-2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.browse-term-flags {
+  font-size: var(--text-xs);
+  letter-spacing: 1px;
+}
+
+.browse-meaning {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.browse-more {
+  font-size: var(--text-xs);
+  color: var(--accent);
+  padding: 4px 10px;
+  align-self: center;
+}
+
+/* -- Toast -- */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: #1a1730; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; padding: 10px 16px;
+  font-size: 0.84rem; color: var(--text-primary);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.55);
+  pointer-events: none;
+  transform: translateY(8px); opacity: 0;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.toast.visible { opacity: 1; transform: translateY(0); }
+
+/* -- Focus & a11y -- */
+:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: 1000;
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent-bright);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  text-decoration: none;
+  transition: top var(--dur);
+}
+.skip-link:focus { top: 0; }
+
+/* -- Button press -- */
+button:active:not(.diagram-node):not(.diagram-back):not(.diagram-share) {
+  transform: scale(0.97);
+  transition-duration: var(--dur-fast);
+}
+
+/* -- Entrance animation -- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -- Reduced motion -- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* -- Responsive -- */
+@media (max-width: 600px) {
+
+  .command-bar {
+    flex-wrap: wrap;
+    top: 68px;
+  }
+
+  .command-bar .filter-select {
+    flex: 1 1 calc(50% - var(--space-1));
+  }
+
+  .command-search .search-input {
+    font-size: var(--text-sm);
+    padding: 11px 36px 11px 38px;
+  }
+
+  .diagram-area { min-height: min(48vh, 360px); }
+
+  .diagram-center {
+    padding: 12px 18px;
+    max-width: 180px;
+  }
+
+  .center-term { font-size: var(--text-lg); }
+  .center-meaning { font-size: 0.7rem; }
+
+  .diagram-node {
+    padding: 8px 10px;
+    min-width: 80px;
+    max-width: 130px;
+  }
+
+  .node-term { font-size: var(--text-xs); }
+  .node-countries { font-size: 0.65rem; }
+  .node-flags { font-size: var(--text-xs); }
+
+  .browse-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .diagram-area { min-height: 300px; }
+  .diagram-node { min-width: 65px; max-width: 110px; padding: 6px 8px; }
+}
+
+/* ==========================================================================
+   Stage layout
+   The globe is the page. Search collapses to a floating bar at the bottom and
+   results live in a sheet above it, so the map keeps the whole viewport.
+   Every rule here is scoped to body.globe-mode; without WebGL the document
+   falls back to its original top-bar flow, which is why both layouts live in
+   one stylesheet and the fallback cannot rot unnoticed.
+   ========================================================================== */
+
+body.globe-mode {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body.globe-mode main#main {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* -- Dock: the sheet sits on top of the bar, both anchored to the floor, so
+      the search field never moves when the sheet opens or shuts. -- */
+.dock {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6) 0;
+  display: flex;
+  flex-direction: column-reverse;   /* fallback: bar above results, as before */
+  gap: var(--space-3);
+}
+
+body.globe-mode .dock {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-3);
+  transform: translateX(-50%);
+  width: min(620px, calc(100% - var(--space-6)));
+  max-width: none;
+  max-height: calc(100% - var(--space-6));
+  padding: 0;
+  margin: 0;
+  flex-direction: column;           /* stage: sheet above the bar */
+  gap: var(--space-2);
+  z-index: 60;
+  pointer-events: none;
+}
+
+body.globe-mode .dock > * { pointer-events: auto; }
+
+/* -- Sheet -- */
+.sheet { min-height: 0; }
+
+body.globe-mode .sheet {
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-height: min(56vh, 520px);
+  opacity: 1;
+  transition: max-height var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out);
+}
+
+body.globe-mode .sheet:not(.is-open) {
+  max-height: 0;
+  opacity: 0;
+  border-color: transparent;
+  pointer-events: none;
+}
+
+body.globe-mode .sheet-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: min(46vh, 440px);
+}
+
+body.globe-mode .sheet-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+body.globe-mode .sheet-head {
+  flex-direction: column;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+
+.sheet-filters {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.sheet-filters .filter-select { flex: 1; min-width: 0; }
+
+.sheet-grab { display: none; }
+
+body.globe-mode .sheet-grab {
+  display: block;
+  width: 40px;
+  height: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: var(--border-strong);
+  cursor: pointer;
+  margin-bottom: var(--space-1);
+}
+
+/* -- Sheet toggle -- */
+.sheet-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font: 500 var(--text-sm)/1 var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur), color var(--dur), background var(--dur);
+}
+
+.sheet-toggle svg { width: 16px; height: 16px; }
+.sheet-toggle:hover { border-color: var(--accent); color: var(--accent-bright); }
+.sheet-toggle[aria-expanded="true"] {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent-bright);
+}
+
+/* -- Overlay layer -- */
+body.globe-mode .diagram-area {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  flex: none;
+  min-height: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+body.globe-mode .diagram-nodes,
+body.globe-mode .diagram-center { pointer-events: auto; }
+
+/* The hero card is never globe-anchored: it owns Back and Share, so it must
+   not be occluded or drift off screen when the camera moves. */
+body.globe-mode .diagram-center {
+  left: var(--space-4);
+  top: var(--space-4);
+  /* Absolutely positioned flex columns shrink-to-fit, which collapses this to
+     a sliver without an explicit width. */
+  width: max-content;
+  max-width: min(300px, 44vw);
+  text-align: left;
+  align-items: flex-start;
+  /* centerIn ends on translate(-50%,-50%) and runs with fill-mode both, and an
+     animation's final value outranks a normal declaration. So the stage needs
+     its own entrance rather than a `transform: none` that can never win. */
+  animation-name: centerInStage;
+}
+
+@keyframes centerInStage {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Cards are placed with the independent `translate` property, which composes
+   with the stylesheet's centring transform and stays a compositor-only write. */
+body.globe-mode .diagram-node {
+  left: 0;
+  top: 0;
+  will-change: translate;
+}
+
+/* Far side of the globe: parked on the rim rather than hidden, because a term
+   disappearing would break the cross-country mapping the map exists to show. */
+.diagram-node--rim { opacity: 0.55; }
+.diagram-node--rim .node-countries,
+.diagram-node--rim .node-note { display: none; }
+
+.diagram-node.is-linked {
+  border-color: var(--node-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--node-color) 22%, transparent);
+}
+
+/* -- Mobile: compact cards. Applied as a class from JS, not a media query
+      alone, because the collision solver measures what is actually rendered. */
+.diagram-node--compact { max-width: 116px; padding: 7px 10px; }
+.diagram-node--compact .node-countries,
+.diagram-node--compact .node-note { display: none; }
+.diagram-node--compact .node-term { font-size: var(--text-sm); }
+
+@media (max-width: 600px) {
+  body.globe-mode .dock {
+    width: calc(100% - var(--space-4));
+    bottom: var(--space-2);
+  }
+  body.globe-mode .diagram-center {
+    left: var(--space-2);
+    top: var(--space-2);
+    max-width: 64vw;
+    padding: 10px 14px 9px;
+  }
+  body.globe-mode .sheet,
+  body.globe-mode .sheet-inner { max-height: 46vh; }
+}
+
+/* -- No WebGL: the radial diagram, in the original document flow. -- */
+body.no-webgl .globe-stage,
+body.no-webgl .globe-card { display: none; }
+
+body.no-webgl .sheet-toggle { display: none; }
+
+body.no-webgl .command-bar {
+  position: sticky;
+  top: 76px;
+  z-index: 50;
+  transition: top .2s ease;
+}
+/* Autohide companion for the no-webgl fallback bar. */
+body.no-webgl:has(.header-bar.header-hidden) .command-bar { top: 0; }
+
+/* The dock sits after the diagram in source order because the stage wants it
+   pinned to the floor. In the fallback it has to lead, as the command bar did. */
+body.no-webgl .dock { order: -1; }
+
+/* sizeDiagram() measures the space left below the bar and writes an explicit
+   height. With `flex: 1` the flex algorithm overrode it and squeezed the
+   cards into an area too small to lay them out without overlap. */
+body.no-webgl .diagram-area { flex: 0 0 auto; }
+
+.globe-card-variety {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.globe-card-variety::before { content: " \00b7 "; }
+
+/* -- Reset control --
+   Appears only when it would do something: a country is filtered, or the
+   camera has been dragged off the default view. Without it the only way back
+   from a rotated globe was to select and deselect a country. */
+.globe-reset {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 9px 14px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font: 500 var(--text-sm)/1 var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur), color var(--dur), opacity var(--dur);
+  animation: fadeIn var(--dur) var(--ease-out) both;
+}
+
+.globe-reset svg { width: 16px; height: 16px; flex: none; }
+
+.globe-reset:hover {
+  border-color: var(--accent);
+  color: var(--accent-bright);
+}
+
+.globe-reset:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+body.no-webgl .globe-reset { display: none; }
+
+@media (max-width: 600px) {
+  .globe-reset {
+    top: var(--space-2);
+    right: var(--space-2);
+    padding: 8px 10px;
+  }
+  /* Icon only: the stage is narrow and the hero card already owns the top row. */
+  .globe-reset span {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+/* ==========================================================================
+   Expressions mode
+   Palabras answers "how do they say this over there"; Expresiones answers
+   "what on earth did they just say to me". The card holds that second question
+   open: the phrase alone, until you ask for the reading and the meaning.
+   ========================================================================== */
+
+.mode-switch {
+  display: flex;
+  width: 100%;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken, rgba(0, 0, 0, 0.18));
+}
+
+.mode-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 7px var(--space-3);
+  border: none;
+  border-radius: calc(var(--radius-md) - 3px);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+
+.mode-btn:hover { color: var(--text-primary); }
+
+.mode-btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.mode-btn:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 1px;
+}
+
+/* Expressions carry no category, so the filter that only the dictionary has
+   goes away rather than sitting there doing nothing. */
+body.mode-expressions #categorySelect { display: none; }
+
+.browse-count {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: var(--text-sm);
+}
+
+.expr-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.expr-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+}
+
+.expr-card:hover { border-color: var(--accent); }
+
+.expr-card:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+.expr-card.is-open {
+  border-color: var(--accent);
+  background: var(--surface-raised, var(--surface));
+}
+
+.expr-phrase {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.expr-flag { margin-left: 4px; }
+
+/* Collapsed to nothing rather than display:none, so the reveal animates.
+   The 0fr..1fr grid trick needs EXACTLY one child: a second child lands in an
+   implicit auto row, which no longer collapses and leaves every closed card
+   padded out with dead space. Hence .expr-reveal-inner. */
+.expr-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  /* Only the fade is transitioned. Animating grid-template-rows 0fr..1fr is
+     the tidy version, and Firefox does not interpolate fr track sizes at all,
+     so there it would jump rather than slide. The grid still does the
+     measuring, so the height stays exact with no magic max-height to outgrow;
+     only the easing is given up. */
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.expr-card.is-open .expr-reveal {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: var(--space-3);
+}
+
+.expr-reveal-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.expr-line {
+  display: block;
+  padding: var(--space-2) 0 0;
+}
+
+.expr-line + .expr-line { border-top: 1px solid var(--border-subtle); margin-top: var(--space-2); }
+
+.expr-tag {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.expr-literal .expr-text {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.expr-meaning .expr-text { color: var(--text-primary); }
+
+.expr-text {
+  display: block;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+/* A phrase and its meaning are both sentences, so the hover card stacks them
+   with more room than the one-word dictionary rows need. */
+.globe-card-terms--stacked li { padding: 8px 0; }
+.globe-card-terms--stacked .globe-card-term { font-style: italic; }
+
+@media (prefers-reduced-motion: reduce) {
+  .expr-reveal { transition: none; }
+  .expr-card { transition: none; }
+}
+
+/* ==========================================================================
+   Usage examples
+   The dictionary says what a word means. These say how somebody actually says
+   it, which is the part you need before using it in front of anyone.
+   ========================================================================== */
+
+/* Marks that an example exists. Not a control: the node around it is the
+   trigger, because a button inside a button is invalid markup. */
+.node-info {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--node-color, var(--accent));
+  color: var(--node-color, var(--accent));
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 12px;
+  text-align: center;
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+/* No `position: relative` here. `.diagram-node` is already `position: absolute`
+   (see the base rule above), which is itself a containing block for the
+   absolutely positioned `.node-info` badge. Re-declaring it as relative had
+   equal specificity and came later, so it won: every node dropped out of
+   absolute positioning into inline-block flow, `left`/`top` written by
+   layoutDiagram became offsets from a flow position, and the cards landed in a
+   row across the top instead of over their countries. */
+.diagram-node.has-usage { padding-right: 26px; }
+.diagram-node:hover .node-info,
+.diagram-node:focus-visible .node-info { opacity: 1; }
+
+/* The compact and rim variants already hide child detail; the marker follows,
+   or it collides with the flags in a box that has no room for it. */
+.diagram-node--compact .node-info,
+.diagram-node--rim .node-info { display: none; }
+
+.usage-pop {
+  position: fixed;
+  z-index: 80;
+  max-width: min(290px, calc(100vw - 24px));
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-solid);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+  pointer-events: none;   /* never eats a click meant for the globe */
+}
+
+.usage-label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+/* The hero's example is inline rather than hover-only: it is the word the
+   visitor actually asked about, and there is room on that card. */
+.center-usage {
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Deliberately NOT hidden when compact. The hero's example is the most useful
+   line on the card and, with the node markers gone at this size, it is the only
+   thing telling a phone visitor that examples exist at all. */
+
+/* Pinned above the dock rather than anchored to a card: on a phone the stage is
+   too narrow for an anchored popover to avoid landing on the hero. */
+.usage-pop--pinned {
+  left: 50% !important;
+  top: auto !important;
+  bottom: calc(var(--dock-height, 96px) + 12px);
+  transform: translateX(-50%);
+  width: min(340px, calc(100vw - 24px));
+  max-width: none;
+}

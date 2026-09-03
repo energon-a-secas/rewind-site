@@ -1,0 +1,348 @@
+<!-- Rewind capture of https://floorplan.neorgon.com/ on 2026-08-30T17:42:38-04:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floorplan | Team Map Builder</title>
+  <meta name="description" content="Build team maps by dragging people into groups, rooms, and shared spaces, split time with percentages, and keep it all as reusable YAML">
+  <meta property="og:title" content="Floorplan | Team Map Builder">
+  <meta property="og:description" content="Drag people into teams, rooms, and shared spaces. Split time with percentages. Write it all as reusable YAML">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://floorplan.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Floorplan | Team Map Builder">
+  <meta name="twitter:description" content="Drag people into teams, rooms, and shared spaces, then write it all as reusable YAML">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://floorplan.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://floorplan.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Floorplan">
+  <meta name="twitter:image" content="https://floorplan.neorgon.com/og-preview.jpg">
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/floorplan-site">
+  <meta name="neo-source-link" content="on">
+  <meta name="neo-version" content="1.0.0">
+  <link rel="icon" type="image/x-icon" href="_ext/cdn.neorgon.org/v1.0.0/favicon.ico" />
+  <!-- Fleet design tokens: canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/diagram.css">
+  <link rel="stylesheet" href="css/building.css">
+  <link rel="stylesheet" href="css/sim.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css: the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Floorplan",
+    "description": "Build team maps by dragging people into groups, rooms, and shared spaces, split time with percentages, and keep it all as reusable YAML",
+    "url": "https://floorplan.neorgon.com/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="https://floorplan.neorgon.com/" class="header-title-link">
+        <img src="_ext/cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Floorplan</h1>
+        <div class="header-subtitle">Teams, rooms, and shared spaces, written in YAML</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <div class="header-actions">
+        <div class="mode-switch" role="group" aria-label="View" data-keep-mobile>
+          <button type="button" class="nav-link mode-btn" data-mode="diagram" aria-pressed="true">Diagram</button>
+          <button type="button" class="nav-link mode-btn" data-mode="building" aria-pressed="false">Building</button>
+        </div>
+        <button type="button" class="nav-link" id="yamlToggle" data-action="toggle-yaml" aria-pressed="false">YAML</button>
+        <div class="menu-wrap">
+          <button type="button" class="nav-link" id="examplesBtn" aria-haspopup="menu" aria-expanded="false">Examples ▾</button>
+          <div class="header-menu" id="examplesMenu" role="menu">
+            <button type="button" role="menuitem" data-example="atlas">Atlas Program <small>nested team chart</small></button>
+            <button type="button" role="menuitem" data-example="revenue">Revenue Platform <small>office with rooms and bands</small></button>
+            <button type="button" role="menuitem" data-action="import-open">Import YAML, JSON or a markdown outline…</button>
+            <button type="button" role="menuitem" data-action="help">Keys and help</button>
+          </div>
+        </div>
+        <div class="menu-wrap">
+          <button type="button" class="nav-link" id="exportBtn" aria-haspopup="menu" aria-expanded="false">Export ▾</button>
+          <div class="header-menu" id="exportMenu" role="menu">
+            <button type="button" role="menuitem" data-export="yaml">Download YAML</button>
+            <button type="button" role="menuitem" data-export="json">Download JSON</button>
+            <button type="button" role="menuitem" data-export="md">Download Markdown outline</button>
+            <button type="button" role="menuitem" data-export="mermaid">Download Mermaid</button>
+            <button type="button" role="menuitem" data-export="svg">Download SVG</button>
+            <button type="button" role="menuitem" data-export="png">Download PNG (2x)</button>
+            <button type="button" role="menuitem" data-export="slides">Open as slides (Presentation Sage)</button>
+            <button type="button" role="menuitem" data-export="print">Print</button>
+            <button type="button" role="menuitem" data-export="share">Copy share link</button>
+            <button type="button" role="menuitem" data-export="prompt">Copy as prompt for Claude</button>
+          </div>
+        </div>
+        <button type="button" class="nav-link nav-link--badge" id="insightToggle" data-action="toggle-insights" aria-label="Toggle insights">
+          Insights <span class="insight-badge" id="insightBadge" hidden>0</span>
+        </button>
+        <button type="button" class="nav-link nav-link--help" id="helpBtn" data-action="help" aria-label="Help: the views, shares, FTE, and every key" title="Help (?)">?</button>
+      </div>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.4"/>
+          <ellipse cx="12" cy="12" rx="8.4" ry="3" transform="rotate(-18 12 12)"/>
+          <g class="nh-orbit">
+            <path d="M17.5 4.2 14.2 2.7l.9 1.4-.6 1.1z" fill="currentColor" stroke="none"/>
+            <circle cx="12.6" cy="3" r=".7" fill="currentColor" stroke="none" opacity=".55"/>
+            <circle cx="11.1" cy="3.3" r=".55" fill="currentColor" stroke="none" opacity=".35"/>
+            <circle cx="9.8" cy="3.7" r=".4" fill="currentColor" stroke="none" opacity=".2"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="workspace" id="workspace">
+
+      <aside class="roster" id="roster" aria-label="People">
+        <div class="roster-head"><h2>People</h2><span class="roster-count" id="rosterCount" title="FTE adds everyone's shares: two people at 50% count as 1 full-time equivalent"></span></div>
+        <div class="roster-list" id="rosterList" data-drop="roster" tabindex="0" aria-label="Roster: drop here to unassign"></div>
+        <form class="roster-add" id="addPersonForm" autocomplete="off">
+          <input type="text" id="personName" class="roster-input" placeholder="Add a person" maxlength="60" aria-label="Name">
+          <input type="text" id="personLoc" class="roster-input roster-input--loc" placeholder="Where" maxlength="40" aria-label="Location">
+          <button type="submit" class="btn btn--primary btn--sm">Add</button>
+        </form>
+        <p class="roster-tip">Drag a person onto a group. Hold <kbd>Alt</kbd> while dropping to split their time. Drop back here to unassign. Keyboard: <kbd>Enter</kbd> picks up, <kbd>Enter</kbd> on a group seats.</p>
+      </aside>
+
+      <section class="board-wrap" id="boardWrap" aria-label="Board">
+        <div class="board-toolbar" id="boardToolbar">
+          <input type="text" id="docTitle" class="doc-title" placeholder="Untitled map" maxlength="80" aria-label="Document title">
+          <div class="toolbar">
+            <button type="button" class="btn btn--secondary btn--sm" data-action="add-group">+ Group</button>
+            <button type="button" class="btn btn--secondary btn--sm" data-action="add-band" title="A strip that spans several groups: QA pool, on-call, shared efforts">+ Shared space</button>
+            <div class="menu-wrap">
+              <button type="button" class="btn btn--ghost btn--sm" id="templatesBtn" aria-haspopup="menu" aria-expanded="false" title="Start a group from a shape">Templates ▾</button>
+              <div class="header-menu" id="templatesMenu" role="menu" aria-label="Group templates">
+                <button type="button" role="menuitem" data-template="squad">Squad <small>6 seats, owns one area</small></button>
+                <button type="button" role="menuitem" data-template="pod">Pod: Back End + Front End <small>a team with two sub-groups</small></button>
+                <button type="button" role="menuitem" data-template="platform">Platform team <small>8 seats, owns tooling and CI</small></button>
+                <button type="button" role="menuitem" data-template="leadership">Leadership <small>product, engineering, design leads</small></button>
+                <button type="button" role="menuitem" data-template="oncall">On-call rotation <small>shared band across every team</small></button>
+                <button type="button" role="menuitem" data-template="qa">QA pool <small>shared band across every team</small></button>
+                <button type="button" role="menuitem" data-template="support">Support desk <small>shared band, 3 seats</small></button>
+              </div>
+            </div>
+            <span class="toolbar-sep" aria-hidden="true"></span>
+            <button type="button" class="btn btn--ghost btn--sm btn--icon" id="undoBtn" data-action="undo" aria-label="Undo" title="Undo (Cmd/Ctrl+Z)">↶</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--icon" id="redoBtn" data-action="redo" aria-label="Redo" title="Redo (Shift+Cmd/Ctrl+Z)">↷</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--versions" id="versionsBtn" data-action="toggle-versions" aria-pressed="false" title="Dated snapshots of this document: preview, restore, compare">Versions <span class="mini-badge" id="versionsCount" hidden>0</span></button>
+            <button type="button" class="btn btn--ghost btn--sm btn--puzzle" id="puzzleBtn" data-action="puzzle" aria-pressed="false" title="The reorg puzzle: the map gets scrambled, put everyone back in the fewest moves">Puzzle</button>
+            <div class="menu-wrap">
+              <button type="button" class="btn btn--ghost btn--sm" id="displayBtn" aria-haspopup="menu" aria-expanded="false" title="How seats are drawn: alignment, shares, open seats, avatars, order">Display ▾</button>
+              <div class="header-menu display-menu" id="displayMenu" role="menu" aria-label="Display options">
+                <fieldset><legend>Seats in a box</legend>
+                  <label><input type="radio" name="align" value="start"> Align to the start</label>
+                  <label><input type="radio" name="align" value="center"> Center</label>
+                </fieldset>
+                <fieldset><legend>Shares</legend>
+                  <label><input type="radio" name="shares" value="bars"> Bars and badges</label>
+                  <label><input type="radio" name="shares" value="badges"> Badges only</label>
+                  <label><input type="radio" name="shares" value="hidden"> Hidden</label>
+                </fieldset>
+                <fieldset><legend>Open seats</legend>
+                  <label><input type="radio" name="placeholder" value="desk"> Empty desk</label>
+                  <label><input type="radio" name="placeholder" value="cat"> A cat keeps the seat</label>
+                  <label><input type="radio" name="placeholder" value="dog"> A dog keeps the seat</label>
+                  <label><input type="radio" name="placeholder" value="none"> Do not show</label>
+                </fieldset>
+                <fieldset><legend>Avatars</legend>
+                  <label><input type="radio" name="avatars" value="pixel"> Pixel sprites</label>
+                  <label><input type="radio" name="avatars" value="initials"> Initials</label>
+                </fieldset>
+                <fieldset><legend>Order inside a group</legend>
+                  <label><input type="radio" name="sort" value="manual"> As written</label>
+                  <label><input type="radio" name="sort" value="name"> By name</label>
+                  <label><input type="radio" name="sort" value="share"> By share</label>
+                </fieldset>
+                <label class="display-check"><input type="checkbox" name="locations"> Show locations</label>
+                <p class="display-hint">Saved in the document (<code>display:</code>), so links and embeds look the same.</p>
+              </div>
+            </div>
+            <span class="only-building">
+              <label class="scale-field"><span>Zoom</span><input type="range" id="scaleRange" min="0.6" max="1.6" step="0.1" value="1" aria-label="Zoom"></label>
+              <button type="button" class="btn btn--ghost btn--sm" id="fitBtn" data-action="fit" aria-pressed="false" title="Scale the building to the board width">Fit</button>
+              <button type="button" class="btn btn--ghost btn--sm" data-action="relayout" title="Clear every room's saved position and let the packer place them">Auto layout</button>
+            </span>
+            <button type="button" class="btn btn--ghost btn--sm btn--visit" id="visitBtn" data-action="visit" aria-pressed="false" title="Walk the office with WASD or the arrows (opens the Building view)">Visit</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--sim" id="simBtn" data-action="sim" aria-pressed="false" title="Bring the office to life: people work, chat, take breaks; stir it with a party, an earthquake or an outage (opens the Building view)">Sim</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--clear" data-action="clear" title="Clear the board (undoable)">Clear</button>
+          </div>
+        </div>
+        <div class="versions-bar" id="versionsBar" hidden></div>
+        <div class="sim-bar" id="simBar" hidden aria-label="Sim controls">
+          <span class="sb-label">Sim</span>
+          <span class="sb-group">
+            <span class="sb-key">Clock</span>
+            <button type="button" class="sb-chip" data-sim="live" aria-pressed="true" title="Follow the real clock">Live</button>
+            <button type="button" class="sb-chip" data-sim="peak" title="Jump to the hour with the most people in">Peak</button>
+            <button type="button" class="sb-chip" data-sim="play" aria-pressed="false" title="Advance the clock round the day and watch the office hand over between zones">Play day</button>
+            <input type="range" id="simClock" min="0" max="23.5" step="0.5" value="12" aria-label="UTC hour, scrub to see who is in">
+            <span class="sb-clock" id="simClockLabel"></span>
+          </span>
+          <span class="sb-group">
+            <span class="sb-key">Stir it</span>
+            <button type="button" class="sb-chip" data-sim="party" aria-pressed="false">Party</button>
+            <button type="button" class="sb-chip" data-sim="coffee" aria-pressed="false">Coffee break</button>
+            <button type="button" class="sb-chip" data-sim="earthquake" aria-pressed="false">Earthquake</button>
+            <button type="button" class="sb-chip" data-sim="outage" aria-pressed="false">Outage</button>
+            <button type="button" class="sb-chip" data-sim="firedrill" aria-pressed="false">Fire drill</button>
+            <button type="button" class="sb-chip" data-sim="tour" aria-pressed="false">Visitor tour</button>
+            <button type="button" class="sb-chip" data-sim="demo" aria-pressed="false">Demo day</button>
+            <button type="button" class="sb-chip sb-chip--calm" data-sim="calm" hidden>All clear</button>
+          </span>
+          <span class="sb-group">
+            <span class="sb-key">Speed</span>
+            <button type="button" class="sb-chip" data-sim="speed" data-value="1" aria-pressed="true">1x</button>
+            <button type="button" class="sb-chip" data-sim="speed" data-value="2" aria-pressed="false">2x</button>
+            <button type="button" class="sb-chip" data-sim="speed" data-value="4" aria-pressed="false">4x</button>
+          </span>
+          <span class="sb-status" id="simStatus" aria-live="polite"></span>
+        </div>
+        <div class="sim-bar puzzle-bar" id="puzzleBar" hidden aria-label="Puzzle controls">
+          <span class="sb-label">Puzzle</span>
+          <span class="sb-status" id="puzzleStatus" aria-live="polite"></span>
+          <span class="sb-group">
+            <button type="button" class="sb-chip" data-puzzle="hint" title="Flash one person who is in the wrong place">Hint</button>
+            <button type="button" class="sb-chip sb-chip--calm" data-puzzle="giveup" title="Put the map back as it was">Give up</button>
+          </span>
+        </div>
+        <div class="preview-banner" id="previewBanner" hidden></div>
+        <div class="doc-notes md-preview" id="docNotes" hidden></div>
+        <div class="board" id="board" data-mode="diagram"></div>
+      </section>
+
+      <aside class="side-panel" id="yamlPanel" aria-label="YAML" hidden>
+        <header class="panel-head">
+          <h2>YAML</h2>
+          <div class="toolbar">
+            <button type="button" class="btn btn--ghost btn--sm" data-action="yaml-regen" title="Throw away edits and regenerate from the board">Regenerate</button>
+            <button type="button" class="btn btn--ghost btn--sm" data-action="yaml-copy">Copy</button>
+            <button type="button" class="btn btn--primary btn--sm" data-action="yaml-apply" title="Cmd/Ctrl+Enter">Apply</button>
+          </div>
+        </header>
+        <p class="panel-status" id="yamlStatus">Regenerated from the board. Comments are not kept.</p>
+        <div class="yaml-errors" id="yamlErrors" hidden></div>
+        <textarea id="yamlText" class="yaml-text" spellcheck="false" wrap="off" aria-label="YAML document"></textarea>
+        <p class="panel-hint">Schema and reusable <code>profiles:</code> are documented in <a href="https://floorplan.neorgon.com/llms.txt">llms.txt</a>. Anchors and <code>&lt;&lt;:</code> merges work too; they are resolved on apply.</p>
+      </aside>
+
+    </div>
+  </main>
+
+  <aside class="detail-sheet" id="detailSheet" aria-label="Details" hidden></aside>
+
+  <aside class="insight-drawer" id="insightDrawer" aria-label="Insights">
+    <header class="drawer-head">
+      <div class="drawer-tabs" id="drawerTabs" role="tablist">
+        <button type="button" role="tab" data-action="drawer-tab" data-tab="insights" aria-selected="true">Insights</button>
+        <button type="button" role="tab" data-action="drawer-tab" data-tab="changes" aria-selected="false">Changes <span class="mini-badge" id="changesBadge" hidden>0</span></button>
+      </div>
+      <button type="button" class="btn btn--ghost btn--icon" data-action="close-insights" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="drawer-body" id="insightList"></div>
+    <div class="drawer-body" id="changesList" hidden></div>
+  </aside>
+  <div class="drawer-scrim" id="drawerScrim" data-action="close-insights"></div>
+
+  <dialog class="fp-dialog" id="importDialog" aria-labelledby="importTitle">
+    <header class="modal__header"><h2 id="importTitle">Import</h2><button type="button" class="btn btn--ghost btn--icon" data-action="dialog-close" aria-label="Close">×</button></header>
+    <div class="modal__body">
+      <p>Paste <strong>YAML</strong>, <strong>JSON</strong>, a <strong>markdown outline</strong> (<code>## Group</code>, <code>### Sub-group</code>, <code>- Name (50%) @Location</code>), or <strong>CSV</strong> with a header row (<code>name, team, sub, location, role, pct, tz, tags</code>). The format is detected. Or pick a file.</p>
+      <textarea id="importText" class="yaml-text yaml-text--import" rows="12" spellcheck="false" placeholder="## Platform&#10;- Maya K @Chile&#10;- Leon V (50%)&#10;### Back End&#10;- Aiko T @Japan"></textarea>
+    </div>
+    <footer class="modal__footer">
+      <input type="file" id="importFile" accept=".yaml,.yml,.json,.md,.markdown,.txt,.csv" hidden>
+      <button type="button" class="btn btn--ghost" data-action="import-file">Choose file…</button>
+      <button type="button" class="btn btn--ghost" data-action="dialog-close">Cancel</button>
+      <button type="button" class="btn btn--primary" data-action="import-apply">Import</button>
+    </footer>
+  </dialog>
+
+  <dialog class="fp-dialog" id="helpDialog" aria-labelledby="helpTitle">
+    <header class="modal__header"><h2 id="helpTitle">Floorplan in a minute</h2><button type="button" class="btn btn--ghost btn--icon" data-action="dialog-close" aria-label="Close">×</button></header>
+    <div class="modal__body help-body">
+      <h3>Getting around</h3>
+      <p><strong>People</strong> live in the left rail: add a name there and drag it onto the board. The <strong>board</strong> in the middle is the map itself; the buttons at the top left switch it between <strong>Diagram</strong> (plain nested boxes) and <strong>Building</strong> (the pixel office). <strong>YAML</strong> opens the same document as text on the right. <strong>Insights</strong> (top right) flags what a manager should notice, and the toolbar above the board holds groups, templates, undo, versions and display options.</p>
+      <p>Not fond of pixel art? Stay in Diagram and pick <em>Initials</em> under <strong>Display</strong>: plain boxes, no sprites anywhere.</p>
+      <h3>Groups and shared spaces</h3>
+      <p><strong>Groups</strong> hold people. A group inside a group is a sub-group. A <strong>shared space</strong> (band) spans several groups: a QA pool, an on-call rotation, shared efforts.</p>
+      <h3>Shares and FTE</h3>
+      <p>Drop with <kbd>Alt</kbd> held to split a person between two groups. Every seat has a share bar: drag it (5% steps), or focus it and nudge with the arrows; click the <em>NN%</em> badge to type a value. The roster bar shows each person's total; Insights flags anyone over or under 100%.</p>
+      <p><strong>FTE</strong> (full-time equivalent) adds the shares up: two people at 50% count as 1 FTE. The People header totals the whole roster; each group header counts its own people and FTE, sub-groups included.</p>
+      <h3>The two views</h3>
+      <p><strong>Diagram</strong> is the nested-box chart. <strong>Building</strong> is the office: rooms on a grid, doors where linked rooms touch, corridors where they do not. Drag a room by its grip, resize from the corner.</p>
+      <h3>Visit and Sim</h3>
+      <p><strong>Visit</strong> lets you walk the office with WASD or the arrows. <strong>Sim</strong> brings it to life: everyone walks in, works, fetches coffee in a shared space, chats, holds team syncs; a split person hops between desks. Click a character, then a colleague to make them talk or the floor to send them there. Both open the Building view on their own.</p>
+      <p>The clock dims people outside their 09:00 to 17:00 local: scrub it, jump to <em>Peak</em> (the fullest hour) or <em>Play day</em> to watch the office hand over from zone to zone; everyone takes lunch around noon local. Energy and company drift while people work and weight what they do next (hover a character to see them).</p>
+      <p>Stir the floor with a party, a coffee break, an earthquake, an outage (the responders are the room that owns it plus every shared space that spans it), a fire drill, a visitor tour (a guest walks every room and the people there greet them) or a demo day (everyone gathers in the biggest room, one person presents). Drop someone from the roster onto a room while the sim runs and they walk from where they landed to a desk. Nothing from the sim lands in the document.</p>
+      <h3>Puzzle</h3>
+      <p><strong>Puzzle</strong> scrambles the map and asks you to put everyone back in the fewest moves: the board marks who moved and the Changes tab lists it; Hint flashes one wrong seat; Give up restores the map. Undo is off while it runs. Best scores stay in this browser per document title. Turn Sim on first and the people walk as you fix it.</p>
+      <h3>Teams that work</h3>
+      <p>Give people <em>tags</em> and groups <em>needs</em>; Insights flags a group missing a skill. Locations (or a <em>time zone</em>) feed a core-hours strip in the group sheet and an Insight when a team shares fewer than three hours. <strong>Templates</strong> start a squad, a pod, a platform team or a shared rotation in one click; <strong>CSV</strong> pastes straight in.</p>
+      <h3>Display</h3>
+      <p>Per document: center seats in their box, show shares as bars, badges only or hide them, let a cat or a dog keep an open seat, pixel sprites or initials, order seats by name or share, hide locations. Each person's avatar has presets (glasses, cap, headset, laptop, coffee, top hat, cat, dog, robot) and fields to customise; everything lands in the YAML.</p>
+      <h3>Versions</h3>
+      <p>Snapshot the document before a change (it is stored inside the YAML as <code>history:</code>, so it travels with links and exports). Scrub through snapshots, restore one, or <strong>compare now</strong> with a snapshot or a pasted document: the board marks who moved, joined, left, and whose share changed; the Changes tab lists it all.</p>
+      <h3>YAML</h3>
+      <p><strong>YAML</strong> is the document. Edit it in the side panel and Apply (<kbd>Cmd/Ctrl+Enter</kbd>). Define <code>profiles:</code> once and <code>extends:</code> them from groups or people, gitlabform style. Share links carry the whole document.</p>
+      <h3>Keys</h3>
+      <dl class="keys">
+        <dt><kbd>Enter</kbd> / <kbd>Space</kbd></dt><dd>pick up the focused person; <kbd>Enter</kbd> on a group seats them (<kbd>Alt+Enter</kbd> splits)</dd>
+        <dt>← → on a share bar</dt><dd>nudge the share by 5 (<kbd>Shift</kbd> for 10); <kbd>Home</kbd>/<kbd>End</kbd> jump</dd>
+        <dt><kbd>Delete</kbd></dt><dd>remove the focused seat from its group</dd>
+        <dt><kbd>Esc</kbd></dt><dd>drop what you carry, close panels, leave Visit mode</dd>
+        <dt><kbd>Cmd/Ctrl+Z</kbd></dt><dd>undo (40 steps, includes Clear and loading an example); <kbd>Shift</kbd> redoes</dd>
+        <dt><kbd>W A S D</kbd> / arrows</dt><dd>walk, in Visit mode</dd>
+        <dt>click, click</dt><dd>in Sim mode: a character, then a colleague (they talk) or the floor (they walk there); <kbd>Enter</kbd> on a focused character does the same; <kbd>Esc</kbd> clears the pick</dd>
+        <dt><kbd>?</kbd></dt><dd>this card</dd>
+      </dl>
+    </div>
+    <footer class="modal__footer"><button type="button" class="btn btn--primary" data-action="dialog-close">Got it</button></footer>
+  </dialog>
+
+  <a class="embed-link" id="embedLink" href="https://floorplan.neorgon.com/" target="_blank" rel="noopener" hidden>Open in Floorplan ↗</a>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    Everything stays in your browser: the document lives in localStorage and in the links you choose to share.
+  </footer>
+
+  <!-- CDN dep (must load before app.js). Pinned + SRI, same line as slides-site. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" integrity="sha384-+pxiN6T7yvpryuJmE1gM9PX7yQit15auDb+ZwwvJOd/4be2Cie5/IuVXgQb/S9du" crossorigin="anonymous"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

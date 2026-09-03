@@ -1,0 +1,195 @@
+<!-- Rewind capture of https://parla.neorgon.com/ on 2026-08-30T18:16:12-04:00 -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://esm.sh cdn.jsdelivr.net cdnjs.cloudflare.com https://challenges.cloudflare.com https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.neorgon.org; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.convex.cloud https://img.clerk.com https://cdn.neorgon.org https://i.ytimg.com https://yt3.ggpht.com https://neorgon.goatcounter.com; connect-src 'self' https://*.convex.cloud https://*.clerk.accounts.dev https://*.accounts.dev https://clerk-telemetry.com https://api.clerk.com https://challenges.cloudflare.com https://*.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com; frame-src 'self' https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.accounts.dev https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Parla | Latin American Slang Map</title>
+  <meta name="description" content="Search Latin American slang and see equivalents across 8 countries on an interactive 3D globe. Static JSON API included">
+  <meta property="og:title" content="Parla | Latin American Slang Map">
+  <meta property="og:description" content="Map regional slang across Latin America on a 3D globe">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://parla.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parla | Latin American Slang Map">
+  <meta name="twitter:description" content="Map regional slang across Latin America on a 3D globe">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://parla.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://parla.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="icon" type="image/x-icon" href="_ext/cdn.neorgon.org/v1.0.0/favicon.ico" />
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/parla-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/three.module.min.js",
+      "three/addons/": "./vendor/three/addons/"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Parla",
+    "description": "Search Latin American slang and see equivalents across 8 countries on an interactive 3D globe",
+    "url": "https://parla.neorgon.com/",
+    "applicationCategory": "ReferenceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+  <!-- Stage pre-flight. WebGL support is knowable synchronously with no network,
+       so the layout is committed here, before the first paint, instead of at the
+       end of initStage() behind 946 KB of dictionary + three.js + geometry.
+       This is the only implementation: js/utils.js reads the verdict it caches.
+       Removing this script drops every visitor into the radial fallback. -->
+  <script>
+  (function () {
+    var ok = false;
+    try {
+      ok = !/[?&]nogl=/.test(location.search) &&
+           !!(document.createElement('canvas').getContext('webgl2') ||
+              document.createElement('canvas').getContext('webgl'));
+    } catch (e) { ok = false; }
+    window.__parlaWebGL = ok;
+    document.body.classList.add(ok ? 'globe-mode' : 'no-webgl');
+  })();
+  </script>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="content" data-header-autohide="on">
+    <div class="header-logo">
+      <a href="https://parla.neorgon.com/" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Parla</h1>
+        <div class="header-subtitle">Latin American Slang Map</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.4"/>
+          <ellipse cx="12" cy="12" rx="8.4" ry="3" transform="rotate(-18 12 12)"/>
+          <g class="nh-orbit">
+            <path d="M17.5 4.2 14.2 2.7l.9 1.4-.6 1.1z" fill="currentColor" stroke="none"/>
+            <circle cx="12.6" cy="3" r=".7" fill="currentColor" stroke="none" opacity=".55"/>
+            <circle cx="11.1" cy="3.3" r=".55" fill="currentColor" stroke="none" opacity=".35"/>
+            <circle cx="9.8" cy="3.7" r=".4" fill="currentColor" stroke="none" opacity=".2"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+
+  <main id="main">
+    <div class="globe-stage" id="globeStage" aria-hidden="true"></div>
+    <div class="globe-card hidden" id="globeCard" role="tooltip"></div>
+    <div class="usage-pop hidden" id="usagePop" role="tooltip" aria-hidden="true"></div>
+
+    <button type="button" class="globe-reset hidden" id="globeReset">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+      </svg>
+      <span>Ver todos los países</span>
+    </button>
+
+    <div class="diagram-area hidden" id="diagramArea" role="region" aria-label="Equivalentes por país">
+      <svg class="diagram-lines" id="diagramLines"></svg>
+      <div class="diagram-center" id="diagramCenter"></div>
+      <div class="diagram-nodes" id="diagramNodes"></div>
+      <p class="sr-only" id="diagramLive" aria-live="polite"></p>
+    </div>
+
+    <div class="dock">
+      <div class="sheet" id="resultsSheet">
+        <div class="sheet-inner">
+          <div class="sheet-head">
+            <button type="button" class="sheet-grab" id="sheetGrab" aria-label="Cerrar el panel"></button>
+            <div class="mode-switch" id="modeSwitch" role="tablist" aria-label="Qué estás buscando">
+              <button type="button" class="mode-btn is-active" id="modeWords"
+                      role="tab" aria-selected="true" data-mode="words">Palabras</button>
+              <button type="button" class="mode-btn" id="modeExpressions"
+                      role="tab" aria-selected="false" data-mode="expressions">Expresiones</button>
+            </div>
+            <div class="sheet-filters">
+              <label class="sr-only" for="countrySelect">Filtrar por país</label>
+              <select class="filter-select" id="countrySelect" aria-label="Filtrar por país"></select>
+              <label class="sr-only" for="categorySelect">Filtrar por categoría</label>
+              <select class="filter-select" id="categorySelect" aria-label="Filtrar por categoría"></select>
+            </div>
+          </div>
+          <div class="sheet-body">
+            <!-- A sibling of #resultsArea, not a child. renderBrowse clears
+                 #resultsArea, so nesting the intro inside it destroyed the copy
+                 and the example pills on the first render of every visit. -->
+            <div class="intro-state" id="introState">
+              <p class="intro-text">Toca un país en el globo, o busca una palabra</p>
+              <div class="intro-examples" id="introExamples"></div>
+            </div>
+            <div class="results-area" id="resultsArea"></div>
+            <div class="browse-area" id="browseArea"></div>
+          </div>
+        </div>
+      </div>
+      <div class="command-bar">
+        <div class="command-search">
+          <label class="sr-only" for="searchInput">Buscar jerga</label>
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="search" id="searchInput" class="search-input" placeholder="bacán, chido, pega, foda…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Borrar búsqueda">&times;</button>
+        </div>
+        <button type="button" class="sheet-toggle" id="sheetToggle" aria-expanded="false" aria-controls="resultsSheet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <span>Explorar</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <dialog class="wod-dialog" id="wodDialog" aria-labelledby="wodTitle">
+    <div class="wod-dialog-inner">
+      <p class="wod-label" id="wodTitle">Palabra del día</p>
+      <div id="wodContent"></div>
+      <p class="wod-hint">Toca la palabra para verla en el mapa</p>
+      <div class="wod-actions">
+        <button type="button" class="wod-btn" id="wodDismiss">No recordarme hoy</button>
+        <button type="button" class="wod-btn wod-btn-primary" id="wodSkip">Omitir</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="neo-footer" data-footer-mode="app" data-stick="off">
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

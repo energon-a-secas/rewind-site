@@ -1,0 +1,454 @@
+/*
+ * Rush Q Cards — theme foundation
+ * Copyright (c) 2026 Luciano Adonis Villarroel. Code under MIT.
+ * Game content all rights reserved (see LICENSE.CONTENT).
+ *
+ * The single source of colour, elevation, and rhythm for every page.
+ * Load this BEFORE any other stylesheet.
+ *
+ * Two themes, one vocabulary:
+ *   Night — a lamp-lit room. Warm espresso neutrals, one amber glow.
+ *   Day   — warm paper on a wooden desk. Never a white screen.
+ *
+ * Surfaces are opaque steps, not alpha films, so elevation reads the same way
+ * in both themes: a raised thing is lighter than what it sits on, and carries a
+ * shadow. Alpha films (--film-*) exist only for chrome that floats over
+ * artwork, where the backdrop is unknown.
+ *
+ * Card-type hues encode gameplay and keep their identity across themes; only
+ * lightness moves, so a Talent card is the same teal idea on paper as at night.
+ */
+
+/* ── Night ─────────────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #14100c;
+  --bg-sunken: #0e0b08;
+  --bg-elev: #1b1611;
+
+  --surface-1: #1c1712;
+  --surface-2: #241e17;
+  --surface-3: #2e261d;
+  --surface-inset: #100d09;
+
+  --film-1: rgba(255, 246, 235, .04);
+  --film-2: rgba(255, 246, 235, .08);
+  --film-3: rgba(255, 246, 235, .13);
+
+  --border-subtle: #2a221b;
+  --border: #3a3026;
+  --border-strong: #77654f;
+
+  --text-primary: #f6efe5;
+  --text-secondary: #cbbfaf;
+  --text-muted: #a1937f;
+  --text-faint: #7d7160;
+  --text-inverse: #14100c;
+
+  --accent: #e8a04a;
+  --accent-bright: #f6bd74;
+  --accent-ink: #f0ad5c;
+  --accent-contrast: #201408;
+  --accent-soft: rgba(232, 160, 74, .15);
+  --accent-line: rgba(232, 160, 74, .34);
+
+  --brand-violet: #8b5cf6;
+  --brand-violet-2: #6d4bd8;
+  --brand-ink: #b295fb;
+  --brand-soft: rgba(139, 92, 246, .16);
+
+  --pos: #6ec98a;   --pos-ink: #86d69e;  --pos-soft: rgba(110, 201, 138, .15);
+  --neg: #e8798d;   --neg-ink: #f293a4;  --neg-soft: rgba(232, 121, 141, .15);
+  --warn: #e0a83c;  --warn-ink: #ecbb56; --warn-soft: rgba(224, 168, 60, .15);
+  --info: #63a8de;  --info-ink: #82bbe9; --info-soft: rgba(99, 168, 222, .15);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .45);
+  --shadow-sm: 0 2px 8px rgba(8, 4, 0, .42);
+  --shadow-soft: 0 8px 28px rgba(8, 4, 0, .5);
+  --shadow-lg: 0 20px 56px rgba(5, 2, 0, .62);
+  --shadow-lift: 0 0 0 1px var(--accent-line), 0 14px 34px rgba(5, 2, 0, .55);
+  --scrim: rgba(10, 6, 2, .76);
+  --shadow-tint: rgba(5, 2, 0, .5);
+
+  /* The felt the board sits on — a touch cooler and deeper than page bg. */
+  --felt: radial-gradient(120% 90% at 50% 0%, #1a1510 0%, #110d09 62%, #0c0906 100%);
+  --paper-grain: .035;
+
+  /* ── Card types (frozen identity — night tuning) ── */
+  --type-talent: #35b0a1;
+  --type-project: #e3b64a;
+  --type-project-queue: #d9973a;
+  --type-bonus-project: #e2b654;
+  --type-soft: #b490e4;
+  --type-hard: #4da5d8;
+  --type-power: #a26ed9;
+  --type-team: #6591e0;
+  --type-quarter-event: #e0605c;
+  --type-layoff: #e2a8c4;
+  --type-favor: #a070d6;
+  --type-tldr: #ac74e0;
+  --type-trait: #e08a4a;
+  --type-budget: #7dabe8;
+  --type-capex: #d9973a;
+  --type-opex: #b490e4;
+  --type-individual: #4fc2b2;
+
+  --stat-value: #ecd083;
+  --stat-members: #86d69e;
+  --stat-deadline: #f293a4;
+  --stat-reward: #86d69e;
+  --stat-penalty: #f293a4;
+  --stat-negation: #f293a4;
+
+  --medal-gold: #ecd083;
+  --medal-silver: #c3cad6;
+  --medal-bronze: #d4956b;
+
+  /* Chart series — one per seat, five because the table seats five. A separate
+     axis from --type-* (card identity) and --pos/--neg (reward and penalty):
+     a rival's line is not "bad", it is just someone else. Series 1 is you, in
+     the accent family. All five clear AA on --surface-2 so they double as
+     legend text. */
+  --series-1: #f0ad5c;
+  --series-2: #6fb8e8;
+  --series-3: #ef8fa6;
+  --series-4: #6ecfa4;
+  --series-5: #b79bf0;
+}
+
+/* ── Day ───────────────────────────────────────────────────── */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f2ece1;
+  --bg-sunken: #e6ddcd;
+  --bg-elev: #fbf7ef;
+
+  --surface-1: #fbf7ef;
+  --surface-2: #fffdf8;
+  --surface-3: #ffffff;
+  --surface-inset: #eae2d4;
+
+  --film-1: rgba(60, 42, 20, .04);
+  --film-2: rgba(60, 42, 20, .07);
+  --film-3: rgba(60, 42, 20, .11);
+
+  --border-subtle: #e2d8c6;
+  --border: #cfc2ab;
+  --border-strong: #8d7a5d;
+
+  --text-primary: #2a2219;
+  --text-secondary: #574b3c;
+  --text-muted: #776957;
+  --text-faint: #94856f;
+  --text-inverse: #fbf7ef;
+
+  --accent: #a2620b;
+  --accent-bright: #8a5207;
+  --accent-ink: #97570c;
+  --accent-contrast: #fffaf0;
+  --accent-soft: rgba(198, 124, 30, .13);
+  --accent-line: rgba(198, 124, 30, .38);
+
+  --brand-violet: #6d3fd4;
+  --brand-violet-2: #5730b4;
+  --brand-ink: #5b2fbe;
+  --brand-soft: rgba(109, 63, 212, .12);
+
+  --pos: #197f43;   --pos-ink: #146b38;  --pos-soft: rgba(25, 127, 67, .12);
+  --neg: #c02d47;   --neg-ink: #a8213a;  --neg-soft: rgba(192, 45, 71, .11);
+  --warn: #a5710a;  --warn-ink: #8c5f06; --warn-soft: rgba(165, 113, 10, .13);
+  --info: #1c6ea4;  --info-ink: #175d8c; --info-soft: rgba(28, 110, 164, .11);
+
+  /* Paper shadows are brown and short — objects sit ON the desk, not above it. */
+  --shadow-xs: 0 1px 1px rgba(84, 62, 32, .1);
+  --shadow-sm: 0 1px 3px rgba(84, 62, 32, .12), 0 1px 2px rgba(84, 62, 32, .08);
+  --shadow-soft: 0 4px 16px rgba(84, 62, 32, .13), 0 1px 3px rgba(84, 62, 32, .08);
+  --shadow-lg: 0 16px 44px rgba(74, 54, 28, .2), 0 3px 10px rgba(74, 54, 28, .1);
+  --shadow-lift: 0 0 0 1px var(--accent-line), 0 10px 26px rgba(74, 54, 28, .2);
+  --scrim: rgba(50, 36, 18, .45);
+  --shadow-tint: rgba(84, 62, 32, .16);
+
+  --felt: radial-gradient(120% 90% at 50% 0%, #efe7d8 0%, #e7dccb 62%, #ded2be 100%);
+  --paper-grain: .05;
+
+  /* ── Card types (frozen identity — day tuning) ──
+     Same hue family as night, darkened until each reads as text/border on
+     paper. The gameplay signal is the hue, and the hue is unchanged. */
+  --type-talent: #0c786d;
+  --type-project: #8c620a;
+  --type-project-queue: #985e0d;
+  --type-bonus-project: #8a650f;
+  --type-soft: #7343bd;
+  --type-hard: #17679a;
+  --type-power: #6c2fb4;
+  --type-team: #2f5cb3;
+  --type-quarter-event: #bd2f2b;
+  --type-layoff: #a74c7b;
+  --type-favor: #6631ae;
+  --type-tldr: #7a3cbb;
+  --type-trait: #a6550d;
+  --type-budget: #2c6bb0;
+  --type-capex: #985e0d;
+  --type-opex: #7343bd;
+  --type-individual: #0c776b;
+
+  --stat-value: #8a6608;
+  --stat-members: #146b38;
+  --stat-deadline: #a8213a;
+  --stat-reward: #146b38;
+  --stat-penalty: #a8213a;
+  --stat-negation: #a8213a;
+
+  --medal-gold: #8a6608;
+  --medal-silver: #5c6472;
+  --medal-bronze: #8c5427;
+
+  --series-1: #9a5c09;
+  --series-2: #1c6ea4;
+  --series-3: #b02f52;
+  --series-4: #14785a;
+  --series-5: #6b3fbd;
+}
+
+/* ── Shape, motion, rhythm (theme-independent) ─────────────── */
+:root {
+  --font: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-display: 'Space Grotesk', 'Avenir Next', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.9rem;
+  --text-4xl: 2.4rem;
+
+  --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px; --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px;
+
+  --gap-sm: .5rem; --gap-md: 1rem; --gap-lg: 1.5rem; --gap-xl: 2rem;
+
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-snap: cubic-bezier(.34, 1.4, .64, 1);
+  --ease-inout: cubic-bezier(.65, 0, .35, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 340ms;
+  --transition-fast: .15s var(--ease-out);
+  --transition-medium: .3s var(--ease-out);
+  --transition-slow: .5s var(--ease-out);
+
+  /* Reading measures — prose never runs wider than the eye can track. */
+  --measure: 68ch;
+  --measure-tight: 56ch;
+
+  /* One inspect size for every "show me this card properly" surface — hover
+     zoom, play prompt, detail modal. A card must not change size depending on
+     how you happened to look at it. */
+  --rc-inspect: 240px;
+
+  --header-height: 60px;
+  --hand-strip-height: 240px;
+  --panel-collapsed-width: 56px;
+  --panel-expanded-width: 320px;
+
+  --z-header: 100;
+  --z-panel: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+
+::selection { background: var(--accent-soft); color: var(--text-primary); }
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Theme swap should feel like a lamp turning on, not a page reload — but only
+   for the shell, and never for anything already animating. */
+.theme-transition,
+.theme-transition *:not(svg *) {
+  transition: background-color 260ms var(--ease-out),
+              border-color 260ms var(--ease-out),
+              color 260ms var(--ease-out) !important;
+}
+
+/* ── Scrollbars ────────────────────────────────────────────── */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-clip: content-box; background-color: var(--text-faint); }
+
+/* ── Theme switch control ──────────────────────────────────── */
+.theme-switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.theme-switch-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--dur), background var(--dur), border-color var(--dur);
+}
+.theme-switch-btn:hover,
+.theme-switch-btn[aria-expanded="true"] {
+  color: var(--text-primary);
+  background: var(--film-2);
+  border-color: var(--border-subtle);
+}
+.theme-switch-btn svg { width: 18px; height: 18px; display: block; }
+
+.theme-switch-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 168px;
+  padding: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.theme-switch-menu[hidden] { display: none; }
+.theme-switch-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur), background var(--dur);
+}
+.theme-switch-opt:hover { background: var(--film-2); color: var(--text-primary); }
+.theme-switch-opt svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+.theme-switch-opt[aria-checked="true"] {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.theme-switch-opt[aria-checked="true"] svg { opacity: 1; }
+.theme-switch-opt::after {
+  content: '';
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+}
+.theme-switch-opt[aria-checked="true"]::after { opacity: 1; }
+
+/* ── Shared primitives ─────────────────────────────────────── */
+.hidden { display: none !important; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.ic { width: 1em; height: 1em; display: inline-block; vertical-align: -.125em; flex-shrink: 0; }
+.ic-gold { color: var(--medal-gold); }
+.ic-silver { color: var(--medal-silver); }
+.ic-bronze { color: var(--medal-bronze); }
+
+/* ── Accessibility preferences ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root, [data-theme="dark"] {
+    --border-subtle: #4b4034;
+    --border: #6a5a48;
+    --border-strong: #8d7c66;
+    --text-secondary: #e8ded0;
+    --text-muted: #c6b8a5;
+    --text-faint: #a89a86;
+  }
+  [data-theme="light"] {
+    --border-subtle: #b8a98f;
+    --border: #92815f;
+    --border-strong: #6b5b3f;
+    --text-secondary: #3a3126;
+    --text-muted: #4d4235;
+    --text-faint: #5f5344;
+  }
+}
+
+/* ── Icon artwork ──────────────────────────────────────────────
+   The icon set in assets/icons/ is monochrome black-on-transparent and is
+   loaded through <img>, which cannot inherit currentColor. Inverting in the
+   dark theme is the one treatment that works for every call site without
+   rewriting thirty img tags into masked spans. Card art is excluded: it is
+   full-colour illustration, not iconography. */
+[data-theme="dark"] img[src*="/assets/icons/"]:not(.rush-card img),
+[data-theme="dark"] img[src*="assets/icons/"]:not(.rush-card img) {
+  filter: invert(1);
+}

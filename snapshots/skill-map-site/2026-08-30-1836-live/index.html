@@ -1,0 +1,265 @@
+<!-- Rewind capture of https://skillmap.neorgon.com/ on 2026-08-30T18:36:40-04:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com https://cdn.neorgon.org; font-src 'self' cdnjs.cloudflare.com; img-src 'self' data: blob: https://cdn.neorgon.org https://neorgon.goatcounter.com; connect-src 'self' https://neorgon.goatcounter.com https://cloudflareinsights.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<title>Skill Map | Learning Path Builder</title>
+<meta name="description" content="Map skills, milestones, and learning paths on a visual grid with typed connections and dependency locking. No install, saves locally">
+<meta property="og:title" content="Skill Map: Visual Learning Path Builder">
+<meta property="og:description" content="Map skills and learning paths as a grid with typed connections and dependency locking. No install">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://skillmap.neorgon.com/">
+<meta property="og:site_name" content="Neorgon">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Skill Map: Visual Learning Path Builder">
+<meta name="twitter:description" content="Map skills and learning paths as a grid with typed connections and dependency locking. No install">
+<meta name="twitter:image" content="https://skillmap.neorgon.com/og-preview.jpg">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://skillmap.neorgon.com/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://skillmap.neorgon.com/og-preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#040714">
+<link rel="icon" type="image/x-icon" href="_ext/cdn.neorgon.org/v1.0.0/favicon.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="css/style.css" />
+<!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+<script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+<link rel="stylesheet" href="css/neorgon-header.css" />
+<link rel="stylesheet" href="css/neorgon-themes.css" />
+<link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css" />
+<script defer src="js/neorgon-header.js"></script>
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Skill Map",
+  "description": "Map skills, milestones, and learning paths with typed connections and dependency locking",
+  "url": "https://skillmap.neorgon.com/",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+}
+</script>
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/skill-map-site">
+</head>
+<body>
+<div id="app">
+
+  <a class="skip-link" href="#body">Skip to content</a>
+  <!-- HEADER (Neorgon Header Kit contract) -->
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="https://skillmap.neorgon.com/" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+<h1>Skill Map</h1>
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <div id="user-level-indicator" style="display: none;">
+        <div class="level-badge">
+          <span class="level-number">1</span>
+        </div>
+        <div class="user-xp-bar">
+          <div class="user-xp-fill"></div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost" id="btn-new" title="New diagram">
+          <i class="fa-regular fa-file"></i>
+          New
+        </button>
+        <button class="btn btn-ghost" id="btn-auto-layout" title="Auto-align nodes to their connections">
+          <i class="fa-solid fa-align-center"></i>
+          Auto-align
+        </button>
+        <button class="btn btn-ghost" id="btn-save-json" title="Export diagram as JSON file">
+          <i class="fa-solid fa-file-export"></i>
+          Export JSON
+        </button>
+        <button class="btn btn-ghost" id="btn-load-json" title="Import diagram from JSON file">
+          <i class="fa-solid fa-file-import"></i>
+          Import JSON
+        </button>
+        <input type="file" id="load-json-input" accept=".json" aria-hidden="true" />
+        <button class="btn btn-primary" id="btn-export-md" title="Export as Markdown">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          Export MD
+        </button>
+        <button class="btn btn-secondary" id="btn-share" data-keep-mobile title="Share roadmap">
+          <i class="fa-solid fa-share"></i>
+          Share
+        </button>
+      </div>
+      <a href="https://neorgon.com/" class="header-home" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.4"/>
+          <ellipse cx="12" cy="12" rx="8.4" ry="3" transform="rotate(-18 12 12)"/>
+          <g class="nh-orbit">
+            <path d="M17.5 4.2 14.2 2.7l.9 1.4-.6 1.1z" fill="currentColor" stroke="none"/>
+            <circle cx="12.6" cy="3" r=".7" fill="currentColor" stroke="none" opacity=".55"/>
+            <circle cx="11.1" cy="3.3" r=".55" fill="currentColor" stroke="none" opacity=".35"/>
+            <circle cx="9.8" cy="3.7" r=".4" fill="currentColor" stroke="none" opacity=".2"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <main id="body">
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+      <div id="sidebar-inner">
+
+        <!-- Diagram title -->
+        <div id="sidebar-title-zone">
+          <input type="text" id="diagram-title" spellcheck="false" aria-label="Diagram title" placeholder="Untitled Map" />
+        </div>
+
+        <!-- Color Legend -->
+        <div class="sidebar-section" id="section-colors">
+          <div class="sidebar-section-header" onclick="toggleSection('section-colors')">
+            <span>Colors</span>
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="sidebar-section-body">
+            <div id="color-legend-list"></div>
+            <button class="btn-add-legend" onclick="openAddColorModal()">
+              <svg viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Add Color
+            </button>
+          </div>
+        </div>
+
+        <!-- Marker Legend -->
+        <div class="sidebar-section" id="section-markers">
+          <div class="sidebar-section-header" onclick="toggleSection('section-markers')">
+            <span>Markers</span>
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="sidebar-section-body">
+            <div id="marker-legend-list"></div>
+            <button class="btn-add-legend" onclick="openAddMarkerModal()">
+              <svg viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Add Marker
+            </button>
+          </div>
+        </div>
+
+        <!-- Help -->
+        <div class="sidebar-section collapsed" id="section-settings">
+          <div class="sidebar-section-header" onclick="toggleSection('section-settings')">
+            <span>Help</span>
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="sidebar-section-body" style="color: var(--text-secondary); font-size: 11.5px; line-height: 1.6;">
+            <p><b style="color: var(--text-primary)">Drag from node body</b> to connect</p>
+            <p><b style="color: var(--text-primary)">Or hover over a node</b>, then click or drag the port circle</p>
+            <p><b style="color: var(--text-primary)">Click a line</b> to change its type</p>
+            <p><b style="color: var(--text-primary)">Double-click text</b> to edit</p>
+            <p><b style="color: var(--text-primary)">Right-click</b> node for all options</p>
+            <p><b style="color: var(--text-primary)">Double-click body</b> to lock/unlock</p>
+            <p><b style="color: var(--text-primary)">Click lock icon</b> to unlock a manually locked node</p>
+            <p><b style="color: var(--text-primary)">Drag handle</b> to move / reorder</p>
+            <p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border)"><b style="color: var(--accent-bright)">Dimmed + red border</b> means an unmet requirement. <b style="color: var(--accent-bright)">Lock icon</b> means manually locked.</p>
+            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border);">
+              <div style="color: var(--text-secondary); font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px;">Connection types</div>
+              <div class="etl-row"><span class="etl-dot" style="background:#ef4444"></span><span class="etl-name">blocks</span></div>
+              <div class="etl-row"><span class="etl-dot" style="background:#0080ff"></span><span class="etl-name">informs</span></div>
+              <div class="etl-row"><span class="etl-dot" style="background:#8b5cf6"></span><span class="etl-name">enhances</span></div>
+              <div class="etl-row"><span class="etl-dot" style="background:#22c55e"></span><span class="etl-name">enables</span></div>
+              <div class="etl-row"><span class="etl-dot" style="background:#f59e0b"></span><span class="etl-name">prepares</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </nav>
+
+    <!-- SIDEBAR TOGGLE -->
+    <button id="sidebar-toggle" title="Toggle sidebar" aria-label="Toggle sidebar" onclick="toggleSidebar()">
+      <svg id="sidebar-toggle-icon" viewBox="0 0 8 12" fill="none" width="8" height="12">
+        <path d="M6 1L2 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- CANVAS WRAPPER -->
+    <div id="canvas-wrapper">
+      <div id="canvas">
+        <div class="canvas-hint" id="canvas-hint">
+          <svg class="canvas-hint-icon" width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+            <line x1="6.5" y1="10" x2="6.5" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="17.5" y1="10" x2="17.5" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <div class="canvas-hint-text">Click <strong style="color: var(--text-primary); opacity: 1;">+ Add column</strong> to start building your roadmap</div>
+        </div>
+        <div id="column-header-row"><!-- filled by JS --></div>
+        <div id="column-area">
+          <!-- SVG overlay for connection lines -->
+          <svg id="svg-overlay" width="0" height="0">
+            <defs>
+              <marker id="arrow-blocks"   markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444" opacity="0.9"/></marker>
+              <marker id="arrow-informs"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0080ff" opacity="0.9"/></marker>
+              <marker id="arrow-enhances" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6" opacity="0.9"/></marker>
+              <marker id="arrow-enables"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#22c55e" opacity="0.9"/></marker>
+              <marker id="arrow-prepares" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f59e0b" opacity="0.9"/></marker>
+            </defs>
+          </svg>
+          <!-- columns filled by JS -->
+        </div>
+      </div>
+    </div>
+
+  </main><!-- #body -->
+</div><!-- #app -->
+
+<!-- CONTEXT MENU -->
+<div id="context-menu" role="menu"></div>
+
+<!-- EDGE TYPE MENU (shown when clicking a connection line) -->
+<div id="edge-type-menu"></div>
+
+<!-- TEMP CONNECTION SVG (rubber-band line while drawing) -->
+<svg id="temp-connection-line" style="display:none;">
+  <defs>
+    <marker id="arrow-temp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#0080ff" opacity="0.7"/>
+    </marker>
+  </defs>
+  <path id="temp-path" fill="none" stroke="#0080ff" stroke-width="2" stroke-dasharray="6,3"
+        marker-end="url(#arrow-temp)" opacity="0.7"/>
+</svg>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay">
+  <div id="modal-box" class="modal"></div>
+</div>
+
+<script src="js/sharing.js" defer></script>
+<script src="js/animations.js" defer></script>
+<script src="js/app.js" defer></script>
+  <footer class="neo-footer" data-footer-mode="minimal">
+  </footer>
+
+</body>
+</html>

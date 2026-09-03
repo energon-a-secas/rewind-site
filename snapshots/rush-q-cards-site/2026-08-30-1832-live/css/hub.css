@@ -1,0 +1,346 @@
+/*
+ * Rush Q Cards — hub
+ * Copyright (c) 2026 Luciano Adonis Villarroel. Code under MIT.
+ * Game content all rights reserved (see LICENSE.CONTENT).
+ *
+ * The front door. Three jobs, in order: say what this is, get a first-time
+ * player into the right mode, and let a returning player skip straight past
+ * all of it. Everything else is reference and sits below the fold on purpose.
+ */
+
+.hub {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--space-6) var(--space-20);
+  flex: 1;
+}
+
+/* ── Hero ──────────────────────────────────────────────────── */
+.hub-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-16) 0 var(--space-8);
+}
+
+.hub-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .04em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 6.4vw, 4.6rem);
+  line-height: .92;
+  letter-spacing: -.035em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+}
+.hub-wordmark .wm-q { color: var(--brand-ink); }
+.hub-wordmark .wm-bang { color: var(--accent-ink); display: inline-block; transform: rotate(7deg); }
+
+.hub-lede {
+  font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.01em;
+  color: var(--text-primary);
+  max-width: 22ch;
+  margin-bottom: var(--space-4);
+  text-wrap: balance;
+}
+.hub-sub {
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 46ch;
+}
+
+.hub-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+.hub-cta-note {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  flex-basis: 100%;
+  margin-top: var(--space-1);
+}
+.hub-cta-note a { color: var(--accent-ink); text-decoration: none; font-weight: 600; }
+.hub-cta-note a:hover { text-decoration: underline; }
+
+/* ── Hero card fan ─────────────────────────────────────────────
+   Three cards off the top of the deck. Not decoration: it shows the three
+   things you actually hold — a person, a project, a lever — before a single
+   word of rules. */
+.hub-fan {
+  position: relative;
+  height: 288px;
+  display: grid;
+  place-items: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hub-fan-card { transition: transform var(--dur-slow) var(--ease-out); }
+  .hub-fan:hover .hub-fan-card.is-left { transform: rotate(-16deg) translate(-138px, 20px); }
+  .hub-fan:hover .hub-fan-card.is-right { transform: rotate(16deg) translate(138px, 20px); }
+  .hub-fan:hover .hub-fan-card.is-mid { transform: translateY(-14px); }
+}
+
+.hub-fan-card {
+  position: absolute;
+  width: 152px;
+  height: 214px;
+  padding: 13px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--fan-hue);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(165deg, color-mix(in oklab, var(--fan-hue) 12%, var(--surface-1)) 0%, var(--surface-1) 62%);
+  box-shadow: var(--shadow-soft);
+}
+.hub-fan-card.is-left { transform: rotate(-13deg) translate(-132px, 18px); }
+.hub-fan-card.is-right { transform: rotate(13deg) translate(132px, 18px); }
+.hub-fan-card.is-mid { z-index: 2; }
+
+/* Side cards are read at a glance, not read through — the deck should look
+   like a deck. Only the type and the name need to survive the overlap. */
+.hub-fan-card:not(.is-mid) .hub-fan-text,
+.hub-fan-card:not(.is-mid) .hub-fan-rule { display: none; }
+.hub-fan-card:not(.is-mid) .hub-fan-name { font-size: .88rem; }
+
+.hub-fan-type {
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--fan-hue) 18%, transparent);
+  color: var(--fan-hue);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.hub-fan-name {
+  font-size: .82rem;
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+.hub-fan-rule {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 2px 0;
+}
+.hub-fan-text {
+  font-size: .68rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+.hub-fan-foot {
+  margin-top: auto;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--fan-hue);
+}
+
+/* ── Section headers ───────────────────────────────────────── */
+.hub-section { margin-top: var(--space-12); }
+.hub-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hub-section-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  color: var(--text-primary);
+}
+.hub-section-head p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ── Mode cards ────────────────────────────────────────────── */
+.hub-modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.hub-mode {
+  --mode-hue: var(--accent);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color var(--dur), background var(--dur),
+              box-shadow var(--dur), transform var(--dur) var(--ease-out);
+}
+/* The accent lives on the top edge, not down the side — a side stripe reads
+   as a status bar and this is not a status. */
+.hub-mode::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--mode-hue);
+  opacity: .55;
+  transition: opacity var(--dur);
+}
+.hub-mode:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-soft);
+}
+.hub-mode:hover::before { opacity: 1; }
+
+.hub-mode-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.hub-mode-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--mode-hue) 14%, transparent);
+  color: var(--mode-hue);
+}
+.hub-mode-icon i {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.hub-mode-title {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+.hub-mode-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: 3px;
+}
+.hub-tag {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--film-1);
+  font-size: .655rem;
+  font-weight: 600;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.hub-tag-lead {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+.hub-mode-desc {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.hub-mode-learn {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border-subtle);
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.hub-mode-learn b {
+  display: block;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 3px;
+}
+
+/* ── Reference tiles ───────────────────────────────────────── */
+/* Three across, two clean rows — six tiles never leave a lonely orphan. */
+.hub-refs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-3);
+}
+.hub-ref {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color var(--dur), background var(--dur), transform var(--dur) var(--ease-out);
+}
+.hub-ref:hover {
+  transform: translateY(-2px);
+  border-color: var(--border);
+  background: var(--surface-2);
+}
+.hub-ref-icon {
+  display: block;
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  background: var(--text-muted);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+  transition: background var(--dur);
+}
+.hub-ref:hover .hub-ref-icon { background: var(--accent-ink); }
+.hub-ref > span { min-width: 0; }
+.hub-ref-title { display: block; font-size: var(--text-sm); font-weight: 650; margin-bottom: 3px; }
+.hub-ref-desc { display: block; font-size: var(--text-xs); line-height: 1.5; color: var(--text-muted); }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .hub-hero { grid-template-columns: 1fr; gap: var(--space-10); padding-top: var(--space-10); }
+  .hub-fan { height: 236px; order: -1; }
+  .hub-lede { max-width: 30ch; }
+}
+@media (max-width: 620px) {
+  .hub { padding: 0 var(--space-4) var(--space-12); }
+  .hub-hero { padding: var(--space-8) 0 var(--space-6); gap: var(--space-8); }
+  .hub-fan { height: 210px; }
+  .hub-fan-card { width: 132px; height: 186px; }
+  .hub-fan-card.is-left { transform: rotate(-11deg) translate(-62px, 12px); }
+  .hub-fan-card.is-right { transform: rotate(11deg) translate(62px, 12px); }
+  .hub-section { margin-top: var(--space-12); }
+  .hub-cta .btn { flex: 1 1 100%; }
+}

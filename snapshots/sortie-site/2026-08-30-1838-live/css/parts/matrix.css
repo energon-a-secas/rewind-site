@@ -1,0 +1,200 @@
+/* ── Component matrix ────────────────────────────────────────
+   Tiles are absolutely placed inside a square stage using the --tx/--ty
+   percentages layout.js computes. Booting animates each tile from the core
+   (translate 0,0 + scale 0) to its slot, so the parts read as coming *out*
+   of the mark. */
+
+.matrix {
+  display: grid;
+  place-items: center;
+  padding: var(--space-4) 0;
+}
+
+.matrix__stage {
+  position: relative;
+  width: 100%;
+  /* Height is bounded rather than derived from an aspect ratio: measure() sizes
+     the tile pitch to whichever axis is tighter, so the whole frame stays above
+     the fold on a laptop instead of running its feet off the screen. */
+  /* The frame is portrait (5 wide, 7 tall), so height is what limits the tile
+     pitch and the stage is given as much of it as the console can spare. */
+  height: clamp(320px, calc(100dvh - 250px), 640px);
+}
+
+/* With the header hidden the frame takes the height back. */
+body[data-chrome='off'] .matrix__stage {
+  height: clamp(320px, calc(100dvh - 190px), 720px);
+}
+
+.matrix__traces {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.matrix__traces line {
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: .55;
+  stroke-dasharray: var(--len) var(--len);
+  stroke-dashoffset: var(--len);
+}
+.matrix__traces line.is-drawn {
+  animation: traceDraw 320ms var(--ease-out) forwards;
+}
+@keyframes traceDraw {
+  from { stroke-dashoffset: var(--len); opacity: .85; }
+  to   { stroke-dashoffset: 0; opacity: .22; }
+}
+
+.matrix__core {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--pitch); height: var(--pitch);
+  transform: translate(-50%, -50%);
+  display: grid; place-items: center;
+  background: var(--accent);
+  border-radius: var(--tile-radius);
+  color: var(--glyph-ink);
+  box-shadow: 0 0 calc(34px * var(--fx-bloom)) var(--glow-hot);
+  z-index: 2;
+  animation: corePulse 3.6s var(--ease-out) infinite;
+}
+@keyframes corePulse {
+  0%, 100% { box-shadow: 0 0 calc(28px * var(--fx-bloom)) var(--glow-mid); }
+  50%      { box-shadow: 0 0 calc(46px * var(--fx-bloom)) var(--glow-hot); }
+}
+
+/* While the socket is still on its way down, the frame's own core is hidden:
+   the descending mark is standing in for it, and two A's on screen at once
+   would give away the handover. */
+body[data-boot='overlay'] .matrix__core,
+body[data-boot='descend'] .matrix__core { opacity: 0; }
+body[data-boot='seated'] .matrix__core {
+  opacity: 1;
+  animation: coreSeat 340ms var(--ease-out);
+}
+@keyframes coreSeat {
+  from { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 0 var(--glow-hot); }
+}
+.core-a--sm { width: 74%; height: 74%; }
+
+.matrix__tiles { position: absolute; inset: 0; }
+
+.tile {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--pitch); height: var(--pitch);
+  margin: calc(var(--pitch) / -2) 0 0 calc(var(--pitch) / -2);
+  padding: 0;
+  display: grid; place-items: center;
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--tile-radius);
+  color: var(--glyph-ink);
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(0, 0) scale(.2);
+  box-shadow: 0 0 calc(18px * var(--fx-bloom)) var(--glow-mid);
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+
+/* Booted: settle at the slot. The custom property drives both the transform
+   and the trace endpoint, so they cannot disagree. */
+.tile.is-online {
+  opacity: 1;
+  transform: translate(var(--tx), var(--ty)) scale(1);
+  animation: tileArrive var(--dur-slow) var(--ease-out) backwards;
+}
+/* Out of the core, in every direction. Each tile starts stacked on the mark at
+   0,0 and travels to its slot, so the frame grows from the A rather than
+   rising off the floor. The two waves and the radial ordering do the rest:
+   body outward first, then the accessories mount onto it. */
+@keyframes tileArrive {
+  from { opacity: 0; transform: translate(0, 0) scale(.22); }
+  35%  { opacity: 1; }
+  to   { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1); }
+}
+
+.tile.is-online:hover,
+.tile.is-online:focus-visible {
+  transform: translate(var(--tx), var(--ty)) scale(1.16);
+  box-shadow: 0 0 calc(30px * var(--fx-bloom)) var(--glow-hot);
+  z-index: 3;
+}
+
+.tile__glyph { width: 82%; height: 82%; display: block; }
+
+.tile__flash {
+  position: absolute; inset: 0;
+  border-radius: var(--tile-radius);
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+.tile.is-online .tile__flash { animation: tileFlash 420ms var(--ease-out); }
+@keyframes tileFlash { from { opacity: .95; } to { opacity: 0; } }
+
+/* Hover callout */
+.tile__tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  min-width: max-content;
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-hud); font-size: 10px;
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--accent);
+  background: rgba(3, 6, 22, .95);
+  border: 1px solid var(--hud-line-strong);
+  border-radius: var(--radius-sm);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+  z-index: 4;
+}
+.tile:hover .tile__tip,
+.tile:focus-visible .tile__tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Custom-forged parts carry a corner notch so they read as yours */
+.tile.is-custom::after {
+  content: ''; position: absolute; top: 2px; right: 2px;
+  width: 5px; height: 5px;
+  background: var(--glyph-ink);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  opacity: .8;
+}
+
+.rail-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3); flex-wrap: wrap;
+}
+.rail-hint {
+  font-family: var(--font-hud); font-size: var(--text-xs);
+  color: var(--text-muted); letter-spacing: var(--track-wide); text-transform: uppercase;
+}
+
+/* Boot stagger. matrix.js computes --delay per slot so the wave sequencing
+   lives in one place rather than being re-derived here. */
+.tile.is-online,
+.tile.is-online .tile__flash,
+.matrix__traces line.is-drawn {
+  /* --boot-offset holds the tiles until the core mark has finished its flight
+     in from the lock screen, so the frame grows out of a mark that has landed. */
+  animation-delay: calc(var(--boot-offset, 0ms) + var(--delay, 0ms));
+}
+.matrix__traces line.is-drawn { animation-fill-mode: both; }
+
+/* Re-renders after boot (a swap, a layout change) place tiles without replaying
+   the ceremony. */
+.matrix__stage.is-instant .tile,
+.matrix__stage.is-instant .tile__flash { animation: none; }
+.matrix__stage.is-instant .matrix__traces line { animation: none; stroke-dashoffset: 0; opacity: .22; }
+.rail.is-instant .pcard { animation: none; }
+
+/* The morph. Slower than a swap and eased hard, so the frame reads as folding
+   rather than cutting to a new shape. */
+.matrix__stage.is-morphing .tile {
+  transition: transform 760ms var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+.matrix__stage.is-morphing .matrix__traces line { opacity: .1; }
