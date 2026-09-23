@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-23T09:40:31-03:00",
+ "generated": "2026-09-23T09:54:12-03:00",
  "sites": {
   "neorgon-site": {
    "title": "Neorgon",
@@ -15,7 +15,7 @@
   },
   "dispatch-site": {
    "title": "Antenne",
-   "domain": "dispatch.neorgon.com"
+   "domain": "antenne.neorgon.com"
   },
   "autopilot-site": {
    "title": "Autopilot",
@@ -375,6 +375,19 @@
    "files": 35
   },
   {
+   "id": "affinity-site/2026-09-23-0944-live",
+   "site": "affinity-site",
+   "date": "2026-09-23T09:44:23-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://affinity.neorgon.com/",
+   "path": "snapshots/affinity-site/2026-09-23-0944-live/index.html",
+   "shot": "shots/affinity-site/2026-09-23-0944-live.jpg",
+   "bytes": 493186,
+   "files": 14
+  },
+  {
    "id": "aficion-site/2026-09-05-11c0ada",
    "site": "aficion-site",
    "date": "2026-09-05T22:26:49-04:00",
@@ -399,6 +412,19 @@
    "shot": "shots/aficion-site/2026-09-21-479d8c5.jpg",
    "bytes": 1068265,
    "files": 99
+  },
+  {
+   "id": "aficion-site/2026-09-23-0944-live",
+   "site": "aficion-site",
+   "date": "2026-09-23T09:44:29-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://aficion.neorgon.com/",
+   "path": "snapshots/aficion-site/2026-09-23-0944-live/index.html",
+   "shot": "shots/aficion-site/2026-09-23-0944-live.jpg",
+   "bytes": 509607,
+   "files": 17
   },
   {
    "id": "agentlore-site/2026-03-11-e7e1344",
@@ -466,6 +492,19 @@
    "files": 53
   },
   {
+   "id": "agentlore-site/2026-09-23-0944-live",
+   "site": "agentlore-site",
+   "date": "2026-09-23T09:44:38-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://agentlore.neorgon.com/",
+   "path": "snapshots/agentlore-site/2026-09-23-0944-live/index.html",
+   "shot": "shots/agentlore-site/2026-09-23-0944-live.jpg",
+   "bytes": 490899,
+   "files": 17
+  },
+  {
    "id": "autopilot-site/2026-03-07-157001e",
    "site": "autopilot-site",
    "date": "2026-03-07T01:07:59-03:00",
@@ -529,6 +568,19 @@
    "shot": "shots/autopilot-site/2026-09-21-506b307.jpg",
    "bytes": 555611,
    "files": 18
+  },
+  {
+   "id": "autopilot-site/2026-09-23-0944-live",
+   "site": "autopilot-site",
+   "date": "2026-09-23T09:44:56-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://autopilot.neorgon.com/",
+   "path": "snapshots/autopilot-site/2026-09-23-0944-live/index.html",
+   "shot": "shots/autopilot-site/2026-09-23-0944-live.jpg",
+   "bytes": 498747,
+   "files": 13
   },
   {
    "id": "awesome-sites-site/2026-05-20-fc2471b",
@@ -596,6 +648,19 @@
    "files": 30
   },
   {
+   "id": "awesome-sites-site/2026-09-23-0945-live",
+   "site": "awesome-sites-site",
+   "date": "2026-09-23T09:45:02-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://awesomesites.neorgon.com/",
+   "path": "snapshots/awesome-sites-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/awesome-sites-site/2026-09-23-0945-live.jpg",
+   "bytes": 438174,
+   "files": 14
+  },
+  {
    "id": "balise-site/2026-08-30-b3cab6d",
    "site": "balise-site",
    "date": "2026-08-30T22:00:45-04:00",
@@ -633,6 +698,19 @@
    "shot": "shots/balise-site/2026-09-21-fb70067.jpg",
    "bytes": 637095,
    "files": 32
+  },
+  {
+   "id": "balise-site/2026-09-23-0945-live",
+   "site": "balise-site",
+   "date": "2026-09-23T09:45:08-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://balise.neorgon.com/",
+   "path": "snapshots/balise-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/balise-site/2026-09-23-0945-live.jpg",
+   "bytes": 470330,
+   "files": 15
   },
   {
    "id": "battlecard-site/2026-03-14-cab3695",
@@ -700,6 +778,19 @@
    "files": 51
   },
   {
+   "id": "battlecard-site/2026-09-23-0945-live",
+   "site": "battlecard-site",
+   "date": "2026-09-23T09:45:15-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://battlecard.neorgon.com/",
+   "path": "snapshots/battlecard-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/battlecard-site/2026-09-23-0945-live.jpg",
+   "bytes": 457825,
+   "files": 14
+  },
+  {
    "id": "boardwright-site/2026-08-15-590b83f",
    "site": "boardwright-site",
    "date": "2026-08-15T17:04:31-04:00",
@@ -737,6 +828,19 @@
    "shot": "shots/boardwright-site/2026-09-21-cb6cc1d.jpg",
    "bytes": 714603,
    "files": 42
+  },
+  {
+   "id": "boardwright-site/2026-09-23-0945-live",
+   "site": "boardwright-site",
+   "date": "2026-09-23T09:45:22-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://boardwright.neorgon.com/",
+   "path": "snapshots/boardwright-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/boardwright-site/2026-09-23-0945-live.jpg",
+   "bytes": 487183,
+   "files": 15
   },
   {
    "id": "bouquin-site/2026-09-08-59b99b1",
@@ -830,6 +934,19 @@
    "files": 57
   },
   {
+   "id": "buyhacks-site/2026-09-23-0945-live",
+   "site": "buyhacks-site",
+   "date": "2026-09-23T09:45:29-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://buyhacks.neorgon.com/",
+   "path": "snapshots/buyhacks-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/buyhacks-site/2026-09-23-0945-live.jpg",
+   "bytes": 488139,
+   "files": 16
+  },
+  {
    "id": "cadrage-site/2026-08-21-0526a36",
    "site": "cadrage-site",
    "date": "2026-08-21T09:42:27-04:00",
@@ -867,6 +984,19 @@
    "shot": "shots/cadrage-site/2026-09-21-a82f706.jpg",
    "bytes": 883886,
    "files": 59
+  },
+  {
+   "id": "cadrage-site/2026-09-23-0945-live",
+   "site": "cadrage-site",
+   "date": "2026-09-23T09:45:38-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://cadrage.neorgon.com/",
+   "path": "snapshots/cadrage-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/cadrage-site/2026-09-23-0945-live.jpg",
+   "bytes": 483772,
+   "files": 16
   },
   {
    "id": "callsign-site/2026-09-16-f02ca53",
@@ -934,6 +1064,19 @@
    "files": 37
   },
   {
+   "id": "cardforge-site/2026-09-23-0945-live",
+   "site": "cardforge-site",
+   "date": "2026-09-23T09:45:46-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://cardforge.neorgon.com/",
+   "path": "snapshots/cardforge-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/cardforge-site/2026-09-23-0945-live.jpg",
+   "bytes": 474874,
+   "files": 15
+  },
+  {
    "id": "carnet-site/2026-08-09-943454e",
    "site": "carnet-site",
    "date": "2026-08-09T09:30:54-04:00",
@@ -971,6 +1114,19 @@
    "shot": "shots/carnet-site/2026-09-21-5ad9a29.jpg",
    "bytes": 544885,
    "files": 26
+  },
+  {
+   "id": "carnet-site/2026-09-23-0945-live",
+   "site": "carnet-site",
+   "date": "2026-09-23T09:45:54-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://carnet.neorgon.com/",
+   "path": "snapshots/carnet-site/2026-09-23-0945-live/index.html",
+   "shot": "shots/carnet-site/2026-09-23-0945-live.jpg",
+   "bytes": 456127,
+   "files": 14
   },
   {
    "id": "character-sheet-site/2026-03-08-625d03a",
@@ -1036,6 +1192,19 @@
    "shot": "shots/character-sheet-site/2026-09-21-08ab07b.jpg",
    "bytes": 950086,
    "files": 57
+  },
+  {
+   "id": "character-sheet-site/2026-09-23-0946-live",
+   "site": "character-sheet-site",
+   "date": "2026-09-23T09:46:01-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://charactersheet.neorgon.com/",
+   "path": "snapshots/character-sheet-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/character-sheet-site/2026-09-23-0946-live.jpg",
+   "bytes": 519815,
+   "files": 17
   },
   {
    "id": "chasqui-site/2026-09-18-181e22a",
@@ -1129,6 +1298,19 @@
    "files": 25
   },
   {
+   "id": "client-says-site/2026-09-23-0946-live",
+   "site": "client-says-site",
+   "date": "2026-09-23T09:46:11-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://clientsays.neorgon.com/",
+   "path": "snapshots/client-says-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/client-says-site/2026-09-23-0946-live.jpg",
+   "bytes": 463468,
+   "files": 15
+  },
+  {
    "id": "decision-wheel-site/2026-03-01-954c657",
    "site": "decision-wheel-site",
    "date": "2026-03-01T11:22:18-03:00",
@@ -1181,6 +1363,19 @@
    "files": 26
   },
   {
+   "id": "decision-wheel-site/2026-09-23-0946-live",
+   "site": "decision-wheel-site",
+   "date": "2026-09-23T09:46:19-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://decisionwheel.neorgon.com/",
+   "path": "snapshots/decision-wheel-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/decision-wheel-site/2026-09-23-0946-live.jpg",
+   "bytes": 460092,
+   "files": 15
+  },
+  {
    "id": "dispatch-site/2026-08-30-1721-live",
    "site": "dispatch-site",
    "date": "2026-08-30T17:21:14-04:00",
@@ -1218,6 +1413,19 @@
    "shot": "shots/dispatch-site/2026-09-22-44678c5.jpg",
    "bytes": 873164,
    "files": 48
+  },
+  {
+   "id": "dispatch-site/2026-09-23-0944-live",
+   "site": "dispatch-site",
+   "date": "2026-09-23T09:44:48-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://antenne.neorgon.com/",
+   "path": "snapshots/dispatch-site/2026-09-23-0944-live/index.html",
+   "shot": "shots/dispatch-site/2026-09-23-0944-live.jpg",
+   "bytes": 548023,
+   "files": 16
   },
   {
    "id": "doorman-site/2026-08-01-08f4d2f",
@@ -1259,6 +1467,19 @@
    "files": 37
   },
   {
+   "id": "doorman-site/2026-09-23-0946-live",
+   "site": "doorman-site",
+   "date": "2026-09-23T09:46:26-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://doorman.neorgon.com/",
+   "path": "snapshots/doorman-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/doorman-site/2026-09-23-0946-live.jpg",
+   "bytes": 456228,
+   "files": 14
+  },
+  {
    "id": "echeance-site/2026-08-30-1735-live",
    "site": "echeance-site",
    "date": "2026-08-30T17:35:55-04:00",
@@ -1296,6 +1517,19 @@
    "shot": "shots/echeance-site/2026-09-21-d4d01ba.jpg",
    "bytes": 743966,
    "files": 62
+  },
+  {
+   "id": "echeance-site/2026-09-23-0946-live",
+   "site": "echeance-site",
+   "date": "2026-09-23T09:46:32-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://echeance.neorgon.com/",
+   "path": "snapshots/echeance-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/echeance-site/2026-09-23-0946-live.jpg",
+   "bytes": 477954,
+   "files": 15
   },
   {
    "id": "emoji-site/2026-03-01-afe8091",
@@ -1350,6 +1584,19 @@
    "files": 28
   },
   {
+   "id": "emoji-site/2026-09-23-0946-live",
+   "site": "emoji-site",
+   "date": "2026-09-23T09:46:40-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://emojis.neorgon.com/",
+   "path": "snapshots/emoji-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/emoji-site/2026-09-23-0946-live.jpg",
+   "bytes": 486908,
+   "files": 12
+  },
+  {
    "id": "enamel-site/2026-09-11-44a3d14",
    "site": "enamel-site",
    "date": "2026-09-11T15:09:43-03:00",
@@ -1374,6 +1621,19 @@
    "shot": "shots/enamel-site/2026-09-22-4249538.jpg",
    "bytes": 1141105,
    "files": 76
+  },
+  {
+   "id": "enamel-site/2026-09-23-0946-live",
+   "site": "enamel-site",
+   "date": "2026-09-23T09:46:47-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://enamel.neorgon.com/",
+   "path": "snapshots/enamel-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/enamel-site/2026-09-23-0946-live.jpg",
+   "bytes": 514855,
+   "files": 20
   },
   {
    "id": "enjeu-site/2026-08-30-1738-live",
@@ -1415,6 +1675,19 @@
    "files": 70
   },
   {
+   "id": "enjeu-site/2026-09-23-0946-live",
+   "site": "enjeu-site",
+   "date": "2026-09-23T09:46:55-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://enjeu.neorgon.com/",
+   "path": "snapshots/enjeu-site/2026-09-23-0946-live/index.html",
+   "shot": "shots/enjeu-site/2026-09-23-0946-live.jpg",
+   "bytes": 564981,
+   "files": 20
+  },
+  {
    "id": "failsafe-site/2026-08-08-47511db",
    "site": "failsafe-site",
    "date": "2026-08-08T15:58:28-04:00",
@@ -1452,6 +1725,19 @@
    "shot": "shots/failsafe-site/2026-09-21-13e46b3.jpg",
    "bytes": 563176,
    "files": 29
+  },
+  {
+   "id": "failsafe-site/2026-09-23-0947-live",
+   "site": "failsafe-site",
+   "date": "2026-09-23T09:47:05-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://failsafe.neorgon.com/",
+   "path": "snapshots/failsafe-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/failsafe-site/2026-09-23-0947-live.jpg",
+   "bytes": 458812,
+   "files": 14
   },
   {
    "id": "fitprofile-site/2026-08-08-4f1707e",
@@ -1493,6 +1779,19 @@
    "files": 35
   },
   {
+   "id": "fitprofile-site/2026-09-23-0947-live",
+   "site": "fitprofile-site",
+   "date": "2026-09-23T09:47:12-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://fitprofile.neorgon.com/",
+   "path": "snapshots/fitprofile-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/fitprofile-site/2026-09-23-0947-live.jpg",
+   "bytes": 472148,
+   "files": 14
+  },
+  {
    "id": "floorplan-site/2026-08-22-c4d10b9",
    "site": "floorplan-site",
    "date": "2026-08-22T15:38:24-04:00",
@@ -1532,6 +1831,19 @@
    "files": 58
   },
   {
+   "id": "floorplan-site/2026-09-23-0947-live",
+   "site": "floorplan-site",
+   "date": "2026-09-23T09:47:19-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://floorplan.neorgon.com/",
+   "path": "snapshots/floorplan-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/floorplan-site/2026-09-23-0947-live.jpg",
+   "bytes": 536333,
+   "files": 18
+  },
+  {
    "id": "gambit-redirect/2026-08-30-1743-live",
    "site": "gambit-redirect",
    "date": "2026-08-30T17:43:38-04:00",
@@ -1556,6 +1868,19 @@
    "shot": "shots/gambit-redirect/2026-08-30-e7ac4af.jpg",
    "bytes": 285288,
    "files": 11
+  },
+  {
+   "id": "gambit-redirect/2026-09-23-0947-live",
+   "site": "gambit-redirect",
+   "date": "2026-09-23T09:47:30-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://gambit.neorgon.com/",
+   "path": "snapshots/gambit-redirect/2026-09-23-0947-live/index.html",
+   "shot": "shots/gambit-redirect/2026-09-23-0947-live.jpg",
+   "bytes": 20616,
+   "files": 5
   },
   {
    "id": "gamebin-site/2026-05-11-ef9aebf",
@@ -1623,6 +1948,19 @@
    "files": 31
   },
   {
+   "id": "gamebin-site/2026-09-23-0947-live",
+   "site": "gamebin-site",
+   "date": "2026-09-23T09:47:36-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://gamebin.neorgon.com/",
+   "path": "snapshots/gamebin-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/gamebin-site/2026-09-23-0947-live.jpg",
+   "bytes": 475297,
+   "files": 14
+  },
+  {
    "id": "gamme-site/2026-08-30-1745-live",
    "site": "gamme-site",
    "date": "2026-08-30T17:45:46-04:00",
@@ -1660,6 +1998,19 @@
    "shot": "shots/gamme-site/2026-09-21-73b07e1.jpg",
    "bytes": 981111,
    "files": 73
+  },
+  {
+   "id": "gamme-site/2026-09-23-0947-live",
+   "site": "gamme-site",
+   "date": "2026-09-23T09:47:46-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://gamme.neorgon.com/",
+   "path": "snapshots/gamme-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/gamme-site/2026-09-23-0947-live.jpg",
+   "bytes": 502952,
+   "files": 17
   },
   {
    "id": "glassbox-site/2026-08-08-e90a964",
@@ -1701,6 +2052,19 @@
    "files": 84
   },
   {
+   "id": "glassbox-site/2026-09-23-0947-live",
+   "site": "glassbox-site",
+   "date": "2026-09-23T09:47:55-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://glassbox.neorgon.com/",
+   "path": "snapshots/glassbox-site/2026-09-23-0947-live/index.html",
+   "shot": "shots/glassbox-site/2026-09-23-0947-live.jpg",
+   "bytes": 645090,
+   "files": 14
+  },
+  {
    "id": "guild-hall-site/2026-03-08-d15d608",
    "site": "guild-hall-site",
    "date": "2026-03-08T20:17:54-03:00",
@@ -1738,6 +2102,19 @@
    "shot": "shots/guild-hall-site/2026-09-21-f0dbc7d.jpg",
    "bytes": 5218300,
    "files": 95
+  },
+  {
+   "id": "guild-hall-site/2026-09-23-0948-live",
+   "site": "guild-hall-site",
+   "date": "2026-09-23T09:48:02-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://guildhall.neorgon.com/",
+   "path": "snapshots/guild-hall-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/guild-hall-site/2026-09-23-0948-live.jpg",
+   "bytes": 467258,
+   "files": 15
   },
   {
    "id": "headpain-site/2026-08-01-d927e22",
@@ -1779,6 +2156,19 @@
    "files": 61
   },
   {
+   "id": "headpain-site/2026-09-23-0948-live",
+   "site": "headpain-site",
+   "date": "2026-09-23T09:48:10-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://headpain.neorgon.com/",
+   "path": "snapshots/headpain-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/headpain-site/2026-09-23-0948-live.jpg",
+   "bytes": 471991,
+   "files": 15
+  },
+  {
    "id": "hiring-pack-site/2026-08-08-5680706",
    "site": "hiring-pack-site",
    "date": "2026-08-08T15:58:29-04:00",
@@ -1816,6 +2206,19 @@
    "shot": "shots/hiring-pack-site/2026-09-21-a2a2fa1.jpg",
    "bytes": 503087,
    "files": 20
+  },
+  {
+   "id": "hiring-pack-site/2026-09-23-0948-live",
+   "site": "hiring-pack-site",
+   "date": "2026-09-23T09:48:17-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://hiringpack.neorgon.com/",
+   "path": "snapshots/hiring-pack-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/hiring-pack-site/2026-09-23-0948-live.jpg",
+   "bytes": 445673,
+   "files": 15
   },
   {
    "id": "hwinfo-viewer-site/2026-08-01-d11a22b",
@@ -1857,6 +2260,19 @@
    "files": 17
   },
   {
+   "id": "hwinfo-viewer-site/2026-09-23-0948-live",
+   "site": "hwinfo-viewer-site",
+   "date": "2026-09-23T09:48:24-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://hwinfo.neorgon.com/",
+   "path": "snapshots/hwinfo-viewer-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/hwinfo-viewer-site/2026-09-23-0948-live.jpg",
+   "bytes": 1524194,
+   "files": 22
+  },
+  {
    "id": "incident-runbook-site/2026-08-08-6c3dd85",
    "site": "incident-runbook-site",
    "date": "2026-08-08T15:58:29-04:00",
@@ -1894,6 +2310,19 @@
    "shot": "shots/incident-runbook-site/2026-09-21-79836b5.jpg",
    "bytes": 656340,
    "files": 37
+  },
+  {
+   "id": "incident-runbook-site/2026-09-23-0948-live",
+   "site": "incident-runbook-site",
+   "date": "2026-09-23T09:48:33-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://runbook.neorgon.com/",
+   "path": "snapshots/incident-runbook-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/incident-runbook-site/2026-09-23-0948-live.jpg",
+   "bytes": 449661,
+   "files": 14
   },
   {
    "id": "infra-drills-site/2026-03-01-f859c8d",
@@ -1961,6 +2390,19 @@
    "files": 27
   },
   {
+   "id": "infra-drills-site/2026-09-23-0948-live",
+   "site": "infra-drills-site",
+   "date": "2026-09-23T09:48:40-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://infradrills.neorgon.com/",
+   "path": "snapshots/infra-drills-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/infra-drills-site/2026-09-23-0948-live.jpg",
+   "bytes": 437864,
+   "files": 10
+  },
+  {
    "id": "interviews-site/2026-02-21-0ae32a8",
    "site": "interviews-site",
    "date": "2026-02-21T15:34:38-03:00",
@@ -2026,6 +2468,19 @@
    "files": 36
   },
   {
+   "id": "interviews-site/2026-09-23-0953-live",
+   "site": "interviews-site",
+   "date": "2026-09-23T09:53:58-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://interviews.neorgon.com/",
+   "path": "snapshots/interviews-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/interviews-site/2026-09-23-0953-live.jpg",
+   "bytes": 504531,
+   "files": 15
+  },
+  {
    "id": "json-studio-site/2026-03-01-a7114aa",
    "site": "json-studio-site",
    "date": "2026-03-01T22:19:52-03:00",
@@ -2078,6 +2533,19 @@
    "files": 24
   },
   {
+   "id": "json-studio-site/2026-09-23-0948-live",
+   "site": "json-studio-site",
+   "date": "2026-09-23T09:48:47-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://jsonstudio.neorgon.com/",
+   "path": "snapshots/json-studio-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/json-studio-site/2026-09-23-0948-live.jpg",
+   "bytes": 451081,
+   "files": 15
+  },
+  {
    "id": "loadout-site/2026-07-14-b9027df",
    "site": "loadout-site",
    "date": "2026-07-14T21:19:46-04:00",
@@ -2128,6 +2596,19 @@
    "shot": "shots/loadout-site/2026-09-21-090235c.jpg",
    "bytes": 581662,
    "files": 28
+  },
+  {
+   "id": "loadout-site/2026-09-23-0948-live",
+   "site": "loadout-site",
+   "date": "2026-09-23T09:48:55-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://loadout.neorgon.com/",
+   "path": "snapshots/loadout-site/2026-09-23-0948-live/index.html",
+   "shot": "shots/loadout-site/2026-09-23-0948-live.jpg",
+   "bytes": 468045,
+   "files": 14
   },
   {
    "id": "lockdown-site/2026-03-16-d5a0cd3",
@@ -2195,6 +2676,19 @@
    "files": 29
   },
   {
+   "id": "lockdown-site/2026-09-23-0949-live",
+   "site": "lockdown-site",
+   "date": "2026-09-23T09:49:02-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://lockdown.neorgon.com/",
+   "path": "snapshots/lockdown-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/lockdown-site/2026-09-23-0949-live.jpg",
+   "bytes": 446411,
+   "files": 14
+  },
+  {
    "id": "memes-site/2024-08-24-627868e",
    "site": "memes-site",
    "date": "2024-08-24T22:24:54-04:00",
@@ -2232,6 +2726,19 @@
    "shot": "shots/memes-site/2026-09-21-4c14d03.jpg",
    "bytes": 54957347,
    "files": 119
+  },
+  {
+   "id": "memes-site/2026-09-23-0949-live",
+   "site": "memes-site",
+   "date": "2026-09-23T09:49:09-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://memes.neorgon.com/",
+   "path": "snapshots/memes-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/memes-site/2026-09-23-0949-live.jpg",
+   "bytes": 476128,
+   "files": 16
   },
   {
    "id": "mettle-site/2026-08-01-ecac7b7",
@@ -2273,6 +2780,19 @@
    "files": 29
   },
   {
+   "id": "mettle-site/2026-09-23-0949-live",
+   "site": "mettle-site",
+   "date": "2026-09-23T09:49:17-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://mettle.neorgon.com/",
+   "path": "snapshots/mettle-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/mettle-site/2026-09-23-0949-live.jpg",
+   "bytes": 462670,
+   "files": 15
+  },
+  {
    "id": "minimap-site/2026-08-02-34186cf",
    "site": "minimap-site",
    "date": "2026-08-02T10:29:52-04:00",
@@ -2310,6 +2830,19 @@
    "shot": "shots/minimap-site/2026-09-21-ceaa920.jpg",
    "bytes": 694446,
    "files": 37
+  },
+  {
+   "id": "minimap-site/2026-09-23-0949-live",
+   "site": "minimap-site",
+   "date": "2026-09-23T09:49:24-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://minimap.neorgon.com/",
+   "path": "snapshots/minimap-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/minimap-site/2026-09-23-0949-live.jpg",
+   "bytes": 483327,
+   "files": 16
   },
   {
    "id": "mosaic-site/2026-08-21-da8e6dd",
@@ -2351,6 +2884,19 @@
    "files": 42
   },
   {
+   "id": "mosaic-site/2026-09-23-0949-live",
+   "site": "mosaic-site",
+   "date": "2026-09-23T09:49:32-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://mosaic.neorgon.com/",
+   "path": "snapshots/mosaic-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/mosaic-site/2026-09-23-0949-live.jpg",
+   "bytes": 489459,
+   "files": 15
+  },
+  {
    "id": "mug-site/2026-09-21-6f32ebd",
    "site": "mug-site",
    "date": "2026-09-21T21:43:50-03:00",
@@ -2362,6 +2908,19 @@
    "shot": "shots/mug-site/2026-09-21-6f32ebd.jpg",
    "bytes": 868978,
    "files": 62
+  },
+  {
+   "id": "mug-site/2026-09-23-0949-live",
+   "site": "mug-site",
+   "date": "2026-09-23T09:49:39-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://mug.neorgon.com/",
+   "path": "snapshots/mug-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/mug-site/2026-09-23-0949-live.jpg",
+   "bytes": 504288,
+   "files": 18
   },
   {
    "id": "neokeys-site/2026-08-15-5d6da2c",
@@ -2401,6 +2960,19 @@
    "shot": "shots/neokeys-site/2026-09-21-a2c0e4b.jpg",
    "bytes": 613097,
    "files": 36
+  },
+  {
+   "id": "neokeys-site/2026-09-23-0949-live",
+   "site": "neokeys-site",
+   "date": "2026-09-23T09:49:48-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://neokeys.neorgon.com/",
+   "path": "snapshots/neokeys-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/neokeys-site/2026-09-23-0949-live.jpg",
+   "bytes": 477947,
+   "files": 16
   },
   {
    "id": "neorgon-cdn-site/2026-08-01-fc2cecc",
@@ -2547,6 +3119,19 @@
    "files": 104
   },
   {
+   "id": "neorgon-site/2026-09-23-0943-live",
+   "site": "neorgon-site",
+   "date": "2026-09-23T09:43:42-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://neorgon.com/",
+   "path": "snapshots/neorgon-site/2026-09-23-0943-live/index.html",
+   "shot": "shots/neorgon-site/2026-09-23-0943-live.jpg",
+   "bytes": 1632112,
+   "files": 125
+  },
+  {
    "id": "og-studio-site/2026-03-07-43e063f",
    "site": "og-studio-site",
    "date": "2026-03-07T19:10:42-03:00",
@@ -2610,6 +3195,19 @@
    "shot": "shots/og-studio-site/2026-09-21-42703d1.jpg",
    "bytes": 4789700,
    "files": 108
+  },
+  {
+   "id": "og-studio-site/2026-09-23-0949-live",
+   "site": "og-studio-site",
+   "date": "2026-09-23T09:49:57-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://ogstudio.neorgon.com/",
+   "path": "snapshots/og-studio-site/2026-09-23-0949-live/index.html",
+   "shot": "shots/og-studio-site/2026-09-23-0949-live.jpg",
+   "bytes": 448177,
+   "files": 15
   },
   {
    "id": "overworld-site/2026-08-21-b2aecca",
@@ -2716,6 +3314,19 @@
    "files": 35
   },
   {
+   "id": "parla-site/2026-09-23-0950-live",
+   "site": "parla-site",
+   "date": "2026-09-23T09:50:05-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://parla.neorgon.com/",
+   "path": "snapshots/parla-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/parla-site/2026-09-23-0950-live.jpg",
+   "bytes": 481259,
+   "files": 15
+  },
+  {
    "id": "pathfinder-site/2026-03-08-3670142",
    "site": "pathfinder-site",
    "date": "2026-03-08T13:39:21-03:00",
@@ -2781,6 +3392,19 @@
    "files": 73
   },
   {
+   "id": "pathfinder-site/2026-09-23-0950-live",
+   "site": "pathfinder-site",
+   "date": "2026-09-23T09:50:11-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://pathfinder.neorgon.com/",
+   "path": "snapshots/pathfinder-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/pathfinder-site/2026-09-23-0950-live.jpg",
+   "bytes": 616748,
+   "files": 15
+  },
+  {
    "id": "pixeldoll-site/2026-08-21-fa6b143",
    "site": "pixeldoll-site",
    "date": "2026-08-21T20:29:56-04:00",
@@ -2818,6 +3442,19 @@
    "shot": "shots/pixeldoll-site/2026-09-21-82954d9.jpg",
    "bytes": 570868,
    "files": 28
+  },
+  {
+   "id": "pixeldoll-site/2026-09-23-0950-live",
+   "site": "pixeldoll-site",
+   "date": "2026-09-23T09:50:18-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://pixeldoll.neorgon.com/",
+   "path": "snapshots/pixeldoll-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/pixeldoll-site/2026-09-23-0950-live.jpg",
+   "bytes": 461240,
+   "files": 15
   },
   {
    "id": "playbook-site/2026-03-11-2f13669",
@@ -2885,6 +3522,19 @@
    "files": 29
   },
   {
+   "id": "playbook-site/2026-09-23-0950-live",
+   "site": "playbook-site",
+   "date": "2026-09-23T09:50:28-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://playbook.neorgon.com/",
+   "path": "snapshots/playbook-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/playbook-site/2026-09-23-0950-live.jpg",
+   "bytes": 458901,
+   "files": 14
+  },
+  {
    "id": "portent-site/2026-09-18-bc02d12",
    "site": "portent-site",
    "date": "2026-09-18T10:16:18-03:00",
@@ -2909,6 +3559,19 @@
    "shot": "shots/portent-site/2026-09-21-4d967db.jpg",
    "bytes": 707764,
    "files": 44
+  },
+  {
+   "id": "portent-site/2026-09-23-0950-live",
+   "site": "portent-site",
+   "date": "2026-09-23T09:50:34-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://portent.neorgon.com/",
+   "path": "snapshots/portent-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/portent-site/2026-09-23-0950-live.jpg",
+   "bytes": 500342,
+   "files": 18
   },
   {
    "id": "primer-site/2026-08-01-da4f2cc",
@@ -2950,6 +3613,19 @@
    "files": 26
   },
   {
+   "id": "primer-site/2026-09-23-0950-live",
+   "site": "primer-site",
+   "date": "2026-09-23T09:50:50-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://primer.neorgon.com/",
+   "path": "snapshots/primer-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/primer-site/2026-09-23-0950-live.jpg",
+   "bytes": 457614,
+   "files": 14
+  },
+  {
    "id": "proctor-site/2026-08-15-6f5a754",
    "site": "proctor-site",
    "date": "2026-08-15T17:09:44-04:00",
@@ -2987,6 +3663,19 @@
    "shot": "shots/proctor-site/2026-09-21-c6dcdcc.jpg",
    "bytes": 686363,
    "files": 33
+  },
+  {
+   "id": "proctor-site/2026-09-23-0950-live",
+   "site": "proctor-site",
+   "date": "2026-09-23T09:50:56-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://proctor.neorgon.com/",
+   "path": "snapshots/proctor-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/proctor-site/2026-09-23-0950-live.jpg",
+   "bytes": 502215,
+   "files": 15
   },
   {
    "id": "prompt-forge-site/2026-06-19-acfcfca",
@@ -3041,6 +3730,19 @@
    "files": 32
   },
   {
+   "id": "prompt-forge-site/2026-09-23-0951-live",
+   "site": "prompt-forge-site",
+   "date": "2026-09-23T09:51:04-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://promptforge.neorgon.com/",
+   "path": "snapshots/prompt-forge-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/prompt-forge-site/2026-09-23-0951-live.jpg",
+   "bytes": 458034,
+   "files": 14
+  },
+  {
    "id": "questline-site/2026-06-04-882235a",
    "site": "questline-site",
    "date": "2026-06-04T17:25:56-04:00",
@@ -3080,6 +3782,19 @@
    "files": 77
   },
   {
+   "id": "questline-site/2026-09-23-0951-live",
+   "site": "questline-site",
+   "date": "2026-09-23T09:51:11-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://questline.neorgon.com/",
+   "path": "snapshots/questline-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/questline-site/2026-09-23-0951-live.jpg",
+   "bytes": 478775,
+   "files": 18
+  },
+  {
    "id": "quiz-site/2026-09-05-10d8614",
    "site": "quiz-site",
    "date": "2026-09-05T22:26:50-04:00",
@@ -3104,6 +3819,19 @@
    "shot": "shots/quiz-site/2026-09-21-6008d04.jpg",
    "bytes": 965252,
    "files": 80
+  },
+  {
+   "id": "quiz-site/2026-09-23-0951-live",
+   "site": "quiz-site",
+   "date": "2026-09-23T09:51:18-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://quiz.neorgon.com/",
+   "path": "snapshots/quiz-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/quiz-site/2026-09-23-0951-live.jpg",
+   "bytes": 476708,
+   "files": 18
   },
   {
    "id": "radar-site/2026-08-01-2a32c01",
@@ -3145,6 +3873,19 @@
    "files": 42
   },
   {
+   "id": "radar-site/2026-09-23-0951-live",
+   "site": "radar-site",
+   "date": "2026-09-23T09:51:27-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://radar.neorgon.com/",
+   "path": "snapshots/radar-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/radar-site/2026-09-23-0951-live.jpg",
+   "bytes": 497097,
+   "files": 16
+  },
+  {
    "id": "rappel-site/2026-09-05-cdd1f81",
    "site": "rappel-site",
    "date": "2026-09-05T22:26:50-04:00",
@@ -3169,6 +3910,19 @@
    "shot": "shots/rappel-site/2026-09-21-4267375.jpg",
    "bytes": 1189605,
    "files": 78
+  },
+  {
+   "id": "rappel-site/2026-09-23-0951-live",
+   "site": "rappel-site",
+   "date": "2026-09-23T09:51:34-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://rappel.neorgon.com/",
+   "path": "snapshots/rappel-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/rappel-site/2026-09-23-0951-live.jpg",
+   "bytes": 544161,
+   "files": 21
   },
   {
    "id": "references-api/2026-03-01-47195b4",
@@ -3223,6 +3977,19 @@
    "files": 18
   },
   {
+   "id": "references-api/2026-09-23-0951-live",
+   "site": "references-api",
+   "date": "2026-09-23T09:51:42-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://references.neorgon.com/",
+   "path": "snapshots/references-api/2026-09-23-0951-live/index.html",
+   "shot": "shots/references-api/2026-09-23-0951-live.jpg",
+   "bytes": 473685,
+   "files": 13
+  },
+  {
    "id": "releve-site/2026-08-30-1830-live",
    "site": "releve-site",
    "date": "2026-08-30T18:30:25-04:00",
@@ -3262,6 +4029,19 @@
    "files": 43
   },
   {
+   "id": "releve-site/2026-09-23-0951-live",
+   "site": "releve-site",
+   "date": "2026-09-23T09:51:48-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://releve.neorgon.com/",
+   "path": "snapshots/releve-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/releve-site/2026-09-23-0951-live.jpg",
+   "bytes": 501191,
+   "files": 16
+  },
+  {
    "id": "reparto-site/2026-09-23-7dc592e",
    "site": "reparto-site",
    "date": "2026-09-23T08:51:17-03:00",
@@ -3273,6 +4053,19 @@
    "shot": "shots/reparto-site/2026-09-23-7dc592e.jpg",
    "bytes": 1855189,
    "files": 265
+  },
+  {
+   "id": "reparto-site/2026-09-23-0951-live",
+   "site": "reparto-site",
+   "date": "2026-09-23T09:51:56-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://reparto.neorgon.com/",
+   "path": "snapshots/reparto-site/2026-09-23-0951-live/index.html",
+   "shot": "shots/reparto-site/2026-09-23-0951-live.jpg",
+   "bytes": 578226,
+   "files": 18
   },
   {
    "id": "resume-forge-site/2026-03-14-8c30aeb",
@@ -3340,6 +4133,19 @@
    "files": 150
   },
   {
+   "id": "resume-forge-site/2026-09-23-0952-live",
+   "site": "resume-forge-site",
+   "date": "2026-09-23T09:52:03-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://resume.neorgon.com/",
+   "path": "snapshots/resume-forge-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/resume-forge-site/2026-09-23-0952-live.jpg",
+   "bytes": 500756,
+   "files": 16
+  },
+  {
    "id": "rewind-site/2026-08-15-76b9793",
    "site": "rewind-site",
    "date": "2026-08-15T17:09:44-04:00",
@@ -3379,6 +4185,19 @@
    "files": 28
   },
   {
+   "id": "rewind-site/2026-09-23-0952-live",
+   "site": "rewind-site",
+   "date": "2026-09-23T09:52:10-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://rewind.neorgon.com/",
+   "path": "snapshots/rewind-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/rewind-site/2026-09-23-0952-live.jpg",
+   "bytes": 461883,
+   "files": 15
+  },
+  {
    "id": "runcible-site/2026-09-05-8da8497",
    "site": "runcible-site",
    "date": "2026-09-05T22:26:50-04:00",
@@ -3403,6 +4222,19 @@
    "shot": "shots/runcible-site/2026-09-21-bc6dd9a.jpg",
    "bytes": 2099177,
    "files": 166
+  },
+  {
+   "id": "runcible-site/2026-09-23-0952-live",
+   "site": "runcible-site",
+   "date": "2026-09-23T09:52:16-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://runcible.neorgon.com/",
+   "path": "snapshots/runcible-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/runcible-site/2026-09-23-0952-live.jpg",
+   "bytes": 530261,
+   "files": 19
   },
   {
    "id": "rush-q-cards-site/2026-03-17-0730a1a",
@@ -3470,6 +4302,19 @@
    "files": 219
   },
   {
+   "id": "rush-q-cards-site/2026-09-23-0952-live",
+   "site": "rush-q-cards-site",
+   "date": "2026-09-23T09:52:24-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://rushq.neorgon.com/",
+   "path": "snapshots/rush-q-cards-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/rush-q-cards-site/2026-09-23-0952-live.jpg",
+   "bytes": 117412,
+   "files": 22
+  },
+  {
    "id": "safeguard-site/2026-03-07-892221a",
    "site": "safeguard-site",
    "date": "2026-03-07T14:35:07-03:00",
@@ -3535,6 +4380,19 @@
    "files": 27
   },
   {
+   "id": "safeguard-site/2026-09-23-0952-live",
+   "site": "safeguard-site",
+   "date": "2026-09-23T09:52:38-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://safeguard.neorgon.com/",
+   "path": "snapshots/safeguard-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/safeguard-site/2026-09-23-0952-live.jpg",
+   "bytes": 441980,
+   "files": 14
+  },
+  {
    "id": "sash-site/2026-09-11-258190e",
    "site": "sash-site",
    "date": "2026-09-11T15:09:44-03:00",
@@ -3559,6 +4417,19 @@
    "shot": "shots/sash-site/2026-09-22-2adfe76.jpg",
    "bytes": 1220881,
    "files": 80
+  },
+  {
+   "id": "sash-site/2026-09-23-0952-live",
+   "site": "sash-site",
+   "date": "2026-09-23T09:52:44-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://sash.neorgon.com/",
+   "path": "snapshots/sash-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/sash-site/2026-09-23-0952-live.jpg",
+   "bytes": 507377,
+   "files": 20
   },
   {
    "id": "scalpel-site/2026-08-30-1835-live",
@@ -3600,6 +4471,19 @@
    "files": 29
   },
   {
+   "id": "scalpel-site/2026-09-23-0952-live",
+   "site": "scalpel-site",
+   "date": "2026-09-23T09:52:52-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://scalpel.neorgon.com/",
+   "path": "snapshots/scalpel-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/scalpel-site/2026-09-23-0952-live.jpg",
+   "bytes": 456876,
+   "files": 15
+  },
+  {
    "id": "skill-map-site/2026-03-01-42220c3",
    "site": "skill-map-site",
    "date": "2026-03-01T11:22:41-03:00",
@@ -3637,6 +4521,19 @@
    "shot": "shots/skill-map-site/2026-09-21-601a45c.jpg",
    "bytes": 47202429,
    "files": 171
+  },
+  {
+   "id": "skill-map-site/2026-09-23-0952-live",
+   "site": "skill-map-site",
+   "date": "2026-09-23T09:52:59-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://skillmap.neorgon.com/",
+   "path": "snapshots/skill-map-site/2026-09-23-0952-live/index.html",
+   "shot": "shots/skill-map-site/2026-09-23-0952-live.jpg",
+   "bytes": 602136,
+   "files": 16
   },
   {
    "id": "slides-site/2026-03-01-27cf4ae",
@@ -3689,6 +4586,19 @@
    "shot": "shots/slides-site/2026-09-21-70d7b3d.jpg",
    "bytes": 871687,
    "files": 43
+  },
+  {
+   "id": "slides-site/2026-09-23-0950-live",
+   "site": "slides-site",
+   "date": "2026-09-23T09:50:42-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://slides.neorgon.com/",
+   "path": "snapshots/slides-site/2026-09-23-0950-live/index.html",
+   "shot": "shots/slides-site/2026-09-23-0950-live.jpg",
+   "bytes": 505246,
+   "files": 15
   },
   {
    "id": "snippets-site/2026-03-07-b623fdd",
@@ -3756,6 +4666,19 @@
    "files": 39
   },
   {
+   "id": "snippets-site/2026-09-23-0953-live",
+   "site": "snippets-site",
+   "date": "2026-09-23T09:53:06-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://snippets.neorgon.com/",
+   "path": "snapshots/snippets-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/snippets-site/2026-09-23-0953-live.jpg",
+   "bytes": 463538,
+   "files": 15
+  },
+  {
    "id": "sortie-site/2026-08-15-e53f821",
    "site": "sortie-site",
    "date": "2026-08-15T17:09:45-04:00",
@@ -3793,6 +4716,19 @@
    "shot": "shots/sortie-site/2026-09-21-ea68276.jpg",
    "bytes": 743422,
    "files": 59
+  },
+  {
+   "id": "sortie-site/2026-09-23-0953-live",
+   "site": "sortie-site",
+   "date": "2026-09-23T09:53:12-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://sortie.neorgon.com/",
+   "path": "snapshots/sortie-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/sortie-site/2026-09-23-0953-live.jpg",
+   "bytes": 524818,
+   "files": 26
   },
   {
    "id": "stack-rank-site/2026-03-24-528d5c9",
@@ -3860,6 +4796,19 @@
    "files": 30
   },
   {
+   "id": "stack-rank-site/2026-09-23-0953-live",
+   "site": "stack-rank-site",
+   "date": "2026-09-23T09:53:21-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://stackrank.neorgon.com/",
+   "path": "snapshots/stack-rank-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/stack-rank-site/2026-09-23-0953-live.jpg",
+   "bytes": 467263,
+   "files": 14
+  },
+  {
    "id": "stash-site/2026-08-08-ca70ff5",
    "site": "stash-site",
    "date": "2026-08-08T15:58:32-04:00",
@@ -3897,6 +4846,19 @@
    "shot": "shots/stash-site/2026-09-21-13007bc.jpg",
    "bytes": 585871,
    "files": 34
+  },
+  {
+   "id": "stash-site/2026-09-23-0953-live",
+   "site": "stash-site",
+   "date": "2026-09-23T09:53:28-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://stash.neorgon.com/",
+   "path": "snapshots/stash-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/stash-site/2026-09-23-0953-live.jpg",
+   "bytes": 465267,
+   "files": 14
   },
   {
    "id": "team-play-site/2026-03-14-ea96d95",
@@ -3964,6 +4926,19 @@
    "files": 19
   },
   {
+   "id": "team-play-site/2026-09-23-0953-live",
+   "site": "team-play-site",
+   "date": "2026-09-23T09:53:34-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://teamplay.neorgon.com/",
+   "path": "snapshots/team-play-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/team-play-site/2026-09-23-0953-live.jpg",
+   "bytes": 852590,
+   "files": 23
+  },
+  {
    "id": "tubestack-site/2026-03-19-0f73dff",
    "site": "tubestack-site",
    "date": "2026-03-19T12:43:42-03:00",
@@ -4027,6 +5002,19 @@
    "shot": "shots/tubestack-site/2026-09-21-bd87338.jpg",
    "bytes": 674378,
    "files": 32
+  },
+  {
+   "id": "tubestack-site/2026-09-23-0953-live",
+   "site": "tubestack-site",
+   "date": "2026-09-23T09:53:44-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://tubestack.neorgon.com/",
+   "path": "snapshots/tubestack-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/tubestack-site/2026-09-23-0953-live.jpg",
+   "bytes": 472337,
+   "files": 14
   },
   {
    "id": "ui-anatomy-site/2026-03-15-21d94cc",
@@ -4094,6 +5082,19 @@
    "files": 35
   },
   {
+   "id": "ui-anatomy-site/2026-09-23-0953-live",
+   "site": "ui-anatomy-site",
+   "date": "2026-09-23T09:53:50-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://uianatomy.neorgon.com/",
+   "path": "snapshots/ui-anatomy-site/2026-09-23-0953-live/index.html",
+   "shot": "shots/ui-anatomy-site/2026-09-23-0953-live.jpg",
+   "bytes": 502523,
+   "files": 15
+  },
+  {
    "id": "vitrina-site/2026-09-06-f7199b3",
    "site": "vitrina-site",
    "date": "2026-09-06T20:46:48-03:00",
@@ -4118,6 +5119,19 @@
    "shot": "shots/vitrina-site/2026-09-21-9e9e11e.jpg",
    "bytes": 2874396,
    "files": 170
+  },
+  {
+   "id": "vitrina-site/2026-09-23-0954-live",
+   "site": "vitrina-site",
+   "date": "2026-09-23T09:54:04-03:00",
+   "source": "live",
+   "kind": "tree",
+   "commit": null,
+   "subject": "Live capture of https://vitrina.neorgon.com/",
+   "path": "snapshots/vitrina-site/2026-09-23-0954-live/index.html",
+   "shot": "shots/vitrina-site/2026-09-23-0954-live.jpg",
+   "bytes": 547229,
+   "files": 17
   }
  ]
 }

@@ -1,0 +1,193 @@
+<!-- Rewind capture of https://snippets.neorgon.com/ on 2026-09-23T09:53:10-03:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Snippets">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://esm.sh cdn.jsdelivr.net cdnjs.cloudflare.com https://challenges.cloudflare.com https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.neorgon.org; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.convex.cloud https://img.clerk.com https://cdn.neorgon.org https://i.ytimg.com https://yt3.ggpht.com https://neorgon.goatcounter.com; connect-src 'self' https://*.convex.cloud https://clerk.neorgon.com https://accounts.neorgon.com https://clerk-telemetry.com https://api.clerk.com https://challenges.cloudflare.com https://*.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com; frame-src 'self' https://challenges.cloudflare.com https://clerk.neorgon.com https://accounts.neorgon.com https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Snippets | Shell, Git, macOS & Windows Command Library</title>
+  <meta name="description" content="255 curated commands for bash, git, macOS, Windows PowerShell, Docker, Kubernetes and ffmpeg. Search, pin and copy, no AI prompting needed">
+  <meta property="og:title" content="Snippets | Shell, Git, macOS & Windows Command Library">
+  <meta property="og:description" content="255 curated commands for bash, git, macOS, Windows, Docker and media tooling. Searching is faster than prompting">
+  <meta name="neo-repo" content="energon-a-secas/snippets-site">
+  <meta name="neo-updated" content="2026-08-03">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://snippets.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Snippets: Search, Copy, Ship">
+  <meta name="twitter:description" content="Curated shell commands and code snippets. Searching is faster than prompting">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://snippets.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://snippets.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://snippets.neorgon.com/og-preview.jpg">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+    <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="js/neorgon-footer.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Snippets",
+    "description": "Curated shell commands and code snippets for macOS, bash, data extraction, and text processing",
+    "url": "https://snippets.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="content" data-header-autohide="on">
+    <div class="header-logo">
+      <a href="https://snippets.neorgon.com/" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Snippets</h1>
+        <div class="header-subtitle">Search, copy, ship</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container motto-wrap">
+      <p class="motto"><strong>Searching is faster than prompting.</strong> Copy what you need, skip the chat.</p>
+    </div>
+
+    <div class="toolbar" id="toolbar">
+      <div class="container toolbar-inner">
+        <div class="search-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input id="search-input" class="search-input" type="text" placeholder="Search commands, descriptions, tags..." aria-label="Search snippets">
+            <span class="search-kbd" aria-hidden="true">/</span>
+          </div>
+
+          <div class="dropdown" id="dd-platform">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Platform</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" id="dd-platform-menu"></ul>
+          </div>
+
+          <div class="dropdown" id="dd-tags">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Tags</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu multi" role="listbox" aria-multiselectable="true" id="dd-tags-menu"></ul>
+          </div>
+
+          <button id="clear-search" class="clear-btn">Reset</button>
+          <button id="help-btn" class="icon-btn" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <rect x="2" y="6" width="20" height="13" rx="2"/>
+              <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="rail-row">
+          <nav class="cat-rail" id="cat-rail" aria-label="Filter by category"></nav>
+          <span id="result-count" class="result-count"></span>
+        </div>
+
+        <div id="active-filters" class="active-filters"></div>
+      </div>
+    </div>
+
+    <div class="container grid-wrap">
+      <div id="snippets-grid"></div>
+
+      <div class="suggest-bar">
+        <button id="suggest-btn" class="suggest-trigger">Suggest a snippet</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+    Everything runs in your browser: pins and filters stay on this device.
+  </footer>
+
+  <div id="help-modal" class="modal">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+      <h3 id="help-modal-title">Keyboard shortcuts</h3>
+      <dl class="shortcut-list">
+        <div><dt><kbd>/</kbd></dt><dd>Focus the search box</dd></div>
+        <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Move between results</dd></div>
+        <div><dt><kbd>↓</kbd> <kbd>↑</kbd></dt><dd>Move between results</dd></div>
+        <div><dt><kbd>Enter</kbd> <kbd>c</kbd></dt><dd>Copy the focused snippet</dd></div>
+        <div><dt><kbd>p</kbd></dt><dd>Pin or unpin the focused snippet</dd></div>
+        <div><dt><kbd>Esc</kbd></dt><dd>Close menus, leave the search box</dd></div>
+        <div><dt><kbd>?</kbd></dt><dd>Show this list</dd></div>
+      </dl>
+      <p class="shortcut-note">Filters live in the URL: bookmark or share any view you land on.</p>
+      <div class="modal-actions">
+        <button id="help-close" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="suggest-modal" class="modal">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="suggest-modal-title">
+      <h3 id="suggest-modal-title">Suggest a Snippet</h3>
+      <label for="suggest-title">Title</label>
+      <input id="suggest-title" type="text" placeholder="e.g. Convert HEIC to PNG">
+      <label for="suggest-command">Command</label>
+      <textarea id="suggest-command" rows="3" placeholder="e.g. for f in *.HEIC; do sips -s format png &quot;$f&quot; --out &quot;${f%.HEIC}.png&quot;; done"></textarea>
+      <label for="suggest-desc">Description (optional)</label>
+      <input id="suggest-desc" type="text" placeholder="What does it do?">
+      <div class="modal-actions">
+        <button id="suggest-close" class="btn-secondary">Cancel</button>
+        <button id="suggest-copy" class="btn-primary">Copy suggestion</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

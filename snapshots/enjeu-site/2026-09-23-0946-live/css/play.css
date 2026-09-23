@@ -1,0 +1,1152 @@
+/*
+ * ── Play view (the runner) ─────────────────────────────────────
+ * The board has one hard requirement: IT FITS. A player on a 1280x720 or
+ * 1440x900 desktop must never scroll the page to reach the button that
+ * resolves their turn. Panels scroll inside themselves; the page does not.
+ *
+ * How that is achieved, because it is not obvious from any one rule:
+ *   1. render.js sets html[data-view="play"], which is the only seam this file
+ *      has into the document element. Everything below is scoped to it, so no
+ *      other view inherits a locked viewport.
+ *   2. The flex chain from style.css (body > main#main > .view-root) is carried
+ *      down through .board-fit > .fight-grid > .fight-main, and every link in
+ *      it gets min-height:0. Without that a flex child refuses to shrink below
+ *      its content and the page grows instead of the panel scrolling.
+ *   3. Card sizes are vh-based clamp() tokens, not a table of breakpoints. The
+ *      cards shrink with the window, so the layout does not have to change
+ *      shape at 800px tall to keep the resolve button on screen.
+ * Below 900px wide it goes back to being an ordinary scrolling column: a phone
+ * has no height to claim and pinning the board there just hides things.
+ *
+ * Only the runner's own blocks live here. Anything the runner shares with
+ * Learn (.action-card, .figure, .die-face, .ladder, .table-wrap, .pips) is a
+ * shared primitive in style.css.
+ */
+
+/* ── The viewport claim ────────────────────────────────────── */
+@media (min-width: 901px) {
+  /* :has() so ONLY the fight locks the page. Setup, the draft and the endings
+     are ordinary documents and must still scroll. */
+  html[data-view="play"] body:has(.board-fit) { height: 100dvh; overflow: hidden; }
+  html[data-view="play"] .view-root { min-height: 0; }
+  html[data-view="play"] .view-root > .board-fit { min-height: 0; }
+
+  .board-fit {
+    max-width: 1520px; flex: 1; min-height: 0;
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 8px var(--space-4) 6px;
+    /* Sized from the window's height, EXCEPT inside the duel, which sizes from
+       the height it was actually granted (see .duel). vh is why 1366x768 and
+       1280x720 used to clip: the action panel and the arena both measured the
+       window, the panel is content-sized so it took what it wanted first, and
+       the arena absorbed the whole deficit by painting its children under an
+       opaque panel. 418 + 251 into 526 has no reflow that fixes it. */
+    --hand-w: clamp(52px, 8.4vh, 88px);
+    --plan-w: clamp(24px, 3.8vh, 34px);
+    --tbl-w: clamp(22px, 3.4vh, 32px);
+    --fig: clamp(42px, 8.2vh, 92px);
+  }
+  .board-fit .fight-grid { flex: 1; min-height: 0; }
+}
+
+/* ── The grid: rail, fight, log ─────────────────────────────── */
+/* The first column is a 74px rail, down from 158px: the labels that used to sit
+   beside each pile clipped themselves to "ge" and "es" at that width, so they
+   moved into the title and the 84px went to the arena. The third column is the
+   log, and closing it hands its 262px over too. */
+.fight-grid {
+  display: grid; grid-template-columns: 74px minmax(0, 1fr);
+  gap: var(--space-3); align-items: stretch;
+}
+/* The log lives BELOW the board, full width, and only when asked for: as a
+   262px right column it taxed the board's width all game for lines most
+   players never read mid-fight. The closed log is not rendered at all:
+   hiding sixty lines with CSS would still build them on every render. */
+.fight-log-below {
+  grid-column: 1 / -1; max-height: 148px; overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* Three rows: the duel takes the slack, the turn band is content-sized but
+   capped, and the resolve band collapses when empty. The cap is what stops the
+   turn band eating the duel: it used to take 60 to 79 percent of the box. */
+/* The duel gets a FLOOR, not just the slack. Without one it was handed whatever
+   the action panel left over, which at 1280x720 with three steps queued was
+   101px against the 133px its own children need, and the difference was painted
+   under the panel. The panel scrolls inside itself, so it is the one that gives. */
+.fight-main { display: grid; grid-template-rows: minmax(150px, 1fr) auto auto; gap: 6px; min-height: 0; }
+/* The action panel is content-sized and comes second, so before this cap it
+   simply took what it wanted and left the duel the remainder, which at 1280x720
+   was 102px against the 251px it needed. Capped, it scrolls inside itself,
+   which is the rule this whole file is built on: panels scroll, the page never
+   does. */
+/* The panel does not scroll; the HAND inside it does. Scrolling the whole panel
+   pushed the resolve button off the bottom at 600px of height, which breaks the
+   one promise at the top of this file. The plan lane and the resolve band are
+   flex:none, so the button that ends the turn is always the last thing on screen
+   and always on it. */
+.fight-main > .actions { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+/* The rail must NOT scroll: a hovered slot grows 4x out of its own box, and any
+   overflow on this axis clips the enlargement that is the point of the hover.
+   Six slots at ~64px fit the height budget without scrolling anyway. */
+.fight-table { overflow: visible; display: flex; flex-direction: column; gap: 4px; align-items: center; }
+@media (max-width: 1180px) {
+  .fight-grid { grid-template-columns: 68px minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .fight-grid, .fight-grid[data-log="closed"] { grid-template-columns: minmax(0, 1fr); }
+  .fight-table { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+  .board-fit { --hand-w: 84px; --plan-w: 32px; --tbl-w: 30px; --fig: 72px; }
+}
+
+.fight-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.fight-bar__who { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.fight-bar__who b { font-size: var(--text-lg); }
+
+/* ── The rest of the table (the left rail) ─────────────────── */
+/* Hover, or focus, and the card grows out of the rail over the arena. Pure CSS
+   and pure transform: nothing reflows, so the rail cannot shift under the
+   pointer that is enlarging it. transform-origin sits on the left edge so the
+   card grows rightwards into the board and never off the window. */
+.tbl-slot {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  font: inherit; padding: 0; border: 0; background: none; color: inherit;
+  /* Content width, never 100%: under 900px the rail turns into a row, and six
+     full-width slots there widened the grid track past the viewport. */
+  width: max-content; max-width: 100%;
+}
+button.tbl-slot { cursor: zoom-in; }
+.tbl-slot__art { display: block; --mini-w: var(--tbl-w); transition: transform 180ms var(--ease-out); }
+.tbl-slot:hover, .tbl-slot:focus-visible { z-index: 30; }
+.tbl-slot:hover .tbl-slot__art, .tbl-slot:focus-visible .tbl-slot__art {
+  transform: scale(4.2); transform-origin: left center;
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.32));
+}
+/* An empty slot has nothing to enlarge: scaling its dashed outline 4x put a grey
+   rectangle over the arena and read as a rendering fault. */
+.tbl-slot:hover .tbl-slot__art:has(.stack-of.is-empty),
+.tbl-slot:focus-visible .tbl-slot__art:has(.stack-of.is-empty) { transform: none; filter: none; }
+.tbl-slot__n { font-size: 9px; font-weight: 800; color: var(--text-muted); line-height: 1.1; text-align: center; }
+/* A pile is a stack, not a spread: three cards of offset says "there are more"
+   in 8px of width, which is all the board can spare for a deck nobody touches. */
+.stack-of { position: relative; display: inline-block; width: var(--tbl-w); height: calc(var(--tbl-w) * 88 / 63); }
+.stack-of__c { position: absolute; top: 0; left: 0; transform: translate(calc(var(--i) * 3px), calc(var(--i) * -2px)); }
+/* A deck that is in the box reads as an empty slot, not as nothing: invisible,
+   the Skills rail slot looked like a rendering bug rather than a pile you do
+   not have yet. */
+.stack-of.is-empty {
+  border: 2px dashed var(--border-strong); border-radius: 3px; opacity: 0.28;
+  box-sizing: border-box;
+}
+
+/* ── The arena ─────────────────────────────────────────────── */
+/* ── The duel ───────────────────────────────────────────────
+   Hero left, the boss's life in the middle, the boss right: three columns that
+   face across the thing the fight is about, instead of a 2x2 diagonal whose
+   spare cells were filled with a die and a shelf.
+
+   `align-content: space-between` is deliberately absent. It was a void
+   generator: every pixel of slack went into the gap between the two rows, so
+   the more room the board had the emptier it looked (80.6% empty on your turn,
+   88.9% on the boss's, with one unbroken 1048x352 rectangle across the middle),
+   and the hero figure moved 335px vertically inside a single turn purely
+   because the panel below changed height. Slack now goes into the wall's card
+   size, which is the one thing on the board that should grow.
+
+   container-type: size is what stops the clipping. Everything card-shaped in
+   here is a fraction of cqh, so it sizes from the height the duel was actually
+   granted rather than from the window. overflow: hidden is the guard rail, not
+   the mechanism: after this it should never fire, and if it does you get a
+   clean crop instead of content painted under an opaque panel. */
+.duel {
+  display: grid; min-height: 0; overflow: hidden;
+  container-type: size; container-name: duel;
+  grid-template-columns: minmax(150px, 236px) minmax(0, 1fr) minmax(120px, 190px);
+  align-items: center; gap: 8px var(--space-3);
+  border-radius: var(--radius); padding: 8px 10px;
+  border: 2px solid var(--border);
+  --fig: clamp(38px, 22cqh, 88px);
+  /* The place is the light. Hero side bright, boss side sunk into the biome's
+     own colour: one diffuse sweep, no hard stop, still light enough on the
+     right for the muted text that lives there. */
+  --biome-a: #d8d2c6;
+  background: linear-gradient(100deg,
+    color-mix(in srgb, var(--biome-a) 12%, #fdfcf8) 0%,
+    color-mix(in srgb, var(--biome-a) 34%, #f6f1e7) 52%,
+    color-mix(in srgb, var(--biome-a) 62%, #7a7263) 135%);
+}
+.duel > * { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: 4px; }
+.duel__hero { align-items: flex-start; }
+.duel__wall { align-items: center; justify-content: center; gap: 6px; }
+.duel__boss { align-items: flex-end; text-align: right; }
+.duel .figure { gap: 0; font-size: 10px; position: relative; flex: none; }
+.duel .figure svg { width: var(--fig); height: var(--fig); }
+.duel .figure.is-missed svg { animation: shudder 400ms var(--ease-out); }
+.duel__boss.is-target .figure svg {
+  filter: drop-shadow(0 0 5px var(--gold-deep)) drop-shadow(0 2px 10px rgba(180, 130, 20, 0.45));
+}
+
+/* ── The wall ──────────────────────────────────────────────
+   The boss's life as the cards on the table. The card size solves from BOTH
+   axes of the region, so twenty cards can never overflow the band: whichever of
+   width or height is tighter wins. */
+.wall-count { display: flex; align-items: baseline; gap: 6px; font-size: var(--text-lg); font-weight: 800; }
+.wall {
+  display: grid; justify-content: center; align-content: center; gap: 4px;
+  grid-template-columns: repeat(var(--wall-cols, 4), auto);
+  --wall-card: clamp(16px, min(
+      (100cqw - 380px - (var(--wall-cols) - 1) * 4px) / var(--wall-cols),
+      ((92cqh - 34px - (var(--wall-rows) - 1) * 4px) / var(--wall-rows)) * 0.716
+    ), 96px);
+}
+.wall .lc { width: var(--wall-card); height: auto; }
+/* A ragged last row (4+3, 6+4) centres rather than hanging left. */
+.wall > :last-child:nth-child(odd) { }
+/* The leading card, part broken. Damage lands in 25s and a card is 100, so
+   without this the wall only moves on one hit in four and is a COARSER readout
+   than the numeral it replaces. The wipe is a mask over the real printed card,
+   not a second drawing of one: face.js stays the only card renderer. */
+.lc-part { position: relative; display: inline-block; width: var(--wall-card); }
+.lc-part .lc { width: 100%; }
+.lc-part::after {
+  content: ""; position: absolute; inset: 0 0 calc(var(--frac) * 100%) 0;
+  background: var(--surface-2); opacity: 0.86; border-radius: 4px 4px 0 0;
+  border-bottom: 2px dashed var(--border-strong); pointer-events: none;
+}
+
+/* A damage numeral that floats off the figure that took it. Absolute so it
+   cannot push the board a pixel taller on the frame it appears. */
+.fx-num {
+  position: absolute; left: 50%; top: -2px; transform: translateX(-50%);
+  font-weight: 900; font-size: var(--text-base); color: var(--ok);
+  animation: float-up 900ms var(--ease-out) forwards; pointer-events: none; white-space: nowrap;
+}
+.fx-num--bad { color: var(--danger); }
+
+/* Below the >=901px lock the page scrolls, so BELOW THE LOCK IS THE STACKED
+   LAYOUT: one rule, not three. This block sat at 700px and left a 701-900px
+   band where container-type: size met an auto-height page and the duel
+   collapsed to its 150px floor with most of the board cropped, a band a
+   375x812 phone lands in the moment it rotates. cq sizing lives only inside
+   the lock now. */
+@media (max-width: 900px) {
+  .duel { grid-template-columns: 1fr; align-items: stretch; container-type: normal; }
+  .duel > * { align-items: flex-start; text-align: left; }
+  /* Order for a phone: what is coming, then what it costs you, then your gear.
+     The rail used to be the second thing on screen and it is the least
+     important thing on the board. */
+  .duel__boss { order: 1; align-items: flex-start; text-align: left; }
+  .duel__wall { order: 2; align-items: flex-start; }
+  .duel__hero { order: 3; }
+  .duel__boss .targets, .duel .gear-row { justify-content: flex-start; }
+  /* Deterministic wall sizing: the old percentage clamp resolved against auto
+     grid tracks (a cyclic percentage browsers may treat as auto) and could
+     clip boss life cards, which are game state. Tracks share the row equally
+     and the card caps at the boss-mini size. */
+  .wall { width: 100%; max-width: 320px; grid-template-columns: repeat(var(--wall-cols), minmax(0, 1fr)); justify-items: center; }
+  .wall .lc, .wall .lc-part, .wall .lc-falls { width: 100%; max-width: 34px; }
+  /* The hand overlapped itself here: the grid's middle auto track took the
+     row and the two 1fr sides resolved to zero, painting the Advantage hand
+     over the attack cards. Flex wraps instead; cards lead on their own line. */
+  .hand-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-3); }
+  .hand-row > .hand-attacks { width: 100%; order: -1; }
+  /* One thumb-width action row, whichever band renders it. */
+  .plan-bar { width: 100%; }
+  .plan-bar .btn { flex: 1; min-height: 48px; }
+  .plan-row { flex-wrap: wrap; }
+  /* Pinned to the thumb while its panel is on screen (sticky cannot escape
+     .fight-main, which is fine: past the panel there is nothing to resolve). */
+  .plan-actions {
+    width: 100%; margin-left: 0; position: sticky; bottom: 0;
+    background: var(--surface-1); padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .plan-actions .btn { flex: 1; min-height: 48px; }
+}
+
+/* ── The boss speaks ───────────────────────────────────────── */
+/* Over its own head, with a border-drawn tail pointing down at the figure. It
+   replaces reading the log for intent, and it replaces the full-width rage
+   banner that used to say the same thing again two rows higher. */
+.bubble {
+  position: relative; margin: 0 0 8px; max-width: 34ch; align-self: flex-end;
+  padding: 5px 10px; border: 2px solid var(--border-strong); border-radius: 12px;
+  background: var(--surface-1); box-shadow: var(--shadow-sm, 0 2px 6px rgb(0 0 0 / 0.12));
+  font-size: var(--text-xs); font-weight: 700; line-height: 1.25;
+  animation: bubble-in 260ms var(--ease-out);
+  --bubble-bg: var(--surface-1);
+}
+.bubble b { display: block; }
+.bubble span { font-weight: 600; color: var(--text-secondary); }
+.bubble::before, .bubble::after { content: ''; position: absolute; right: 26px; border: 0 solid transparent; border-style: solid; }
+.bubble::before { bottom: -12px; border-width: 12px 9px 0; border-top-color: var(--border-strong); }
+.bubble::after { bottom: -8px; right: 29px; border-width: 9px 6px 0; border-top-color: var(--bubble-bg); }
+.bubble.is-alert { border-color: var(--gold-deep); }
+.bubble.is-alert::before { border-top-color: var(--gold-deep); }
+.bubble.is-alarm {
+  background: #fee2e2; color: #7f1d1d; border-color: #b91c1c; --bubble-bg: #fee2e2;
+  animation: bubble-in 260ms var(--ease-out), flash 700ms var(--ease-out);
+}
+.bubble.is-alarm::before { border-top-color: #b91c1c; }
+.bubble.is-alarm span { color: #991b1b; }
+.bubble.is-said { border-style: dashed; }
+@media (max-width: 900px) { .bubble { align-self: flex-start; } .bubble::before { right: auto; left: 26px; } .bubble::after { right: auto; left: 29px; } }
+
+/* ── The die in the empty cell ─────────────────────────────── */
+.die-cell .die-face {
+  width: clamp(46px, 7.6vh, 78px); height: clamp(46px, 7.6vh, 78px);
+  font-size: clamp(18px, 3vh, 30px);
+}
+.die-cell .die-face svg { width: 56%; height: 56%; }
+.die-cell small { text-align: center; max-width: 16ch; line-height: 1.15; }
+/* Waiting for a roll the die rocks: the board is asking for a die, and a still
+   die on an empty cell reads as decoration. Rocking, it reads as a prompt. */
+.die-face.is-waiting { border-color: var(--gold-deep); color: var(--gold-deep); animation: rock 1.6s var(--ease-out) infinite; }
+.die-face.is-good { border-color: var(--ok); color: var(--ok); }
+.die-face.is-bad { border-color: var(--danger); color: var(--danger); }
+
+/* ── The gear shelf ────────────────────────────────────────── */
+/* Five slots that are always there. An empty one is a dimmed dashed outline
+   rather than nothing, so the shelf does not reflow every time one fills. */
+.gear-row { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.gear {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;
+  width: clamp(42px, 6.6vh, 60px); min-height: clamp(44px, 7vh, 62px); padding: 4px 2px;
+  border: 2px dashed var(--border-strong); border-radius: 10px; background: var(--surface-1);
+  font-size: 9px; font-weight: 800; line-height: 1.1; text-align: center; opacity: 0.4;
+}
+/* No animation on .is-on: it persists across renders, and render.js replaces the
+   markup wholesale, so an animation here would replay on every unrelated click.
+   Only the fx classes below animate, and play.js clears those after one render. */
+.gear.is-on { opacity: 1; border-style: solid; border-color: var(--gold-deep); }
+.gear svg { width: 20px; height: 20px; flex: none; }
+.gear small { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.gear--ally svg { width: clamp(26px, 4.4vh, 40px); height: auto; }
+.gear--ally.is-struck { animation: shake 420ms var(--ease-out); border-color: var(--ok); }
+.gear--ally.is-lost { animation: gear-lost 700ms var(--ease-out); border-color: var(--danger); color: var(--danger); }
+
+/* ── Life piles ────────────────────────────────────────────── */
+/* Spent is the card turned sideways, which is the physical game's own gesture.
+   Broken is NOT a mirrored face: face.js renders the real printed back for it,
+   so the only styling it needs is to sit back visually. A rotateY(180deg) here
+   would mirror that back and undo the point of showing it. */
+.pile { display: flex; flex-wrap: wrap; gap: 4px; align-items: flex-end; --mini-w: clamp(24px, 4vh, 40px); }
+/* The hero's life IS the resource the whole game spends, so its cards get the
+   side column and a size you can read states off at a glance. */
+.duel__hero .pile { --mini-w: clamp(32px, 8.5cqh, 58px); gap: 5px; }
+.pile .lc { width: var(--mini-w); height: auto; transition: transform 400ms var(--ease-out), opacity 300ms; }
+.pile .lc.is-spent { transform: rotate(90deg) translateY(-2px); }
+.pile .lc.is-broken { opacity: 0.5; filter: saturate(0.7); }
+.pile--boss { --mini-w: clamp(20px, 3.4vh, 34px); }
+.pile-label { font-size: var(--text-xs); color: var(--text-muted); font-weight: 700; }
+
+/* ── Target selection ──────────────────────────────────────── */
+/* The strip is always there, body chip included, so "which one am I hitting"
+   has an answer before it becomes a question. The pressed chip carries the same
+   gold ring as the figure in the arena. */
+.targets { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; justify-content: flex-end; }
+.minion { display: flex; align-items: center; gap: 5px; padding: 2px 7px; border: 2px solid var(--border-strong); border-radius: var(--radius); background: var(--surface-1); cursor: pointer; font: inherit; font-weight: 700; font-size: var(--text-xs); transition: transform var(--dur, 160ms) var(--ease-out); }
+.minion:hover { transform: translateY(-2px); }
+.minion svg { width: 20px; height: 20px; flex: none; }
+.minion.is-target, .minion[aria-pressed="true"] { border-color: var(--gold-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-deep) 34%, transparent); }
+.hp { display: flex; align-items: center; gap: 6px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.hp .bar { flex: 1; min-width: 48px; max-width: 140px; height: 9px; background: var(--surface-sunk); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-strong); }
+.hp .bar i { display: block; height: 100%; background: var(--boss); transition: width 400ms var(--ease-out); }
+
+/* ── The action panel ──────────────────────────────────────── */
+.actions { display: flex; flex-direction: column; gap: 6px; flex: none; padding: 8px 10px; }
+.turn-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.slots { display: flex; gap: 5px; align-items: center; font-weight: 800; font-size: var(--text-xs); }
+.slots i { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--text-primary); display: inline-block; }
+.slots i.used { background: var(--text-primary); }
+/* A planned action is not spent yet: outlined, so the difference is visible. */
+.slots i.planned { background: var(--gold-deep); border-color: var(--gold-deep); }
+
+/* Three bands: what you hold, what you have declared, what resolves it. Only
+   the first spends a line on a label, and the last collapses entirely when
+   there is nothing to resolve, so an empty band never costs a rule of height. */
+.band { display: flex; flex-direction: column; gap: 3px; }
+.band--plan, .band--go { border-top: 1px solid var(--border); padding-top: 5px; }
+.band--go:empty { display: none; }
+
+/* Three columns, not a centred flex row: the die and the gear are side matter,
+   and centring the row as a whole pushed the CARDS off centre by however wide
+   the die happened to be. The middle column is what the eye should find. */
+.hand-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: end; gap: var(--space-3); }
+.hand-row > .die-cell { justify-self: start; }
+.hand-row > .adv-hand { justify-self: end; }
+/* Wraps, and that is the only reason a phone does not scroll sideways: four
+   84px cards plus their gaps are 372px of a 358px column, and a non-wrapping
+   flex row of them widened the grid track past the viewport instead. */
+.hand-attacks { display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: center; }
+.hand-attacks .action-card { width: var(--hand-w); }
+.hand-attacks .action-card span { font-size: 10px; }
+/* Cost, stake and risk under the card they belong to. Picking a combination
+   used to mean reading a hint line after the fact. */
+.ac-meta { display: flex; align-items: center; justify-content: center; gap: 3px; flex-wrap: wrap; font-size: 9px; font-weight: 700; color: var(--text-muted); line-height: 1.1; }
+.ac-meta .pips { transform: scale(0.85); }
+.action-card.is-queued { outline: 3px solid var(--gold-deep); outline-offset: 2px; transform: translateY(-4px); }
+/* A queued card carries its OWN patterns forward: the count badge and the risk
+   dots go gold with it, so the hand answers "which of these am I playing, and
+   at what odds" without reading the lane underneath. Hover (or press and hold)
+   opens the inspector, which turns those same patterns into this turn's real
+   numbers: the mode dial and a Roar move the check, Hidden halves the damage. */
+.action-card.is-queued { background: #fdf3d3; }
+.action-card.is-queued .qty { background: var(--gold-deep); color: #fffdf7; border-radius: 999px; padding: 0 6px; }
+.action-card.is-queued .ac-meta { color: var(--text-primary); font-weight: 700; }
+.action-card.is-queued .pips--risk { transform: scale(1.15); transform-origin: left center; }
+.action-card .qty { color: var(--gold-deep); }
+.adv-hand { display: flex; flex-direction: column; gap: 2px; }
+.adv-hand .action-cards { display: flex; flex-wrap: wrap; gap: 6px; --mini-w: calc(var(--hand-w) * 0.62); }
+.adv-hand .action-card { width: calc(var(--hand-w) * 0.62); }
+.adv-hand .action-card span { font-size: 10px; }
+
+/* ── The plan lane ─────────────────────────────────────────── */
+/* Horizontal on purpose. Stacked, three steps cost ~130px of the ~560px the
+   whole board gets on a 720px screen; side by side they cost ~58px. */
+.plan-wrap { display: flex; flex-direction: column; gap: 3px; }
+/* The keyboard hint rides the far right of the lane's own heading row, where
+   there is width for one line. It is a reminder, not a control, so it is the
+   first thing dropped when the row runs out of room. */
+.plan-keys { margin-left: auto; white-space: nowrap; }
+@media (max-width: 1100px) { .plan-keys { display: none; } }
+.plan { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; align-items: stretch; min-height: 0; }
+.plan-step {
+  display: flex; align-items: center; gap: 5px; padding: 3px 7px 3px 3px;
+  border: 2px solid var(--border-strong); border-radius: var(--radius); background: var(--surface-1);
+  --mini-w: var(--plan-w);
+}
+.plan-step.is-now { border-color: var(--gold-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold-deep) 30%, transparent); }
+.plan-step.is-done { opacity: 0.45; }
+.plan-step--react { border-style: dashed; }
+.plan-step--react.is-on { border-style: solid; border-color: var(--water, var(--gold-deep)); }
+.plan-num {
+  width: 24px; height: 24px; flex: none; border-radius: 50%; cursor: pointer; font: inherit;
+  font-weight: 900; font-size: var(--text-sm); border: 2px solid var(--text-primary);
+  background: var(--text-primary); color: var(--surface-1);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.plan-num:hover { background: var(--danger); border-color: var(--danger); }
+.plan-num--react { background: var(--surface-1); color: var(--text-primary); }
+.plan-num--react svg { width: 15px; height: 15px; }
+.plan-what { display: flex; flex-direction: column; line-height: 1.1; font-size: 11px; font-weight: 700; }
+.plan-what small { color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
+.plan-what small svg { width: 11px; height: 11px; }
+.plan-bet { display: inline-flex; gap: 3px; align-items: center; }
+/* Each pip IS a life card being staked: 12x17 is the 63x88 card ratio the .lc
+   minis already draw. Filled up to the bet, hollow above it, capped by betRoom
+   at what could legally be staked, so every pip is a live button. */
+.plan-bet .plan-pip {
+  width: 12px; height: 17px; padding: 0; cursor: pointer;
+  border: 2px solid var(--border-strong); border-radius: 3px; background: var(--surface-2);
+}
+.plan-bet .plan-pip.is-staked { background: var(--gold); border-color: var(--gold-deep); }
+.plan-tgt, .plan-rune {
+  font: inherit; font-size: 10px; font-weight: 800; cursor: pointer; padding: 1px 5px;
+  border: 2px solid var(--border-strong); border-radius: 6px; background: var(--surface-2); color: var(--text-secondary);
+}
+.plan-rune[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); border-color: var(--text-primary); }
+/* The per-step target button carries the same gold as the chips in the strip
+   above it: one colour means "this is who that step is aimed at", wherever the
+   player happens to be looking. */
+.plan-tgt { border-color: var(--gold-deep); color: var(--text-primary); }
+.plan-rune { display: inline-flex; align-items: center; padding: 2px 4px; }
+.plan-rune svg { width: 14px; height: 14px; }
+.plan-bar { align-items: center; gap: var(--space-3); }
+.plan-error { font-size: var(--text-xs); font-weight: 800; color: var(--danger); }
+
+.roll-now { padding: 6px 8px; display: flex; flex-direction: column; gap: 5px; }
+.roll-now .row { flex-wrap: wrap; gap: var(--space-3); }
+.typed-roll { width: 68px; min-height: 34px; padding: 0 8px; border: 2px solid var(--border-strong); border-radius: 8px; font: inherit; }
+
+/* ── Log and banners ───────────────────────────────────────── */
+.log { list-style: none; display: flex; flex-direction: column; gap: 3px; font-size: 11px; margin: 0; padding: 0; }
+.log li { padding: 4px 6px; border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text-secondary); }
+.log li.boss { border-left: 4px solid var(--boss); }
+.log li.hero { border-left: 4px solid var(--earth); }
+.log li.bad { border-left: 4px solid var(--danger); color: var(--danger); font-weight: 700; }
+.log li.good { border-left: 4px solid var(--ok); color: var(--ok); font-weight: 700; }
+.log li.rage { background: #fee2e2; color: #7f1d1d; font-weight: 800; }
+/* With the log closed its last line still shows, as one line above the action
+   panel. Closing the log hides the history, not the thing that just happened. */
+.log-tick {
+  margin: 0; padding: 4px 8px; border-radius: var(--radius-sm); background: var(--surface-2);
+  color: var(--text-secondary); font-size: 11px; font-weight: 700;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.log-tick.boss { border-left: 4px solid var(--boss); }
+.log-tick.hero { border-left: 4px solid var(--earth); }
+.log-tick.bad { border-left: 4px solid var(--danger); color: var(--danger); }
+.log-tick.good { border-left: 4px solid var(--ok); color: var(--ok); }
+.log-tick.rage { background: #fee2e2; color: #7f1d1d; font-weight: 800; }
+.banner { padding: 6px var(--space-4); border-radius: var(--radius); font-weight: 800; text-align: center; }
+.banner--soon { opacity: 0.75; }
+.banner--win { background: #dcfce7; color: #14532d; border: 2px solid #15803d; }
+.banner--lose { background: var(--surface-sunk); color: var(--text-primary); border: 2px solid var(--border-strong); }
+
+/* ── Motion ────────────────────────────────────────────────── */
+/* Every effect on the board is one of these, driven by a class play.js puts on
+   the markup for exactly one render. Nothing here is on a JS timer: the global
+   prefers-reduced-motion rule in style.css can only zero motion the CSS owns,
+   and a rAF loop would keep running for a player who asked it not to.
+   `shake`, `wobble` and `flash` are shared primitives and live in style.css. */
+@keyframes float-up {
+  0% { opacity: 0; transform: translate(-50%, 6px) scale(0.8); }
+  25% { opacity: 1; transform: translate(-50%, -4px) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -26px) scale(1); }
+}
+@keyframes bubble-in {
+  0% { opacity: 0; transform: translateY(6px) scale(0.9); }
+  60% { transform: translateY(0) scale(1.04); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes rock {
+  0%, 70%, 100% { transform: rotate(0); }
+  80% { transform: rotate(-9deg); }
+  90% { transform: rotate(7deg); }
+}
+@keyframes shudder {
+  0%, 100% { transform: none; }
+  20% { transform: translateX(-3px) rotate(-2deg); }
+  60% { transform: translateX(3px) rotate(2deg); }
+}
+@keyframes gear-lost {
+  0% { opacity: 1; transform: none; }
+  30% { opacity: 1; transform: translateY(-4px) rotate(-6deg); }
+  100% { opacity: 0.4; transform: translateY(8px) rotate(10deg); }
+}
+
+/* ── Setup and the level-end screens ───────────────────────── */
+.setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
+.pick { display: grid; gap: var(--space-2); }
+.pick button { display: flex; align-items: center; gap: 10px; text-align: left; }
+.pick .figure svg { width: 64px; height: 64px; }
+.draft { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-4); }
+/* The Second Wind toggle: the card itself, next to the sentence that arms it.
+   A checkbox alone never told anyone which card it was putting on the table. */
+.sw-pick { display: flex; align-items: center; gap: var(--space-4); }
+.sw-pick__card { --mini-w: 62px; flex: none; }
+/* An enabled option wears its state: an accent frame, a tint and a corner
+   check, not only the 3px underscore panel--accent drew. The Second Wind card
+   at the side IS the state made visible: parked in greyscale while the option
+   is off, in colour and standing up once it is on. */
+.opt {
+  position: relative; border: 2px solid var(--border); border-radius: var(--radius);
+  padding: var(--space-3);
+  transition: border-color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+.opt.is-on { border-color: var(--gold-deep); background: #fdf3d3; }
+.opt.is-on::after {
+  content: '✓'; position: absolute; top: -10px; right: -8px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--gold-deep); color: #fff;
+  font-weight: 900; font-size: 14px; line-height: 1;
+  display: grid; place-items: center;
+  box-shadow: 0 1px 0 rgba(40, 32, 16, 0.35);
+}
+.opt .sw-pick__card {
+  filter: grayscale(1); opacity: 0.55;
+  transition: filter var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.opt.is-on .sw-pick__card { filter: none; opacity: 1; transform: rotate(-3deg) scale(1.05); }
+@media (prefers-reduced-motion: reduce) {
+  .opt.is-on .sw-pick__card { transform: none; }
+}
+.sw-pick__text { display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
+.sw-pick__text input { width: 20px; height: 20px; }
+
+
+/* ── Collapsing the things that were reserved and empty ────── */
+/* The plan lane billed 61px at 1280x720 (11.6% of the whole fight box) to hold
+   zero steps, in the state the player is in at the start of every turn. */
+.band--plan:has(.plan:empty) { display: none; }
+/* The gear row reserves ONE slot's height so nothing jumps when the first chip
+   arrives, which was the real goal of drawing five permanent ghosts. */
+.gear-row { min-height: var(--gear-h, 30px); }
+.gear-row:empty { min-height: 0; }
+/* The resolve band already collapses; make it explicit next to the other two. */
+.band--go:empty { display: none; }
+.die-cell { flex: none; align-items: center; justify-content: center; gap: 4px; display: flex; flex-direction: column; }
+/* The hand grows from the middle out, so the cards stay where the eye already
+   is instead of starting at the left edge under a 1000px band. */
+.hand-attacks { justify-content: center; }
+.hand-row > .hand-attacks { grid-column: 2; }
+
+
+/* ── Too short to lock ──────────────────────────────────────
+   Under about 660px of height the three promises this file makes stop being
+   satisfiable together: the page must not scroll, the resolve button must be
+   reachable, and the duel must not crop. Something has to give, and the honest
+   one is the lock. A 1280x600 window gets an ordinary scrolling page, exactly
+   like a phone does, instead of a board that hides a third of itself.
+
+   Scrolling the action panel was tried first and was worse: the hand scrolled
+   under the plan lane and a card in it stopped being clickable at all. */
+@media (min-width: 901px) and (max-height: 659px) {
+  html[data-view="play"] body:has(.board-fit) { height: auto; overflow: visible; }
+  .fight-main { grid-template-rows: auto auto auto; }
+  /* container-type: size needs a definite height to resolve cqh against, and in
+     this branch the duel is content-sized, so the query units would resolve to
+     zero and the wall would collapse. Back to ordinary sizing here. */
+  .duel { overflow: visible; container-type: normal; --fig: 60px; }
+  .wall { --wall-card: clamp(20px, calc((100% - (var(--wall-cols) - 1) * 4px) / var(--wall-cols)), 64px); }
+}
+
+/* ══ Iteration 1: the fight gets a heartbeat ═══════════════════
+   Every rule below is a one-render CSS effect keyed off ui.fx (cleared at the
+   top of the next action) or a static state class. Nothing here survives
+   prefers-reduced-motion except the static tints, which is the deal law 5
+   demands: motion is emphasis, never information. */
+
+/* ── Damage has weight classes ─────────────────────────────── */
+.duel .figure.is-hit svg { animation: shake 400ms var(--ease-out); }
+.duel .figure.is-hit.hit-big svg { animation: shake-big 500ms var(--ease-out); }
+.duel .figure.is-hit.hit-xl svg { animation: shake-xl 650ms var(--ease-out); }
+.fx-num.hit-big { font-size: var(--text-xl); }
+.fx-num.hit-xl { font-size: var(--text-2xl); font-weight: 900; }
+@keyframes shake-big {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  20% { transform: translate(-7px, 2px) rotate(-3deg); }
+  45% { transform: translate(6px, -2px) rotate(2.5deg); }
+  70% { transform: translate(-4px, 1px) rotate(-1.5deg); }
+}
+@keyframes shake-xl {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  15% { transform: translate(-12px, 4px) rotate(-5deg); }
+  35% { transform: translate(10px, -4px) rotate(4deg); }
+  55% { transform: translate(-7px, 2px) rotate(-2.5deg); }
+  80% { transform: translate(4px, -1px) rotate(1deg); }
+}
+
+/* ── The wall loses its card, visibly ──────────────────────── */
+.wall .lc-falls { display: inline-block; width: var(--wall-card); animation: wall-fall 700ms var(--ease-out) forwards; }
+.wall .lc-falls .lc { width: 100%; }
+@keyframes wall-fall {
+  0% { transform: none; opacity: 1; }
+  30% { transform: rotate(9deg); opacity: 1; }
+  100% { transform: translateY(140%) rotate(24deg); opacity: 0; }
+}
+/* Reduced motion zeroes the keyframe; `forwards` then holds the 100% frame, so
+   the card is invisible instantly: exactly the old card-is-just-gone render. */
+
+/* ── Rage changes the room ─────────────────────────────────── */
+.duel.is-raging {
+  background: #efe0da;
+  border-color: var(--danger);
+}
+.duel.is-raging .wall-count b { color: var(--danger); }
+.duel.rage-in { animation: rage-in 700ms var(--ease-out); }
+@keyframes rage-in {
+  0% { background: var(--surface-2); }
+  30% { background: #e8c9bf; border-color: var(--danger); }
+  100% { background: #efe0da; }
+}
+.round-chip { display: inline-block; }
+.round-chip.round-warn { color: var(--danger); font-weight: 800; }
+.round-chip.round-rage { color: var(--danger); font-weight: 900; }
+.round-chip.round-pop { animation: round-pop 500ms var(--ease-out); }
+@keyframes round-pop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* ── The room takes the biome's temperature ────────────────────
+   Low-saturation washes so the picture stays the loud thing. Rage wins: its
+   rule sits later with the same specificity, and the klaxon overrides the
+   weather wherever both apply, which is the declared precedence. */
+.duel.duel--volcano { --biome-a: #d99a72; }
+.duel.duel--river { --biome-a: #8fb4c9; }
+.duel.duel--mountain { --biome-a: #a9b596; }
+.duel.duel--desert { --biome-a: #d9c48a; }
+.duel.duel--forest { --biome-a: #93ad7e; }
+.duel.duel--village { --biome-a: #cbab7c; }
+.duel.duel--castle { --biome-a: #a292b8; }
+.duel.is-raging { --biome-a: #cc7a5e; }
+
+/* ── The endings land ──────────────────────────────────────── */
+.duel .figure.is-felled svg { transform: rotate(78deg) translateY(-8%); transform-origin: 50% 88%; }
+.duel .figure.is-felled b { opacity: 0.55; }
+
+/* ── The roll gets a breath of doubt ───────────────────────────
+   The cover is transparent at rest and only the keyframe paints it, so a
+   reduced-motion player sees the number instantly: anticipation is emphasis. */
+.die-cell .die-face { background: #fffdf7; border-color: var(--gold-deep); color: var(--text-primary); box-shadow: 0 2px 0 rgba(120, 85, 15, 0.35); position: relative; }
+.die-cell .die-face.is-rolling::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: transparent; pointer-events: none;
+  animation: die-cover 480ms var(--ease-out);
+}
+@keyframes die-cover {
+  0% { background: var(--gold-deep); transform: scaleY(1); }
+  70% { background: var(--gold-deep); transform: scaleY(1); }
+  100% { background: transparent; transform: scaleY(0); }
+}
+
+/* ── The boss's d6 in the child's hand ─────────────────────── */
+.boss-ask { margin-top: var(--space-3); }
+.die-chips { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.die-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 64px; padding: 6px 8px; cursor: pointer; font: inherit;
+  background: #fffdf7; border: 2px solid var(--border-strong); border-radius: 10px;
+}
+.die-chip:hover { border-color: var(--gold-deep); }
+.die-chip__n { font-size: var(--text-lg); font-weight: 900; line-height: 1; }
+.die-chip small { color: var(--text-muted); font-size: var(--text-xs); }
+
+/* ── The plan's visible Undo, and the settle-in ────────────── */
+/* The lane's own line carries the turn's buttons, pinned right. Steps wrap
+   downward inside ul.plan; the cluster stays vertically centred beside them. */
+.plan-row { display: flex; align-items: center; gap: var(--space-3); }
+.plan-row > .plan { flex: 1; min-width: 0; }
+.plan-actions { flex: none; margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
+.plan-step.just-queued { animation: queue-settle 350ms var(--ease-out); }
+@keyframes queue-settle { 0% { transform: translateY(-8px); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
+
+/* ── The picks confirm before they commit ──────────────────── */
+.action-card.is-picked { outline: 3px solid var(--gold-deep); outline-offset: 3px; border-radius: 10px; }
+.confirm-bar { min-height: 52px; }
+
+/* ── The bubble's event tone ───────────────────────────────── */
+.bubble.is-event { border-color: var(--gold-deep); background: #fdf6e0; }
+
+/* ── Setup as slides ───────────────────────────────────────── */
+.setup-steps { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.setup-step {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer;
+  font: inherit; background: var(--surface-1); border: 2px solid var(--border); border-radius: 999px;
+}
+.setup-step span { font-weight: 900; }
+.setup-step.is-here { border-color: var(--gold-deep); background: #fdf6e0; }
+.setup-step.is-done { opacity: 0.75; }
+.fast-lane { border-color: var(--gold-deep); gap: var(--space-3); }
+.table-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.table-steps li { display: flex; align-items: center; gap: var(--space-4); font-size: var(--text-base); }
+.table-steps__art { display: inline-flex; gap: 3px; --mini-w: 34px; flex: none; }
+.table-steps__art .lc { width: 34px; }
+.setup-nav { margin-top: var(--space-2); }
+/* The keyboard hint describes keys a touch screen does not have. */
+@media (hover: none) { .setup-keys { display: none; } }
+
+/* ── Small fingers ─────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .die-chip { min-width: 72px; min-height: 56px; }
+  .action-card, .btn, .tbl-slot, .setup-step, .seg button { min-height: 44px; }
+  .minion { min-height: 44px; }
+  .minion { padding: 4px 10px; }
+  /* The plan number stays a 24px circle but hits like 48: deleting a step is
+     the control a thumb misses most. Steps are a full row apart, no overlap. */
+  .plan-num { position: relative; }
+  .plan-num::after { content: ""; position: absolute; inset: -8px; }
+  .plan-bet .plan-pip { min-height: 28px; min-width: 18px; }
+  .plan-tgt, .plan-rune { min-height: 32px; min-width: 32px; padding: 4px 8px; }
+  .typed-roll { min-height: 44px; width: 84px; }
+}
+/* Sticky hover is not hover: a tapped rail slot stayed 4x scaled over the
+   board. The zoom is a desktop affordance; tap opens the modal either way. */
+@media (hover: none) {
+  .tbl-slot:hover { transform: none; }
+  .minion:hover { transform: none; }
+}
+
+/* ── The phone column leads with the fight ─────────────────── */
+@media (max-width: 900px) {
+  .fight-main { order: 1; }
+  .fight-table { order: 2; }
+  .fight-log-below { order: 3; }
+}
+
+/* The boss's own row on the chips wears its signature colour. */
+.die-chip--sig { border-color: var(--gold-deep); background: #fdf6e0; }
+.die-chip--sig small { color: var(--gold-deep); font-weight: 700; }
+
+/* ── The first-fight tour ──────────────────────────────────── */
+/* One floating sentence at a time, and a pulse on the region it names. The
+   callout never covers the board: it floats bottom-centre, above the fold on
+   every size the lock allows. */
+.tour-callout {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+  z-index: 80; max-width: min(440px, calc(100vw - 24px));
+  background: var(--surface-1); border: 2px solid var(--gold-deep);
+  border-radius: var(--radius); padding: 10px 14px;
+  box-shadow: 0 10px 30px rgba(40, 32, 16, 0.28);
+}
+.tour-callout p { margin: 0 0 8px; font-size: var(--text-sm); line-height: 1.5; }
+[data-tour-on="wall"] [data-tour="wall"],
+[data-tour-on="life"] [data-tour="life"],
+[data-tour-on="hand"] [data-tour="hand"],
+[data-tour-on="go"] [data-tour="go"] {
+  outline: 3px solid var(--gold-deep); outline-offset: 4px; border-radius: 8px;
+  animation: tour-pulse 1.6s var(--ease-out) infinite;
+}
+@keyframes tour-pulse {
+  0%, 100% { outline-offset: 4px; }
+  50% { outline-offset: 7px; }
+}
+
+/* ── The resolve popup: the throw gets a stage ─────────────── */
+.rm-backdrop {
+  position: fixed; inset: 0; z-index: 70;
+  background: rgba(50, 42, 26, 0.38);
+  display: grid; place-items: center;
+}
+/* No entry animation, deliberately. render() rebuilds this element on every
+   click, so a fade from transparent replayed every time: throwing a die showed
+   the whole bright page for 200ms and then darkened again, which is what the
+   owner reported as the page refreshing white and hard on the eyes. The scrim
+   is simply there, at one opacity, for as long as the popup is. */
+.rm {
+  width: min(520px, calc(100vw - 28px));
+  background: var(--surface-1); border: 2px solid var(--border-strong);
+  border-radius: var(--radius); padding: 16px 18px;
+  box-shadow: 0 18px 50px rgba(40, 32, 16, 0.35);
+}
+.rm-what { margin: 0 0 10px; display: flex; flex-direction: column; gap: 3px; }
+.rm-what span { font-size: var(--text-sm); color: var(--text-muted); }
+.rm-row { margin-top: 12px; }
+.rm-ledger { list-style: none; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; font-size: var(--text-sm); }
+.rm-ledger li { display: flex; align-items: center; gap: 7px; }
+.rm-ledger li.bad { color: var(--text-muted); }
+.rm-roll {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; flex: none;
+  border: 2px solid var(--gold-deep); border-radius: 7px; font-weight: 900; font-size: 12px;
+  background: #fffdf7;
+}
+.rm-roll--auto { border-color: var(--border); color: var(--text-muted); }
+
+@media (max-width: 900px) {
+  .rm { width: calc(100vw - 16px); padding: 12px; }
+  .rm-row .btn { min-height: 48px; }
+}
+
+/* ── The throw: the site's own die, tossed ─────────────────── */
+/* One rounded square, one numeral, the same face the die-cell and the ledger
+   draw: exactly one number exists to read, so the landing cannot be misread.
+   Pre-throw the face wears the die's glyph; the throw arcs, squashes into the
+   shadow, and the numeral pops in late so it never contradicts the tumble. */
+.die-stage { display: grid; place-items: center; min-height: 92px; position: relative; }
+.die-stage::after {
+  content: ""; position: absolute; left: 50%; bottom: 6px; width: 60px; height: 11px;
+  transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(80, 66, 34, 0.26), transparent);
+  pointer-events: none;
+}
+.die-stage.has-rolled::after { animation: die-shadow 620ms var(--ease-out); }
+@keyframes die-shadow {
+  0%   { transform: translateX(-50%) scaleX(0.35); opacity: 0.15; }
+  74%  { transform: translateX(-50%) scaleX(1.2); opacity: 1; }
+  100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+}
+.die-stage__dice { display: flex; gap: 14px; align-items: center; }
+.die-stage__which { position: absolute; right: 8px; bottom: 2px; font-size: 10px; }
+.die-toss {
+  width: 62px; height: 62px; border-radius: 14px;
+  border: 3px solid var(--gold-deep); background: #fffdf7;
+  display: grid; place-items: center;
+  font-size: 28px; font-weight: 900; font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 0 rgba(120, 85, 15, 0.35);
+}
+.die-toss__glyph { width: 34px; height: 34px; color: var(--gold-deep); opacity: 0.85; }
+.die-toss.is-tossed { animation: die-toss 620ms var(--ease-out); }
+.die-toss.is-tossed b { animation: die-num 620ms var(--ease-out); }
+@keyframes die-toss {
+  0%   { transform: translate3d(0, -44px, 0) rotate(-200deg) scale(0.55); }
+  74%  { transform: translate3d(0, 5px, 0) rotate(9deg) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+}
+@keyframes die-num {
+  0%, 55% { opacity: 0; }
+  76% { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 1; transform: none; }
+}
+/* 2d6 / 3d6 patter in, not in lockstep. */
+.die-toss--b { animation-delay: 80ms; animation-duration: 690ms; }
+.die-toss--c { animation-delay: 160ms; animation-duration: 760ms; }
+
+/* ── Break points, and the dial that prices them ────────────
+   RULES.md section 7. The row is only ever on screen inside the window a
+   landed attack opens, so it is styled as a prompt rather than as a toolbar:
+   it appears, you say what you went for, you pick, it goes. */
+.band--break { border-top: 1px solid var(--gold-deep); padding-top: 5px; }
+.brk { display: flex; flex-direction: column; gap: 6px; }
+.brk-picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+.brk-pick {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer;
+  border: 2px solid var(--gold-deep); background: #fffdf7; font: inherit; text-align: left;
+}
+.brk-pick svg { color: var(--gold-deep); }
+.brk-pick b { font-size: var(--text-sm); }
+.brk-pick small { color: var(--text-secondary); font-size: 11px; line-height: 1.25; }
+.brk-pick:hover, .brk-pick:focus-visible { background: #fdf3d3; transform: translateY(-1px); }
+
+.dm-dial { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); border: 2px solid var(--border); border-radius: var(--radius); }
+.dm-styles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3); }
+.dm-style {
+  display: flex; flex-direction: column; gap: 3px; align-items: flex-start;
+  padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer;
+  border: 2px solid var(--border); background: var(--surface-1); font: inherit; text-align: left;
+}
+.dm-style.is-on { border-color: var(--gold-deep); background: #fdf3d3; }
+.dm-style small { line-height: 1.3; }
+
+/* The boss's popup: one button, centred, because there is exactly one thing
+   to do and a lone control floating left reads as half a row. */
+.rm-row--one { justify-content: center; }
+.rm--boss .boss-ask { margin-top: 6px; }
+.brk--modal { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; }
+
+/* ── The phone ──────────────────────────────────────────────
+   Measured 2026-08-30 on a real page at 390x844 and 360x740. Four things were
+   wrong and three of them were dead CSS: rules that were written, are correct,
+   and never applied. They are re-stated here, at the bottom of the file and at
+   a specificity that does not depend on source order, which is what defeated
+   two of them the first time. */
+@media (max-width: 900px) {
+  /* 1. The action panel began 45px BELOW the fold at 360x740: the board opened
+        with no hand, no plan and no button on screen, and the arena above it
+        was 537px of figures. Pinning the panel is the fix that also makes the
+        plan lane's sticky work, since sticky can only pin inside a containing
+        block the viewport can see. */
+  .fight-main > .panel.actions {
+    /* min-width:0 because .fight-main is a GRID and a grid item defaults to
+       min-width:auto: the panel measured 552px inside a 328px track and took
+       the page sideways with it. Releasing the flex chain below was not enough;
+       the growth simply happened one level up. */
+    min-width: 0;
+    position: sticky; bottom: 0; z-index: 3;
+    background: var(--surface-1);
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    box-shadow: 0 -10px 20px -14px rgba(0, 0, 0, 0.45);
+  }
+  /* The lane no longer pins itself: its panel is the thing that is pinned. */
+  .board-fit .plan-actions { position: static; padding-bottom: 0; }
+
+  /* 2. The arena yields instead of the panel. cqh cannot be used here
+        (container-type is normal below the lock), so the figures take a flat
+        size and the wall takes a flat cap. */
+  .board-fit .duel { --fig: 64px; gap: 6px; padding: 6px 8px; }
+  .board-fit .duel .bubble { max-width: none; align-self: stretch; }
+  .board-fit .wall .lc, .board-fit .wall .lc-part, .board-fit .wall .lc-falls { max-width: 28px; }
+
+  /* 3. The hand row: the ">=901px" grid was declared later in the file at equal
+        specificity, so the phone got a three-column grid, the die readout was
+        auto-placed outside its own parent, 36px of it hung off the right edge
+        and the page scrolled sideways. Specificity, not order, decides now. */
+  .board-fit .hand-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-3); }
+  .board-fit .hand-row > .die-cell { flex: none; }
+
+  /* 5. The hand scrolls sideways instead of wrapping. Measured: six cards at
+        84px wrapped to two rows, the panel came to 539px of a 740px screen,
+        and the pinned panel then covered the boss it was pinned in front of.
+        One row of 78px cards is 150px, and the arena gets its 190px back.
+        The cards you have QUEUED carry a gold ring, so a card scrolled out of
+        sight is still accounted for on the lane underneath. */
+  .board-fit { --hand-w: 78px; }
+  /* min-width:0 is the load-bearing line. A flex item defaults to
+     min-width:auto, so a nowrap row of six cards sets its own base size from
+     its content: the scroller measured 528px inside a 304px column and the
+     PAGE scrolled sideways instead of the strip. Every ancestor between here
+     and .fight-main needs the same release or the growth just moves up a level. */
+  .board-fit .fight-main, .board-fit .band, .board-fit .hand-row { min-width: 0; }
+  .board-fit .hand-row > .hand-attacks {
+    width: 100%; min-width: 0; max-width: 100%; order: -1;
+    flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+    justify-content: flex-start; scroll-snap-type: x proximity;
+    padding-bottom: 3px;
+  }
+  .board-fit .hand-attacks .action-card { flex: none; scroll-snap-align: start; }
+
+  /* 4. Nothing scrolls under an open dialog. Without this a touch-drag on the
+        backdrop scrolled the board out from under a modal marked aria-modal. */
+  /* 6. The three rewards stay a ROW on a phone, and drop their hint lines.
+        Stacking them read better and measured 289px, which pushed the pinned
+        panel past the viewport and put the whole prompt below the fold: the
+        exact defect the pinning exists to prevent. The hint is one hold away
+        on the card itself, and the reward names are the short words. */
+  .brk-picks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .brk-pick { align-items: center; text-align: center; gap: 2px; padding: 7px 4px; min-height: 46px; }
+  .brk-pick small { display: none; }
+  .brk-pick b { font-size: 12px; }
+  /* Inside the dialog there is room, so the hints come back. */
+  .brk--modal .brk-picks { grid-template-columns: 1fr; }
+  .brk--modal .brk-pick { flex-direction: row; align-items: center; text-align: left; gap: var(--space-3); }
+  .brk--modal .brk-pick small { display: block; flex: 1; }
+}
+
+/* The dialog owns the screen while it is up, at every width. */
+html[data-view="play"] body:has(.rm-backdrop) { overflow: hidden; }
+
+/* ── The way in ─────────────────────────────────────────────
+   Three cards, not two panels of the same shape in the same colour. The owner
+   read the old pair as one thing and said so: a menu you can overlook is not a
+   menu. What separates them is LENGTH, because that is the question actually
+   being asked at a table on a Saturday, so the pips and the clock come first
+   and each card takes its own accent from the boss it ends on. */
+.kind-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--space-4); }
+.kind {
+  --kind-accent: var(--border-strong);
+  display: grid; grid-template-rows: auto auto auto auto 1fr; gap: 4px;
+  padding: var(--space-4); text-align: left; font: inherit; cursor: pointer;
+  border: 2px solid var(--border); border-radius: var(--radius);
+  background: var(--surface-1); border-top: 5px solid var(--kind-accent);
+  transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out), border-color 140ms var(--ease-out);
+}
+.kind[data-kind-id="first"] { --kind-accent: #16a34a; }
+.kind[data-kind-id="quick"] { --kind-accent: #2563eb; }
+.kind[data-kind-id="full"]  { --kind-accent: #b91c1c; }
+.kind:hover, .kind:focus-visible { transform: translateY(-3px); box-shadow: 0 10px 22px -14px rgba(40, 32, 16, 0.55); }
+.kind.is-on { border-color: var(--kind-accent); background: color-mix(in srgb, var(--kind-accent) 7%, var(--surface-1)); }
+.kind__len { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.kind__len b { font-size: var(--text-sm); color: var(--kind-accent); }
+.kind__len small { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+/* Five pips, lit to the run's length: the comparison IS the picture. */
+.kind__pips { display: inline-flex; gap: 3px; }
+.kind__pips i { width: 8px; height: 8px; border-radius: 2px; border: 1.5px solid var(--kind-accent); }
+.kind__pips i.is-on { background: var(--kind-accent); }
+.kind__fig { justify-self: start; }
+.kind__fig svg { width: 64px; height: 64px; }
+.kind__name { font-size: var(--text-lg); font-weight: 900; }
+.kind__who { font-size: var(--text-xs); font-weight: 700; color: var(--kind-accent); }
+.kind__lead { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.45; }
+
+/* The break dial's own body, which only exists once the switch is on. */
+.dm-open { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); }
+
+/* ── The hero cheers before the fight ───────────────────────
+   Two arm rotations and a hop on the figure standing on the last setup slide.
+   It is the one moment in the whole flow where nothing is being decided, which
+   is exactly where a small piece of life belongs. CSS only: css/style.css
+   zeroes every animation under prefers-reduced-motion and this goes with it. */
+.fig--cheer .fig__arm--l { animation: cheer-l 2.4s var(--ease-out) infinite; }
+.fig--cheer .fig__arm--r { animation: cheer-r 2.4s var(--ease-out) infinite; }
+.fig--cheer { animation: cheer-hop 2.4s var(--ease-out) infinite; }
+@keyframes cheer-l {
+  0%, 30%, 100% { transform: rotate(0deg); }
+  45%, 80% { transform: rotate(-42deg); }
+}
+@keyframes cheer-r {
+  0%, 30%, 100% { transform: rotate(0deg); }
+  45%, 80% { transform: rotate(42deg); }
+}
+@keyframes cheer-hop {
+  0%, 34%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  66% { transform: translateY(0); }
+}
+
+/* The setup column reads as a column: the stepper, one slide, the buttons,
+   all on the same axis. It was centred by the container and its content was
+   not, so the whole thing sat a little left of where the eye expected it. */
+.setup-slide { max-width: 62rem; margin-inline: auto; width: 100%; }
+/* The header and the stepper sat hard left while the Next button sat hard
+   right, so the eye crossed an empty middle on every slide and the whole thing
+   read as off centre. One axis: everything the setup says is centred on it, and
+   only Back and Next keep the edges, because those are directions. */
+/* Everything in the column shares the spine's left edge. Centring the stepper
+   inside the column looked right before the spine existed and looks wrong now:
+   it put the stepper 66px right of the cards below it, which is exactly the
+   soft, nothing-quite-lines-up feel the spine was meant to cure. */
+.setup-slide .setup-steps { justify-content: flex-start; }
+.setup-slide > .small.muted { text-align: center; }
+.setup-slide .setup-nav { align-items: center; }
+@media (max-width: 700px) {
+  .setup-slide .setup-steps { gap: 4px; }
+  .kind { padding: var(--space-3); }
+  .kind__fig svg { width: 52px; height: 52px; }
+}
+
+/* ── The wall answers the obvious question ──────────────────
+   Every card in the boss's wall is worth the same 100 and the leading one is a
+   fraction of it, and nothing on screen said so. A hover lifts the card and its
+   title gives the number; the grid cell does not move, so the wall does not
+   reflow under the pointer. */
+.lc-hit { display: contents; }
+.wall .lc-hit > * { transition: transform 120ms var(--ease-out); }
+.wall .lc-hit:hover > * { transform: translateY(-3px) scale(1.06); cursor: help; }
+
+/* ── Reordering the lane ────────────────────────────────────
+   Order started mattering when Run began halving what follows it, and the only
+   way to move a card was to clear the lane and rebuild it. Drag the step, or
+   nudge it with the two chevrons: both dispatch the same action, so the mouse
+   can never do what the keyboard cannot. */
+.plan-step[draggable="true"] { cursor: grab; }
+.plan-step.is-dragging { opacity: 0.45; cursor: grabbing; }
+.plan-step.is-over { outline: 2px dashed var(--gold-deep); outline-offset: 2px; }
+.plan-move { display: inline-flex; color: var(--text-muted); }
+.plan-bump {
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+  border-radius: var(--radius-sm); width: 20px; min-height: 22px; padding: 0;
+  font: inherit; font-size: 13px; line-height: 1; cursor: pointer;
+}
+.plan-bump:hover { border-color: var(--gold-deep); color: var(--text-primary); }
+.plan-bump[aria-disabled="true"] { opacity: 0.3; pointer-events: none; }
+@media (max-width: 900px) {
+  /* On a phone the drag is the awkward gesture and the chevrons are the answer,
+     so they get a thumb-sized target and the grip dots go away. */
+  .plan-move { display: none; }
+  .plan-bump { width: 28px; min-height: 30px; font-size: 15px; }
+}
+
+/* ── The spine ──────────────────────────────────────────────
+   The setup title stands on its edge down the left margin, the way a word runs
+   down the spine of a book or the edge of a boxed game. It is the one piece of
+   typography here that a generic layout would not produce, and it is not
+   decoration: it hands the top of the screen back to the thing being chosen,
+   which is what the three run cards needed.
+
+   The visible copy is aria-hidden and a sr-only h2 carries the real heading,
+   because a rotated string is read letter-by-letter by some screen readers.
+   Below 900px it lies back down: a 90-degree title on a 360px screen costs
+   more width than it saves. */
+.setup-shell { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+.spine {
+  position: sticky; top: var(--space-6);
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: clamp(28px, 4.2vw, 54px); font-weight: 900; line-height: 1;
+  letter-spacing: -0.02em; text-transform: uppercase;
+  color: transparent; -webkit-text-stroke: 1.5px var(--gold-deep);
+  padding-block: var(--space-2);
+  border-inline-end: 3px solid var(--gold-deep);
+  padding-inline-end: var(--space-4);
+  user-select: none;
+}
+@media (max-width: 900px) {
+  .setup-shell { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  .spine {
+    position: static; writing-mode: horizontal-tb; transform: none;
+    font-size: var(--text-2xl); border-inline-end: 0; padding-inline-end: 0;
+    border-block-end: 3px solid var(--gold-deep); padding-block-end: var(--space-2);
+  }
+}
+
+/* ── Marks: the bricks under a figure (expansion M1) ──────────
+   The physical brick is the rule (RULES.terrain.md), so these are drawn as
+   small solid studs rather than as text or an icon: a table glancing between
+   the screen and the floor should be looking at the same object. Marked is a
+   near-white brick, so every pip carries a ring rather than relying on its
+   fill to separate it from the paper. */
+.marks { display: inline-flex; gap: 4px; align-items: center; margin-left: 6px; vertical-align: middle; }
+.mark-brick {
+  width: 13px; height: 13px; border-radius: 3px;
+  background: var(--brick, #888);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.22), 0 0 0 1.5px var(--ink, #2b2118);
+  display: inline-block; flex: none;
+}
+.mark-brick::after {
+  content: ''; display: block; width: 5px; height: 5px; margin: 1.5px auto 0;
+  border-radius: 50%; background: rgb(255 255 255 / 0.4);
+}
+
+/* The terrain module's board row. Same weight as the break offer it sits
+   under: one line, never a panel, because it is an option and not a phase. */
+.terrain-row {
+  gap: var(--space-3); align-items: center; flex-wrap: wrap;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--rule, #d8cfbc); border-radius: var(--radius-2, 8px);
+}
+.terrain-row .pile-label { display: inline-flex; align-items: center; gap: 6px; }
+.terrain-row button[disabled] { opacity: .5; cursor: default; }
+
+/* The expansion switches on the setup screen. */
+.mod-switches { margin-top: var(--space-4); }
+.mod-switches .sw-pick + .sw-pick { margin-top: var(--space-2); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .mark-brick { transition: transform 120ms ease; }
+}

@@ -1,0 +1,213 @@
+<!-- Rewind capture of https://decisionwheel.neorgon.com/ on 2026-09-23T09:46:23-03:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org; img-src 'self' data: blob: https://cdn.neorgon.org https://neorgon.goatcounter.com; connect-src 'self' https://neorgon.goatcounter.com https://cloudflareinsights.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Decision Wheel">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Decision Wheel | Spinner Wheel & Random Picker</title>
+  <meta name="description" content="Build a custom decision wheel with your options, colors, and messages. Share any setup as a bookmark link">
+  <meta property="og:title" content="Decision Wheel | Spinner Wheel & Random Picker">
+  <meta property="og:description" content="Custom decision wheel. Pick your options, colors, and messages, then share via URL">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://decisionwheel.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Decision Wheel | Spinner Wheel & Random Picker">
+  <meta name="twitter:description" content="Custom decision wheel. Pick your options, colors, and messages, then share via URL">
+  <meta name="twitter:image" content="https://decisionwheel.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://decisionwheel.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://decisionwheel.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Decision Wheel",
+    "description": "Build a custom decision wheel with your options, colors, and messages. Share any setup as a bookmark link",
+    "url": "https://decisionwheel.neorgon.com/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+    <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/decision-wheel-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header class="header-bar" data-header-mode="app">
+  <div class="header-logo">
+    <a href="https://decisionwheel.neorgon.com/" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+      <h1 id="header-title">Decision Wheel</h1>
+      <div class="header-subtitle" id="header-subtitle">Spin your choices, pick a winner</div>
+    
+        </div>
+      </a>
+  </div>
+  <div class="header-right">
+    <div class="header-actions">
+      <button class="btn-settings-header" data-keep-mobile id="btn-toggle-settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span>Settings</span>
+  </button>
+    </div>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+  </div>
+</header>
+
+<!-- ── App body ─────────────────────────────────────────────────────────────── -->
+<main class="app-body" id="main">
+
+  <!-- Wheel stage -->
+  <div class="wheel-stage" id="wheel-stage">
+    <div class="wheel-title">
+      <span class="wheel-title-icon" id="display-icon">🎡</span>
+      <span id="display-title">Spin the Wheel</span>
+    </div>
+    <div class="wheel-wrapper">
+      <canvas id="wheel-canvas" width="600" height="600" role="img" aria-label="Decision wheel. Use the Spin button below to spin."></canvas>
+      <div class="wheel-pointer"></div>
+    </div>
+    <button class="btn-spin" id="btn-spin" onclick="spin()">SPIN</button>
+  </div>
+
+  <!-- Settings drawer -->
+  <div class="settings-drawer closed" id="settings-drawer">
+    <div class="settings-drawer-inner">
+      <div class="settings-header">
+        <h2>⚙️ Wheel Settings</h2>
+        <button class="btn-close-settings" onclick="toggleSettings()" title="Close" aria-label="Close settings">×</button>
+      </div>
+      <div class="settings-body">
+
+        <!-- Wheel identity -->
+        <div class="setting-group">
+          <label>Wheel Title &amp; Icon</label>
+          <div class="setting-row-2">
+            <input class="form-input seg-emoji-input" id="cfg-icon" type="text" placeholder="🎡" maxlength="4" value="🎡">
+            <input class="form-input" id="cfg-title" type="text" placeholder="Decision Wheel">
+          </div>
+        </div>
+
+        <!-- Win message -->
+        <div class="setting-group">
+          <label>Result Message</label>
+          <input class="form-input" id="cfg-win-msg" type="text" placeholder="🎉 {emoji} {result}!">
+          <span class="form-hint">Use <code style="color:var(--accent-bright)">{result}</code> and <code style="color:var(--accent-bright)">{emoji}</code> as placeholders</span>
+        </div>
+
+        <!-- Segments -->
+        <div class="setting-group">
+          <label>Options <span id="seg-count" style="color:var(--accent-bright);font-weight:700;margin-left:4px"></span></label>
+          <div class="segments-list" id="segments-list"></div>
+          <button class="btn-ghost" onclick="addSegment()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Add Option
+          </button>
+        </div>
+
+      </div>
+      <div class="settings-footer">
+        <button class="btn-primary" onclick="applySettings()">✓ Apply &amp; Save</button>
+        <button class="btn-secondary" onclick="copyShareLink()">🔗 Copy Share Link</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn-secondary" style="flex:1;font-size:.8rem" onclick="loadTemplate('blameGame')">🎯 Blame Game</button>
+          <button class="btn-secondary" style="flex:1;font-size:.8rem" onclick="loadTemplate('pizza')">🍕 Pizza Night</button>
+        </div>
+        <button class="btn-secondary" onclick="resetToDefault()">↺ Reset to Default</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Result overlay ──────────────────────────────────────────────────────── -->
+<div class="result-overlay" id="result-overlay" onclick="closeResult()">
+  <div class="result-card" onclick="event.stopPropagation()">
+    <span class="result-emoji-big" id="res-emoji">🎉</span>
+    <div class="result-color-bar" id="res-color-bar"></div>
+    <div class="result-segment-text" id="res-text"></div>
+    <div class="result-message" id="res-message"></div>
+    <div class="result-excuses" id="res-excuses"></div>
+    <button class="btn-spin-again" onclick="closeResult()">Spin Again</button>
+  </div>
+</div>
+
+<!-- ── Help button & menu ──────────────────────────────────────────────────── -->
+<button class="help-button" onclick="toggleHelpMenu()" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button>
+<div class="help-menu" id="help-menu">
+  <div>
+    <h3>Random Spin</h3>
+    <div class="help-row"><span>Spin wheel</span><span><kbd class="help-key">Space</kbd> / <kbd class="help-key">Enter</kbd></span></div>
+    <div class="help-row"><span>Click wheel</span><span>🖱️ click</span></div>
+  </div>
+  <div class="help-section" id="help-rig-section">
+    <h3>Rig Spin</h3>
+    <div id="help-rig-rows"></div>
+  </div>
+  <div class="help-section">
+    <h3>Other</h3>
+    <div class="help-row"><span>Toggle help</span><kbd class="help-key">?</kbd></div>
+    <div class="help-row"><span>Easter egg 🥚</span><kbd class="help-key">8</kbd></div>
+  </div>
+</div>
+
+<!-- ── Explosion overlay ───────────────────────────────────────────────────── -->
+<div class="explosion-overlay" id="explosion-overlay" onclick="closeExplosion()">
+  <div class="explosion-particles" id="explosion-particles"></div>
+  <div class="you-container">
+    <div class="pointing-hand">👆</div>
+    <div class="you-text">YOU</div>
+    <div class="you-subtitle">It's all your fault</div>
+  </div>
+  <div class="explosion-close-hint">Press any key or click to close</div>
+</div>
+
+<!-- ── Toast container ─────────────────────────────────────────────────────── -->
+<div id="toast-container"></div>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+  </footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

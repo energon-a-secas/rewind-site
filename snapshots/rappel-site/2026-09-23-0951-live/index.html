@@ -1,0 +1,236 @@
+<!-- Rewind capture of https://rappel.neorgon.com/ on 2026-09-23T09:51:40-03:00 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Rappel">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Rappel | Spaced repetition flashcards</title>
+  <meta name="description" content="Drill flashcards with FSRS-6 scheduling in your browser. Import a deck, review it, keep the ledger, and embed any deck in your own site">
+  <meta property="og:title" content="Rappel: Spaced repetition flashcards">
+  <meta property="og:description" content="FSRS-6 scheduling, your decks, your review ledger, no account">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rappel.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rappel: Spaced repetition flashcards">
+  <meta name="twitter:description" content="FSRS-6 scheduling, your decks, your review ledger, no account">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rappel.neorgon.com/">
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/rappel-site">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://rappel.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Rappel">
+  <meta name="twitter:image" content="https://rappel.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/session.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="_ext/cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- NeoKeys Kit (vendored). The ? sheet, the H chrome toggle and the WCAG 2.1.4
+       remap panel. Registrations are in js/keys.js, not here.
+       See packages/neorgon-ui/keys/README.md. -->
+  <script>try{if(/(?:^|;\s*)neo_chrome=off/.test(document.cookie))document.documentElement.dataset.chrome='off'}catch(e){}</script>
+  <meta name="neo-chrome-toggle" content="on">
+  <link rel="stylesheet" href="css/neorgon-keys.css">
+  <!-- Neorgon Viz Kit (vendored). The stats screen is viz.heatmap, viz.line,
+       viz.statGrid and viz.spark. See packages/neorgon-ui/README.md. -->
+  <link rel="stylesheet" href="css/viz.css">
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md. -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <!-- Neorgon Auth Kit (vendored; packages/neorgon-ui/sync-auth.sh). Dormant until a
+       clerk-publishable-key meta is added: without one the slot stays hidden and nothing
+       loads. neo-auth-reason is the sign-in dialog's lede, read each time it opens. -->
+  <meta name="neo-auth-reason" content="Sign in to keep your review ledger on every device. With no account, everything stays in this browser.">
+  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter. -->
+  <meta name="beacon-site" content="rappel-site">
+  <link rel="stylesheet" href="css/neorgon-beacon.css">
+  <script defer src="js/neorgon-beacon.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rappel",
+    "description": "Spaced repetition flashcards with an FSRS-6 scheduler that runs in the browser. Decks and the review ledger stay on the visitor's device.",
+    "url": "https://rappel.neorgon.com/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Skip links. render.js repoints "Skip to content" at the current view's
+       own h2 after every paint, so the first thing read is the screen's name
+       rather than an unnamed div; #viewRoot is the fallback for a screen with
+       no heading. The card link is shown by render.js during a session and
+       hidden again after it, since there is nothing to skip to otherwise. -->
+  <a class="skip-link" id="skipCard" href="#rpCard" data-ui="skipToCard" hidden>Skip to the card</a>
+  <a class="skip-link" id="skipMain" href="#viewRoot" data-ui="skipToContent">Skip to content</a>
+
+  <!-- Neorgon Header Kit contract. app mode: slim 56px, auto-hides on scroll. -->
+  <header class="header-bar" data-header-mode="app" data-header-skin="custom">
+    <div class="header-logo">
+      <a href="https://rappel.neorgon.com/" class="header-title-link">
+        <img src="_ext/cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+          <h1>Rappel</h1>
+          <div class="header-subtitle">Spaced repetition, FSRS-6</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <!-- Import is the one action worth reaching from any screen, and it is
+           where an empty library points. Export and Restore moved to the
+           Storage block at the foot of the library, beside the sentence about
+           where the ledger actually lives: they were tab stops twice over,
+           once here and once in the library toolbar. -->
+      <div class="header-actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-act="open-import" data-keep-mobile data-ui="import">Import</button>
+      </div>
+      <!-- Accounts (CONTRACTS C7.2): the Neorgon Auth Kit's slot, "Sign in" or the
+           avatar menu. It stays hidden until a clerk-publishable-key meta is on the
+           page and js/sync.js starts the kit, and an embed never starts it. -->
+      <div class="neo-auth" data-neo-auth data-keep-mobile hidden></div>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="shell">
+      <nav class="shell__rail" aria-label="Sections" data-ui-aria="navLabel">
+        <button type="button" class="nav-link is-active" data-view="library" aria-current="page" data-ui="decks">Decks</button>
+        <button type="button" class="nav-link" data-view="stats" data-ui="stats">Stats</button>
+        <button type="button" class="nav-link" data-view="settings" data-ui="settings">Settings</button>
+      </nav>
+      <div class="shell__main stack stack--loose">
+        <div id="viewRoot" tabindex="-1"></div>
+        <!-- The licence acknowledgement. Site owned, at the foot of the main
+             content region, emitted from the loaded deck's own declaration so
+             an author cannot forget it. Contract C11.3. -->
+        <aside class="neo-attrib" id="attrib" aria-label="Licences" data-ui-aria="attribLabel" hidden></aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Import a deck -->
+  <div class="modal" id="importModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="importTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="importTitle" data-ui="importTitle">Import a deck</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog" data-ui-aria="closeDialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body stack stack--tight">
+        <p class="section__lead" data-ui-html="importLead">TSV, CSV or JSON. Anki's <code>#separator:</code> header block is
+          read as written, so a file exported from Anki loads unchanged, and
+          <code>#guid column:</code> keeps note ids stable across a re-import.</p>
+        <label class="rp-field">
+          <span data-ui="deckName">Deck name</span>
+          <input type="text" id="importName" placeholder="Spanish core 1000">
+        </label>
+        <label class="rp-field">
+          <span data-ui="file">File</span>
+          <input type="file" id="importFile" accept=".txt,.tsv,.csv,.json,text/plain,application/json">
+        </label>
+        <label class="rp-field rp-field--block">
+          <span data-ui="orPaste">Or paste it</span>
+          <textarea id="importText" rows="8" spellcheck="false" placeholder="Front&#9;Back"></textarea>
+        </label>
+        <label class="rp-check">
+          <input type="checkbox" id="importReverse">
+          <span data-ui="importReverse">Also make a typed card in the reverse direction</span>
+        </label>
+        <p class="rp-note" id="importNote" role="status" data-ui="importNote">Three templates over 50 notes is 150 cards, which is a
+          month of reviews from one paste. Add the reverse only when it is a real skill.</p>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-modal-close data-ui="cancel">Cancel</button>
+        <button type="button" class="btn btn--primary" data-act="do-import" data-ui="import">Import</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Restore a ledger -->
+  <div class="modal" id="restoreModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="restoreTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="restoreTitle" data-ui="restoreTitle">Restore a ledger</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog" data-ui-aria="closeDialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body stack stack--tight">
+        <p class="section__lead" data-ui-html="restoreLead">Take back a <code>neo-ledger/1</code> file exported from another
+          browser or device. Merge keeps whichever review of each card is newer, so two devices
+          that studied different cards both survive.</p>
+        <label class="rp-field">
+          <span data-ui="file">File</span>
+          <input type="file" id="restoreFile" accept=".json,application/json">
+        </label>
+        <label class="rp-field rp-field--block">
+          <span data-ui="orPaste">Or paste it</span>
+          <textarea id="restoreText" rows="6" spellcheck="false"></textarea>
+        </label>
+        <fieldset class="rp-radios">
+          <legend data-ui="restoreLegend">What to do with what is already here</legend>
+          <label class="rp-check"><input type="radio" name="restoreStrategy" value="merge" checked> <span data-ui="restoreMerge">Merge, newest review of each card wins</span></label>
+          <label class="rp-check"><input type="radio" name="restoreStrategy" value="replace"> <span data-ui="restoreReplace">Replace everything in this browser</span></label>
+        </fieldset>
+        <p class="rp-note" id="restoreNote" role="status"></p>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-modal-close data-ui="cancel">Cancel</button>
+        <button type="button" class="btn btn--primary" data-act="do-restore" data-ui="restore">Restore</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Neorgon Footer Kit contract. app mode: slim, note left, meta right. -->
+  <footer class="neo-footer" data-footer-mode="app">
+    Your decks and your review history stay in this browser. Nothing leaves it unless you sign in.
+  </footer>
+
+  <!-- Live regions, present from load and empty. A region inserted with its
+       text already set is not reliably announced: that is why the first toast
+       was silent. showToast() finds this element by id rather than creating
+       one, so every toast is now spoken as well as seen. -->
+  <div id="announce" class="rp-visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="app-toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

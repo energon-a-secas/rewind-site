@@ -181,9 +181,17 @@ def add_snapshot(m, entry):
     return True
 
 
-def latest_entry_file(m, sid):
-    """Entry HTML of the newest snapshot already recorded for `sid`, or None."""
-    snaps = [s for s in m['snapshots'] if s['site'] == sid]
+def latest_entry_file(m, sid, source=None):
+    """Entry HTML of the newest snapshot recorded for `sid`, or None.
+
+    `source` narrows it to one kind. --if-changed asks "has the live page moved
+    since I last mirrored it", so it compares live against live: a git tree is
+    source that still points at cdn.neorgon.org, and never matches a mirror whose
+    assets have been downloaded and re-pointed, which would make every scheduled
+    run record a duplicate.
+    """
+    snaps = [s for s in m['snapshots']
+             if s['site'] == sid and (source is None or s['source'] == source)]
     if not snaps:
         return None
     return ROOT / PurePosixPath(max(snaps, key=lambda s: s['date'])['path'])
@@ -493,7 +501,7 @@ def cmd_live(a):
     size, files = dir_stats(dest)
     m = load_manifest()
     if a.if_changed:
-        prev, fresh = latest_entry_file(m, sid), dest / 'index.html'
+        prev, fresh = latest_entry_file(m, sid, source='live'), dest / 'index.html'
         if prev and prev.exists() and fresh.exists() and prev.read_bytes() == fresh.read_bytes():
             shutil.rmtree(dest)
             print(f'  = unchanged since {prev.parent.name}, nothing recorded')
@@ -761,13 +769,24 @@ def cmd_prune(a):
     `capture.py fleet-git`, but it deletes directories, so it says so first.
     """
     m = load_manifest()
-    groups, newest = {}, {}
+    groups, newest, newest_live = {}, {}, {}
     for s in m['snapshots']:
         groups.setdefault((s['site'], s['date'][:7]), []).append(s)
         cur = newest.get(s['site'])
         if cur is None or s['date'] > cur['date']:
             newest[s['site']] = s
+        # A live mirror is not interchangeable with a git tree: it is the page as
+        # served, with CDN assets resolved and localized, where a tree is source
+        # that still points at whatever cdn.neorgon.org holds today. Keeping only
+        # "earliest in the month" systematically drops live captures, because they
+        # are stamped when the fleet ran and a commit almost always precedes them.
+        if s['source'] == 'live':
+            cur = newest_live.get(s['site'])
+            if cur is None or s['date'] > cur['date']:
+                newest_live[s['site']] = s
     protected = {s['id'] for s in newest.values()}
+    if not a.drop_live:
+        protected |= {s['id'] for s in newest_live.values()}
 
     drop = []
     for (sid, month), snaps in sorted(groups.items()):
@@ -905,6 +924,8 @@ def main():
                    help='snapshots to keep per site per month, earliest first (default 1)')
     p.add_argument('--site', help='limit to one site')
     p.add_argument('--apply', action='store_true', help='actually delete (default is a dry run)')
+    p.add_argument('--drop-live', action='store_true',
+                   help='also thin live mirrors (default keeps the newest one per site)')
     p.set_defaults(fn=cmd_prune)
 
     p = sub.add_parser('list', help='print the manifest')

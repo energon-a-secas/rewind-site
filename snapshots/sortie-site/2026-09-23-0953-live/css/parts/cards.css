@@ -1,0 +1,107 @@
+/* ── Part cards ──────────────────────────────────────────────
+   The rail deals a card in as each part comes online, staggered on the same
+   clock as the matrix tiles (js sets --i on each card). */
+
+.rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+  gap: var(--space-3);
+}
+.rail--picker { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+
+.pcard {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3);
+  text-align: left;
+  background: linear-gradient(160deg, var(--hud-plate), rgba(3, 6, 22, .82));
+  border: 1px solid var(--hud-line-strong);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: border-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out);
+  animation: cardDeal var(--dur-slow) var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes cardDeal {
+  from { opacity: 0; transform: translateY(14px) scale(.96); }
+  to   { opacity: 1; }
+}
+
+.pcard:hover, .pcard:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 0 calc(24px * var(--fx-bloom)) rgba(var(--accent-rgb), .2);
+}
+.pcard[aria-pressed='true'] { border-color: var(--accent); }
+
+.pcard__chip {
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  background: var(--accent);
+  border-radius: var(--tile-radius);
+  color: var(--glyph-ink);
+  box-shadow: 0 0 calc(14px * var(--fx-bloom)) var(--glow-soft);
+}
+.pcard__chip svg { width: 82%; height: 82%; }
+
+.pcard__body { min-width: 0; display: grid; gap: 2px; }
+
+.pcard__slot {
+  font-family: var(--font-hud); font-size: 10px;
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--accent);
+}
+.pcard__name {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pcard__cls {
+  font-family: var(--font-hud); font-size: 10px;
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--text-muted);
+}
+
+.pcard__stats { display: grid; gap: 3px; margin-top: var(--space-2); }
+.pcard__stat { display: grid; grid-template-columns: 34px 1fr; gap: var(--space-2); align-items: center; }
+.pcard__stat span {
+  font-family: var(--font-hud); font-size: 9px;
+  letter-spacing: .08em; color: var(--text-muted);
+}
+.pcard__stat i {
+  display: block; height: 3px; border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  overflow: hidden;
+}
+.pcard__stat i::after {
+  content: ''; display: block; height: 100%;
+  width: var(--w, 0%);
+  background: var(--accent);
+  box-shadow: 0 0 calc(6px * var(--fx-bloom)) var(--glow-mid);
+}
+
+.pcard__tag {
+  position: absolute; top: var(--space-2); right: var(--space-3);
+  font-family: var(--font-hud); font-size: 9px;
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--on-accent);
+  background: var(--accent);
+  padding: 1px 5px; border-radius: 2px;
+}
+
+.rail-empty {
+  grid-column: 1 / -1;
+  padding: var(--space-6);
+  text-align: center;
+  font-family: var(--font-hud); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}

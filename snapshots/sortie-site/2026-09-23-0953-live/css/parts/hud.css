@@ -1,0 +1,110 @@
+/* ── Cockpit HUD ─────────────────────────────────────────────
+   Six numbered section panels flanking the frame, with a broken ring behind
+   the matrix. Follows the cockpit reference: panels 4-6 left, 1-3 right, each
+   a bright header bar over a few lines of status. */
+
+.hud {
+  display: grid;
+  /* The centre column is sized explicitly. With `auto` the stage's own
+     `width: min(100%, …)` had nothing to resolve against and collapsed to
+     zero, taking the whole frame with it. */
+  grid-template-columns: minmax(0, 1fr) minmax(300px, var(--stage-max)) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-5, 20px);
+}
+
+.hud__col {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.hud__col--left { justify-items: end; }
+.hud__col--right { justify-items: start; }
+
+/* ── The ring ────────────────────────────────────────────── */
+.hud__ring {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: min(112%, 132vh);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  overflow: visible;
+}
+.hud__ring-track {
+  fill: none;
+  stroke: var(--hud-line-strong);
+  stroke-width: 1;
+}
+.hud__ring-arc {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  opacity: .55;
+  filter: drop-shadow(0 0 calc(8px * var(--fx-bloom)) var(--glow-mid));
+}
+.hud__ring-tick {
+  stroke: var(--accent);
+  stroke-width: 2;
+  opacity: .7;
+}
+
+.matrix { position: relative; }
+
+/* ── Section panels ──────────────────────────────────────── */
+.hudp {
+  width: min(100%, 260px);
+  font-family: var(--font-hud);
+  animation: hudpIn var(--dur-slow) var(--ease-out) backwards;
+}
+@keyframes hudpIn { from { opacity: 0; transform: translateY(6px); } }
+
+.hudp__head {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: 3px var(--space-2);
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), .58), rgba(var(--accent-rgb), .16));
+  border: 1px solid var(--accent);
+  color: var(--on-accent);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+.hud__col--left .hudp__head { flex-direction: row-reverse; }
+
+.hudp__num {
+  flex: none;
+  min-width: 14px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--on-accent);
+}
+.hudp__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hudp__state { flex: none; opacity: .85; }
+
+.hudp__lines {
+  margin: 0; padding: var(--space-2);
+  list-style: none;
+  display: grid; gap: 2px;
+  border: 1px solid var(--hud-line);
+  border-top: 0;
+  background: rgba(3, 6, 22, .6);
+}
+.hud__col--left .hudp__lines { text-align: right; }
+
+.hudp__lines li {
+  font-size: 9px;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A section that is not nominal says so in the one place you are looking. */
+.hudp[data-on='false'] .hudp__head {
+  background: linear-gradient(90deg, rgba(244, 63, 94, .55), rgba(244, 63, 94, .14));
+  border-color: var(--danger-hover);
+  color: #fff;
+}
+.hudp[data-on='false'] .hudp__lines li:last-child { color: var(--danger-hover); }

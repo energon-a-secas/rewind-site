@@ -68,6 +68,17 @@ def test_if_changed(tmp):
         body['v'] = b'<html><body>two</body></html>'
         run_at('2026-01-01T12:00:00')
         check(n() == 2, 'changed page is recorded (guard does not over-trip)')
+        # A git tree landing later must not become the comparison target, or the
+        # next scheduled run mirrors an unchanged page and records it anyway.
+        man = json.loads(capture.MANIFEST.read_text())
+        man['snapshots'].append({
+            'id': 'example-test/2026-06-01-abc', 'site': 'example-test',
+            'date': '2026-06-01T10:00:00', 'source': 'git', 'kind': 'tree',
+            'commit': 'abc', 'subject': '', 'shot': None, 'bytes': 1, 'files': 1,
+            'path': 'snapshots/example-test/2026-01-01-1200-live/index.html'})
+        capture.save_manifest(man)
+        run_at('2026-07-01T10:00:00')
+        check(n() == 3, 'unchanged page still skipped when a newer git tree exists')
     finally:
         capture.capture_live = real_live
 
@@ -129,7 +140,7 @@ def test_prune(tmp):
     capture.MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     capture.save_manifest({'generated': None, 'sites': {}, 'snapshots': snaps})
 
-    ns = argparse.Namespace(per_month=1, site=None, apply=False)
+    ns = argparse.Namespace(per_month=1, site=None, apply=False, drop_live=False)
     capture.cmd_prune(ns)
     left = json.loads(capture.MANIFEST.read_text())['snapshots']
     check(len(left) == 5, 'dry run deletes nothing')
@@ -148,12 +159,42 @@ def test_prune(tmp):
           'the site current state survives even though its month was full')
 
 
+def test_prune_keeps_live(tmp):
+    """A live mirror must survive a month whose earliest snapshot is a git tree."""
+    print('prune keeps live mirrors')
+    capture.ROOT, capture.SNAP_DIR = tmp, tmp / 'snapshots'
+    capture.MANIFEST = tmp / 'data' / 'manifest.json'
+    snaps = []
+    # March: git on the 2nd, git on the 11th, LIVE on the 30th. April: git, so the
+    # live one is not the site's newest and only the source rule can save it.
+    for date, src in (('2026-03-02', 'git'), ('2026-03-11', 'git'),
+                      ('2026-03-30', 'live'), ('2026-04-05', 'git')):
+        stamp = f'{date}-x'
+        d = capture.SNAP_DIR / 'demo-site' / stamp
+        d.mkdir(parents=True)
+        (d / 'index.html').write_text('<html></html>')
+        snaps.append({'id': f'demo-site/{stamp}', 'site': 'demo-site',
+                      'date': f'{date}T10:00:00', 'source': src, 'kind': 'tree',
+                      'commit': None, 'subject': '',
+                      'path': f'snapshots/demo-site/{stamp}/index.html',
+                      'shot': None, 'bytes': 1000, 'files': 1})
+    capture.MANIFEST.parent.mkdir(parents=True, exist_ok=True)
+    capture.save_manifest({'generated': None, 'sites': {}, 'snapshots': snaps})
+
+    capture.cmd_prune(argparse.Namespace(per_month=1, site=None, apply=True, drop_live=False))
+    left = sorted(s['date'][:10] for s in json.loads(capture.MANIFEST.read_text())['snapshots'])
+    check(left == ['2026-03-02', '2026-03-30', '2026-04-05'],
+          f'live mirror survives a month it did not start (got {left})')
+    check('2026-03-11' not in left, 'the redundant git tree is still pruned')
+
+
 def main():
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)
         test_if_changed(tmp / 'a')
         test_lean_extract(tmp / 'b')
         test_prune(tmp / 'c')
+        test_prune_keeps_live(tmp / 'd')
     print()
     if fails:
         print(f'{len(fails)} FAILED')

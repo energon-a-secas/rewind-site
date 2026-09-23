@@ -1,0 +1,211 @@
+/* ── Lock screen ─────────────────────────────────────────────
+   The socket sits above the panel. On a correct device ID the rings spin up,
+   the mark ignites, and a shockwave clears the stage — js/boot.js drives the
+   phases by toggling data-boot on <body>. */
+
+.boot {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 74vh;
+}
+
+.boot__stage {
+  position: relative;
+  width: min(46vh, 340px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.boot__tethers { position: absolute; inset: 0; width: 100%; height: 100%; }
+.boot__tethers path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  opacity: .35;
+  stroke-dasharray: 128;
+  stroke-dashoffset: 0;
+  animation: tetherPulse 3.4s var(--ease-out) infinite;
+}
+@keyframes tetherPulse { 0%, 100% { opacity: .18; } 50% { opacity: .5; } }
+
+.boot__socket {
+  position: relative;
+  width: 74%; aspect-ratio: 1;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 40%, rgba(0, 0, 0, .55) 70%, transparent 72%);
+}
+
+.boot__ring, .boot__pulse {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.boot__ring {
+  border: 1px solid var(--hud-line-strong);
+  border-top-color: var(--accent);
+  border-right-color: transparent;
+  animation: ringSpin 9s linear infinite;
+}
+.boot__ring--outer {
+  inset: -9%;
+  border-color: transparent;
+  border-bottom-color: rgba(var(--accent-rgb), .55);
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+
+.boot__pulse { border: 1px solid var(--accent); opacity: 0; }
+
+.boot__socket .core-a {
+  width: 54%; height: 54%;
+  color: var(--accent);
+  opacity: .38;
+  filter: drop-shadow(0 0 calc(18px * var(--fx-bloom)) var(--glow-mid));
+  animation: coreBreathe 4.2s var(--ease-out) infinite;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+@keyframes coreBreathe { 0%, 100% { opacity: .3; } 50% { opacity: .55; } }
+
+.boot__panel { max-width: 46ch; display: grid; gap: var(--space-3); justify-items: center; }
+
+.boot__title {
+  font-size: var(--text-2xl);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+.boot__lead { color: var(--text-secondary); font-size: var(--text-sm); }
+
+.boot__form {
+  display: flex; gap: var(--space-2); align-items: flex-end;
+  margin-top: var(--space-2);
+}
+.boot__form .hud-label {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+.boot__input {
+  width: 11ch;
+  height: var(--control-height);
+  padding: 0 var(--space-3);
+  font-family: var(--font-hud);
+  font-size: var(--text-xl);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--accent);
+  background: rgba(3, 6, 22, .8);
+  border: 1px solid var(--hud-line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+.boot__input::placeholder { color: rgba(255, 255, 255, .2); letter-spacing: .1em; }
+.boot__input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .22);
+}
+
+.boot__hint, .boot__status, .boot__note {
+  font-family: var(--font-hud); font-size: var(--text-xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  min-height: 1.2em;
+}
+.boot__hint { color: var(--accent); animation: fadeUp var(--dur-slow) var(--ease-out); }
+.boot__status { color: var(--text-muted); }
+/* No opacity multiplier: --text-muted already sits at 6.2:1 on the cockpit
+   ground, and dimming it further dropped this line to 3.5:1. */
+.boot__note { color: var(--text-muted); text-transform: none; letter-spacing: 0; margin-top: var(--space-4); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+/* Rejected handshake */
+body[data-boot='reject'] .boot__socket { animation: rejectShake 420ms var(--ease-out); }
+body[data-boot='reject'] .core-a { color: var(--danger); opacity: .9; }
+body[data-boot='reject'] .boot__status { color: var(--danger-hover); }
+@keyframes rejectShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  45% { transform: translateX(7px); }
+  70% { transform: translateX(-4px); }
+}
+
+/* Accepted handshake: rings snap, mark ignites, shockwave clears the stage */
+body[data-boot='accept'] .core-a {
+  opacity: 1;
+  animation: none;
+  filter: drop-shadow(0 0 calc(46px * var(--fx-bloom)) var(--glow-hot));
+}
+body[data-boot='accept'] .boot__ring {
+  animation-duration: .5s;
+  border-right-color: rgba(var(--accent-rgb), .6);
+}
+body[data-boot='accept'] .boot__pulse {
+  animation: shockwave calc(var(--dur-boot) * .34) var(--ease-out) 2;
+}
+@keyframes shockwave {
+  from { opacity: .9; transform: scale(.6); }
+  to { opacity: 0; transform: scale(2.6); }
+}
+body[data-boot='accept'] .boot__panel { animation: panelOut calc(var(--dur-boot) * .3) var(--ease-out) forwards; }
+@keyframes panelOut { to { opacity: 0; transform: translateY(10px); } }
+
+/* ── The descent ─────────────────────────────────────────────
+   The console comes up underneath while the lock screen still covers it, so
+   the socket can be measured against the frame's real core before it moves.
+   Then the whole assembly travels as one object: ring, glow and mark together.
+   Moving only the mark would have left its circle behind, which is what made
+   the arrival read as a cut rather than a connection. */
+
+/* boot.js clears the `hidden` attribute for these two phases; the template's
+   `[hidden] { display: none !important }` cannot be overridden from here. */
+body[data-boot='overlay'] #screenBoot,
+body[data-boot='descend'] #screenBoot,
+body[data-boot='seated'] #screenBoot {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  justify-content: center;
+  pointer-events: none;
+  background: none;
+}
+
+/* The panel is gone by now; only the socket travels. */
+body[data-boot='overlay'] .boot__panel,
+body[data-boot='descend'] .boot__panel,
+body[data-boot='seated'] .boot__panel { opacity: 0; }
+
+body[data-boot='descend'] .boot__stage {
+  transform: translate(var(--drop-x, 0px), var(--drop-y, 0px)) scale(var(--drop-scale, 1));
+  transition: transform var(--drop-ms, 1150ms) var(--ease-out);
+}
+
+/* Held at the landing while it seats, so the arrival registers as an event
+   rather than a waypoint. */
+body[data-boot='seated'] .boot__stage {
+  transform: translate(var(--drop-x, 0px), var(--drop-y, 0px)) scale(var(--drop-scale, 1));
+}
+
+/* The ring winds down as it falls, then snaps shut on the seat. */
+body[data-boot='descend'] .boot__ring { animation-duration: 1.1s; }
+body[data-boot='seated'] .boot__ring {
+  animation: none;
+  opacity: 0;
+  transition: opacity 240ms var(--ease-out);
+}
+body[data-boot='seated'] .boot__tethers { opacity: 0; transition: opacity 200ms linear; }
+
+body[data-boot='seated'] .boot__pulse {
+  animation: shockwave 340ms var(--ease-out) 1;
+}
+body[data-boot='seated'] .boot__socket .core-a {
+  opacity: 1;
+  animation: none;
+  filter: drop-shadow(0 0 calc(54px * var(--fx-bloom)) var(--glow-hot));
+}
