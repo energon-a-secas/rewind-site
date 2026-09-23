@@ -1,0 +1,280 @@
+:root {
+  --bg: #040714;
+  --surface: #0d1224;
+  --surface-2: #141a31;
+  --text: #e6e9f5;
+  --text-dim: #9aa3b8;
+  --accent: #b015b0;
+  --accent-2: #00d4ff;
+  --border: rgba(255,255,255,0.08);
+  --shadow: 0 8px 30px rgba(0,0,0,0.35);
+  --radius: 14px;
+  --max-width: 900px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header bar/logo layout is owned by the Neorgon Header Kit; .header-link (GitHub icon) stays site-owned */
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--text-dim);
+  transition: color 0.2s, background 0.2s;
+}
+
+.header-link:hover { color: var(--text); background: var(--surface-2); }
+
+/* Page layout */
+.page {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  flex: 1;
+}
+
+.hero { text-align: center; margin-bottom: 36px; }
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 12px;
+  background: linear-gradient(90deg, #fff, #f0c0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* Form grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.form-card.full { grid-column: 1 / -1; }
+
+label { color: var(--text-dim); font-size: 0.9rem; }
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(176,21,176,0.15);
+}
+
+.slider-card label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-val {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--accent-2);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+/* Output */
+.output-section {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.output-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.output-header h2 { margin: 0; }
+
+.output-actions { display: flex; gap: 10px; }
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { background: #c018c0; }
+
+.btn-secondary { background: var(--surface-2); color: var(--text); }
+.btn-secondary:hover { background: #1c2442; }
+
+.output-text {
+  width: 100%;
+  min-height: 320px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+/* Kit explainer */
+.kit-explainer {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.kit-explainer h2 { margin: 0 0 8px; }
+
+.kit-explainer > p { color: var(--text-dim); margin: 0 0 20px; }
+
+.kit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.kit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.kit-card:hover { border-color: rgba(176,21,176,0.35); transform: translateY(-2px); text-decoration: none; }
+
+.kit-card strong { font-size: 1.05rem; }
+
+.kit-card span { color: var(--text-dim); font-size: 0.9rem; }
+
+/* Footer */
+.neorgon-footer {
+  width: 100%;
+  padding: 24px 20px;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  background: rgba(13,18,36,0.7);
+  backdrop-filter: blur(8px);
+}
+
+.neorgon-footer-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.neorgon-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.neorgon-footer-btn:hover {
+  background: rgba(176,21,176,0.12);
+  border-color: rgba(176,21,176,0.35);
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .output-header { flex-direction: column; align-items: flex-start; }
+}

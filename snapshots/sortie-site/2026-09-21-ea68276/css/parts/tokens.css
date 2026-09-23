@@ -1,0 +1,99 @@
+/*
+ * ── Sortie token layer ───────────────────────────────────────
+ * Canonical tokens (bg, text, spacing, radii, type scale) come from the CDN
+ * base.css. Nothing here redeclares them. This file adds only what a cockpit
+ * needs and base.css has no opinion on: the glow ramp derived from the live
+ * accent, the four mode palettes, and the FX intensity knobs.
+ *
+ * --accent and --accent-rgb are rewritten at runtime by js/panel.js (visitor
+ * choice) and js/modes.js (active burst mode). Everything below reads through
+ * them, so one assignment repaints the whole console.
+ */
+
+:root {
+  --accent-rgb: 6, 182, 212;      /* kept in sync with --accent by panel.js */
+  --on-accent: #04121a;           /* text on accent; theme.js picks by measured contrast */
+
+  /* Glyph art on an accent tile is a large solid shape, aria-hidden, inside a
+     control that already carries its name. It stays white at every accent so the
+     frame reads as lit icons; --on-accent is for *text*, where 4.5:1 is a real
+     requirement and white loses on mid-tones. */
+  /*
+   * The sprite reads as a shape punched through the tile rather than printed
+   * on it: the body is the cockpit ground showing through, and the contour is
+   * the light catching the cut edge.
+   *
+   * The two swapped roles together. Making the body dark while the contour was
+   * also dark would have merged them and put the sprites back to solid blobs,
+   * so the rim is what turned bright.
+   */
+  --glyph-ink: var(--hud-deep);
+  --glyph-key: rgba(255, 255, 255, .92);
+
+  /* Cockpit ground — a blue-violet wash over the fleet's --bg */
+  --hud-deep: #030616;
+  --hud-plate: #070c22;
+  --hud-wash: #0d1440;
+  /* The raised surfaces: the burst overlay and the options drawer share one
+     gradient, so it is declared once rather than twice. */
+  --hud-raised-start: #0a1030;
+  --hud-raised-end: #04081c;
+  --hud-line: rgba(var(--accent-rgb), .14);
+  --hud-line-strong: rgba(var(--accent-rgb), .34);
+
+  --glow-soft: rgba(var(--accent-rgb), .18);
+  --glow-mid: rgba(var(--accent-rgb), .38);
+  --glow-hot: rgba(var(--accent-rgb), .75);
+
+  --font-hud: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --track-wide: .18em;
+  --track-xwide: .34em;
+
+  --tile-radius: 3px;
+  --stage-max: 560px;
+
+  /* FX intensity — flipped by the data-attributes below */
+  --fx-scan: .05;
+  --fx-bloom: 1;
+  --fx-shift: 0px;
+  --fx-curve: 0;
+
+  --dur-slow: 520ms;
+  --dur-boot: 2600ms;
+}
+
+/* ── Mode palettes ──────────────────────────────────────────
+   modes.js copies the matching pair onto --accent/--accent-rgb. Keeping the
+   values here means a mode is a data change, not a code change. */
+:root {
+  --mode-burst: #22d3ee;   --mode-burst-rgb: 34, 211, 238;
+  --mode-siege: #f5a524;   --mode-siege-rgb: 245, 165, 36;
+  --mode-recon: #a78bfa;   --mode-recon-rgb: 167, 139, 250;
+  --mode-sprint: #f0439c;  --mode-sprint-rgb: 240, 67, 156;
+}
+
+/* ── FX switches ────────────────────────────────────────────
+   Set on <body> by panel.js. Absent attribute = the :root default above. */
+body[data-scanlines='off'] { --fx-scan: 0; }
+body[data-bloom='off']     { --fx-bloom: 0; }
+body[data-aberration='on'] { --fx-shift: 1px; }
+body[data-curve='on']      { --fx-curve: 1; }
+
+/* Motion: 'off' freezes every decorative animation, 'reduced' keeps position
+   changes but drops the long boot choreography. Both are honoured by the
+   duration tokens rather than by per-rule overrides. */
+body[data-motion='reduced'] { --dur-slow: 220ms; --dur-boot: 600ms; }
+body[data-motion='off']     { --dur-slow: 1ms;   --dur-boot: 1ms; }
+
+body[data-motion='off'] *,
+body[data-motion='off'] *::before,
+body[data-motion='off'] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  /* Delays too. Zeroing only the durations still made the boot wait out its
+     full 1.4s stagger with every tile held invisible by the backwards fill,
+     which is not what "motion off" promises. */
+  animation-delay: 0ms !important;
+  transition-delay: 0ms !important;
+}

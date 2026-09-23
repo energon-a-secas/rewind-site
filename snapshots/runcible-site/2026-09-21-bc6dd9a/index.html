@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Runcible">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Runcible | A book that teaches back</title>
+  <meta name="description" content="Graded chapters, drills and spaced review, with progress that follows you. A Book is data, so the shell teaches any subject">
+  <meta property="og:title" content="Runcible: a book that teaches back">
+  <meta property="og:description" content="Graded chapters, drills and spaced review, with progress that follows you">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://runcible.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Runcible: a book that teaches back">
+  <meta name="twitter:description" content="Graded chapters, drills and spaced review">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://runcible.neorgon.com/">
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/runcible-site">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://runcible.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Runcible">
+  <meta name="twitter:image" content="https://runcible.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/exercises.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md. -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <!-- Neorgon Auth Kit (vendored; packages/neorgon-ui/sync-auth.sh). Dormant: with no
+       clerk-publishable-key meta, js/sync.js never imports js/neorgon-auth.js, the header
+       slot stays hidden and nothing is fetched. The reason meta is the sign-in dialog's
+       lede: js/i18n.js applyChrome relabels it through data-ui like the rest of the
+       chrome, and the kit reads it each time the dialog opens. -->
+  <meta name="neo-auth-reason" content="Sign in to keep your progress on every device. With no account, everything stays in this browser." data-ui="authNote" data-ui-attr="content">
+  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
+       carries page context to balise.neorgon.com in a URL fragment and the
+       visitor writes there. No form on this page and no request from it. -->
+  <meta name="beacon-site" content="runcible-site">
+  <link rel="stylesheet" href="css/neorgon-beacon.css">
+  <script defer src="js/neorgon-beacon.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Runcible",
+    "description": "A learning book with graded chapters, drills and spaced review. Books are static data, so the shell is not tied to one subject.",
+    "url": "https://runcible.neorgon.com/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main" data-ui="skipToContent">Skip to content</a>
+
+  <!-- Neorgon Header Kit contract (PROJECTS.md section 10). content mode: the
+       sticky 68px gradient, which is what a reading site takes. -->
+  <header class="header-bar" data-header-mode="content">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+          <h1>Runcible</h1>
+          <div class="header-subtitle">A book that teaches back</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- .header-right owns margin-left:auto; home icon is always last. -->
+    <div class="header-right">
+      <div class="header-actions">
+        <a class="btn btn--ghost btn--sm" href="#/" data-keep-mobile data-ui="today">Today</a>
+        <a class="btn btn--ghost btn--sm" href="#/books" data-keep-mobile data-ui="books">Books</a>
+        <!-- The current language is the <strong>, and the accessible name says
+             which is on and what a press switches to. js/i18n.js applyChrome
+             rewrites both on every paint. -->
+        <button class="btn btn--ghost btn--sm" type="button" id="langToggle" data-lang="en" aria-label="Language: English. Switch to Spanish" title="Language: English. Switch to Spanish"><strong class="rn-lang rn-lang--on">EN</strong> / <span class="rn-lang">ES</span></button>
+        <a class="btn btn--ghost btn--sm" href="#/settings" data-ui="settings">Settings</a>
+      </div>
+
+      <!-- Accounts (CONTRACTS C7.2): the Neorgon Auth Kit's slot. It stays hidden
+           until a clerk-publishable-key meta is on the page and js/sync.js starts
+           the kit, which then owns the button, the avatar and the sign-in dialog. -->
+      <div class="neo-auth" data-neo-auth data-keep-mobile hidden></div>
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- The whole app renders into #view. Books are fetched at runtime from
+       books/index.json, so no Book appears in this file and adding one changes
+       nothing here (C1.1). -->
+  <main id="main">
+    <div class="rn-view" id="view" aria-busy="true">
+      <p class="rn-loading" data-ui="loading">Loading</p>
+    </div>
+  </main>
+
+  <!-- Neorgon Footer Kit contract. content mode matches the content header. -->
+  <footer class="neo-footer" data-footer-mode="content">
+    <div class="neo-footer-inner">
+      <div class="neo-footer-brand">
+        <img class="neo-footer-logo" src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" alt="">
+        <p class="neo-footer-tagline" data-ui="footerTagline">Runs in your browser. Progress is stored on this device until you sign in.</p>
+      </div>
+      <nav class="neo-footer-cols" aria-label="Footer">
+        <div class="neo-footer-col">
+          <h2 data-ui="footerRead">Read</h2>
+          <a href="#/" data-ui="today">Today</a>
+          <a href="#/books" data-ui="books">Books</a>
+          <a href="#/settings" data-ui="settings">Settings</a>
+        </div>
+        <div class="neo-footer-col">
+          <h2 data-ui="footerReview">Review</h2>
+          <a href="https://rappel.neorgon.com/" target="_blank" rel="noopener noreferrer">Rappel</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

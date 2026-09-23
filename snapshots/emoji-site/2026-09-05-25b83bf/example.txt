@@ -1,0 +1,25 @@
+
+
+    emoji-site/index.html — added:
+  - CSS: Upload panel styles (password row, drop zone, preview, fields), .badge-new for Convex emojis
+  - HTML: Upload button in nav, upload panel with password gate + drag-and-drop zone + name/category
+  fields
+  - JS (converted to type="module"):
+    - Convex client via CDN (esm.sh/convex@1.21.0/browser)
+    - String-based function references (no build step needed)
+    - getAllEmojis() merges hardcoded + Convex emojis
+    - rebuildChips() dynamically recalculates category counts
+    - loadConvexEmojis() fetches from Convex, updates gallery + subtitle count
+    - Password gate with sessionStorage persistence
+    - Full upload flow: file select/drop, preview, Convex storage upload, metadata save
+    - Convex emojis render with a green "NEW" badge and crossOrigin for clipboard copy
+
+  Setup Steps
+
+  1. cd emoji-site && npm install
+  2. npx convex dev — creates Convex project, generates _generated/ files
+  3. Copy the deployment URL from the terminal and replace https://YOUR_DEPLOYMENT.convex.cloud in
+  index.html
+  4. In Convex dashboard: set UPLOAD_PASSWORD environment variable
+  5. Open index.html and test the upload flow
+  6. npx convex deploy when ready for production

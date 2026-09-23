@@ -1,0 +1,4 @@
+# Crawlable on purpose. This host only redirects to gamme.neorgon.com, and a
+# crawler has to fetch the page to see the canonical and follow the move.
+User-agent: *
+Allow: /

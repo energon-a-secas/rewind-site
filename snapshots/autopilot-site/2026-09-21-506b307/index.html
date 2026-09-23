@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org; img-src 'self' data: blob: https://cdn.neorgon.org https://neorgon.goatcounter.com; connect-src 'self' https://neorgon.goatcounter.com https://cloudflareinsights.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Autopilot">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Autopilot | Block Schedule Builder</title>
+  <meta name="description" content="Build visual time-block schedules and generate shell commands. Cross-platform focus sessions you can run in the browser.">
+  <meta property="og:title" content="Autopilot: Block Schedule Builder">
+  <meta property="og:description" content="Build visual time-block schedules and generate shell commands">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Autopilot: Block Schedule Builder">
+  <meta name="twitter:description" content="Build visual time-block schedules and generate shell commands">
+  <meta name="twitter:image" content="https://autopilot.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://autopilot.neorgon.com/">
+  <meta property="og:url" content="https://autopilot.neorgon.com/">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://autopilot.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Autopilot",
+    "description": "Build visual time-block schedules and generate shell commands. Cross-platform focus sessions you can run in the browser.",
+    "url": "https://autopilot.neorgon.com/",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "macOS, Windows, Linux",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <style>
+
+    /* -- Reset & base -------------------------------------------------------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:            #040714;
+      --surface-1:     rgba(255,255,255,.03);
+      --surface-2:     rgba(255,255,255,.06);
+      --border-subtle: rgba(255,255,255,.07);
+      --border:        rgba(255,255,255,.10);
+      --border-strong: rgba(255,255,255,.22);
+      --text-primary:  #f9f9f9;
+      --text-secondary:#cacaca;
+      --text-muted:    rgba(255,255,255,.45);
+
+      --accent:        #22d3ee;
+      --accent-dim:    rgba(34,211,238,.40);
+      --accent-bg:     rgba(34,211,238,.10);
+      --accent-glow:   rgba(34,211,238,.55);
+
+      --away:          #94a3b8;
+      --away-dim:      rgba(148,163,184,.25);
+      --away-bg:       rgba(148,163,184,.07);
+      --away-glow:     rgba(148,163,184,.40);
+
+      --rest:          #f472b6;
+      --rest-dim:      rgba(244,114,182,.25);
+      --rest-bg:       rgba(244,114,182,.08);
+      --rest-glow:     rgba(244,114,182,.45);
+
+      --success:       #34d399;
+      --success-bg:    rgba(52,211,153,.12);
+
+      --font:  'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --mono:  'SF Mono', 'Fira Code', 'Courier New', monospace;
+
+      --radius-sm: 6px; --radius: 10px; --radius-lg: 15px;
+      --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur-fast: 120ms; --dur: 200ms;
+
+      --puzzle-depth: 14px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text-primary);
+      display: flex; flex-direction: column;
+    }
+
+
+    /* -- Layout -------------------------------------------------------------- */
+    .container {
+      max-width: 900px; width: 100%;
+      margin: 0 auto; padding: 30px;
+      flex: 1;
+    }
+
+    /* -- Card ---------------------------------------------------------------- */
+    .card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+    .card-title {
+      font-size: .75em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .9px;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* -- Controls card ------------------------------------------------------- */
+    .controls-row { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .ctrl-group   { display: flex; flex-direction: column; gap: 7px; }
+    .ctrl-label   {
+      font-size: .72em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .7px;
+      color: rgba(255,255,255,.55);
+    }
+    .ctrl-label-active { color: var(--accent); }
+    .ctrl-label-away   { color: var(--away); }
+    .ctrl-label-rest   { color: var(--rest); }
+    .time-group { display: flex; align-items: center; gap: 10px; }
+    .time-colon { font-size: 1.4em; font-weight: 700; color: rgba(255,255,255,.28); margin: 0 -2px; }
+
+    .time-input {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 4px; font-size: 1.22em;
+      font-family: var(--font); font-weight: 700;
+      text-align: center; width: 54px; outline: none;
+      caret-color: var(--accent);
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .time-input:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .time-input:focus { border-color: var(--accent); background: rgba(34,211,238,.08); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+
+    .ampm-toggle {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 12px; font-size: 1.08em;
+      font-family: var(--font); font-weight: 700;
+      cursor: pointer; outline: none; min-width: 60px;
+      transition: all .2s; user-select: none;
+    }
+    .ampm-toggle:hover { border-color: var(--accent-dim); background: rgba(34,211,238,.08); }
+    .ampm-toggle:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .ampm-toggle:active { transform: scale(.97); }
+
+    .now-btn {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 8px; color: rgba(255,255,255,.50);
+      padding: 8px 12px; font-size: .82em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      margin-left: 4px;
+    }
+    .now-btn:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .now-btn:active { transform: scale(.97); }
+
+    .cmd-tpl-input {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 12px; font-size: .84em;
+      font-family: var(--mono); outline: none;
+      width: 100%;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .cmd-tpl-input:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .cmd-tpl-input:focus { border-color: var(--accent); background: rgba(34,211,238,.08); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .cmd-tpl-input::placeholder { color: rgba(255,255,255,.22); }
+
+    .tpl-hint {
+      font-size: .68em; color: var(--text-muted);
+      font-family: var(--mono);
+      margin-top: 2px;
+      opacity: .55;
+    }
+
+    .cmd-templates-row {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .cmd-templates-row .ctrl-group { flex: 1 1 calc(33.333% - 14px); min-width: 200px; }
+
+    .platform-select {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 12px; font-size: 1em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; outline: none;
+      transition: all .2s;
+    }
+    .platform-select:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .platform-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .platform-select option { background: #0a0a18; color: #f9f9f9; }
+
+    .presets-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; justify-content: center; }
+    .preset-btn {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 20px; color: rgba(255,255,255,.65);
+      padding: 6px 14px; font-size: .82em;
+      font-family: var(--font); font-weight: 500;
+      cursor: pointer; transition: all .18s;
+      position: relative;
+    }
+    .preset-btn:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .preset-btn.active { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .preset-btn:active { transform: scale(.97); }
+    .preset-delete {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px;
+      margin-left: 6px; margin-right: -4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.55);
+      font-size: .7em; line-height: 1;
+      cursor: pointer; border: none;
+      transition: background .15s, color .15s;
+    }
+    .preset-delete:hover { background: rgba(255,80,80,.25); color: rgba(255,100,100,.9); }
+
+    .save-preset-row {
+      display: flex; gap: 8px; justify-content: center; align-items: center;
+      margin-top: 14px; flex-wrap: wrap;
+    }
+    .save-preset-input {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 7px 12px; font-size: .84em;
+      font-family: var(--font); outline: none;
+      width: 180px;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .save-preset-input:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .save-preset-input:focus { border-color: var(--accent); background: rgba(34,211,238,.08); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .save-preset-input::placeholder { color: rgba(255,255,255,.25); }
+
+    /* -- Schedule blocks card ---------------------------------------------------- */
+    .chain-outer { overflow-x: auto; padding-bottom: 6px; }
+    .chain-row {
+      display: flex; align-items: stretch;
+      gap: 0; min-height: 108px;
+      flex-wrap: nowrap;
+      justify-content: center;
+    }
+    .chain-row.empty { align-items: center; justify-content: center; flex-wrap: wrap; }
+    .chain-empty-msg {
+      color: rgba(255,255,255,.55); font-size: .88em;
+      text-align: center; padding: 20px;
+    }
+
+    /* Block wrapper: stacked drop-shadows create a visible outline + glow that follows clip-path */
+    .block-wrapper { flex: 0 0 auto; position: relative; }
+    .block-wrapper.active-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(34,211,238,.7))
+        drop-shadow(0 0 0.5px rgba(34,211,238,.7))
+        drop-shadow(0 0 3px var(--accent-glow));
+    }
+    .block-wrapper.away-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(148,163,184,.6))
+        drop-shadow(0 0 0.5px rgba(148,163,184,.6))
+        drop-shadow(0 0 2.5px var(--away-glow));
+    }
+    .block-wrapper.rest-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(244,114,182,.7))
+        drop-shadow(0 0 0.5px rgba(244,114,182,.7))
+        drop-shadow(0 0 3px var(--rest-glow));
+    }
+
+    /* Overlap blocks so puzzle tabs interlock with indents */
+    .block-wrapper + .block-wrapper { margin-left: calc(-1 * var(--puzzle-depth)); }
+    /* Rest is a standalone cap: no overlap, small gap */
+    .block-wrapper.rest-type { margin-left: 8px; }
+
+    .block-wrapper.dragging { opacity: .45; }
+    .block-wrapper.drag-over-left { margin-left: 0 !important; }
+    .block-wrapper.drag-over-left .block { border-left: 2px dashed var(--accent); }
+    .block-wrapper.drag-over-right .block { border-right: 2px dashed var(--accent); }
+
+    .block {
+      position: relative;
+      padding: 12px 16px;
+      min-width: 148px;
+      display: flex; flex-direction: column; gap: 8px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .block.active { background: var(--accent-bg); }
+    .block.away   { background: var(--away-bg); }
+    .block.rest   { background: var(--rest-bg); min-width: 128px; justify-content: center; }
+
+    /* Live runner: pulse the current block */
+    .block-wrapper.current-block .block {
+      animation: blockPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes blockPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,.0); }
+      50% { box-shadow: 0 0 18px 4px rgba(34,211,238,.22); }
+    }
+    .block-wrapper.current-block.away-type .block {
+      animation-name: blockPulseAway;
+    }
+    @keyframes blockPulseAway {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(148,163,184,.0); }
+      50% { box-shadow: 0 0 18px 4px rgba(148,163,184,.18); }
+    }
+
+    /* -- Puzzle piece shapes via clip-path ----------------------------------- */
+
+    /* solo: normal rounded rect */
+    .block.solo { border-radius: var(--radius); }
+
+    /* first: flat left, puzzle tab on right */
+    .block.first {
+      border-radius: var(--radius) 0 0 var(--radius);
+      clip-path: polygon(
+        0 0,
+        calc(100% - 14px) 0,
+        calc(100% - 14px) calc(50% - 14px),
+        calc(100% - 14px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 9px),
+        100% calc(50% - 9px),
+        100% calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 14px),
+        calc(100% - 14px) 100%,
+        0 100%
+      );
+      padding-right: 28px;
+    }
+
+    /* middle: indent on left, tab on right */
+    .block.middle {
+      clip-path: polygon(
+        0 0,
+        calc(100% - 14px) 0,
+        calc(100% - 14px) calc(50% - 14px),
+        calc(100% - 14px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 9px),
+        100% calc(50% - 9px),
+        100% calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 14px),
+        calc(100% - 14px) 100%,
+        0 100%,
+        0 calc(50% + 14px),
+        0 calc(50% + 5px),
+        5px calc(50% + 5px),
+        5px calc(50% + 9px),
+        14px calc(50% + 9px),
+        14px calc(50% - 9px),
+        5px calc(50% - 9px),
+        5px calc(50% - 5px),
+        0 calc(50% - 5px),
+        0 calc(50% - 14px)
+      );
+      padding-left: 28px; padding-right: 28px;
+    }
+
+    /* last: indent on left, flat right */
+    .block.last {
+      border-radius: 0 var(--radius) var(--radius) 0;
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 100%,
+        0 calc(50% + 14px),
+        0 calc(50% + 5px),
+        5px calc(50% + 5px),
+        5px calc(50% + 9px),
+        14px calc(50% + 9px),
+        14px calc(50% - 9px),
+        5px calc(50% - 9px),
+        5px calc(50% - 5px),
+        0 calc(50% - 5px),
+        0 calc(50% - 14px)
+      );
+      padding-left: 28px;
+    }
+
+    .block-type-label {
+      font-size: .68em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .9px;
+    }
+    .block.active .block-type-label { color: var(--accent); }
+    .block.away   .block-type-label { color: var(--away); }
+    .block.rest   .block-type-label { color: var(--rest); }
+
+    .block-inputs { display: flex; align-items: center; gap: 4px; }
+    .dur-input {
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 5px; color: #f9f9f9;
+      padding: 3px 4px; font-size: .82em;
+      font-family: var(--font); font-weight: 600;
+      text-align: center; width: 38px; outline: none;
+      caret-color: var(--accent);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .dur-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(34,211,238,.2); }
+    .block.away .dur-input:focus { border-color: var(--away); box-shadow: 0 0 0 2px rgba(148,163,184,.2); }
+    .block.rest .dur-input:focus { border-color: var(--rest); box-shadow: 0 0 0 2px rgba(244,114,182,.2); }
+    .dur-unit { font-size: .7em; color: rgba(255,255,255,.38); }
+
+    .block-window { font-size: .72em; color: var(--text-muted); }
+
+    /* Delete button: positioned within body area, away from puzzle tab */
+    .block-delete {
+      position: absolute; top: 7px; right: 8px;
+      background: none; border: none;
+      color: rgba(255,255,255,.30); cursor: pointer;
+      font-size: .8em; line-height: 1; padding: 2px 5px;
+      border-radius: 4px;
+      transition: color .15s, background .15s;
+    }
+    .block-delete:hover { color: rgba(255,80,80,.85); background: rgba(255,50,50,.12); }
+    .block.first .block-delete,
+    .block.middle .block-delete { right: 22px; }
+
+    .drag-handle {
+      position: absolute; bottom: 5px; right: 8px;
+      color: rgba(255,255,255,.20); cursor: grab;
+      font-size: .85em; line-height: 1; padding: 2px 4px;
+      border-radius: 4px; user-select: none;
+      transition: color .15s;
+    }
+    .drag-handle:hover { color: rgba(255,255,255,.45); }
+    .drag-handle:active { cursor: grabbing; }
+    .block.first .drag-handle,
+    .block.middle .drag-handle { right: 22px; }
+
+    /* -- Add / Clear buttons ------------------------------------------------- */
+    .add-buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; justify-content: center; }
+    .add-btn {
+      background: rgba(255,255,255,.04);
+      border: 1.5px dashed rgba(255,255,255,.14);
+      border-radius: 8px; color: rgba(255,255,255,.45);
+      padding: 7px 15px; font-size: .84em;
+      font-family: var(--font); font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .add-btn.add-active:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .add-btn.add-away:hover   { border-color: var(--away-dim);   color: var(--away);   background: var(--away-bg); }
+    .add-btn.add-rest:hover   { border-color: var(--rest-dim);   color: var(--rest);   background: var(--rest-bg); }
+    .add-btn:active { transform: scale(.97); }
+    .clear-btn {
+      background: none; border: none;
+      color: rgba(255,100,100,.38);
+      font-family: var(--font); font-size: .8em;
+      cursor: pointer; padding: 7px 10px;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .clear-btn:hover { color: rgba(255,80,80,.85); background: rgba(255,50,50,.08); }
+
+    /* -- Timeline card ------------------------------------------------------- */
+    .timeline-bar {
+      display: flex; border-radius: 8px; overflow: hidden;
+      height: 30px; margin-bottom: 12px;
+    }
+    .timeline-seg {
+      display: flex; align-items: center; justify-content: center;
+      font-size: .69em; font-weight: 600;
+      overflow: hidden; white-space: nowrap;
+      min-width: 0;
+    }
+    .timeline-seg.active { background: rgba(34,211,238,.30); color: rgba(34,211,238,.9); }
+    .timeline-seg.away   { background: rgba(148,163,184,.13); color: rgba(148,163,184,.7); }
+    .timeline-labels {
+      display: flex; justify-content: space-between;
+      font-size: .72em; color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .timeline-summary { font-size: .82em; color: rgba(255,255,255,.45); text-align: center; }
+    .timeline-summary strong { color: var(--accent); font-weight: 600; }
+    .timeline-empty { color: rgba(255,255,255,.2); font-size: .85em; font-style: italic; }
+
+    .runner-row {
+      display: flex; align-items: center; gap: 12px;
+      justify-content: center; flex-wrap: wrap;
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .runner-btn {
+      background: rgba(34,211,238,.12);
+      border: 1.5px solid var(--accent-dim);
+      border-radius: 8px; color: var(--accent);
+      padding: 8px 18px; font-size: .9em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; transition: all .18s;
+    }
+    .runner-btn:hover { background: var(--accent-bg); }
+    .runner-btn.stop {
+      background: rgba(244,114,182,.12);
+      border-color: var(--rest-dim);
+      color: var(--rest);
+    }
+    .runner-btn.stop:hover { background: var(--rest-bg); }
+    .runner-status {
+      font-size: .82em; color: var(--text-secondary);
+      min-width: 180px; text-align: center;
+    }
+    .runner-status strong { color: var(--accent); }
+
+    /* -- Command card -------------------------------------------------------- */
+    .command-wrap { position: relative; }
+    .command-code {
+      display: block; width: 100%;
+      background: rgba(0,0,0,.38);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 10px;
+      padding: 16px 100px 16px 18px;
+      font-family: var(--mono); font-size: .87em;
+      color: #e2e8f0; line-height: 1.7;
+      word-break: break-all; white-space: pre-wrap;
+      min-height: 54px;
+    }
+    .cmd-active { color: var(--accent); }
+    .cmd-away   { color: var(--away); }
+    .cmd-rest   { color: var(--rest); }
+    .cmd-sep    { color: rgba(255,255,255,.28); }
+    .copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 6px; color: rgba(255,255,255,.55);
+      padding: 5px 13px; font-size: .78em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: var(--accent-bg); border-color: var(--accent-dim); color: var(--accent); }
+    .copy-btn.copied { background: rgba(34,211,238,.15); border-color: var(--accent); color: var(--accent); }
+
+    .command-actions {
+      display: flex; gap: 10px; margin-top: 12px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .action-btn {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 8px; color: rgba(255,255,255,.65);
+      padding: 7px 14px; font-size: .82em;
+      font-family: var(--font); font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .action-btn:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .action-btn.copied { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+
+    /* -- History card -------------------------------------------------------- */
+    .history-stats {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .history-stat {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      text-align: center; min-width: 110px;
+    }
+    .history-stat-value {
+      font-size: 1.4em; font-weight: 700; color: var(--accent);
+    }
+    .history-stat-label {
+      font-size: .68em; text-transform: uppercase; letter-spacing: .6px;
+      color: var(--text-muted); margin-top: 2px;
+    }
+    .history-list {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 240px; overflow-y: auto;
+      padding-right: 4px;
+    }
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px; font-size: .82em;
+    }
+    .history-item.empty {
+      justify-content: center; color: var(--text-muted);
+      font-style: italic; border: none; background: none;
+    }
+    .history-item-date { color: var(--text-secondary); }
+    .history-item-duration { color: var(--accent); font-weight: 600; }
+    .history-clear {
+      background: none; border: none;
+      color: rgba(255,100,100,.4); font-size: .75em;
+      cursor: pointer; margin-top: 12px;
+      transition: color .15s;
+    }
+    .history-clear:hover { color: rgba(255,80,80,.85); }
+
+    /* -- Footer -------------------------------------------------------------- */
+
+    /* -- Focus styles -------------------------------------------------------- */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* -- Skip link ----------------------------------------------------------- */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      font-size: .875rem;
+      border-radius: 0 0 6px 6px;
+      text-decoration: none;
+      transition: top var(--dur);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* -- Entrance animation -------------------------------------------------- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* -- Skeleton loading ---------------------------------------------------- */
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,.03) 25%, rgba(255,255,255,.06) 50%, rgba(255,255,255,.03) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--radius);
+    }
+
+    /* -- Reduced motion ------------------------------------------------------ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* -- Mobile -------------------------------------------------------------- */
+    @media (max-width: 600px) {
+      .container { padding: 16px 16px 0; }
+      .card { padding: 18px 16px; }
+      .controls-row { flex-direction: column; gap: 16px; }
+      .cmd-templates-row { flex-direction: column; }
+      .cmd-tpl-input { width: 100%; }
+
+      /* Degrade puzzle pieces to standard cards on narrow screens */
+      .chain-row { flex-direction: column; gap: 8px; }
+      .block-wrapper { filter: none !important; }
+      .block-wrapper + .block-wrapper { margin-left: 0; }
+      .block,
+      .block.first,
+      .block.middle,
+      .block.last {
+        clip-path: none !important;
+        border-radius: var(--radius) !important;
+        padding: 12px 14px !important;
+        min-width: unset; width: 100%;
+      }
+      .block.active { outline: 1.5px solid rgba(34,211,238,.38); }
+      .block.away   { outline: 1.5px solid rgba(148,163,184,.24); }
+      .block.rest   { outline: 1.5px solid rgba(244,114,182,.38); }
+      .block.first .block-delete,
+      .block.middle .block-delete { right: 8px; }
+      .block.first .drag-handle,
+      .block.middle .drag-handle { right: 8px; }
+
+      .runner-row { flex-direction: column; align-items: stretch; }
+      .runner-status { text-align: center; }
+
+      .history-stats { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/flow-planner-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- -- Header (no-nav variant) ------------------------------------------- -->
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Autopilot</h1>
+        <div class="header-subtitle">Block schedule builder</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- -- Main -------------------------------------------------------------- -->
+  <main class="container" id="main">
+
+    <!-- Card 1: Controls -->
+    <div class="card" id="card-controls">
+      <div class="card-title">Schedule settings</div>
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <div class="ctrl-label">Start time</div>
+          <div class="time-group">
+            <input type="number" class="time-input" id="start-hour"   min="1" max="12" value="9" aria-label="Start hour">
+            <span class="time-colon" aria-hidden="true">:</span>
+            <input type="number" class="time-input" id="start-minute" min="0" max="59" value="0" aria-label="Start minute">
+            <button class="ampm-toggle" id="start-ampm" aria-label="Toggle AM or PM">AM</button>
+            <button class="now-btn" id="btn-now" aria-label="Set start time to now">Now</button>
+          </div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">Platform</div>
+          <select class="platform-select" id="platform-select" aria-label="Platform">
+            <option value="macos">macOS</option>
+            <option value="windows">Windows</option>
+            <option value="linux">Linux</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cmd-templates-row">
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-active">Active command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-active-tpl"
+                 value="caffeinate -t {secs}"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">placeholders: {mins} {secs} {h} {m}</div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-away">Away command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-away-tpl"
+                 value="sleep {secs}"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">placeholders: {mins} {secs} {h} {m}</div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-rest">Rest command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-rest-tpl"
+                 value="pmset displaysleepnow"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">runs once at end (no duration)</div>
+        </div>
+      </div>
+
+      <div class="presets-row" id="presets-row">
+        <button class="preset-btn" data-preset="full-day">Full day</button>
+        <button class="preset-btn" data-preset="morning">Morning focus</button>
+        <button class="preset-btn" data-preset="afternoon">Afternoon slot</button>
+        <button class="preset-btn" data-preset="split-day">Split session</button>
+        <button class="preset-btn" data-preset="pomodoro">Pomodoro</button>
+        <button class="preset-btn" data-preset="52-17">52/17</button>
+        <button class="preset-btn" data-preset="meeting-buffer">Meeting buffer</button>
+      </div>
+
+      <div class="save-preset-row">
+        <input type="text" class="save-preset-input" id="save-preset-name" placeholder="Preset name" aria-label="Preset name">
+        <button class="action-btn" id="btn-save-preset">Save as preset</button>
+      </div>
+    </div>
+
+    <!-- Card 2: Schedule blocks builder -->
+    <div class="card">
+      <div class="card-title">Schedule blocks</div>
+      <div class="chain-outer">
+        <div class="chain-row" id="chain-row"></div>
+      </div>
+      <div class="add-buttons">
+        <button class="add-btn add-active" id="btn-add-active">+ Active block</button>
+        <button class="add-btn add-away"   id="btn-add-away">+ Away block</button>
+        <button class="add-btn add-rest"   id="btn-add-rest">+ Rest block</button>
+        <button class="clear-btn"          id="btn-clear">Clear all</button>
+      </div>
+    </div>
+
+    <!-- Card 3: Timeline -->
+    <div class="card" id="card-timeline">
+      <div class="card-title">Timeline</div>
+      <div class="timeline-bar"    id="timeline-bar"></div>
+      <div class="timeline-labels" id="timeline-labels"></div>
+      <div class="timeline-summary" id="timeline-summary"></div>
+      <div class="runner-row">
+        <button class="runner-btn" id="btn-run">▶ Run schedule</button>
+        <div class="runner-status" id="runner-status">Schedule not running</div>
+      </div>
+    </div>
+
+    <!-- Card 4: Generated command -->
+    <div class="card">
+      <div class="card-title">Generated command</div>
+      <div class="command-wrap">
+        <pre class="command-code" id="command-output"></pre>
+        <button class="copy-btn" id="btn-copy">Copy</button>
+      </div>
+      <div class="command-actions">
+        <button class="action-btn" id="btn-share">Copy share link</button>
+        <button class="action-btn" id="btn-download">Download script</button>
+        <button class="action-btn" id="btn-ics">Export .ics</button>
+      </div>
+    </div>
+
+    <!-- Card 5: Session history -->
+    <div class="card">
+      <div class="card-title">Session history</div>
+      <div class="history-stats">
+        <div class="history-stat">
+          <div class="history-stat-value" id="stat-sessions">0</div>
+          <div class="history-stat-label">Sessions</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-value" id="stat-focus">0h</div>
+          <div class="history-stat-label">Focus time</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-value" id="stat-streak">0</div>
+          <div class="history-stat-label">Day streak</div>
+        </div>
+      </div>
+      <div class="history-list" id="history-list"></div>
+      <div style="text-align:center">
+        <button class="history-clear" id="btn-clear-history">Clear history</button>
+      </div>
+    </div>
+
+  </main><!-- /.container -->
+
+  <script>
+    /* ========================================================================
+     * Autopilot — Block Schedule Builder
+     * localStorage keys:
+     *   "flow-planner"         — current schedule + templates
+     *   "flow-planner-presets" — user-saved presets
+     *   "flow-planner-history" — completed runner sessions
+     *
+     * Render strategy:
+     *   fullRender()    -> renderChain + renderTimeline + renderCommand
+     *   partialRender() -> renderTimeline + renderCommand only
+     * ======================================================================== */
+
+    /* -- Constants ----------------------------------------------------------- */
+    const LS_KEY = 'flow-planner';
+    const PRESETS_KEY = 'flow-planner-presets';
+    const HISTORY_KEY = 'flow-planner-history';
+
+    const PLATFORM_TEMPLATES = {
+      macos: {
+        active: "caffeinate -t {secs}",
+        away:   "sleep {secs}",
+        rest:   "pmset displaysleepnow"
+      },
+      windows: {
+        active: "powercfg /requestsoverride PROCESS powershell.exe display system; Start-Sleep -Seconds {secs}; powercfg /requestsoverride PROCESS powershell.exe display",
+        away:   "Start-Sleep -Seconds {secs}",
+        rest:   "rundll32.exe user32.dll,LockWorkStation"
+      },
+      linux: {
+        active: "xset s off -dpms && sleep {secs} && xset s on +dpms",
+        away:   "sleep {secs}",
+        rest:   "loginctl lock-session"
+      }
+    };
+
+    const SCRIPT_HEADERS = {
+      macos:   { ext: 'sh',  shebang: '#!/bin/bash\n# Autopilot schedule\n# https://autopilot.neorgon.com/\n\n' },
+      windows: { ext: 'ps1', shebang: '# Autopilot schedule\n# https://autopilot.neorgon.com/\n\n' },
+      linux:   { ext: 'sh',  shebang: '#!/bin/bash\n# Autopilot schedule\n# https://autopilot.neorgon.com/\n\n' }
+    };
+
+    /* -- Built-in presets (block patterns only) ------------------------------ */
+    const BUILTIN_PRESETS = {
+      'full-day':  {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [{type:'active',h:4,m:45},{type:'away',h:1,m:0},{type:'active',h:3,m:5}]
+      },
+      'morning':   {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [{type:'active',h:4,m:0}]
+      },
+      'afternoon': {
+        hour: 1, min: 0, ampm: 'PM',
+        blocks: [{type:'active',h:4,m:0}]
+      },
+      'split-day': {
+        hour: 8, min: 30, ampm: 'AM',
+        blocks: [
+          {type:'active',h:3,m:30},{type:'away',h:0,m:30},
+          {type:'active',h:2,m:0},{type:'away',h:1,m:0},
+          {type:'active',h:2,m:0}
+        ]
+      },
+      'pomodoro': {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [
+          {type:'active',h:0,m:25},{type:'away',h:0,m:5},
+          {type:'active',h:0,m:25},{type:'away',h:0,m:5},
+          {type:'active',h:0,m:25},{type:'away',h:0,m:5},
+          {type:'active',h:0,m:25},{type:'away',h:0,m:15}
+        ]
+      },
+      '52-17': {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [
+          {type:'active',h:0,m:52},{type:'away',h:0,m:17},
+          {type:'active',h:0,m:52},{type:'away',h:0,m:17}
+        ]
+      },
+      'meeting-buffer': {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [
+          {type:'active',h:0,m:50},{type:'away',h:0,m:10},
+          {type:'active',h:0,m:50},{type:'away',h:0,m:10}
+        ]
+      }
+    };
+
+    /* -- State --------------------------------------------------------------- */
+    let blocks      = [];
+    let startHour   = 9;
+    let startMinute = 0;
+    let startAmpm   = 'AM';
+    let platform    = 'macos';
+    let userPresets = {};
+
+    /* Runner state */
+    let runnerTimer = null;
+    let runnerNotifications = [];
+    let currentSession = null;
+
+    /* Drag state */
+    let dragSrcIdx = null;
+
+    /* -- Element refs -------------------------------------------------------- */
+    const chainRow        = document.getElementById('chain-row');
+    const timelineBar     = document.getElementById('timeline-bar');
+    const timelineLabels  = document.getElementById('timeline-labels');
+    const timelineSummary = document.getElementById('timeline-summary');
+    const commandOutput   = document.getElementById('command-output');
+    const startHourEl     = document.getElementById('start-hour');
+    const startMinEl      = document.getElementById('start-minute');
+    const startAmpmEl     = document.getElementById('start-ampm');
+    const platformSelect  = document.getElementById('platform-select');
+    const cmdActiveTplEl  = document.getElementById('cmd-active-tpl');
+    const cmdAwayTplEl    = document.getElementById('cmd-away-tpl');
+    const cmdRestTplEl    = document.getElementById('cmd-rest-tpl');
+    const presetsRow      = document.getElementById('presets-row');
+    const savePresetInput = document.getElementById('save-preset-name');
+    const btnCopy         = document.getElementById('btn-copy');
+    const btnShare        = document.getElementById('btn-share');
+    const btnDownload     = document.getElementById('btn-download');
+    const btnIcs          = document.getElementById('btn-ics');
+    const btnRun          = document.getElementById('btn-run');
+    const runnerStatus    = document.getElementById('runner-status');
+    const statSessions    = document.getElementById('stat-sessions');
+    const statFocus       = document.getElementById('stat-focus');
+    const statStreak      = document.getElementById('stat-streak');
+    const historyList     = document.getElementById('history-list');
+
+    /* -- Time helpers -------------------------------------------------------- */
+    function startTotalMins() {
+      let h = startHour % 12;
+      if (startAmpm === 'PM') h += 12;
+      return h * 60 + startMinute;
+    }
+
+    function formatMins(total) {
+      const h = Math.floor(total / 60), m = total % 60;
+      if (h === 0) return `${m}m`;
+      if (m === 0) return `${h}h`;
+      return `${h}h ${m}m`;
+    }
+
+    function formatTime(totalMins) {
+      totalMins = ((totalMins % 1440) + 1440) % 1440;
+      const h24  = Math.floor(totalMins / 60);
+      const m    = totalMins % 60;
+      const ampm = h24 < 12 ? 'AM' : 'PM';
+      let h = h24 % 12;
+      if (h === 0) h = 12;
+      return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+    }
+
+    function totalBlockMins(b) {
+      return (b.h || 0) * 60 + (b.m || 0);
+    }
+
+    /* -- Template expansion -------------------------------------------------- */
+    function expandTemplate(tpl, b) {
+      const totalMins = totalBlockMins(b);
+      return tpl
+        .replace(/\{mins\}/g, totalMins)
+        .replace(/\{secs\}/g, totalMins * 60)
+        .replace(/\{h\}/g, b.h || 0)
+        .replace(/\{m\}/g, b.m || 0);
+    }
+
+    /* -- Command generation -------------------------------------------------- */
+    function generateCommandParts() {
+      if (blocks.length === 0) return [];
+      const activeTpl = cmdActiveTplEl.value.trim();
+      const awayTpl   = cmdAwayTplEl.value.trim();
+      const restTpl   = cmdRestTplEl.value.trim();
+      return blocks.map(b => {
+        if (b.type === 'rest') return restTpl ? { type: 'rest', cmd: restTpl } : null;
+        const tpl = b.type === 'active' ? activeTpl : awayTpl;
+        if (!tpl) return null;
+        return { type: b.type, cmd: expandTemplate(tpl, b) };
+      }).filter(Boolean);
+    }
+
+    function generateCommand() {
+      return generateCommandParts().map(p => p.cmd).join('; ');
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    /* -- URL sharing --------------------------------------------------------- */
+    function encodeState() {
+      const payload = {
+        b: blocks.map(b => b.type === 'rest' ? ['r'] : [b.type === 'active' ? 'a' : 'w', b.h || 0, b.m || 0]),
+        h: startHour, m: startMinute, a: startAmpm, p: platform,
+        ca: cmdActiveTplEl.value, cw: cmdAwayTplEl.value, cr: cmdRestTplEl.value
+      };
+      return btoa(JSON.stringify(payload));
+    }
+
+    function decodeState(hash) {
+      try {
+        const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+        if (!raw) return null;
+        const s = JSON.parse(atob(raw));
+        const blocks = (s.b || []).map(x => {
+          if (x[0] === 'r') return { type: 'rest', h: 0, m: 0 };
+          return { type: x[0] === 'a' ? 'active' : 'away', h: x[1] || 0, m: x[2] || 0 };
+        });
+        return {
+          blocks,
+          startHour: s.h ?? 9,
+          startMinute: s.m ?? 0,
+          startAmpm: s.a || 'AM',
+          platform: s.p || 'macos',
+          cmdActiveTpl: s.ca ?? '',
+          cmdAwayTpl: s.cw ?? '',
+          cmdRestTpl: s.cr ?? ''
+        };
+      } catch {
+        return null;
+      }
+    }
+
+    function updateUrlHash() {
+      try {
+        history.replaceState(null, '', '#' + encodeState());
+      } catch {}
+    }
+
+    /* -- User presets -------------------------------------------------------- */
+    function loadUserPresets() {
+      try {
+        const raw = localStorage.getItem(PRESETS_KEY);
+        userPresets = raw ? JSON.parse(raw) : {};
+      } catch { userPresets = {}; }
+    }
+
+    function saveUserPresets() {
+      localStorage.setItem(PRESETS_KEY, JSON.stringify(userPresets));
+      renderPresets();
+    }
+
+    function titleCase(s) {
+      return s.replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function renderPresets() {
+      presetsRow.innerHTML = '';
+      Object.entries(BUILTIN_PRESETS).forEach(([key, p]) => {
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.dataset.preset = key;
+        btn.textContent = titleCase(key.replace(/-/g, ' '));
+        presetsRow.appendChild(btn);
+      });
+      Object.entries(userPresets).forEach(([key, p]) => {
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.dataset.preset = `user:${key}`;
+        btn.innerHTML = `${escHtml(key)} <button class="preset-delete" data-delete="${escHtml(key)}" title="Delete preset" aria-label="Delete preset">\u2715</button>`;
+        presetsRow.appendChild(btn);
+      });
+      wirePresetButtons();
+    }
+
+    function applyPreset(key) {
+      let p;
+      if (key.startsWith('user:')) {
+        const name = key.slice(5);
+        p = userPresets[name];
+      } else {
+        p = BUILTIN_PRESETS[key];
+      }
+      if (!p) return;
+      blocks      = p.blocks.map(b => ({ type: b.type, h: b.h, m: b.m }));
+      startHour   = p.hour;
+      startMinute = p.min;
+      startAmpm   = p.ampm;
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+      setActivePresetByKey(key);
+      fullRender(); saveState();
+    }
+
+    function saveCurrentPreset(name) {
+      if (!name.trim()) return;
+      userPresets[name.trim()] = {
+        hour: startHour, min: startMinute, ampm: startAmpm,
+        blocks: blocks.map(b => ({ type: b.type, h: b.h, m: b.m }))
+      };
+      saveUserPresets();
+      setActivePresetByKey('user:' + name.trim());
+    }
+
+    function deleteUserPreset(name) {
+      delete userPresets[name];
+      saveUserPresets();
+      setActivePreset(null);
+    }
+
+    /* -- Render: chain ------------------------------------------------------- */
+    function renderChain() {
+      if (blocks.length === 0) {
+        chainRow.classList.add('empty');
+        chainRow.innerHTML = '<div class="chain-empty-msg">No blocks yet. Add an Active or Away block below.</div>';
+        return;
+      }
+      chainRow.classList.remove('empty');
+
+      let cursor = startTotalMins();
+      chainRow.innerHTML = '';
+
+      const TYPE_LABELS = { active: '\u25CF ACTIVE', away: '\u25CC AWAY', rest: '\u25A0 REST' };
+      const nonRestIndices = blocks.map((b, i) => b.type !== 'rest' ? i : -1).filter(i => i !== -1);
+
+      blocks.forEach((b, i) => {
+        let pos;
+        if (b.type === 'rest') {
+          pos = 'solo';
+        } else {
+          const ni = nonRestIndices.indexOf(i);
+          const total = nonRestIndices.length;
+          if (total === 1) pos = 'solo';
+          else if (ni === 0) pos = 'first';
+          else if (ni === total - 1) pos = 'last';
+          else pos = 'middle';
+        }
+        const mins = totalBlockMins(b);
+        const winStart = formatTime(cursor);
+        cursor += mins;
+        const winEnd = formatTime(cursor);
+
+        const wrapper = document.createElement('div');
+        wrapper.className = `block-wrapper ${b.type}-type`;
+        wrapper.dataset.idx = i;
+        wrapper.draggable = b.type !== 'rest' && window.innerWidth > 600;
+
+        const block = document.createElement('div');
+        block.className = `block ${b.type} ${pos}`;
+
+        const dragHandle = b.type !== 'rest'
+          ? `<div class="drag-handle" title="Drag to reorder">\u2630</div>`
+          : '';
+
+        if (b.type === 'rest') {
+          block.innerHTML = `
+            <button class="block-delete" data-idx="${i}" title="Remove block" aria-label="Remove block">\u2715</button>
+            <div class="block-type-label">${TYPE_LABELS.rest}</div>
+            <div class="block-window" style="color:var(--rest);opacity:.7">terminates</div>
+          `;
+        } else {
+          block.innerHTML = `
+            <button class="block-delete" data-idx="${i}" title="Remove block" aria-label="Remove block">\u2715</button>
+            <div class="block-type-label">${TYPE_LABELS[b.type]}</div>
+            <div class="block-inputs">
+              <input type="number" class="dur-input"
+                data-idx="${i}" data-field="h"
+                min="0" max="23" value="${b.h}" aria-label="Hours">
+              <span class="dur-unit">h</span>
+              <input type="number" class="dur-input"
+                data-idx="${i}" data-field="m"
+                min="0" max="59" value="${b.m}" aria-label="Minutes">
+              <span class="dur-unit">m</span>
+            </div>
+            <div class="block-window">${winStart} \u2013 ${winEnd}</div>
+            ${dragHandle}
+          `;
+        }
+
+        wrapper.appendChild(block);
+        chainRow.appendChild(wrapper);
+      });
+
+      /* Wire block events */
+      chainRow.querySelectorAll('.block-delete').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          blocks.splice(+btn.dataset.idx, 1);
+          setActivePreset(null); fullRender(); saveState();
+        });
+      });
+
+      chainRow.querySelectorAll('.dur-input').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const val = parseInt(inp.value, 10);
+          if (!isNaN(val) && val >= 0) {
+            blocks[+inp.dataset.idx][inp.dataset.field] = val;
+            partialRender(); saveState();
+          }
+        });
+        inp.addEventListener('blur', () => {
+          const idx   = +inp.dataset.idx;
+          const field = inp.dataset.field;
+          const max   = field === 'h' ? 23 : 59;
+          let val = parseInt(inp.value, 10);
+          if (isNaN(val) || val < 0) val = 0;
+          if (val > max) val = max;
+          blocks[idx][field] = val;
+          inp.value = val;
+          fullRender(); saveState();
+        });
+      });
+
+      /* Wire drag events */
+      chainRow.querySelectorAll('.block-wrapper').forEach(w => {
+        w.addEventListener('dragstart', handleDragStart);
+        w.addEventListener('dragover',  handleDragOver);
+        w.addEventListener('dragleave', handleDragLeave);
+        w.addEventListener('drop',      handleDrop);
+        w.addEventListener('dragend',   handleDragEnd);
+      });
+    }
+
+    /* -- Drag and drop ------------------------------------------------------- */
+    function handleDragStart(e) {
+      dragSrcIdx = +this.dataset.idx;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(dragSrcIdx));
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const idx = +this.dataset.idx;
+      if (idx === dragSrcIdx) return;
+      const rect = this.getBoundingClientRect();
+      const mid = rect.left + rect.width / 2;
+      this.classList.remove('drag-over-left', 'drag-over-right');
+      this.classList.add(e.clientX < mid ? 'drag-over-left' : 'drag-over-right');
+    }
+
+    function handleDragLeave(e) {
+      this.classList.remove('drag-over-left', 'drag-over-right');
+    }
+
+    function handleDrop(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      const src = dragSrcIdx;
+      const dst = +this.dataset.idx;
+      if (src === null || src === dst) return;
+      const rect = this.getBoundingClientRect();
+      const insertAfter = e.clientX >= rect.left + rect.width / 2;
+      const [moved] = blocks.splice(src, 1);
+      let targetIdx = dst;
+      if (src < dst && insertAfter) targetIdx = dst;
+      else if (src > dst && !insertAfter) targetIdx = dst;
+      else if (src < dst && !insertAfter) targetIdx = dst - 1;
+      else if (src > dst && insertAfter) targetIdx = dst + 1;
+      blocks.splice(targetIdx, 0, moved);
+      setActivePreset(null); fullRender(); saveState();
+    }
+
+    function handleDragEnd(e) {
+      this.classList.remove('dragging');
+      chainRow.querySelectorAll('.block-wrapper').forEach(w => {
+        w.classList.remove('drag-over-left', 'drag-over-right');
+      });
+      dragSrcIdx = null;
+    }
+
+    /* -- Render: timeline ---------------------------------------------------- */
+    function renderTimeline() {
+      timelineBar.innerHTML = '';
+      timelineLabels.innerHTML = '';
+      timelineSummary.innerHTML = '';
+
+      const totalMins = blocks.reduce((s, b) => s + totalBlockMins(b), 0);
+      if (totalMins === 0) {
+        timelineBar.innerHTML = '<div style="flex:1;background:rgba(255,255,255,.04);"></div>';
+        return;
+      }
+
+      blocks.forEach(b => {
+        if (b.type === 'rest') return;
+        const mins = totalBlockMins(b);
+        const pct  = (mins / totalMins) * 100;
+        const seg  = document.createElement('div');
+        seg.className = `timeline-seg ${b.type}`;
+        seg.style.flex = String(pct);
+        if (pct > 7) seg.textContent = formatMins(mins);
+        timelineBar.appendChild(seg);
+      });
+
+      const startStr = formatTime(startTotalMins());
+      const endStr   = formatTime(startTotalMins() + totalMins);
+
+      const s = document.createElement('span'); s.textContent = startStr;
+      const e = document.createElement('span'); e.textContent = endStr;
+      timelineLabels.appendChild(s); timelineLabels.appendChild(e);
+
+      const th = Math.floor(totalMins / 60), tm = totalMins % 60;
+      const tStr = th > 0 ? `${th}h${tm > 0 ? ' ' + tm + 'm' : ''}` : `${tm}m`;
+      timelineSummary.innerHTML = `Total: <strong>${tStr}</strong> \u00B7 ends ${endStr}`;
+    }
+
+    /* -- Render: command ----------------------------------------------------- */
+    function renderCommand() {
+      const parts = generateCommandParts();
+      if (parts.length === 0) {
+        const hasBlocks = blocks.length > 0;
+        const msg = hasBlocks
+          ? 'Set command templates above to generate a command.'
+          : 'Add blocks to generate a command.';
+        commandOutput.innerHTML = `<span style="color:rgba(255,255,255,.55);font-style:italic">${msg}</span>`;
+        return;
+      }
+
+      commandOutput.innerHTML = parts.map((p, i) => {
+        const sep = i < parts.length - 1 ? '<span class="cmd-sep">; </span>' : '';
+        const cls = p.type === 'active' ? 'cmd-active' : p.type === 'rest' ? 'cmd-rest' : 'cmd-away';
+        return `<span class="${cls}">${escHtml(p.cmd)}</span>${sep}`;
+      }).join('');
+    }
+
+    /* -- Full / partial render ----------------------------------------------- */
+    function fullRender() {
+      renderChain();
+      renderTimeline();
+      renderCommand();
+      updateRunnerVisuals();
+      updateUrlHash();
+    }
+    function partialRender() {
+      renderTimeline();
+      renderCommand();
+      updateUrlHash();
+    }
+
+    /* -- Persist ------------------------------------------------------------- */
+    function saveState() {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        blocks, startHour, startMinute, startAmpm, platform,
+        cmdActiveTpl: cmdActiveTplEl.value,
+        cmdAwayTpl:   cmdAwayTplEl.value,
+        cmdRestTpl:   cmdRestTplEl.value
+      }));
+      updateUrlHash();
+    }
+
+    function applyLoadedState(s) {
+      blocks      = Array.isArray(s.blocks) ? s.blocks : [];
+      startHour   = s.startHour   ?? 9;
+      startMinute = s.startMinute ?? 0;
+      startAmpm   = s.startAmpm   || 'AM';
+      platform    = s.platform    || 'macos';
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+      platformSelect.value    = platform;
+      cmdActiveTplEl.value = s.cmdActiveTpl ?? PLATFORM_TEMPLATES[platform].active;
+      cmdAwayTplEl.value   = s.cmdAwayTpl   ?? PLATFORM_TEMPLATES[platform].away;
+      cmdRestTplEl.value   = s.cmdRestTpl   ?? PLATFORM_TEMPLATES[platform].rest;
+    }
+
+    function loadState() {
+      try {
+        const hash = location.hash;
+        if (hash && hash.length > 1) {
+          const decoded = decodeState(hash);
+          if (decoded) { applyLoadedState(decoded); return true; }
+        }
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        applyLoadedState(s);
+        return true;
+      } catch { return false; }
+    }
+
+    /* -- Clipboard ----------------------------------------------------------- */
+    function copyText(text, btn, doneText) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = doneText || 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    /* -- Sync start time from inputs ----------------------------------------- */
+    function syncStartTime() {
+      let h = parseInt(startHourEl.value,  10);
+      let m = parseInt(startMinEl.value,   10);
+      if (isNaN(h) || h < 1)  h = 1;
+      if (h > 12)              h = 12;
+      if (isNaN(m) || m < 0)  m = 0;
+      if (m > 59)              m = 59;
+      startHour   = h;
+      startMinute = m;
+    }
+
+    /* -- Platform switching -------------------------------------------------- */
+    function applyPlatformTemplates() {
+      const t = PLATFORM_TEMPLATES[platform];
+      cmdActiveTplEl.value = t.active;
+      cmdAwayTplEl.value   = t.away;
+      cmdRestTplEl.value   = t.rest;
+      fullRender(); saveState();
+    }
+
+    /* -- Share / Export ------------------------------------------------------ */
+    function getShareUrl() {
+      return location.origin + location.pathname + '#' + encodeState();
+    }
+
+    function downloadScript() {
+      const parts = generateCommandParts();
+      if (parts.length === 0) return;
+      const header = SCRIPT_HEADERS[platform];
+      const body = parts.map(p => p.cmd).join(platform === 'windows' ? '\n' : ' && \\\n  ');
+      const content = header.shebang + body + '\n';
+      const blob = new Blob([content], { type: platform === 'windows' ? 'text/plain' : 'application/x-sh' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `autopilot-schedule.${header.ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* -- .ics export --------------------------------------------------------- */
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    function toIcsDate(dt) {
+      return `${dt.getUTCFullYear()}${pad2(dt.getUTCMonth()+1)}${pad2(dt.getUTCDate())}T${pad2(dt.getUTCHours())}${pad2(dt.getUTCMinutes())}${pad2(dt.getUTCSeconds())}Z`;
+    }
+
+    function escapeIcsText(s) {
+      return s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    }
+
+    function downloadIcs() {
+      const totalMins = blocks.reduce((s, b) => s + totalBlockMins(b), 0);
+      if (totalMins === 0) return;
+      const start = startTotalMins();
+      const now = new Date();
+      const base = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const startDt = new Date(base.getTime() + start * 60000);
+      const endDt   = new Date(base.getTime() + (start + totalMins) * 60000);
+
+      const blockLines = blocks.map(b => `${b.type}: ${formatMins(totalBlockMins(b))}`).join('\\n');
+      const cmd = generateCommand();
+      const description = escapeIcsText(`Schedule\\n${blockLines}\\n\\nCommand\\n${cmd}`);
+
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Neorgon//Autopilot//EN',
+        'BEGIN:VEVENT',
+        `UID:autopilot-${Date.now()}@neorgon.com`,
+        `DTSTAMP:${toIcsDate(new Date())}`,
+        `DTSTART:${toIcsDate(startDt)}`,
+        `DTEND:${toIcsDate(endDt)}`,
+        'SUMMARY:Autopilot schedule',
+        `DESCRIPTION:${description}`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([ics], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'autopilot-schedule.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* -- Session history ----------------------------------------------------- */
+    function loadHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      } catch { return []; }
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-50)));
+      renderHistory();
+    }
+
+    function computeDayStreak(history) {
+      if (history.length === 0) return 0;
+      const days = new Set(history.map(h => new Date(h.startedAt).toDateString()));
+      const sorted = Array.from(days).map(d => new Date(d)).sort((a,b) => b - a);
+      let streak = 0;
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      let check = days.has(today) ? today : (days.has(yesterday) ? yesterday : null);
+      if (!check) return 0;
+      while (true) {
+        if (!days.has(check)) break;
+        streak++;
+        const d = new Date(check);
+        d.setDate(d.getDate() - 1);
+        check = d.toDateString();
+      }
+      return streak;
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      const sessions = history.length;
+      const focusMins = history.reduce((s, h) => s + (h.focusMins || 0), 0);
+      statSessions.textContent = String(sessions);
+      statFocus.textContent = formatMins(focusMins);
+      statStreak.textContent = String(computeDayStreak(history));
+
+      historyList.innerHTML = '';
+      if (history.length === 0) {
+        historyList.innerHTML = '<div class="history-item empty">No sessions yet. Run a schedule to start tracking.</div>';
+        return;
+      }
+      history.slice().reverse().slice(0, 5).forEach(h => {
+        const d = new Date(h.startedAt);
+        const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        const timeStr = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML = `
+          <span class="history-item-date">${dateStr} \u00B7 ${timeStr}</span>
+          <span class="history-item-duration">${formatMins(h.focusMins || 0)} focus</span>
+        `;
+        historyList.appendChild(item);
+      });
+    }
+
+    function startSession() {
+      const focusMins = blocks.reduce((s, b) => s + (b.type === 'active' ? totalBlockMins(b) : 0), 0);
+      currentSession = { startedAt: Date.now(), focusMins, platform };
+    }
+
+    function endSession() {
+      if (!currentSession) return;
+      const history = loadHistory();
+      history.push(currentSession);
+      saveHistory(history);
+      currentSession = null;
+    }
+
+    /* -- Browser runner ------------------------------------------------------ */
+    function scheduleBounds() {
+      const totalMins = blocks.reduce((s, b) => s + totalBlockMins(b), 0);
+      return { start: startTotalMins(), end: startTotalMins() + totalMins, total: totalMins };
+    }
+
+    function currentBlockIndex(nowMins) {
+      const { start } = scheduleBounds();
+      let cursor = start;
+      for (let i = 0; i < blocks.length; i++) {
+        const mins = totalBlockMins(blocks[i]);
+        if (nowMins >= cursor && nowMins < cursor + mins) return i;
+        cursor += mins;
+      }
+      return -1;
+    }
+
+    function updateRunnerVisuals() {
+      document.querySelectorAll('.block-wrapper').forEach(w => w.classList.remove('current-block'));
+      if (!runnerTimer) return;
+      const now = new Date();
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+      const idx = currentBlockIndex(nowMins);
+      if (idx >= 0) {
+        const wrapper = chainRow.querySelector(`.block-wrapper[data-idx="${idx}"]`);
+        if (wrapper) wrapper.classList.add('current-block');
+      }
+    }
+
+    function runnerTick() {
+      if (!runnerTimer) return;
+      const { start, end, total } = scheduleBounds();
+      const now = new Date();
+      const nowMins = now.getHours() * 60 + now.getMinutes();
+
+      if (total === 0) {
+        stopRunner();
+        return;
+      }
+
+      if (nowMins < start) {
+        const minsUntil = start - nowMins;
+        runnerStatus.textContent = `Starts in ${formatMins(minsUntil)}`;
+        updateRunnerVisuals();
+        return;
+      }
+
+      if (nowMins >= end) {
+        runnerStatus.textContent = 'Schedule finished';
+        stopRunner();
+        return;
+      }
+
+      let cursor = start;
+      let currentIdx = -1;
+      let remaining = 0;
+      for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
+        const mins = totalBlockMins(b);
+        if (nowMins >= cursor && nowMins < cursor + mins) {
+          currentIdx = i;
+          remaining = cursor + mins - nowMins;
+          break;
+        }
+        cursor += mins;
+      }
+
+      if (currentIdx >= 0) {
+        const b = blocks[currentIdx];
+        const label = b.type === 'active' ? 'Focus' : b.type === 'away' ? 'Break' : 'Rest';
+        runnerStatus.innerHTML = `<strong>${label}</strong> \u00B7 ${formatMins(remaining)} left`;
+        sendNotificationIfNeeded(currentIdx, label, remaining);
+      }
+      updateRunnerVisuals();
+    }
+
+    function sendNotificationIfNeeded(idx, label, remaining) {
+      if (!('Notification' in window)) return;
+      if (Notification.permission !== 'granted') return;
+      const key = `${idx}-${label}`;
+      if (runnerNotifications.includes(key)) return;
+      const blockMins = totalBlockMins(blocks[idx]);
+      if (remaining >= blockMins - 1) {
+        const body = `${label} block started. ${formatMins(blockMins)} on the clock.`;
+        try {
+          new Notification('Autopilot', { body, icon: 'energon-classic-logo.png' });
+        } catch {}
+        runnerNotifications.push(key);
+      }
+    }
+
+    function startRunner() {
+      if (runnerTimer) return;
+      if (!blocks.length) return;
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+      runnerNotifications = [];
+      startSession();
+      runnerTimer = setInterval(runnerTick, 1000);
+      btnRun.textContent = '\u25A0 Stop';
+      btnRun.classList.add('stop');
+      runnerTick();
+    }
+
+    function stopRunner() {
+      if (runnerTimer) {
+        clearInterval(runnerTimer);
+        runnerTimer = null;
+      }
+      runnerNotifications = [];
+      btnRun.textContent = '\u25B6 Run schedule';
+      btnRun.classList.remove('stop');
+      runnerStatus.textContent = 'Schedule not running';
+      endSession();
+      updateRunnerVisuals();
+    }
+
+    /* -- Preset buttons ------------------------------------------------------ */
+    function setActivePreset(activeBtn) {
+      presetsRow.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function setActivePresetByKey(key) {
+      const btn = presetsRow.querySelector(`.preset-btn[data-preset="${CSS.escape(key)}"]`);
+      setActivePreset(btn);
+    }
+
+    function wirePresetButtons() {
+      presetsRow.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyPreset(btn.dataset.preset);
+        });
+      });
+      presetsRow.querySelectorAll('.preset-delete').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (confirm(`Delete preset "${btn.dataset.delete}"?`)) {
+            deleteUserPreset(btn.dataset.delete);
+          }
+        });
+      });
+    }
+
+    /* -- Event wiring -------------------------------------------------------- */
+    startHourEl.addEventListener('input', () => { syncStartTime(); partialRender(); saveState(); });
+    startHourEl.addEventListener('blur',  () => { syncStartTime(); startHourEl.value = startHour; fullRender(); saveState(); });
+
+    startMinEl.addEventListener('input',  () => { syncStartTime(); partialRender(); saveState(); });
+    startMinEl.addEventListener('blur',   () => { syncStartTime(); startMinEl.value = startMinute; fullRender(); saveState(); });
+
+    startAmpmEl.addEventListener('click', () => {
+      startAmpm = startAmpm === 'AM' ? 'PM' : 'AM';
+      startAmpmEl.textContent = startAmpm;
+      fullRender(); saveState();
+    });
+
+    platformSelect.addEventListener('change', () => {
+      platform = platformSelect.value;
+      applyPlatformTemplates();
+    });
+
+    cmdActiveTplEl.addEventListener('input', () => { renderCommand(); saveState(); });
+    cmdAwayTplEl.addEventListener('input',   () => { renderCommand(); saveState(); });
+    cmdRestTplEl.addEventListener('input',   () => { renderCommand(); saveState(); });
+
+    document.getElementById('btn-add-active').addEventListener('click', () => {
+      blocks.push({ type: 'active', h: 1, m: 0 });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    document.getElementById('btn-add-away').addEventListener('click', () => {
+      blocks.push({ type: 'away', h: 1, m: 0 });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    document.getElementById('btn-add-rest').addEventListener('click', () => {
+      blocks.push({ type: 'rest', h: 0, m: 0 });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    const btnClear = document.getElementById('btn-clear');
+    let clearPending = false;
+    btnClear.addEventListener('click', () => {
+      if (blocks.length === 0) return;
+      if (!clearPending) {
+        clearPending = true;
+        btnClear.textContent = 'Confirm clear?';
+        btnClear.style.color = 'rgba(255,80,80,.85)';
+        setTimeout(() => {
+          clearPending = false;
+          btnClear.textContent = 'Clear all';
+          btnClear.style.color = '';
+        }, 2500);
+        return;
+      }
+      clearPending = false;
+      btnClear.textContent = 'Clear all';
+      btnClear.style.color = '';
+      blocks = [];
+      fullRender(); saveState();
+    });
+
+    btnCopy.addEventListener('click', () => {
+      const cmd = generateCommand();
+      if (cmd) copyText(cmd, btnCopy);
+    });
+
+    btnShare.addEventListener('click', () => {
+      copyText(getShareUrl(), btnShare, 'Link copied!');
+    });
+
+    btnDownload.addEventListener('click', () => {
+      downloadScript();
+    });
+
+    btnIcs.addEventListener('click', () => {
+      downloadIcs();
+    });
+
+    btnRun.addEventListener('click', () => {
+      if (runnerTimer) stopRunner();
+      else startRunner();
+    });
+
+    document.getElementById('btn-save-preset').addEventListener('click', () => {
+      const name = savePresetInput.value.trim();
+      if (!name) return;
+      saveCurrentPreset(name);
+      savePresetInput.value = '';
+    });
+
+    savePresetInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const name = savePresetInput.value.trim();
+        if (name) { saveCurrentPreset(name); savePresetInput.value = ''; }
+      }
+    });
+
+    document.getElementById('btn-clear-history').addEventListener('click', () => {
+      if (confirm('Clear all session history?')) {
+        localStorage.setItem(HISTORY_KEY, '[]');
+        renderHistory();
+      }
+    });
+
+    /* -- Init ---------------------------------------------------------------- */
+    function setStartToNow() {
+      const now = new Date();
+      let h24 = now.getHours();
+      startAmpm   = h24 < 12 ? 'AM' : 'PM';
+      startHour   = h24 % 12 || 12;
+      startMinute = now.getMinutes();
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+    }
+
+    document.getElementById('btn-now').addEventListener('click', () => {
+      setStartToNow();
+      fullRender(); saveState();
+    });
+
+    loadUserPresets();
+    renderPresets();
+
+    if (!loadState()) {
+      platform = 'macos';
+      platformSelect.value = platform;
+      cmdActiveTplEl.value = PLATFORM_TEMPLATES.macos.active;
+      cmdAwayTplEl.value   = PLATFORM_TEMPLATES.macos.away;
+      cmdRestTplEl.value   = PLATFORM_TEMPLATES.macos.rest;
+      const p = BUILTIN_PRESETS['full-day'];
+      blocks      = p.blocks.map(b => ({ type: b.type, h: b.h, m: b.m }));
+      startHour   = p.hour;
+      startMinute = p.min;
+      startAmpm   = p.ampm;
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+    }
+
+    renderHistory();
+    fullRender();
+  </script>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-ancestors 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autopilot — Block Schedule Builder</title>
+  <meta name="description" content="Build visual time-block schedules and generate shell commands. No more manual duration math">
+  <meta property="og:title" content="Autopilot — Block Schedule Builder">
+  <meta property="og:description" content="Build visual time-block schedules and generate shell commands">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Autopilot — Block Schedule Builder">
+  <meta name="twitter:description" content="Build visual time-block schedules and generate shell commands">
+  <meta name="twitter:image" content="https://autopilot.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://autopilot.neorgon.com/">
+  <meta property="og:url" content="https://autopilot.neorgon.com/">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://autopilot.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Autopilot",
+    "description": "Build visual time-block schedules and generate shell commands. No more manual duration math",
+    "url": "https://autopilot.neorgon.com/",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "macOS",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+  <style>
+
+    /* -- Reset & base -------------------------------------------------------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:            #040714;
+      --surface-1:     rgba(255,255,255,.03);
+      --surface-2:     rgba(255,255,255,.06);
+      --border-subtle: rgba(255,255,255,.07);
+      --border:        rgba(255,255,255,.10);
+      --border-strong: rgba(255,255,255,.22);
+      --text-primary:  #f9f9f9;
+      --text-secondary:#cacaca;
+      --text-muted:    rgba(255,255,255,.45);
+
+      --accent:        #22d3ee;
+      --accent-dim:    rgba(34,211,238,.40);
+      --accent-bg:     rgba(34,211,238,.10);
+      --accent-glow:   rgba(34,211,238,.55);
+
+      --away:          #94a3b8;
+      --away-dim:      rgba(148,163,184,.25);
+      --away-bg:       rgba(148,163,184,.07);
+      --away-glow:     rgba(148,163,184,.40);
+
+      --rest:          #f472b6;
+      --rest-dim:      rgba(244,114,182,.25);
+      --rest-bg:       rgba(244,114,182,.08);
+      --rest-glow:     rgba(244,114,182,.45);
+
+      --font:  'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --mono:  'SF Mono', 'Fira Code', 'Courier New', monospace;
+
+      --radius-sm: 6px; --radius: 10px; --radius-lg: 15px;
+      --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur-fast: 120ms; --dur: 200ms;
+
+      --puzzle-depth: 14px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text-primary);
+      display: flex; flex-direction: column;
+    }
+
+    /* -- Header -------------------------------------------------------------- */
+    .header-bar {
+      background: linear-gradient(135deg, #B015B0 0%, #3D0080 45%, #080010 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      padding: 0 24px;
+      height: 68px;
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center;
+    }
+    .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .header-logo-img {
+      height: 36px; width: auto; flex-shrink: 0;
+      filter: brightness(0) invert(1);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: block;
+    }
+    .header-logo-img:hover { transform: scale(1.14) rotate(-9deg); }
+    .header-logo h1 { font-size: 1.2em; font-weight: 600; color: #f9f9f9; letter-spacing: .5px; }
+    .header-subtitle { font-size: .82em; color: rgba(255,255,255,.72); font-weight: 500; margin-top: 3px; }
+    .header-home {
+      display: flex; align-items: center;
+      margin-left: auto;
+      padding: 5px;
+      color: rgba(255,255,255,.9); text-decoration: none;
+      border-radius: 6px;
+      transition: color .2s, background .2s; flex-shrink: 0;
+    }
+    .header-home:hover { color: #fff; background: rgba(255,255,255,.12); }
+    .header-home svg { width: 34px; height: 34px; display: block; }
+
+    /* -- Layout -------------------------------------------------------------- */
+    .container {
+      max-width: 900px; width: 100%;
+      margin: 0 auto; padding: 30px;
+      flex: 1;
+    }
+
+    /* -- Card ---------------------------------------------------------------- */
+    .card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+    .card-title {
+      font-size: .75em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .9px;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* -- Controls card ------------------------------------------------------- */
+    .controls-row { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .ctrl-group   { display: flex; flex-direction: column; gap: 7px; }
+    .ctrl-label   {
+      font-size: .72em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .7px;
+      color: rgba(255,255,255,.38);
+    }
+    .ctrl-label-active { color: var(--accent); }
+    .ctrl-label-away   { color: var(--away); }
+    .ctrl-label-rest   { color: var(--rest); }
+    .time-group { display: flex; align-items: center; gap: 10px; }
+    .time-colon { font-size: 1.4em; font-weight: 700; color: rgba(255,255,255,.28); margin: 0 -2px; }
+
+    .time-input {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 4px; font-size: 1.22em;
+      font-family: var(--font); font-weight: 700;
+      text-align: center; width: 54px; outline: none;
+      caret-color: var(--accent);
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .time-input:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .time-input:focus { border-color: var(--accent); background: rgba(34,211,238,.08); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+
+    .ampm-toggle {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 12px; font-size: 1.08em;
+      font-family: var(--font); font-weight: 700;
+      cursor: pointer; outline: none; min-width: 60px;
+      transition: all .2s; user-select: none;
+    }
+    .ampm-toggle:hover { border-color: var(--accent-dim); background: rgba(34,211,238,.08); }
+    .ampm-toggle:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .ampm-toggle:active { transform: scale(.97); }
+
+    .now-btn {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 8px; color: rgba(255,255,255,.50);
+      padding: 8px 12px; font-size: .82em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      margin-left: 4px;
+    }
+    .now-btn:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .now-btn:active { transform: scale(.97); }
+
+    .cmd-tpl-input {
+      background: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 8px; color: #f9f9f9;
+      padding: 8px 12px; font-size: .84em;
+      font-family: var(--mono); outline: none;
+      width: 100%;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .cmd-tpl-input:hover { border-color: var(--accent-dim); background: var(--accent-bg); }
+    .cmd-tpl-input:focus { border-color: var(--accent); background: rgba(34,211,238,.08); box-shadow: 0 0 0 3px rgba(34,211,238,.18); }
+    .cmd-tpl-input::placeholder { color: rgba(255,255,255,.22); }
+
+    .tpl-hint {
+      font-size: .68em; color: var(--text-muted);
+      font-family: var(--mono);
+      margin-top: 2px;
+      opacity: .55;
+    }
+
+    .cmd-templates-row {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .cmd-templates-row .ctrl-group { flex: 1 1 calc(33.333% - 14px); min-width: 200px; }
+
+    .presets-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; justify-content: center; }
+    .preset-btn {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 20px; color: rgba(255,255,255,.65);
+      padding: 6px 14px; font-size: .82em;
+      font-family: var(--font); font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .preset-btn:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .preset-btn.active { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .preset-btn:active { transform: scale(.97); }
+
+    /* -- Schedule blocks card ---------------------------------------------------- */
+    .chain-outer { overflow-x: auto; padding-bottom: 6px; }
+    .chain-row {
+      display: flex; align-items: stretch;
+      gap: 0; min-height: 108px;
+      flex-wrap: nowrap;
+      justify-content: center;
+    }
+    .chain-row.empty { align-items: center; justify-content: center; flex-wrap: wrap; }
+    .chain-empty-msg {
+      color: rgba(255,255,255,.22); font-size: .88em;
+      text-align: center; padding: 20px;
+    }
+
+    /* Block wrapper: stacked drop-shadows create a visible outline + glow that follows clip-path */
+    .block-wrapper { flex: 0 0 auto; position: relative; }
+    .block-wrapper.active-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(34,211,238,.7))
+        drop-shadow(0 0 0.5px rgba(34,211,238,.7))
+        drop-shadow(0 0 3px var(--accent-glow));
+    }
+    .block-wrapper.away-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(148,163,184,.6))
+        drop-shadow(0 0 0.5px rgba(148,163,184,.6))
+        drop-shadow(0 0 2.5px var(--away-glow));
+    }
+    .block-wrapper.rest-type {
+      filter:
+        drop-shadow(0 0 0.5px rgba(244,114,182,.7))
+        drop-shadow(0 0 0.5px rgba(244,114,182,.7))
+        drop-shadow(0 0 3px var(--rest-glow));
+    }
+
+    /* Overlap blocks so puzzle tabs interlock with indents */
+    .block-wrapper + .block-wrapper { margin-left: calc(-1 * var(--puzzle-depth)); }
+    /* Rest is a standalone cap — no overlap, small gap */
+    .block-wrapper.rest-type { margin-left: 8px; }
+
+    .block {
+      position: relative;
+      padding: 12px 16px;
+      min-width: 148px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .block.active { background: var(--accent-bg); }
+    .block.away   { background: var(--away-bg); }
+    .block.rest   { background: var(--rest-bg); min-width: 128px; justify-content: center; }
+
+    /* -- Puzzle piece shapes via clip-path ----------------------------------- */
+
+    /* solo: normal rounded rect */
+    .block.solo { border-radius: var(--radius); }
+
+    /* first: flat left, puzzle tab on right */
+    .block.first {
+      border-radius: var(--radius) 0 0 var(--radius);
+      clip-path: polygon(
+        0 0,
+        calc(100% - 14px) 0,
+        calc(100% - 14px) calc(50% - 14px),
+        calc(100% - 14px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 9px),
+        100% calc(50% - 9px),
+        100% calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 14px),
+        calc(100% - 14px) 100%,
+        0 100%
+      );
+      padding-right: 28px;
+    }
+
+    /* middle: indent on left, tab on right */
+    .block.middle {
+      clip-path: polygon(
+        0 0,
+        calc(100% - 14px) 0,
+        calc(100% - 14px) calc(50% - 14px),
+        calc(100% - 14px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 5px),
+        calc(100% - 9px) calc(50% - 9px),
+        100% calc(50% - 9px),
+        100% calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 9px),
+        calc(100% - 9px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 5px),
+        calc(100% - 14px) calc(50% + 14px),
+        calc(100% - 14px) 100%,
+        0 100%,
+        0 calc(50% + 14px),
+        0 calc(50% + 5px),
+        5px calc(50% + 5px),
+        5px calc(50% + 9px),
+        14px calc(50% + 9px),
+        14px calc(50% - 9px),
+        5px calc(50% - 9px),
+        5px calc(50% - 5px),
+        0 calc(50% - 5px),
+        0 calc(50% - 14px)
+      );
+      padding-left: 28px; padding-right: 28px;
+    }
+
+    /* last: indent on left, flat right */
+    .block.last {
+      border-radius: 0 var(--radius) var(--radius) 0;
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 100%,
+        0 calc(50% + 14px),
+        0 calc(50% + 5px),
+        5px calc(50% + 5px),
+        5px calc(50% + 9px),
+        14px calc(50% + 9px),
+        14px calc(50% - 9px),
+        5px calc(50% - 9px),
+        5px calc(50% - 5px),
+        0 calc(50% - 5px),
+        0 calc(50% - 14px)
+      );
+      padding-left: 28px;
+    }
+
+    .block-type-label {
+      font-size: .68em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .9px;
+    }
+    .block.active .block-type-label { color: var(--accent); }
+    .block.away   .block-type-label { color: var(--away); }
+    .block.rest   .block-type-label { color: var(--rest); }
+
+    .block-inputs { display: flex; align-items: center; gap: 4px; }
+    .dur-input {
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 5px; color: #f9f9f9;
+      padding: 3px 4px; font-size: .82em;
+      font-family: var(--font); font-weight: 600;
+      text-align: center; width: 38px; outline: none;
+      caret-color: var(--accent);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .dur-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(34,211,238,.2); }
+    .block.away .dur-input:focus { border-color: var(--away); box-shadow: 0 0 0 2px rgba(148,163,184,.2); }
+    .block.rest .dur-input:focus { border-color: var(--rest); box-shadow: 0 0 0 2px rgba(244,114,182,.2); }
+    .dur-unit { font-size: .7em; color: rgba(255,255,255,.38); }
+
+    .block-window { font-size: .72em; color: var(--text-muted); }
+
+    /* Delete button — positioned within body area, away from puzzle tab */
+    .block-delete {
+      position: absolute; top: 7px; right: 8px;
+      background: none; border: none;
+      color: rgba(255,255,255,.30); cursor: pointer;
+      font-size: .8em; line-height: 1; padding: 2px 5px;
+      border-radius: 4px;
+      transition: color .15s, background .15s;
+    }
+    .block-delete:hover { color: rgba(255,80,80,.85); background: rgba(255,50,50,.12); }
+    .block.first .block-delete,
+    .block.middle .block-delete { right: 22px; }
+
+    /* -- Add / Clear buttons ------------------------------------------------- */
+    .add-buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; justify-content: center; }
+    .add-btn {
+      background: rgba(255,255,255,.04);
+      border: 1.5px dashed rgba(255,255,255,.14);
+      border-radius: 8px; color: rgba(255,255,255,.45);
+      padding: 7px 15px; font-size: .84em;
+      font-family: var(--font); font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .add-btn.add-active:hover { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-bg); }
+    .add-btn.add-away:hover   { border-color: var(--away-dim);   color: var(--away);   background: var(--away-bg); }
+    .add-btn.add-rest:hover   { border-color: var(--rest-dim);   color: var(--rest);   background: var(--rest-bg); }
+    .add-btn:active { transform: scale(.97); }
+    .clear-btn {
+      background: none; border: none;
+      color: rgba(255,100,100,.38);
+      font-family: var(--font); font-size: .8em;
+      cursor: pointer; padding: 7px 10px;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .clear-btn:hover { color: rgba(255,80,80,.85); background: rgba(255,50,50,.08); }
+
+    /* -- Timeline card ------------------------------------------------------- */
+    .timeline-bar {
+      display: flex; border-radius: 8px; overflow: hidden;
+      height: 30px; margin-bottom: 12px;
+    }
+    .timeline-seg {
+      display: flex; align-items: center; justify-content: center;
+      font-size: .69em; font-weight: 600;
+      overflow: hidden; white-space: nowrap;
+      min-width: 0;
+    }
+    .timeline-seg.active { background: rgba(34,211,238,.30); color: rgba(34,211,238,.9); }
+    .timeline-seg.away   { background: rgba(148,163,184,.13); color: rgba(148,163,184,.7); }
+    .timeline-labels {
+      display: flex; justify-content: space-between;
+      font-size: .72em; color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .timeline-summary { font-size: .82em; color: rgba(255,255,255,.45); text-align: center; }
+    .timeline-summary strong { color: var(--accent); font-weight: 600; }
+    .timeline-empty { color: rgba(255,255,255,.2); font-size: .85em; font-style: italic; }
+
+    /* -- Command card -------------------------------------------------------- */
+    .command-wrap { position: relative; }
+    .command-code {
+      display: block; width: 100%;
+      background: rgba(0,0,0,.38);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 10px;
+      padding: 16px 100px 16px 18px;
+      font-family: var(--mono); font-size: .87em;
+      color: #e2e8f0; line-height: 1.7;
+      word-break: break-all; white-space: pre-wrap;
+      min-height: 54px;
+    }
+    .cmd-active { color: var(--accent); }
+    .cmd-away   { color: var(--away); }
+    .cmd-rest   { color: var(--rest); }
+    .cmd-sep    { color: rgba(255,255,255,.28); }
+    .copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 6px; color: rgba(255,255,255,.55);
+      padding: 5px 13px; font-size: .78em;
+      font-family: var(--font); font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: var(--accent-bg); border-color: var(--accent-dim); color: var(--accent); }
+    .copy-btn.copied { background: rgba(34,211,238,.15); border-color: var(--accent); color: var(--accent); }
+
+    /* -- Footer -------------------------------------------------------------- */
+    .info-footer {
+      text-align: center; padding: 24px 30px 32px;
+      color: var(--text-muted); font-size: .78em; line-height: 1.8;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 48px;
+    }
+    .footer-link {
+      color: var(--text-muted); text-decoration: none;
+      transition: color var(--dur);
+    }
+    .footer-link:hover,
+    .footer-link:focus-visible {
+      color: var(--text-secondary); text-decoration: underline;
+    }
+
+    /* -- Focus styles -------------------------------------------------------- */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* -- Skip link ----------------------------------------------------------- */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 1000;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      font-size: .875rem;
+      border-radius: 0 0 6px 6px;
+      text-decoration: none;
+      transition: top var(--dur);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* -- Entrance animation -------------------------------------------------- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* -- Skeleton loading ---------------------------------------------------- */
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,.03) 25%, rgba(255,255,255,.06) 50%, rgba(255,255,255,.03) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--radius);
+    }
+
+    /* -- Reduced motion ------------------------------------------------------ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* -- Mobile -------------------------------------------------------------- */
+    @media (max-width: 600px) {
+      .container { padding: 16px 16px 0; }
+      .card { padding: 18px 16px; }
+      .controls-row { flex-direction: column; gap: 16px; }
+      .cmd-templates-row { flex-direction: column; }
+      .cmd-tpl-input { width: 100%; }
+
+      /* Degrade puzzle pieces to standard cards on narrow screens */
+      .chain-row { flex-direction: column; gap: 8px; }
+      .block-wrapper { filter: none !important; }
+      .block-wrapper + .block-wrapper { margin-left: 0; }
+      .block,
+      .block.first,
+      .block.middle,
+      .block.last {
+        clip-path: none !important;
+        border-radius: var(--radius) !important;
+        padding: 12px 14px !important;
+        min-width: unset; width: 100%;
+      }
+      .block.active { outline: 1.5px solid rgba(34,211,238,.38); }
+      .block.away   { outline: 1.5px solid rgba(148,163,184,.24); }
+      .block.rest   { outline: 1.5px solid rgba(244,114,182,.38); }
+      .block.first .block-delete,
+      .block.middle .block-delete { right: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- -- Header (no-nav variant) ------------------------------------------- -->
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Logo">
+      </a>
+      <div>
+        <h1>Autopilot</h1>
+        <div class="header-subtitle">Block schedule builder</div>
+      </div>
+    </div>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+  </header>
+
+  <!-- -- Main -------------------------------------------------------------- -->
+  <main class="container" id="main">
+
+    <!-- Card 1: Controls -->
+    <div class="card" id="card-controls">
+      <div class="card-title">Schedule settings</div>
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <div class="ctrl-label">Start time</div>
+          <div class="time-group">
+            <input type="number" class="time-input" id="start-hour"   min="1" max="12" value="9">
+            <span class="time-colon">:</span>
+            <input type="number" class="time-input" id="start-minute" min="0" max="59" value="0">
+            <button class="ampm-toggle" id="start-ampm">AM</button>
+            <button class="now-btn" id="btn-now">Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-templates-row">
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-active">Active command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-active-tpl"
+                 value="gtimeout {mins}m bash -c 'osascript ~/ui-automation.scpt'"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">placeholders: {mins} {secs} {h} {m}</div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-away">Away command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-away-tpl"
+                 value="sleep {secs}"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">placeholders: {mins} {secs} {h} {m}</div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label ctrl-label-rest">Rest command</div>
+          <input type="text" class="cmd-tpl-input" id="cmd-rest-tpl"
+                 value="pmset displaysleepnow"
+                 autocomplete="off" spellcheck="false">
+          <div class="tpl-hint">runs once at end (no duration)</div>
+        </div>
+      </div>
+
+      <div class="presets-row">
+        <button class="preset-btn" data-preset="full-day">Full day</button>
+        <button class="preset-btn" data-preset="morning">Morning focus</button>
+        <button class="preset-btn" data-preset="afternoon">Afternoon slot</button>
+        <button class="preset-btn" data-preset="split-day">Split session</button>
+      </div>
+    </div>
+
+    <!-- Card 2: Schedule blocks builder -->
+    <div class="card">
+      <div class="card-title">Schedule blocks</div>
+      <div class="chain-outer">
+        <div class="chain-row" id="chain-row"></div>
+      </div>
+      <div class="add-buttons">
+        <button class="add-btn add-active" id="btn-add-active">+ Active block</button>
+        <button class="add-btn add-away"   id="btn-add-away">+ Away block</button>
+        <button class="add-btn add-rest"   id="btn-add-rest">+ Rest block</button>
+        <button class="clear-btn"          id="btn-clear">Clear all</button>
+      </div>
+    </div>
+
+    <!-- Card 3: Timeline -->
+    <div class="card" id="card-timeline">
+      <div class="card-title">Timeline</div>
+      <div class="timeline-bar"    id="timeline-bar"></div>
+      <div class="timeline-labels" id="timeline-labels"></div>
+      <div class="timeline-summary" id="timeline-summary"></div>
+    </div>
+
+    <!-- Card 4: Generated command -->
+    <div class="card">
+      <div class="card-title">Generated command</div>
+      <div class="command-wrap">
+        <pre class="command-code" id="command-output"></pre>
+        <button class="copy-btn" id="btn-copy">Copy</button>
+      </div>
+    </div>
+
+  </main><!-- /.container -->
+
+  <footer class="info-footer">
+    Autopilot &middot; Block Schedule Builder &middot; <a class="footer-link" href="https://neorgon.com/">neorgon.com</a>
+  </footer>
+
+  <script>
+    /* ========================================================================
+     * Autopilot — Block Schedule Builder
+     * localStorage key: "flow-planner"
+     *
+     * Render strategy:
+     *   fullRender()    -> renderChain + renderTimeline + renderCommand
+     *   partialRender() -> renderTimeline + renderCommand only
+     *                      (called on duration input events to avoid blurring
+     *                       the focused input mid-type)
+     *   fullRender on blur: clamps value, rebuilds chain
+     * ======================================================================== */
+
+    /* -- Constants ----------------------------------------------------------- */
+    const LS_KEY = 'flow-planner';
+
+    /* -- Presets (block patterns only, no command templates) ------------------ */
+    const PRESETS = {
+      'full-day':  {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [{type:'active',h:4,m:45},{type:'away',h:1,m:0},{type:'active',h:3,m:5}]
+      },
+      'morning':   {
+        hour: 9, min: 0, ampm: 'AM',
+        blocks: [{type:'active',h:4,m:0}]
+      },
+      'afternoon': {
+        hour: 1, min: 0, ampm: 'PM',
+        blocks: [{type:'active',h:4,m:0}]
+      },
+      'split-day': {
+        hour: 8, min: 30, ampm: 'AM',
+        blocks: [
+          {type:'active',h:3,m:30},{type:'away',h:0,m:30},
+          {type:'active',h:2,m:0},{type:'away',h:1,m:0},
+          {type:'active',h:2,m:0}
+        ]
+      },
+    };
+
+    /* -- State --------------------------------------------------------------- */
+    let blocks      = [];
+    let startHour   = 9;
+    let startMinute = 0;
+    let startAmpm   = 'AM';
+
+    /* -- Element refs -------------------------------------------------------- */
+    const chainRow        = document.getElementById('chain-row');
+    const timelineBar     = document.getElementById('timeline-bar');
+    const timelineLabels  = document.getElementById('timeline-labels');
+    const timelineSummary = document.getElementById('timeline-summary');
+    const commandOutput   = document.getElementById('command-output');
+    const startHourEl     = document.getElementById('start-hour');
+    const startMinEl      = document.getElementById('start-minute');
+    const startAmpmEl     = document.getElementById('start-ampm');
+    const cmdActiveTplEl  = document.getElementById('cmd-active-tpl');
+    const cmdAwayTplEl    = document.getElementById('cmd-away-tpl');
+    const cmdRestTplEl    = document.getElementById('cmd-rest-tpl');
+    const btnCopy         = document.getElementById('btn-copy');
+
+    /* -- Time helpers -------------------------------------------------------- */
+    function startTotalMins() {
+      let h = startHour % 12;
+      if (startAmpm === 'PM') h += 12;
+      return h * 60 + startMinute;
+    }
+
+    function formatMins(total) {
+      const h = Math.floor(total / 60), m = total % 60;
+      if (h === 0) return `${m}m`;
+      if (m === 0) return `${h}h`;
+      return `${h}h ${m}m`;
+    }
+
+    function formatTime(totalMins) {
+      totalMins = ((totalMins % 1440) + 1440) % 1440;
+      const h24  = Math.floor(totalMins / 60);
+      const m    = totalMins % 60;
+      const ampm = h24 < 12 ? 'AM' : 'PM';
+      let h = h24 % 12;
+      if (h === 0) h = 12;
+      return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+    }
+
+    function posClass(i, total) {
+      if (total === 1) return 'solo';
+      if (i === 0)          return 'first';
+      /* If next block is rest (terminator), this block needs a tab → treat as middle, not last */
+      if (i === total - 1)  return 'last';
+      return 'middle';
+    }
+
+    /* -- Template expansion -------------------------------------------------- */
+    function expandTemplate(tpl, b) {
+      const totalMins = b.h * 60 + b.m;
+      return tpl
+        .replace(/\{mins\}/g, totalMins)
+        .replace(/\{secs\}/g, totalMins * 60)
+        .replace(/\{h\}/g, b.h)
+        .replace(/\{m\}/g, b.m);
+    }
+
+    /* -- Command generation -------------------------------------------------- */
+    function generateCommand() {
+      if (blocks.length === 0) return '';
+      const activeTpl = cmdActiveTplEl.value.trim();
+      const awayTpl   = cmdAwayTplEl.value.trim();
+      const restTpl   = cmdRestTplEl.value.trim();
+      return blocks.map(b => {
+        if (b.type === 'rest') return restTpl || null;
+        const tpl = b.type === 'active' ? activeTpl : awayTpl;
+        if (!tpl) return null;
+        return expandTemplate(tpl, b);
+      }).filter(Boolean).join('; ');
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    /* -- Render: chain ------------------------------------------------------- */
+    function renderChain() {
+      if (blocks.length === 0) {
+        chainRow.classList.add('empty');
+        chainRow.innerHTML = '<div class="chain-empty-msg">No blocks yet -- add an Active or Away block below.</div>';
+        return;
+      }
+      chainRow.classList.remove('empty');
+
+      let cursor = startTotalMins();
+      const total = blocks.length;
+      chainRow.innerHTML = '';
+
+      const TYPE_LABELS = { active: '\u25CF ACTIVE', away: '\u25CC AWAY', rest: '\u25A0 REST' };
+
+      blocks.forEach((b, i) => {
+        /* Rest is a standalone terminator — no puzzle connector */
+        const nonRestCount = blocks.filter(x => x.type !== 'rest').length;
+        let pos;
+        if (b.type === 'rest') {
+          pos = 'solo';
+        } else {
+          /* Position among non-rest blocks only */
+          const niAmongReal = blocks.slice(0, i).filter(x => x.type !== 'rest').length;
+          if (nonRestCount === 1) pos = 'solo';
+          else if (niAmongReal === 0) pos = 'first';
+          else if (niAmongReal === nonRestCount - 1) pos = 'last';
+          else pos = 'middle';
+        }
+        const mins = (b.h || 0) * 60 + (b.m || 0);
+        const winStart = formatTime(cursor);
+        cursor += mins;
+        const winEnd = formatTime(cursor);
+
+        const wrapper = document.createElement('div');
+        wrapper.className = `block-wrapper ${b.type}-type`;
+
+        const block = document.createElement('div');
+        block.className = `block ${b.type} ${pos}`;
+
+        if (b.type === 'rest') {
+          block.innerHTML = `
+            <button class="block-delete" data-idx="${i}" title="Remove block" aria-label="Remove block">\u2715</button>
+            <div class="block-type-label">${TYPE_LABELS.rest}</div>
+            <div class="block-window" style="color:var(--rest);opacity:.7">terminates</div>
+          `;
+        } else {
+          block.innerHTML = `
+            <button class="block-delete" data-idx="${i}" title="Remove block" aria-label="Remove block">\u2715</button>
+            <div class="block-type-label">${TYPE_LABELS[b.type]}</div>
+            <div class="block-inputs">
+              <input type="number" class="dur-input"
+                data-idx="${i}" data-field="h"
+                min="0" max="23" value="${b.h}" aria-label="Hours">
+              <span class="dur-unit">h</span>
+              <input type="number" class="dur-input"
+                data-idx="${i}" data-field="m"
+                min="0" max="59" value="${b.m}" aria-label="Minutes">
+              <span class="dur-unit">m</span>
+            </div>
+            <div class="block-window">${winStart} \u2013 ${winEnd}</div>
+          `;
+        }
+
+        wrapper.appendChild(block);
+        chainRow.appendChild(wrapper);
+      });
+
+      /* Wire block events */
+      chainRow.querySelectorAll('.block-delete').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          blocks.splice(+btn.dataset.idx, 1);
+          setActivePreset(null); fullRender(); saveState();
+        });
+      });
+
+      chainRow.querySelectorAll('.dur-input').forEach(inp => {
+        inp.addEventListener('input', () => {
+          const val = parseInt(inp.value, 10);
+          if (!isNaN(val) && val >= 0) {
+            blocks[+inp.dataset.idx][inp.dataset.field] = val;
+            partialRender(); saveState();
+          }
+        });
+        inp.addEventListener('blur', () => {
+          const idx   = +inp.dataset.idx;
+          const field = inp.dataset.field;
+          const max   = field === 'h' ? 23 : 59;
+          let val = parseInt(inp.value, 10);
+          if (isNaN(val) || val < 0) val = 0;
+          if (val > max) val = max;
+          blocks[idx][field] = val;
+          inp.value = val;
+          fullRender(); saveState();
+        });
+      });
+    }
+
+    /* -- Render: timeline ---------------------------------------------------- */
+    function renderTimeline() {
+      timelineBar.innerHTML = '';
+      timelineLabels.innerHTML = '';
+      timelineSummary.innerHTML = '';
+
+      const totalMins = blocks.reduce((s, b) => s + (b.h || 0) * 60 + (b.m || 0), 0);
+      if (totalMins === 0) {
+        timelineBar.innerHTML = '<div style="flex:1;background:rgba(255,255,255,.04);"></div>';
+        return;
+      }
+
+      blocks.forEach(b => {
+        if (b.type === 'rest') return;
+        const mins = (b.h || 0) * 60 + (b.m || 0);
+        const pct  = (mins / totalMins) * 100;
+        const seg  = document.createElement('div');
+        seg.className = `timeline-seg ${b.type}`;
+        seg.style.flex = String(pct);
+        if (pct > 7) seg.textContent = formatMins(mins);
+        timelineBar.appendChild(seg);
+      });
+
+      const startStr = formatTime(startTotalMins());
+      const endStr   = formatTime(startTotalMins() + totalMins);
+
+      const s = document.createElement('span'); s.textContent = startStr;
+      const e = document.createElement('span'); e.textContent = endStr;
+      timelineLabels.appendChild(s); timelineLabels.appendChild(e);
+
+      const th = Math.floor(totalMins / 60), tm = totalMins % 60;
+      const tStr = th > 0 ? `${th}h${tm > 0 ? ' ' + tm + 'm' : ''}` : `${tm}m`;
+      timelineSummary.innerHTML = `Total: <strong>${tStr}</strong> \u00B7 ends ${endStr}`;
+    }
+
+    /* -- Render: command ----------------------------------------------------- */
+    function renderCommand() {
+      const cmd = generateCommand();
+      if (!cmd) {
+        const hasBlocks = blocks.length > 0;
+        const msg = hasBlocks
+          ? 'Set command templates above to generate a command.'
+          : 'Add blocks to generate a command.';
+        commandOutput.innerHTML = `<span style="color:rgba(255,255,255,.22);font-style:italic">${msg}</span>`;
+        return;
+      }
+
+      /* Syntax-highlight each segment */
+      const parts = cmd.split('; ');
+      const activeTpl = cmdActiveTplEl.value.trim();
+      const restTpl   = cmdRestTplEl.value.trim();
+      const activePrefix = activeTpl ? activeTpl.split('{')[0] : '';
+      commandOutput.innerHTML = parts.map((p, i) => {
+        const sep = i < parts.length - 1 ? '<span class="cmd-sep">; </span>' : '';
+        let cls = 'cmd-away';
+        if (restTpl && p === restTpl) cls = 'cmd-rest';
+        else if (activePrefix && p.startsWith(activePrefix)) cls = 'cmd-active';
+        return `<span class="${cls}">${escHtml(p)}</span>${sep}`;
+      }).join('');
+    }
+
+    /* -- Full / partial render ----------------------------------------------- */
+    function fullRender() {
+      renderChain();
+      renderTimeline();
+      renderCommand();
+    }
+    function partialRender() {
+      renderTimeline();
+      renderCommand();
+    }
+
+    /* -- Persist ------------------------------------------------------------- */
+    function saveState() {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        blocks, startHour, startMinute, startAmpm,
+        cmdActiveTpl: cmdActiveTplEl.value,
+        cmdAwayTpl:   cmdAwayTplEl.value,
+        cmdRestTpl:   cmdRestTplEl.value
+      }));
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        blocks      = Array.isArray(s.blocks) ? s.blocks : [];
+        startHour   = s.startHour   ?? 9;
+        startMinute = s.startMinute ?? 0;
+        startAmpm   = s.startAmpm   || 'AM';
+        startHourEl.value       = startHour;
+        startMinEl.value        = startMinute;
+        startAmpmEl.textContent = startAmpm;
+        cmdActiveTplEl.value = s.cmdActiveTpl ?? '';
+        cmdAwayTplEl.value   = s.cmdAwayTpl   ?? '';
+        cmdRestTplEl.value   = s.cmdRestTpl   ?? 'pmset displaysleepnow';
+        return true;
+      } catch { return false; }
+    }
+
+    /* -- Clipboard ----------------------------------------------------------- */
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    /* -- Sync start time from inputs ----------------------------------------- */
+    function syncStartTime() {
+      let h = parseInt(startHourEl.value,  10);
+      let m = parseInt(startMinEl.value,   10);
+      if (isNaN(h) || h < 1)  h = 1;
+      if (h > 12)              h = 12;
+      if (isNaN(m) || m < 0)  m = 0;
+      if (m > 59)              m = 59;
+      startHour   = h;
+      startMinute = m;
+    }
+
+    /* -- Event wiring -------------------------------------------------------- */
+    startHourEl.addEventListener('input', () => { syncStartTime(); partialRender(); saveState(); });
+    startHourEl.addEventListener('blur',  () => { syncStartTime(); startHourEl.value = startHour; fullRender(); saveState(); });
+
+    startMinEl.addEventListener('input',  () => { syncStartTime(); partialRender(); saveState(); });
+    startMinEl.addEventListener('blur',   () => { syncStartTime(); startMinEl.value = startMinute; fullRender(); saveState(); });
+
+    startAmpmEl.addEventListener('click', () => {
+      startAmpm = startAmpm === 'AM' ? 'PM' : 'AM';
+      startAmpmEl.textContent = startAmpm;
+      fullRender(); saveState();
+    });
+
+    cmdActiveTplEl.addEventListener('input', () => { renderCommand(); saveState(); });
+    cmdAwayTplEl.addEventListener('input',   () => { renderCommand(); saveState(); });
+    cmdRestTplEl.addEventListener('input',   () => { renderCommand(); saveState(); });
+
+    document.getElementById('btn-add-active').addEventListener('click', () => {
+      blocks.push({ type: 'active', h: 1, m: 0 });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    document.getElementById('btn-add-away').addEventListener('click', () => {
+      blocks.push({ type: 'away', h: 1, m: 0 });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    document.getElementById('btn-add-rest').addEventListener('click', () => {
+      blocks.push({ type: 'rest' });
+      setActivePreset(null); fullRender(); saveState();
+    });
+    const btnClear = document.getElementById('btn-clear');
+    let clearPending = false;
+    btnClear.addEventListener('click', () => {
+      if (blocks.length === 0) return;
+      if (!clearPending) {
+        clearPending = true;
+        btnClear.textContent = 'Confirm clear?';
+        btnClear.style.color = 'rgba(255,80,80,.85)';
+        setTimeout(() => {
+          clearPending = false;
+          btnClear.textContent = 'Clear all';
+          btnClear.style.color = '';
+        }, 2500);
+        return;
+      }
+      clearPending = false;
+      btnClear.textContent = 'Clear all';
+      btnClear.style.color = '';
+      blocks = [];
+      fullRender(); saveState();
+    });
+
+    btnCopy.addEventListener('click', () => {
+      const cmd = generateCommand();
+      if (cmd) copyText(cmd, btnCopy);
+    });
+
+    /* Presets (set block patterns only, leave command templates untouched) */
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    function setActivePreset(activeBtn) {
+      presetBtns.forEach(b => b.classList.remove('active'));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = PRESETS[btn.dataset.preset];
+        if (!p) return;
+        blocks      = p.blocks.map(b => ({ type: b.type, h: b.h, m: b.m }));
+        startHour   = p.hour;
+        startMinute = p.min;
+        startAmpm   = p.ampm;
+        startHourEl.value       = startHour;
+        startMinEl.value        = startMinute;
+        startAmpmEl.textContent = startAmpm;
+        setActivePreset(btn);
+        fullRender(); saveState();
+      });
+    });
+
+    /* -- Init ---------------------------------------------------------------- */
+    function setStartToNow() {
+      const now = new Date();
+      let h24 = now.getHours();
+      startAmpm   = h24 < 12 ? 'AM' : 'PM';
+      startHour   = h24 % 12 || 12;
+      startMinute = now.getMinutes();
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+    }
+
+    document.getElementById('btn-now').addEventListener('click', () => {
+      setStartToNow();
+      fullRender(); saveState();
+    });
+
+    if (!loadState()) {
+      /* Default to Full day preset at 9 AM */
+      const p = PRESETS['full-day'];
+      blocks      = p.blocks.map(b => ({ type: b.type, h: b.h, m: b.m }));
+      startHour   = p.hour;
+      startMinute = p.min;
+      startAmpm   = p.ampm;
+      startHourEl.value       = startHour;
+      startMinEl.value        = startMinute;
+      startAmpmEl.textContent = startAmpm;
+    }
+    fullRender();
+  </script>
+</body>
+</html>

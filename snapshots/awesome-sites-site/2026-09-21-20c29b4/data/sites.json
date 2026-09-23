@@ -1,0 +1,676 @@
+{
+  "sites": [
+    {
+      "id": "capcut",
+      "name": "CapCut",
+      "url": "https://www.capcut.com/",
+      "description": "Desktop video editing with a wide feature set on the free tier. Also strong for background removal without a subscription.",
+      "labels": [
+        "video",
+        "image",
+        "edition"
+      ],
+      "accent": "#38bdf8",
+      "featuredOnHub": true,
+      "preview": "assets/previews/capcut.jpg"
+    },
+    {
+      "id": "davinci-resolve",
+      "name": "DaVinci Resolve",
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "description": "Professional-grade video editor and color suite. Worth exploring if you outgrow browser-first tools.",
+      "labels": [
+        "video"
+      ],
+      "accent": "#f97316",
+      "featuredOnHub": true,
+      "preview": "assets/previews/davinci-resolve.jpg"
+    },
+    {
+      "id": "mp3-juices",
+      "name": "MP3 Juices",
+      "url": "https://mp3juices.cc/",
+      "description": "Extract audio from YouTube URLs when you have the rights to do so. Use only where downloading is legal.",
+      "labels": [
+        "video",
+        "audio",
+        "complementary"
+      ],
+      "accent": "#a78bfa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/mp3-juices.jpg"
+    },
+    {
+      "id": "anyflip",
+      "name": "AnyFlip",
+      "url": "https://anyflip.com/",
+      "description": "Download PDFs from supported flipbook and magazine sites when you need an offline copy.",
+      "labels": [
+        "video",
+        "complementary",
+        "pdf"
+      ],
+      "accent": "#22d3ee",
+      "featuredOnHub": false,
+      "preview": "assets/previews/anyflip.jpg"
+    },
+    {
+      "id": "color-hex",
+      "name": "Color Hex",
+      "url": "https://www.color-hex.com/",
+      "description": "Palette suggestions and predefined color schemes. Handy when you need inspiration beyond a single swatch.",
+      "labels": [
+        "colors",
+        "fonts"
+      ],
+      "accent": "#f472b6",
+      "featuredOnHub": false,
+      "preview": "assets/previews/color-hex.jpg"
+    },
+    {
+      "id": "myfonts",
+      "name": "MyFonts",
+      "url": "https://www.myfonts.com/",
+      "description": "Large font catalog for browsing families, weights, and licensing before you commit to a typeface.",
+      "labels": [
+        "colors",
+        "fonts"
+      ],
+      "accent": "#818cf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/myfonts.jpg"
+    },
+    {
+      "id": "text-studio",
+      "name": "Text Studio",
+      "url": "https://www.textstudio.com/",
+      "description": "Generates well-known display and logo-style text effects without hunting for scattered download links.",
+      "labels": [
+        "colors",
+        "fonts",
+        "text"
+      ],
+      "accent": "#e879f9",
+      "featuredOnHub": false,
+      "preview": "assets/previews/text-studio.jpg"
+    },
+    {
+      "id": "canva",
+      "name": "Canva",
+      "url": "https://www.canva.com/",
+      "description": "Templates for ads, slides, and social graphics. The free tier covers a lot if you stay inside their layouts.",
+      "labels": [
+        "image",
+        "edition",
+        "design"
+      ],
+      "accent": "#34d399",
+      "featuredOnHub": true,
+      "preview": "assets/previews/canva.jpg"
+    },
+    {
+      "id": "adobe-lightroom",
+      "name": "Adobe Lightroom",
+      "url": "https://lightroom.adobe.com/",
+      "description": "Photo editing with an approachable panel layout. Good for learning curves and batch adjustments.",
+      "labels": [
+        "image",
+        "edition",
+        "photo"
+      ],
+      "accent": "#60a5fa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/adobe-lightroom.jpg"
+    },
+    {
+      "id": "remove-background",
+      "name": "remove.bg",
+      "url": "https://www.remove.bg/",
+      "description": "Fast background removal. Quality drops on the free tier; paid plans if you need print-ready edges.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#4ade80",
+      "featuredOnHub": false,
+      "preview": "assets/previews/remove-background.jpg"
+    },
+    {
+      "id": "cleanup-pictures",
+      "name": "Cleanup.pictures",
+      "url": "https://cleanup.pictures/",
+      "description": "Paint out unwanted objects from photos. Simple brush workflow for quick touch-ups.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#fb923c",
+      "featuredOnHub": false,
+      "preview": "assets/previews/cleanup-pictures.jpg"
+    },
+    {
+      "id": "upscale-media",
+      "name": "Upscale Media",
+      "url": "https://www.upscale.media/",
+      "description": "AI upscaling for small or soft images. Results vary by source, but it can rescue usable assets.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#a78bfa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/upscale-media.jpg"
+    },
+    {
+      "id": "borderize",
+      "name": "Borderize",
+      "url": "https://borderize.com/",
+      "description": "Add borders around transparent PNGs. Useful for stickers, badges, and meme frames.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#fbbf24",
+      "featuredOnHub": false,
+      "preview": "assets/previews/borderize.jpg"
+    },
+    {
+      "id": "tinypng",
+      "name": "TinyPNG",
+      "url": "https://tinypng.com/",
+      "description": "Lossy compression for PNG and JPEG. Shrink assets before you ship them to the web or chat.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#22d3ee",
+      "featuredOnHub": false,
+      "preview": "assets/previews/tinypng.jpg"
+    },
+    {
+      "id": "bulk-resize-photos",
+      "name": "Bulk Resize Photos",
+      "url": "https://bulkresizephotos.com/",
+      "description": "Resize many images at once with no arbitrary batch cap on the free flow.",
+      "labels": [
+        "image",
+        "modification"
+      ],
+      "accent": "#f472b6",
+      "featuredOnHub": false,
+      "preview": "assets/previews/bulk-resize-photos.jpg"
+    },
+    {
+      "id": "autocropper",
+      "name": "AutoCropper",
+      "url": "https://www.autocropper.io/",
+      "description": "Batch crop with coordinates you can reuse in CLI pipelines. Helpful when you need repeatable crops.",
+      "labels": [
+        "image",
+        "cutting"
+      ],
+      "accent": "#38bdf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/autocropper.jpg"
+    },
+    {
+      "id": "iloveimg",
+      "name": "iLoveIMG",
+      "url": "https://www.iloveimg.com/",
+      "description": "Straightforward crop, compress, and convert tools in one place. Good for one-off image chores.",
+      "labels": [
+        "image",
+        "cutting"
+      ],
+      "accent": "#e879f9",
+      "featuredOnHub": false,
+      "preview": "assets/previews/iloveimg.jpg"
+    },
+    {
+      "id": "photoaid",
+      "name": "PhotoAiD",
+      "url": "https://photoaid.com/",
+      "description": "Round crops, background removal, and ID-photo style tools. Free tier with the usual ad-supported tradeoff.",
+      "labels": [
+        "image",
+        "cutting"
+      ],
+      "accent": "#4ade80",
+      "featuredOnHub": false,
+      "preview": "assets/previews/photoaid.jpg"
+    },
+    {
+      "id": "unsplash",
+      "name": "Unsplash",
+      "url": "https://unsplash.com/",
+      "description": "Free high-resolution photos with clear licensing. Easier than digging through legacy stock sites.",
+      "labels": [
+        "content",
+        "images"
+      ],
+      "accent": "#34d399",
+      "featuredOnHub": true,
+      "preview": "assets/previews/unsplash.jpg"
+    },
+    {
+      "id": "wallpaper-access",
+      "name": "Wallpaper Access",
+      "url": "https://wallpaperaccess.com/",
+      "description": "Wallpapers including 4K sets. The 4k-space category is a solid starting point for presentations.",
+      "labels": [
+        "content",
+        "images",
+        "wallpaper"
+      ],
+      "accent": "#818cf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/wallpaper-access.jpg"
+    },
+    {
+      "id": "wallpaper-cave",
+      "name": "Wallpaper Cave",
+      "url": "https://wallpapercave.com/",
+      "description": "Another wallpaper archive. Useful for themed sets (e.g. game art for slide backgrounds).",
+      "labels": [
+        "content",
+        "images",
+        "wallpaper"
+      ],
+      "accent": "#a78bfa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/wallpaper-cave.jpg"
+    },
+    {
+      "id": "dark-souls-text-generator",
+      "name": "Dark Souls Text Generator",
+      "url": "https://fontmeme.com/dark-souls-font/",
+      "description": "Renders the iconic Dark Souls lettering style for images and thumbnails.",
+      "labels": [
+        "content",
+        "images",
+        "text"
+      ],
+      "accent": "#f97316",
+      "featuredOnHub": false,
+      "preview": "assets/previews/dark-souls-text-generator.jpg"
+    },
+    {
+      "id": "solid-color-generator",
+      "name": "Solid Color Image Generator",
+      "url": "https://singlecolorimage.com/",
+      "description": "Outputs a flat-color image at the dimensions you specify. Does exactly what the name says.",
+      "labels": [
+        "content",
+        "images"
+      ],
+      "accent": "#22d3ee",
+      "featuredOnHub": false,
+      "preview": "assets/previews/solid-color-generator.jpg"
+    },
+    {
+      "id": "tree-generator",
+      "name": "Tree Generator",
+      "url": "https://tree.nathanfriend.io/",
+      "description": "Builds folder-tree diagrams for docs and READMEs. Easier than hand-aligning ASCII in a slide.",
+      "labels": [
+        "content",
+        "text",
+        "developer"
+      ],
+      "accent": "#4ade80",
+      "featuredOnHub": false,
+      "preview": "assets/previews/tree-generator.jpg"
+    },
+    {
+      "id": "giphy-capture",
+      "name": "GIPHY Capture",
+      "url": "https://giphy.com/apps/giphycapture",
+      "description": "Record the screen and export a GIF. Desktop app from GIPHY for quick captures.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#f472b6",
+      "featuredOnHub": false,
+      "preview": "assets/previews/giphy-capture.jpg"
+    },
+    {
+      "id": "ezgif",
+      "name": "EZGIF",
+      "url": "https://ezgif.com/",
+      "description": "Create, resize, optimize, and repair GIFs in the browser. Swiss-army knife for short animations.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#fb923c",
+      "featuredOnHub": false,
+      "preview": "assets/previews/ezgif.jpg"
+    },
+    {
+      "id": "loading-io",
+      "name": "loading.io",
+      "url": "https://loading.io/",
+      "description": "Spinner and loading animations from icons. Export GIFs or CSS for prototypes.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#38bdf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/loading-io.jpg"
+    },
+    {
+      "id": "freeicons",
+      "name": "FreeIcons",
+      "url": "https://freeicons.io/",
+      "description": "Browse and download icon packs. Filter by style before you import into a design tool.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#e879f9",
+      "featuredOnHub": false,
+      "preview": "assets/previews/freeicons.jpg"
+    },
+    {
+      "id": "flaticon",
+      "name": "Flaticon",
+      "url": "https://www.flaticon.com/",
+      "description": "Large icon library with static and animated assets. Search filters help narrow color vs line style.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#34d399",
+      "featuredOnHub": false,
+      "preview": "assets/previews/flaticon.jpg"
+    },
+    {
+      "id": "app-icon-co",
+      "name": "App Icon Maker",
+      "url": "https://www.appicon.co/",
+      "description": "Generate mobile app icon sizes from one master image. Exports the common iOS and Android grids.",
+      "labels": [
+        "icons",
+        "gif"
+      ],
+      "accent": "#818cf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/app-icon-co.jpg"
+    },
+    {
+      "id": "metatags-io",
+      "name": "Metatags.io",
+      "url": "https://metatags.io/",
+      "description": "Preview and copy meta tag snippets for SEO and social sharing.",
+      "labels": [
+        "sites",
+        "seo",
+        "meta"
+      ],
+      "accent": "#60a5fa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/metatags-io.jpg"
+    },
+    {
+      "id": "opengraph-preview",
+      "name": "OpenGraph.xyz",
+      "url": "https://www.opengraph.xyz/",
+      "description": "See how a URL will look when shared on social networks before you publish.",
+      "labels": [
+        "sites",
+        "seo",
+        "meta"
+      ],
+      "accent": "#a78bfa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/opengraph-preview.jpg"
+    },
+    {
+      "id": "capitalize-my-title",
+      "name": "Capitalize My Title",
+      "url": "https://capitalizemytitle.com/",
+      "description": "Title-case and capitalization helpers tuned for YouTube and search-friendly headlines.",
+      "labels": [
+        "sites",
+        "youtube",
+        "text"
+      ],
+      "accent": "#fbbf24",
+      "featuredOnHub": false,
+      "preview": "assets/previews/capitalize-my-title.jpg"
+    },
+    {
+      "id": "suno-ai",
+      "name": "Suno",
+      "url": "https://suno.com/",
+      "description": "Generate or extend music with AI. Quality varies; browse community examples before you commit.",
+      "labels": [
+        "music",
+        "ai"
+      ],
+      "accent": "#f472b6",
+      "featuredOnHub": true,
+      "preview": "assets/previews/suno-ai.jpg"
+    },
+    {
+      "id": "easeus-vocal-remover",
+      "name": "EaseUS Vocal Remover",
+      "url": "https://multimedia.easeus.com/vocal-remover/",
+      "description": "Split vocals from instrumentals in uploaded tracks. Handy for karaoke or remix experiments.",
+      "labels": [
+        "music",
+        "audio"
+      ],
+      "accent": "#22d3ee",
+      "featuredOnHub": false,
+      "preview": "assets/previews/easeus-vocal-remover.jpg"
+    },
+    {
+      "id": "hackertyper",
+      "name": "Hacker Typer",
+      "url": "https://hackertyper.net/",
+      "description": "Type anything and look like a movie hacker. Pure morale for demos and stream overlays.",
+      "labels": [
+        "random",
+        "fun"
+      ],
+      "accent": "#4ade80",
+      "featuredOnHub": false,
+      "preview": "assets/previews/hackertyper.jpg"
+    },
+    {
+      "id": "what-the-commit",
+      "name": "What the Commit",
+      "url": "https://whatthecommit.com/",
+      "description": "Random humorous git commit messages when inspiration runs dry.",
+      "labels": [
+        "random",
+        "fun",
+        "git"
+      ],
+      "accent": "#fb923c",
+      "featuredOnHub": false,
+      "preview": "assets/previews/what-the-commit.jpg"
+    },
+    {
+      "id": "tldr-pages",
+      "name": "tldr pages",
+      "url": "https://tldr.sh/",
+      "description": "Community-maintained command examples—like man pages, but oriented toward copy-paste usage.",
+      "labels": [
+        "random",
+        "developer",
+        "cli"
+      ],
+      "accent": "#38bdf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/tldr-pages.jpg"
+    },
+    {
+      "id": "cheat-sh",
+      "name": "cheat.sh",
+      "url": "https://cheat.sh/",
+      "description": "Dense cheat sheets for languages and tools. Less polished than tldr, more examples per topic.",
+      "labels": [
+        "random",
+        "developer",
+        "cli"
+      ],
+      "accent": "#e879f9",
+      "featuredOnHub": false,
+      "preview": "assets/previews/cheat-sh.jpg"
+    },
+    {
+      "id": "dxomark",
+      "name": "DXOMARK",
+      "url": "https://www.dxomark.com/",
+      "description": "Camera and lens test scores. Strong reference when you compare phone or DSLR sensors.",
+      "labels": [
+        "random",
+        "reviews"
+      ],
+      "accent": "#f97316",
+      "featuredOnHub": false,
+      "preview": "assets/previews/dxomark.jpg"
+    },
+    {
+      "id": "fragrantica",
+      "name": "Fragrantica",
+      "url": "https://www.fragrantica.com/",
+      "description": "Perfume database with notes, dupes, and reviews. Useful for finding similar scents.",
+      "labels": [
+        "random",
+        "reviews"
+      ],
+      "accent": "#a78bfa",
+      "featuredOnHub": false,
+      "preview": "assets/previews/fragrantica.jpg"
+    },
+    {
+      "id": "rtings",
+      "name": "RTINGS",
+      "url": "https://www.rtings.com/",
+      "description": "Lab-style reviews for TVs, monitors, headphones, and more. Measurements you can compare side by side.",
+      "labels": [
+        "random",
+        "reviews"
+      ],
+      "accent": "#34d399",
+      "featuredOnHub": false,
+      "preview": "assets/previews/rtings.jpg"
+    },
+    {
+      "id": "excalidraw",
+      "name": "Excalidraw",
+      "url": "https://excalidraw.com/",
+      "description": "Hand-drawn style whiteboards in the browser. Fast enough for architecture sketches and incident diagrams.",
+      "labels": [
+        "whiteboard",
+        "design",
+        "collab"
+      ],
+      "accent": "#f472b6",
+      "preview": "assets/previews/excalidraw.jpg",
+      "featuredOnHub": true
+    },
+    {
+      "id": "tldraw",
+      "name": "tldraw",
+      "url": "https://www.tldraw.com/",
+      "description": "Minimal infinite canvas with multiplayer. Good when you want a board without installing anything.",
+      "labels": [
+        "whiteboard",
+        "design"
+      ],
+      "accent": "#38bdf8",
+      "preview": "assets/previews/tldraw.jpg",
+      "featuredOnHub": true
+    },
+    {
+      "id": "drawio",
+      "name": "draw.io",
+      "url": "https://app.diagrams.net/",
+      "description": "Diagrams.net in the browser or desktop. AWS, GCP, and K8s stencils when you need proper boxes and arrows.",
+      "labels": [
+        "whiteboard",
+        "diagrams",
+        "architecture"
+      ],
+      "accent": "#f97316",
+      "preview": "assets/previews/drawio.jpg",
+      "featuredOnHub": true
+    },
+    {
+      "id": "convex",
+      "name": "Convex",
+      "url": "https://www.convex.dev/",
+      "description": "TypeScript backend with realtime sync, auth, and server functions—no separate API layer to wire up.",
+      "labels": [
+        "devops",
+        "backend",
+        "database"
+      ],
+      "accent": "#f59e0b",
+      "featuredOnHub": true,
+      "preview": "assets/previews/convex.jpg"
+    },
+    {
+      "id": "airtable",
+      "name": "Airtable",
+      "url": "https://www.airtable.com/",
+      "description": "Spreadsheet-style bases with views, automations, and interfaces for ops and content teams.",
+      "labels": [
+        "devops",
+        "database",
+        "workflow"
+      ],
+      "accent": "#38bdf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/airtable.jpg"
+    },
+    {
+      "id": "tailscale",
+      "name": "Tailscale",
+      "url": "https://tailscale.com/",
+      "description": "WireGuard-based mesh VPN for secure access to homelab, cloud, and office resources without legacy VPN pain.",
+      "labels": [
+        "devops",
+        "network",
+        "security"
+      ],
+      "accent": "#818cf8",
+      "featuredOnHub": false,
+      "preview": "assets/previews/tailscale.jpg"
+    },
+    {
+      "id": "sqlitebrowser",
+      "name": "DB Browser for SQLite",
+      "url": "https://sqlitebrowser.org/",
+      "description": "Visual editor for SQLite files. Handy for local prototypes and quick data peeks.",
+      "labels": [
+        "devops",
+        "data",
+        "sqlite"
+      ],
+      "accent": "#a78bfa",
+      "preview": "assets/previews/sqlitebrowser.jpg",
+      "featuredOnHub": false
+    },
+    {
+      "id": "ngrok",
+      "name": "ngrok",
+      "url": "https://ngrok.com/",
+      "description": "Expose a local port with a public URL. Webhooks and mobile testing without VPN gymnastics.",
+      "labels": [
+        "devops",
+        "tunnel",
+        "webhooks"
+      ],
+      "accent": "#22d3ee",
+      "preview": "assets/previews/ngrok.jpg",
+      "featuredOnHub": true
+    }
+  ]
+}

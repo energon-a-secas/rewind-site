@@ -1,0 +1,182 @@
+// ── Timeline ─────────────────────────────────────────────────
+// When the work happens. A deliverable runs over a span of the plan's
+// sprints (`window: { from, to }`, 1-based and inclusive; null is the whole
+// plan), and a share is a percentage of the person's time during that span.
+// Each person's planned capacity is split across sprints, so a share's points
+// land in the sprints it covers, a sprint can be over-booked while the
+// quarter as a whole is not, and a deliverable has a date its points add up
+// to its estimate: the date it lands. Pure, like capacity.js.
+
+import { parseISO, addDays, iso, planRange } from './calendar.js'
+import { quarterOf } from './quarters.js'
+
+/**
+ * Largest remainder: whole numbers for exact values, adding up to the
+ * rounded total of the exact values, remainders handed out biggest first
+ * (ties to the earlier one). The rounding every share and sprint goes through.
+ */
+export function splitExact(exact) {
+  const floors = exact.map(Math.floor)
+  const target = Math.round(exact.reduce((t, x) => t + x, 0))
+  let left = target - floors.reduce((t, x) => t + x, 0)
+  const order = exact.map((x, i) => [x - floors[i], i]).sort((a, b) => b[0] - a[0] || a[1] - b[1])
+  for (const [, i] of order) { if (left <= 0) break; floors[i] += 1; left -= 1 }
+  return floors
+}
+
+/** Whole points for `total`, shared in proportion to `weights` and adding up to it exactly. Zeros when nothing weighs. */
+export function apportionInt(total, weights) {
+  const sum = weights.reduce((t, x) => t + x, 0)
+  return sum > 0 ? splitExact(weights.map(w => (total * w) / sum)) : weights.map(() => 0)
+}
+
+/**
+ * A deliverable's sprints, 0-based and inclusive, inside a plan of `sprints`.
+ * A window past the plan (the plan got shorter) is pulled in and says so.
+ */
+export function spanOf(d, sprints) {
+  const last = Math.max(0, sprints - 1)
+  const w = d?.window
+  if (!w) return { a: 0, b: last, whole: true, clamped: false }
+  const a = Math.min(Math.max(0, w.from - 1), last), b = Math.min(Math.max(a, w.to - 1), last)
+  return { a, b, whole: a === 0 && b === last, clamped: w.to - 1 > last || w.from - 1 > last }
+}
+
+export const spanLength = span => span.b - span.a + 1
+/** "S3", "S1 to S2", or "the whole plan". */
+export const spanLabel = (span, { whole = true } = {}) =>
+  span.whole && whole ? 'the whole plan' : span.a === span.b ? `S${span.a + 1}` : `S${span.a + 1} to S${span.b + 1}`
+
+/** Someone's points in a span: their per-sprint planned capacity added up. */
+export const windowCap = (sprintCap, span) => {
+  let t = 0
+  for (let i = span.a; i <= span.b; i++) t += sprintCap[i] || 0
+  return t
+}
+
+/**
+ * Where a share's points fall: across its span in proportion to the person's
+ * capacity in each sprint (a sprint half lost to a vacation carries half), or
+ * evenly when they have none in it. Exact values, one per plan sprint.
+ */
+export function spread(points, sprintCap, span, n) {
+  const out = Array.from({ length: n }, () => 0)
+  const wc = windowCap(sprintCap, span)
+  for (let i = span.a; i <= span.b && i < n; i++) out[i] = wc > 0 ? (points * (sprintCap[i] || 0)) / wc : points / spanLength(span)
+  return out
+}
+
+// ── Landing dates ────────────────────────────────────────────
+/** Sprint k's dates (`to` exclusive), counting on past the plan's last sprint at the same length. */
+export function sprintAt(s, k) {
+  const start = parseISO(s.startDate)
+  if (!start) return null
+  const len = s.weeksPerSprint * 7
+  return { i: k, from: addDays(start, k * len), to: addDays(start, (k + 1) * len) }
+}
+
+/**
+ * The days of sprint k a deliverable's points are earned on, as [date, share]
+ * adding up to 1: each person's points there spread over the days they work
+ * in it, so not on their holidays, team days off or vacation. `people` is
+ * [{ points: per plan sprint, off: Map(iso -> day off) }]. Null when nobody
+ * on it works in sprint k.
+ */
+export function earnedDays(s, k, people) {
+  const w = sprintAt(s, k)
+  if (!w) return null
+  const at = new Map()
+  let total = 0
+  for (const { points, off } of people) {
+    const x = points[k] || 0
+    if (x <= 1e-9) continue
+    const days = []
+    for (let d = w.from; d < w.to; d = addDays(d, 1)) if ((d.getUTCDay() || 7) <= s.daysPerWeek && !off?.has(iso(d))) days.push(d)
+    if (!days.length) continue
+    for (const d of days) at.set(+d, (at.get(+d) || 0) + x / days.length)
+    total += x
+  }
+  return total > 0 ? [...at].sort((a, b) => a[0] - b[0]).map(([t, x]) => [new Date(t), x / total]) : null
+}
+
+/**
+ * The day a fraction of the way through sprint k: through the days its points
+ * are earned on when they are known (`days`, from earnedDays), else through
+ * the sprint's weekdays: 0.5 of a 10-day sprint is its 5th working day.
+ */
+function dayAt(s, k, fraction, days = null) {
+  if (days?.length) {
+    let cum = 0
+    for (const [d, x] of days) { cum += x; if (cum >= fraction - 1e-9) return d }
+    return days[days.length - 1][0]
+  }
+  const w = sprintAt(s, k)
+  if (!w) return null
+  const weekdays = []
+  for (let d = w.from; d < w.to; d = addDays(d, 1)) if ((d.getUTCDay() || 7) <= s.daysPerWeek) weekdays.push(d)
+  if (!weekdays.length) return w.from
+  const at = Math.min(weekdays.length, Math.max(1, Math.ceil(fraction * weekdays.length - 1e-9)))
+  return weekdays[at - 1]
+}
+
+const FAR_DAYS = 730   // two years from the plan's start: past that, "at this pace" stops meaning anything
+
+/**
+ * When a deliverable's points add up to its estimate. `perSprint` is what its
+ * people put into each plan sprint (exact points). Inside its span it lands
+ * on the day the running total reaches the estimate, counting only the days
+ * its people work when `people` is given (see earnedDays); short of that, it
+ * keeps the span's average pace past the span, and past the plan if need be,
+ * over plain weekdays, and says so.
+ *   { kind: 'unsized' | 'none' }                 no date to give (nobody on it)
+ *   { kind: 'idle' }                              people on it, none with time in its sprints
+ *   { kind: 'on-time', sprint, date }            lands inside its span
+ *   { kind: 'late', sprint, date, afterPlan }    at this pace, after its span
+ *   { kind: 'far' }                               too slow to put a date on
+ */
+export function landing(perSprint, estimate, span, s, people = null) {
+  if (!estimate) return { kind: 'unsized' }
+  let total = 0
+  for (let i = span.a; i <= span.b; i++) total += perSprint[i] || 0
+  if (total <= 1e-9) return { kind: people?.length ? 'idle' : 'none' }
+  let cum = 0
+  for (let i = span.a; i <= span.b; i++) {
+    const p = perSprint[i] || 0
+    if (p > 1e-9 && cum + p >= estimate - 1e-6) return { kind: 'on-time', sprint: i, date: dayAt(s, i, (estimate - cum) / p, people && earnedDays(s, i, people)) }
+    cum += p
+  }
+  const pace = total / spanLength(span)
+  const extra = (estimate - total) / pace
+  const whole = Math.ceil(extra - 1e-9)
+  const sprint = span.b + whole
+  // Two years of calendar time whatever the sprint length (52 sprints was one year of weekly sprints and four of monthly ones).
+  if (sprint * s.weeksPerSprint * 7 >= FAR_DAYS) return { kind: 'far' }
+  const date = dayAt(s, sprint, extra - (whole - 1))
+  if (date && (date - parseISO(s.startDate)) / 86400000 >= FAR_DAYS) return { kind: 'far' }
+  return { kind: 'late', sprint, date, afterPlan: sprint >= s.sprints }
+}
+
+// ── The map's dates ──────────────────────────────────────────
+const MAP_PAST = 13 * 7      // how far past the quarter the map follows a late landing
+
+/**
+ * The map's dates: from the plan's start to the end of the quarter it ends
+ * in, or to the last landing past that (a quarter more at most), closed on a
+ * sprint boundary so the header reads in whole sprints.
+ */
+export function mapRange(a, s) {
+  const range = planRange(s)
+  if (!range) return null
+  const quarterEnd = quarterOf(range.last, s.fiscalStart).to
+  let end = range.to > quarterEnd ? range.to : quarterEnd
+  const cap = addDays(end, MAP_PAST)
+  for (const da of a.deliverables.values()) {
+    const d = da.lands?.date
+    if (d && d >= end) end = addDays(d, 1)
+  }
+  if (end > cap) end = cap
+  let k = s.sprints
+  while (sprintAt(s, k - 1).to < end) k += 1
+  const to = sprintAt(s, k - 1).to
+  return { from: range.from, to, planEnd: range.to, quarterEnd, n: Math.round((to - range.from) / 86400000), sprints: k }
+}

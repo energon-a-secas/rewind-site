@@ -1,0 +1,12 @@
+/* ════════════════════════════════════════════════════════════
+   Questline — stylesheet manifest
+   ────────────────────────────────────────────────────────────
+   Styles are now loaded directly via <link> tags in index.html
+   for parallel fetching and faster first paint.
+
+     base.css        Reset, tokens, layout, header, nav/auth, buttons, sheet
+     components.css  Overlays (modal, reader, splash, coach), card, toast,
+                     footer, focus/skip, reduced-motion, closed-bevel ring
+     flow.css        Detroit-style chapter flowchart (Flow tab graph)
+     console.css     NieR console: tabs, panels, every tab view, controls
+   ════════════════════════════════════════════════════════════ */

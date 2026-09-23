@@ -1,0 +1,681 @@
+/* ── Card component ────────────────────────────────────────── */
+/* Self-contained CSS for rendered HTML cards. Used by card     */
+/* browser and game views. Does not override existing styles.   */
+
+/* ── Base card container ────────────────────────────────────── */
+/* All type colors derived from --card-type-color set by JS via typeColor() */
+.rush-card {
+  --card-type-color: #888;
+  --rc-grad-from: var(--card-type-color);
+  --rc-grad-to: color-mix(in srgb, var(--card-type-color) 50%, #000);
+  aspect-ratio: 5 / 7;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--card-type-color) 15%, var(--bg, #040714)) 0%,
+      var(--bg, #040714) 100%
+    );
+  border: 2px solid var(--card-type-color);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 4px 16px rgba(0,0,0,.4);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  font-family: var(--font, 'Avenir Next', -apple-system, sans-serif);
+  color: var(--text-primary, #f9f9f9);
+  container-type: inline-size;
+}
+
+/* ── Header bar ─────────────────────────────────────────────── */
+.rc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: linear-gradient(135deg, var(--rc-grad-from), var(--rc-grad-to));
+  min-height: 0;
+  flex-shrink: 0;
+}
+.rc-title {
+  font-weight: 700;
+  color: #000;
+  line-height: 1.2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.rc-deck {
+  font-weight: 600;
+  color: rgba(0,0,0,.55);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+/* ── RQ brand mark (top-left corner) ─────────────────────────── */
+.rc-brand {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  font-size: 0.45rem;
+  font-weight: 800;
+  color: rgba(255,255,255,.15);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Category pill row ──────────────────────────────────────── */
+.rc-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.rc-pill {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card-type-color) 20%, transparent);
+  color: var(--card-type-color);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 35%, transparent);
+  line-height: 1.4;
+}
+.rc-effect-pill {
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+  line-height: 1.4;
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.14);
+}
+
+/* ── Icon / image area ─────────────────────────────────────── */
+.rc-image-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 0 2px;
+}
+.rc-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--card-type-color);
+  background: color-mix(in srgb, var(--card-type-color) 12%, transparent);
+  flex-shrink: 0;
+}
+.rc-type-svg {
+  border-radius: 50%;
+  border: 2px solid var(--card-type-color);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.rc-icon-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card art image */
+.rc-card-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* rc-role removed — type info now in header deck label */
+
+/* ── Flavor text ────────────────────────────────────────────── */
+.rc-flavor {
+  text-align: center;
+  font-style: italic;
+  color: rgba(255,255,255,.45);
+  padding: 0 8px;
+  line-height: 1.3;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Description / skill box ────────────────────────────────── */
+.rc-desc {
+  flex: 1;
+  min-height: 0;
+  margin: 4px 6px;
+  padding: 5px 7px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 6px;
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.72);
+  line-height: 1.45;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Stat footer ────────────────────────────────────────────── */
+.rc-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.rc-stat {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255,255,255,.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.rc-stat-icon { opacity: .7; }
+.rc-stat-val { font-weight: 600; }
+
+/* Stat-specific color hints */
+.rc-stat--value .rc-stat-val   { color: var(--stat-value, #ffd764); }
+.rc-stat--members .rc-stat-val { color: var(--stat-members, #50dc78); }
+.rc-stat--deadline .rc-stat-val{ color: var(--stat-deadline, #f56eb4); }
+.rc-stat--reward .rc-stat-val  { color: var(--stat-reward, #50dc78); }
+.rc-stat--penalty .rc-stat-val { color: var(--stat-penalty, #f56eb4); }
+.rc-stat--negation .rc-stat-val{ color: var(--stat-negation, #ff7878); }
+.rc-stat--opex .rc-stat-icon  { color: var(--type-soft, #c084fc); }
+.rc-stat--opex .rc-stat-val   { color: var(--type-soft, #c084fc); }
+.rc-stat--capex .rc-stat-icon { color: var(--type-project, #ffc107); }
+.rc-stat--capex .rc-stat-val  { color: var(--type-project, #ffc107); }
+.rc-stat--min-quarter .rc-stat-icon { color: rgba(255,255,255,.5); }
+.rc-stat--min-quarter .rc-stat-val  { color: rgba(255,255,255,.5); }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Size: sm  (130 x 182) — hand fan, gameplay, compact view     */
+/* Shows: name, type color, emoji, category pill, key stats     */
+/* Hides: flavor, description, deck label, stat icons           */
+/* ══════════════════════════════════════════════════════════════ */
+/* When a card is placed inside a sized container, fill it */
+.card-item .rush-card,
+.hand-card .rush-card,
+.proj-card .rush-card,
+.person-card .rush-card,
+.trade-target-img .rush-card,
+.effect-card-img .rush-card,
+.complete-proj-img .rush-card,
+.rq-card-img .rush-card,
+.card-detail-img .rush-card,
+.card-detail-left .rush-card,
+.card-hover-preview .rush-card,
+.card-projection .rush-card,
+.card-play-stage .rush-card {
+  width: 100%;
+}
+
+.rush-card.rc-sm {
+  width: 130px;
+  font-size: 0.58rem;
+}
+.rush-card.rc-sm .rc-header { padding: 3px 5px; }
+.rush-card.rc-sm .rc-title  { font-size: 0.58rem; }
+.rush-card.rc-sm .rc-deck   { font-size: 0.5rem; display: none; }
+.rush-card.rc-sm .rc-emoji  { width: 36px; height: 36px; font-size: 1.1rem; }
+.rush-card.rc-sm .rc-type-svg { width: 36px; height: 36px; }
+.rush-card.rc-sm .rc-image-area { padding: 4px 0 1px; }
+.rush-card.rc-sm .rc-pill-row { padding: 1px 4px; }
+.rush-card.rc-sm .rc-pill { font-size: 0.45rem; padding: 0 5px; }
+.rush-card.rc-sm .rc-effect-pill { font-size: 0.4rem; padding: 0 3px; }
+.rush-card.rc-sm .rc-flavor { display: none; }
+.rush-card.rc-sm .rc-desc   { display: none; }
+.rush-card.rc-sm .rc-stats  { gap: 3px; padding: 2px 4px; }
+.rush-card.rc-sm .rc-stat   { padding: 0 3px; font-size: 0.5rem; }
+.rush-card.rc-sm .rc-stat-icon { display: none; }
+.rush-card.rc-sm .rc-brand { display: none; }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Size: md  (200 x 280) — card browser grid, modals            */
+/* Shows: all sections, truncated description                   */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card.rc-md {
+  width: 200px;
+  font-size: 0.72rem;
+}
+.rush-card.rc-md .rc-header { padding: 5px 7px; }
+.rush-card.rc-md .rc-title  { font-size: 0.72rem; }
+.rush-card.rc-md .rc-deck   { font-size: 0.6rem; }
+.rush-card.rc-md .rc-emoji  { width: 48px; height: 48px; font-size: 1.5rem; }
+.rush-card.rc-md .rc-type-svg { width: 48px; height: 48px; }
+.rush-card.rc-md .rc-flavor { font-size: 0.6rem; -webkit-line-clamp: 1; }
+.rush-card.rc-md .rc-desc   { font-size: 0.62rem; -webkit-line-clamp: 3; }
+.rush-card.rc-md .rc-stats  { font-size: 0.6rem; }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Size: lg  (280 x 392) — detail view, hover preview           */
+/* Shows: everything, generous description space                 */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card.rc-lg {
+  width: 280px;
+  font-size: 0.82rem;
+}
+.rush-card.rc-lg .rc-header { padding: 8px 10px; }
+.rush-card.rc-lg .rc-title  { font-size: 0.85rem; }
+.rush-card.rc-lg .rc-deck   { font-size: 0.68rem; }
+.rush-card.rc-lg .rc-emoji  { width: 64px; height: 64px; font-size: 2rem; }
+.rush-card.rc-lg .rc-type-svg { width: 64px; height: 64px; }
+.rush-card.rc-lg .rc-flavor { font-size: 0.72rem; -webkit-line-clamp: 2; }
+.rush-card.rc-lg .rc-desc   { font-size: 0.75rem; -webkit-line-clamp: 5; }
+.rush-card.rc-lg .rc-stats  { font-size: 0.72rem; gap: 8px; padding: 5px 8px; }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Size: xl  (2.5in x 3.5in) — print-ready poker card size      */
+/* Full card for physical play and detailed browser reading      */
+/* Shows: everything unclamped, print-optimized colors           */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card.rc-xl {
+  width: 2.5in;
+  height: 3.5in;
+  aspect-ratio: auto;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  border-width: 3px;
+}
+.rush-card.rc-xl .rc-header {
+  padding: 6px 10px;
+}
+.rush-card.rc-xl .rc-title {
+  font-size: 0.82rem;
+}
+.rush-card.rc-xl .rc-deck {
+  font-size: 0.62rem;
+}
+.rush-card.rc-xl .rc-pill-row {
+  padding: 3px 8px;
+  gap: 4px;
+}
+.rush-card.rc-xl .rc-pill {
+  font-size: 0.52rem;
+  padding: 2px 8px;
+}
+.rush-card.rc-xl .rc-effect-pill {
+  font-size: 0.48rem;
+  padding: 2px 6px;
+}
+.rush-card.rc-xl .rc-image-area {
+  padding: 6px 0 4px;
+}
+.rush-card.rc-xl .rc-emoji {
+  width: 52px;
+  height: 52px;
+  font-size: 1.6rem;
+}
+.rush-card.rc-xl .rc-type-svg { width: 52px; height: 52px; }
+.rush-card.rc-xl .rc-flavor {
+  font-size: 0.62rem;
+  -webkit-line-clamp: 2;
+  padding: 0 10px;
+}
+.rush-card.rc-xl .rc-desc {
+  font-size: 0.68rem;
+  -webkit-line-clamp: unset;
+  margin: 4px 8px;
+  padding: 6px 8px;
+  overflow-y: auto;
+}
+.rush-card.rc-xl .rc-stats {
+  font-size: 0.65rem;
+  gap: 6px;
+  padding: 5px 8px;
+}
+.rush-card.rc-xl .rc-stat {
+  padding: 2px 6px;
+}
+.rush-card.rc-xl .rc-brand {
+  font-size: 0.5rem;
+}
+
+/* ── Responsive adjustments for card component ──────────────── */
+@media (max-width: 768px) {
+  .rush-card.rc-lg { width: 240px; }
+}
+@media (max-width: 480px) {
+  .rush-card.rc-sm { width: 115px; }
+  .rush-card.rc-md { width: 170px; }
+  .rush-card.rc-lg { width: 200px; }
+}
+
+/* SVG type icons rendered inline by JS via buildIconHtml() */
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Tier 1A - Card Type Border Colors                            */
+/* Left border derived from --card-type-color (single source)   */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card { border-left: 4px solid var(--card-type-color, #888); }
+
+/* ── Budget card symbols ───────────────────────────────────── */
+.rc-budget-desc {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  -webkit-box-orient: unset;
+  -webkit-line-clamp: unset;
+}
+.rc-budget-sym {
+  font-size: 1.8em;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.rc-budget-tri { color: #34d399; }
+.rc-budget-sq  { color: #60a5fa; }
+.rush-card.rc-sm .rc-budget-sym { font-size: 1.2em; }
+.rush-card.rc-sm .rc-budget-desc { gap: 6px; display: flex !important; }
+.rush-card.rc-xl .rc-budget-sym { font-size: 2.4em; }
+
+/* ── Simplified card layout (compact, mobile-friendly) ─────── */
+.rc-simplified {
+  aspect-ratio: 5 / 3.5;
+  max-width: 160px;
+}
+
+.rc-simplified .rc-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 4px 6px;
+}
+
+.rc-simplified .rc-title {
+  font-size: 0.7rem;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.2;
+  max-height: 1.7em;
+}
+
+.rc-simplified .rc-pill {
+  font-size: 0.5rem;
+  padding: 1px 5px;
+  align-self: flex-start;
+}
+
+.rc-simplified .rc-image-area {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rc-simplified .rc-emoji {
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+}
+
+.rc-simplified .rc-effect-row {
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+  right: 6px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-align: center;
+  background: rgba(0,0,0,.7);
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: #fff;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .rc-simplified {
+    max-width: 130px;
+  }
+  .rc-simplified .rc-title {
+    font-size: 0.65rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Variant: mini — compact card for exercises & lists            */
+/* Shows: emoji, name, type pill, effect summary, info tooltip   */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card.rc-mini {
+  width: 140px;
+  min-height: 160px;
+  aspect-ratio: auto;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+.rush-card.rc-mini .rc-header,
+.rush-card.rc-mini .rc-pill-row,
+.rush-card.rc-mini .rc-image-area,
+.rush-card.rc-mini .rc-flavor,
+.rush-card.rc-mini .rc-desc,
+.rush-card.rc-mini .rc-stats,
+.rush-card.rc-mini .rc-brand { display: none; }
+.rc-mini-icon { margin-bottom: 6px; display: flex; align-items: center; justify-content: center; }
+.rc-mini-icon .rc-type-svg { width: 40px; height: 40px; }
+.rc-mini-icon .rc-emoji { width: 40px; height: 40px; font-size: 1.5rem; }
+.rc-mini-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary, #f9f9f9);
+  line-height: 1.3;
+}
+.rc-mini-type {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--card-type-color);
+  margin-top: 3px;
+}
+.rc-mini-effect {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.55);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+.rc-mini-info {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-type-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 30%, transparent);
+  color: var(--card-type-color);
+  font-size: 0.6rem;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: all 0.2s ease;
+  padding: 0;
+  outline: none;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.rush-card.rc-mini:hover .rc-mini-info {
+  background: color-mix(in srgb, var(--card-type-color) 22%, transparent);
+  transform: scale(1.1);
+}
+
+/* ── Mini card tooltip ──────────────────────────────────────── */
+.rc-mini-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max(180px, calc(100% + 40px));
+  max-width: 260px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(10, 10, 20, .95);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 35%, transparent);
+  box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,.85);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 100;
+}
+.rc-mini-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(10, 10, 20, .95);
+}
+
+/* Desktop: show on card hover */
+@media (hover: hover) {
+  .rush-card.rc-mini:hover .rc-mini-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Mobile: show on tap toggle via .rc-mini--tip-open or data attribute */
+.rush-card.rc-mini.rc-mini--tip-open .rc-mini-tooltip,
+.rush-card.rc-mini[data-tip-open="true"] .rc-mini-tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+/* Also handle direct button press for immediate feedback */
+.rush-card.rc-mini .rc-mini-info:active + .rc-mini-tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+/* Selection state for mini cards (toggled by parent context) */
+.rush-card.rc-mini.rc-selected {
+  border-color: var(--accent-bright, #008cff);
+  box-shadow: 0 0 12px rgba(0,128,255,.3);
+  transform: translateY(-6px);
+}
+
+@media (max-width: 768px) {
+  .rush-card.rc-mini { width: 120px; min-height: 140px; padding: 10px 8px; }
+  .rc-mini-emoji { font-size: 1.5rem; }
+  .rc-mini-name { font-size: 0.7rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Variant: chip — inline colored dot + name for text references */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--card-type-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--card-type-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 25%, transparent);
+  white-space: nowrap;
+  font-family: var(--font, 'Avenir Next', -apple-system, sans-serif);
+}
+.rush-card-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--card-type-color);
+  flex-shrink: 0;
+  box-shadow: 0 0 4px color-mix(in srgb, var(--card-type-color) 50%, transparent);
+}
+
+/* ── T4C: Hover/Tap visual feedback ─────────────────────────── */
+/* Desktop hover */
+@media (hover: hover) {
+  .rush-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,.08),
+      0 8px 24px rgba(0,0,0,.5);
+    transition: transform 0.2s var(--ease-snap), box-shadow 0.2s ease;
+  }
+  .rush-card:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 0.1s;
+  }
+}
+
+/* Mobile touch feedback */
+@media (hover: none) {
+  .rush-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rush-card:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .rush-card:hover,
+  .rush-card:active {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Print layout for xl cards — poker-size sheets                */
+/* ══════════════════════════════════════════════════════════════ */
+@media print {
+  .rush-card.rc-xl {
+    break-inside: avoid;
+    box-shadow: none;
+    border-color: #888;
+    /* Print-safe backgrounds */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .rush-card.rc-xl .rc-brand { display: block; color: rgba(0,0,0,.2); }
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockdown — Security Hardening Guides</title>
+  <meta name="description" content="Step-by-step guides to harden your Apple, Google, and mobile accounts. Bilingual EN/ES">
+  <meta property="og:title" content="Lockdown — Security Hardening Guides">
+  <meta property="og:description" content="Step-by-step guides to harden your Apple, Google, and mobile accounts">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lockdown.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lockdown — Security Hardening Guides">
+  <meta name="twitter:description" content="Step-by-step guides to harden your Apple, Google, and mobile accounts">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://lockdown.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Lockdown",
+    "description": "Step-by-step security hardening guides for Apple, Google, password managers, and mobile devices. Bilingual EN/ES.",
+    "url": "https://lockdown.neorgon.com/",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Logo">
+      </a>
+      <div>
+        <h1 id="siteTitle">Lockdown</h1>
+        <div class="header-subtitle" id="siteSubtitle">Security Hardening Guides</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Toggle language">ES</button>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+
+      <!-- List view -->
+      <div id="listView">
+        <div class="search-bar">
+          <input type="search" id="searchInput" placeholder="Search guides..." autocomplete="off">
+        </div>
+        <div class="pills" id="categoryPills"></div>
+        <div class="guide-grid" id="guideGrid"></div>
+      </div>
+
+      <!-- Detail view -->
+      <div id="detailView" hidden>
+        <button class="back-btn" id="backBtn">All guides</button>
+        <div class="detail-layout">
+          <aside class="guide-toc" id="guideToc"></aside>
+          <div class="guide-body" id="guideBody"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

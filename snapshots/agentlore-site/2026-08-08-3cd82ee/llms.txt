@@ -1,0 +1,114 @@
+# Agent Lore
+
+> Practical reference for working with AI coding agents: 66 guides for Claude Code, Cursor and local AI, a model comparison with verified pricing and a cost calculator, and patterns for building grounded agent skills.
+
+Site: https://agentlore.neorgon.com/
+Updated: 2026-08-04
+
+## Sections
+
+- [The Path](https://agentlore.neorgon.com/#/learn): structured training tracks, Claude Code and Cursor side by side.
+- [The Codex](https://agentlore.neorgon.com/#/codex): 13 models compared on context, price and fit, with a monthly-cost calculator and a routing guide. Prices carry the date they were verified.
+- [The Armory](https://agentlore.neorgon.com/#/armory): how to build agent skills grounded in sources you control, with 4 working templates.
+- [Browse](https://agentlore.neorgon.com/#/browse): all guides, filterable.
+
+## Guides
+
+### Setup
+
+- [Install Claude Code](https://agentlore.neorgon.com/t/install-claude-code/): Get Claude Code running in your terminal in under 5 minutes
+- [Use Claude Code with Custom and Local Models](https://agentlore.neorgon.com/t/claude-custom-models/): Route Claude Code to Moonshot, AWS Bedrock, or your own local model
+- [Install Cursor](https://agentlore.neorgon.com/t/install-cursor/): Set up Cursor as your AI-powered code editor
+- [Essential CLI Flags](https://agentlore.neorgon.com/t/essential-cli-flags/): The most useful Claude Code command-line options for daily work
+- [Sessions, Memory & Gotchas](https://agentlore.neorgon.com/t/session-management/): Resume conversations, understand memory files, and avoid the path rename trap
+- [Authentication Options](https://agentlore.neorgon.com/t/auth-options/): Connect Claude via API key, AWS Bedrock, or Google Vertex AI
+
+### Context
+
+- [Write an Effective CLAUDE.md](https://agentlore.neorgon.com/t/write-effective-claude-md/): Structure project context so AI agents understand your codebase fast
+- [Set Up .cursorrules](https://agentlore.neorgon.com/t/setup-cursorrules/): Configure Cursor-specific behavior with rules files
+- [Explore Unfamiliar Codebases](https://agentlore.neorgon.com/t/explore-unfamiliar-codebase/): Strategies for context switching into repos you have never seen
+- [Ignore Files for AI](https://agentlore.neorgon.com/t/ignore-files/): Use .claudeignore and .cursorignore to exclude files from AI context
+- [Cursor @ References](https://agentlore.neorgon.com/t/cursor-at-references/): Use @file, @folder, @web, and @docs to give the AI precise context
+- [Notepads in Cursor](https://agentlore.neorgon.com/t/cursor-notepads/): Save reusable context blocks that you can attach to any conversation
+- [What Actually Fills a Context Window](https://agentlore.neorgon.com/t/what-fills-context/): An accounting of where your tokens go, so you can cut the right ones
+- [Compaction or a Fresh Session?](https://agentlore.neorgon.com/t/compaction-vs-fresh-session/): Both reset the window. They lose very different things
+- [Retrieval or Just Put It In Context?](https://agentlore.neorgon.com/t/retrieval-vs-stuffing/): Long windows made this a real decision instead of a foregone one
+
+### Cost
+
+- [Check Your AI Costs](https://agentlore.neorgon.com/t/check-ai-costs/): Where to monitor usage and spending in Claude and Cursor
+- [Session Cost Report Script](https://agentlore.neorgon.com/t/session-cost-report/): Track per-session Claude Code spending with a Python script — supports API, Bedrock, and Vertex pricing with budget alerts
+- [Keep AI Costs Low](https://agentlore.neorgon.com/t/keep-ai-costs-low/): Practical strategies to reduce token usage and API spend
+- [Prompt Caching Economics](https://agentlore.neorgon.com/t/prompt-caching-economics/): Why caching is the single biggest lever on an agentic bill, and when it stops paying
+- [Halve the Bill with the Batch API](https://agentlore.neorgon.com/t/batch-api-savings/): A 50% discount on anything that does not need an answer right now
+- [Output Discipline](https://agentlore.neorgon.com/t/output-token-discipline/): Output costs five to six times input — and it is the part you control most directly
+- [What Subagents Actually Cost](https://agentlore.neorgon.com/t/subagent-cost-model/): Fan-out buys you clean context and parallelism — and multiplies your token bill
+- [When Local Actually Beats the API](https://agentlore.neorgon.com/t/local-vs-api-breakeven/): Running the numbers on hardware, throughput, and the capability gap
+
+### Skills
+
+- [Create an Agent Skill](https://agentlore.neorgon.com/t/create-skill/): Write a SKILL.md file that Claude and Cursor discover and follow automatically
+- [Install Skills from a Registry](https://agentlore.neorgon.com/t/install-skills-registry/): Use skillfish or manual install to add community skills
+- [Skill Discovery: Claude vs Cursor](https://agentlore.neorgon.com/t/skill-discovery-differences/): Where each tool looks for skills and how discovery differs
+
+### Commands
+
+- [Write a Slash Command](https://agentlore.neorgon.com/t/write-slash-command/): Create custom slash commands for Claude Code with markdown templates
+- [Use $ARGUMENTS in Commands](https://agentlore.neorgon.com/t/use-arguments-commands/): Pass dynamic input to slash commands with the $ARGUMENTS variable
+- [Chain Commands with Agents](https://agentlore.neorgon.com/t/chain-commands-agents/): Combine slash commands with agent patterns for multi-step workflows
+- [Hooks in Claude Code](https://agentlore.neorgon.com/t/claude-hooks/): Run custom scripts before or after Claude uses tools for validation and automation
+
+### MCPs
+
+- [What is MCP?](https://agentlore.neorgon.com/t/what-is-mcp/): Model Context Protocol basics and when to use MCP servers
+- [Configure an MCP Server in Cursor](https://agentlore.neorgon.com/t/configure-mcp-cursor/): Set up and use MCP servers in your Cursor workspace
+- [Configure MCP in Claude Code](https://agentlore.neorgon.com/t/configure-mcp-claude/): Add MCP servers to Claude Code for browser testing, docs lookup, and more
+
+### Architecture
+
+- [Single Agent or Subagents?](https://agentlore.neorgon.com/t/single-agent-vs-subagents/): The one question that decides it — and it is not "is this task big?"
+- [Agent Pipelines](https://agentlore.neorgon.com/t/agent-pipeline-patterns/): Four shapes for composing agent steps, and when each one is the right one
+
+### Evaluation
+
+- [Build a Golden Task Set](https://agentlore.neorgon.com/t/golden-task-set/): The 30 cases that let you answer "did that change help?" with evidence instead of vibes
+- [Regression Prompts](https://agentlore.neorgon.com/t/regression-prompts/): Catch the quality drift that happens when nothing on your side changed
+- [Verify What the Agent Tells You](https://agentlore.neorgon.com/t/verify-agent-output/): Cheap checks that separate "the model believes this" from "this is true"
+
+### Tips
+
+- [Context Management & Compaction](https://agentlore.neorgon.com/t/context-management/): How to manage conversation context in Claude Code and Cursor to save tokens and stay productive
+- [Parallel Agents Pattern](https://agentlore.neorgon.com/t/parallel-agents-pattern/): Launch multiple AI agents concurrently for independent tasks
+- [Progressive Disclosure in Docs](https://agentlore.neorgon.com/t/progressive-disclosure-docs/): Structure documentation so agents find what they need without reading everything
+- [Choose the Right Model](https://agentlore.neorgon.com/t/model-selection/): When to use fast models vs powerful models in Claude and Cursor
+- [Git Workflows with AI](https://agentlore.neorgon.com/t/git-ai-workflows/): Use AI agents to review diffs, write commits, and manage branches
+
+### Diagrams
+
+- [Mermaid Flowchart Basics](https://agentlore.neorgon.com/t/mermaid-flowchart-basics/): Create flowcharts with Mermaid syntax for architecture docs
+- [Generate Architecture SVGs](https://agentlore.neorgon.com/t/generate-architecture-svg/): Use mmdc CLI to convert Mermaid source into SVG files for docs
+- [C4 Diagrams in Mermaid](https://agentlore.neorgon.com/t/c4-diagrams-mermaid/): Model system architecture with C4 context, container, and component diagrams
+
+### Local AI
+
+- [Local AI Landscape](https://agentlore.neorgon.com/t/local-ai-landscape/): Map the self-hosted AI stack before you pick your first tool
+- [Local AI Hardware Check](https://agentlore.neorgon.com/t/local-ai-hardware/): Estimate what your machine can run before downloading models
+- [Install LM Studio](https://agentlore.neorgon.com/t/lmstudio-install/): Download, install, and run your first local model with a GUI
+- [Chat with Local Models](https://agentlore.neorgon.com/t/lmstudio-first-chat/): Use the built-in chat UI, compare models, and manage memory
+- [Use LM Studio as an OpenAI-Compatible Server](https://agentlore.neorgon.com/t/lmstudio-server-mode/): Expose local models to Claude Code, Cursor, or scripts via API
+- [Tool Calling with Local Models](https://agentlore.neorgon.com/t/lmstudio-tool-calling/): Give local models access to files, search, and shell commands
+- [Pick the Right Quantization](https://agentlore.neorgon.com/t/lmstudio-quantization/): Balance speed, quality, and VRAM for your hardware
+- [Build a Local Agent Workflow](https://agentlore.neorgon.com/t/lmstudio-advanced-workflow/): Chain reasoning + tool calls into a repeatable local pipeline
+- [Install Ollama](https://agentlore.neorgon.com/t/ollama-install/): Get Ollama running on macOS, Linux, or Windows
+- [Pull and Run Your First Model](https://agentlore.neorgon.com/t/ollama-first-model/): Use ollama run for quick terminal chat
+- [Customize Models with Modelfiles](https://agentlore.neorgon.com/t/ollama-modelfile/): Build reusable model configs with system prompts and parameters
+- [Call Ollama from Code](https://agentlore.neorgon.com/t/ollama-api-integration/): Use the REST API from Python, Node.js, or curl
+- [Generate Local Embeddings](https://agentlore.neorgon.com/t/ollama-embeddings/): Run embedding models for RAG without sending data to the cloud
+- [Run Ollama Reliably](https://agentlore.neorgon.com/t/ollama-production-tips/): Keep models loaded, monitor resources, and deploy on a server
+- [Local Image Generation Landscape](https://agentlore.neorgon.com/t/imagegen-landscape/): Understand models, UIs, and hardware requirements
+- [First Image with ComfyUI](https://agentlore.neorgon.com/t/imagegen-comfyui-first/): Install ComfyUI and generate your first image
+- [Prompting for Photoreal and Art](https://agentlore.neorgon.com/t/imagegen-prompting/): Write prompts and negative prompts that actually work
+- [Run Flux Locally](https://agentlore.neorgon.com/t/imagegen-flux/): Download and run Flux.1 [dev/schnell] on consumer hardware
+- [Build Reusable ComfyUI Workflows](https://agentlore.neorgon.com/t/imagegen-workflows/): Save, parameterize, and automate image pipelines
+- [Generate Images from Code](https://agentlore.neorgon.com/t/imagegen-api-batch/): Batch-generate images via API and integrate into apps

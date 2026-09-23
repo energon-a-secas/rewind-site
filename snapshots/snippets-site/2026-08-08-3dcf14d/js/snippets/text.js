@@ -1,0 +1,98 @@
+// ── Text Processing ─────────────────────────────────────────────
+
+export const text = [
+  {
+    id: 'remove-duplicate-lines',
+    title: 'Remove duplicate lines preserving order',
+    description: 'Strips duplicate lines from a file without sorting it first',
+    command: `awk '!seen[$0]++' file.txt`,
+    platform: 'bash',
+    tags: ['text', 'duplicates', 'awk', 'unique'],
+    category: 'text',
+  },
+  {
+    id: 'grep-context',
+    title: 'Find pattern with surrounding context',
+    description: 'Shows 3 lines before and after each match for quick orientation',
+    command: `grep -n -B3 -A3 "pattern" file.txt`,
+    platform: 'bash',
+    tags: ['grep', 'search', 'context', 'text'],
+    category: 'text',
+  },
+  {
+    id: 'replace-in-files',
+    title: 'Replace text across multiple files',
+    description: 'Recursively replaces a string in all matching files using sed',
+    command: `find . -name "*.py" -exec sed -i '' 's/old_text/new_text/g' {} +`,
+    platform: 'macOS',
+    tags: ['sed', 'replace', 'bulk', 'text', 'macos'],
+    category: 'text',
+  },
+  {
+    id: 'extract-columns',
+    title: 'Extract columns from delimited data',
+    description: 'Pulls specific columns from tab or comma delimited files',
+    command: `cut -d',' -f1,3,5 data.csv`,
+    platform: 'bash',
+    tags: ['cut', 'columns', 'data', 'csv', 'text'],
+    category: 'text',
+  },
+  {
+    id: 'sort-numeric',
+    title: 'Sort file by numeric column',
+    description: 'Sorts lines by the second column as numbers in descending order',
+    command: `sort -t',' -k2 -rn data.csv`,
+    platform: 'bash',
+    tags: ['sort', 'numeric', 'data', 'text'],
+    category: 'text',
+  },
+  {
+    id: 'remove-blank-lines',
+    title: 'Remove all blank lines from a file',
+    description: 'Strips empty and whitespace-only lines in place',
+    command: `sed -i '' '/^[[:space:]]*$/d' file.txt`,
+    platform: 'macOS',
+    tags: ['sed', 'text', 'blank', 'cleanup', 'macos'],
+    category: 'text',
+  },
+  {
+    id: 'word-frequency',
+    title: 'Count word frequency in a file',
+    description: 'Lists every word and how many times it appears — sorted by count descending',
+    command: `tr -cs 'A-Za-z' '\\n' < file.txt | tr 'A-Z' 'a-z' | sort | uniq -c | sort -rn | head -30`,
+    platform: 'bash',
+    tags: ['text', 'frequency', 'count', 'words', 'analysis'],
+    category: 'text',
+  },
+  {
+    id: 'json-pretty-print',
+    title: 'Pretty-print JSON (with or without jq)',
+    description: 'Format minified JSON into readable indented output',
+    command: `# With jq
+cat data.json | jq .
+
+# Without jq (Python)
+python3 -m json.tool data.json`,
+    platform: 'bash',
+    tags: ['json', 'format', 'pretty', 'jq', 'text'],
+    category: 'text',
+  },
+  {
+    id: 'diff-highlight',
+    title: 'Side-by-side colorized file diff',
+    description: 'Shows differences between two files in a two-column layout with color',
+    command: `diff --color -y --width=120 file1.txt file2.txt`,
+    platform: 'bash',
+    tags: ['diff', 'compare', 'text', 'files'],
+    category: 'text',
+  },
+  {
+    id: 'tabs-to-spaces',
+    title: 'Convert tabs to spaces across files',
+    description: 'Replaces all tabs with 2 spaces in every matching file — adjustable width',
+    command: `find . -name "*.py" -exec sed -i '' 's/\\t/  /g' {} +`,
+    platform: 'macOS',
+    tags: ['sed', 'tabs', 'spaces', 'format', 'macos'],
+    category: 'text',
+  },
+];

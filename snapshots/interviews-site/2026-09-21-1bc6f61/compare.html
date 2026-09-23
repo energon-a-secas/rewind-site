@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Vibe Check">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Vibe Check | Compare Candidates</title>
+  <meta name="description" content="Compare two saved Vibe Check candidate assessments side by side">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/interview-vibes-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <style>
+    .compare-main { max-width: 1200px; margin: 0 auto; padding: 30px; }
+    .compare-header { margin-bottom: 24px; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .compare-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+    .compare-card h2 { font-size: 1.25em; margin-bottom: 18px; }
+    .compare-select { width: 100%; margin-bottom: 20px; }
+    .compare-empty { color: var(--text-muted); text-align: center; padding: 40px; }
+    .compare-score { font-size: 2.5em; font-weight: 700; margin: 10px 0; }
+    .compare-verdict { display: inline-block; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.9em; background: rgba(255,255,255,0.1); margin-bottom: 16px; }
+    .compare-section { margin-top: 20px; }
+    .compare-section h3 { font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-bright); margin-bottom: 10px; }
+    .compare-bar { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 0.85em; }
+    .compare-bar-label { width: 110px; opacity: 0.85; }
+    .compare-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .compare-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+    .compare-bar-val { width: 32px; text-align: right; }
+    .compare-piece { display: flex; align-items: center; gap: 10px; font-size: 1.1em; margin: 6px 0; }
+    .compare-piece-icon { font-size: 1.4em; }
+    .compare-risk { margin-top: 6px; font-weight: 600; }
+    .compare-notes { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; font-size: 0.85em; color: var(--text-secondary); white-space: pre-wrap; max-height: 120px; overflow-y: auto; }
+    @media (max-width: 900px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app" role="banner">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Vibe Check</h1>
+        <div class="header-subtitle">Compare Candidates</div>
+      
+        </div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <nav class="header-actions" aria-label="Main navigation">
+        <a data-keep-mobile href="./">Scorecard</a>
+        <a data-keep-mobile href="compare.html" class="active">Compare</a>
+    
+      </nav>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+
+  </header>
+
+  <main class="compare-main" id="main">
+    <div class="compare-header">
+      <h2 class="section-title">Compare Candidates</h2>
+      <p class="control-description">Select two saved sessions to compare scores, verdicts, piece profiles, and anti-cheat risk side by side.</p>
+    </div>
+
+    <div class="compare-grid" id="compare-grid">
+      <div class="compare-card" id="left-card">
+        <h2>Candidate A</h2>
+        <select id="left-select" class="text-input compare-select"></select>
+        <div id="left-content"></div>
+      </div>
+      <div class="compare-card" id="right-card">
+        <h2>Candidate B</h2>
+        <select id="right-select" class="text-input compare-select"></select>
+        <div id="right-content"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+    Behavioral interview scorecard with Core Five archetype matching
+  </footer>
+
+  <script type="module" src="js/compare.js"></script>
+</body>
+</html>

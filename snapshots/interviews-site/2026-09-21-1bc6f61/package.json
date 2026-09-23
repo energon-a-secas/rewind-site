@@ -1,0 +1,27 @@
+{
+  "name": "interview-insight",
+  "version": "1.0.0",
+  "description": "Quantifying the vibes you get from someone.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed",
+    "test:scoring": "python3 test_scoring.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucianoAdonis/Interview-Insight.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LucianoAdonis/Interview-Insight/issues"
+  },
+  "homepage": "https://github.com/LucianoAdonis/Interview-Insight#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

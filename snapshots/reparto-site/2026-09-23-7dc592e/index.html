@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Reparto">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Reparto | Sprint Capacity Planner</title>
+  <meta name="description" content="Drag people onto deliverables, size the work on the Fibonacci scale, and see who is missing before the quarter starts. Runs in your browser">
+  <meta property="og:title" content="Reparto | Sprint Capacity Planner">
+  <meta property="og:description" content="Split a quarter of story points across people and deliverables, and flag every gap before planning day">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://reparto.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reparto | Sprint Capacity Planner">
+  <meta name="twitter:description" content="Split a quarter of story points across people and deliverables, and flag every gap before planning day">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://reparto.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://reparto.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Reparto: split a quarter's points, see who is missing">
+  <meta name="twitter:image" content="https://reparto.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/app.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
+       Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
+  <meta name="neo-repo" content="energon-a-secas/reparto-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
+       carries page context to balise.neorgon.com in a URL fragment and the
+       visitor writes there. No form on this page and no request from it.
+       Opt out per page with <meta name="beacon" content="off">.
+       See packages/neorgon-ui/beacon/README.md. -->
+  <meta name="beacon-site" content="reparto-site">
+  <link rel="stylesheet" href="css/neorgon-beacon.css">
+  <script defer src="js/neorgon-beacon.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Reparto",
+    "description": "Sprint capacity planner: drag people onto deliverables, size work on the Fibonacci scale, and flag missing estimates, missing people and over-booked engineers",
+    "url": "https://reparto.neorgon.com/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+          <h1>Reparto</h1>
+          <div class="header-subtitle">Split a quarter's points, see who is missing</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <div class="header-actions">
+        <button type="button" class="nav-link" id="undoBtn" data-action="undo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled><span data-icon="undo-2"></span><span class="planner-action-label">Undo</span></button>
+        <button type="button" class="nav-link" id="redoBtn" data-action="redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled><span data-icon="redo-2"></span><span class="planner-action-label">Redo</span></button>
+        <button type="button" class="nav-link" id="wipeBtn" data-action="wipe" aria-label="Wipe" title="Empty this plan: its people, deliverables and days off"><span data-icon="eraser"></span><span class="planner-action-label">Wipe</span></button>
+        <button type="button" class="nav-link" data-action="help" aria-label="Help" title="How the numbers work"><span data-icon="circle-help"></span><span class="planner-action-label">Help</span></button>
+        <!-- Every label sits in its own <span>: the header kit squares off a
+             button whose only element child is an <svg> as icon-only.
+             The two menus stay in the header on phones (data-keep-mobile): a
+             dropdown inside the kit's overflow panel is clipped by the panel's
+             own scroll box. Each closes only itself (js/events.js setupMenu). -->
+        <div class="menu-wrap" data-keep-mobile>
+          <button type="button" class="nav-link" id="plansBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="plansMenu" aria-label="Plans"><span data-icon="layers"></span><span class="nav-label">Plans</span> ▾</button>
+          <div class="header-menu menu--plans" id="plansMenu" role="menu" aria-label="Plans">
+            <div role="group" aria-label="Your plans" id="planList"></div>
+            <div role="group" aria-label="Add a plan">
+              <button type="button" role="menuitem" data-action="blank"><span data-icon="plus"></span>New blank plan</button>
+              <button type="button" role="menuitem" data-action="duplicate"><span data-icon="copy"></span>Duplicate this plan</button>
+              <button type="button" role="menuitem" data-action="example"><span data-icon="lightbulb"></span>Open the example</button>
+              <button type="button" role="menuitem" data-action="import"><span data-icon="file-up"></span>Import a plan file (JSON)…</button>
+              <button type="button" role="menuitem" data-action="previous" id="previousItem" hidden><span data-icon="history"></span>Restore a deleted plan…</button>
+            </div>
+            <div role="group" aria-label="This plan">
+              <button type="button" role="menuitem" data-action="delete-plan" class="menu-danger"><span data-icon="trash-2"></span>Delete this plan…</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-wrap" data-keep-mobile>
+          <button type="button" class="nav-link" id="exportBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="exportMenu" aria-label="Export"><span data-icon="download"></span><span class="nav-label">Export</span> ▾</button>
+          <div class="header-menu" id="exportMenu" role="menu" aria-label="Export">
+            <button type="button" role="menuitem" data-export="link"><span data-icon="link"></span>Copy share link</button>
+            <button type="button" role="menuitem" data-action="export"><span data-icon="sheet"></span>Tables and flags (.xlsx, CSV)…</button>
+            <button type="button" role="menuitem" data-export="md"><span data-icon="file-text"></span>Report (Markdown)</button>
+            <button type="button" role="menuitem" data-export="json"><span data-icon="file-json"></span>Plan file (JSON)</button>
+          </div>
+        </div>
+      </div>
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="plan">
+
+      <div class="plan-heading">
+        <div class="plan-identity">
+          <label class="plan-label" for="planTitle">Planning workspace</label>
+          <label class="plan-name-wrap" for="planTitle">
+            <input class="plan-title" id="planTitle" data-key="plan-title" aria-label="Plan name" maxlength="80" title="Rename this plan">
+            <span data-icon="pencil"></span>
+          </label>
+          <p class="plan-quarter" id="planQuarterLabel" tabindex="-1"></p>
+        </div>
+        <nav class="workspace-nav" aria-label="Jump to a section">
+          <a href="#roster"><span data-icon="users"></span>Team</a>
+          <a href="#deliverables"><span data-icon="layout-grid"></span>Deliverables</a>
+          <button type="button" class="flags-trigger" id="flagsBtn" data-action="flags" data-key="flags-trigger" aria-haspopup="dialog" aria-controls="flagsModal"><span data-icon="flag"></span><span>Flags</span><span class="flags-trigger-count" id="flagsTotal"></span></button>
+        </nav>
+      </div>
+
+      <section class="calc" id="calc" aria-labelledby="calcTitle">
+        <details class="capacity-rules" id="capacityRules">
+          <summary class="capacity-summary">
+            <span class="capacity-heading"><span data-icon="sliders-horizontal"></span><span id="calcTitle">Capacity settings</span></span>
+            <span class="capacity-overview" id="capacityOverview"></span>
+            <span class="disclosure-label"><span class="disclosure-closed">Edit rules</span><span class="disclosure-open">Hide rules</span><span data-icon="chevron-down"></span></span>
+          </summary>
+          <div class="rules-editor" id="calcChain"></div>
+          <p class="calc-lead" id="calcLead"></p>
+          <span class="sr-only" id="capacityUpdate" role="status" aria-atomic="true"></span>
+        </details>
+        <!-- The calendar: the controls and the add form are static so a half-typed
+             date survives a repaint; js/render-calendar.js fills the rest. -->
+        <details class="cal" id="cal">
+          <summary class="capacity-summary cal-summary">
+            <span class="capacity-heading"><span data-icon="calendar-days"></span><span>Calendar</span></span>
+            <span class="capacity-overview" id="calSummary"></span>
+            <span class="disclosure-label"><span class="disclosure-closed">Edit dates &amp; days off</span><span class="disclosure-open">Hide calendar</span><span data-icon="chevron-down"></span></span>
+          </summary>
+          <div class="calendar-editor">
+          <div class="cal-controls">
+            <div class="calendar-period">
+              <h2 class="editor-heading">Plan dates</h2>
+              <div class="period-fields">
+                <label class="cal-field">Quarter
+                  <select class="field field--quarter" id="planQuarter" aria-describedby="calRange"></select>
+                </label>
+                <label class="cal-field">First day of the plan
+                  <input type="date" class="field field--date" id="startDate" data-setting="startDate" required>
+                </label>
+                <label class="cal-field">Fiscal year starts in
+                  <select class="field field--fiscal" id="fiscalStart" data-setting="fiscalStart"></select>
+                </label>
+              </div>
+              <p class="cal-range" id="calRange"></p>
+            </div>
+            <div class="cal-field cal-field--countries">
+              <h2 class="editor-heading" id="countriesLabel">Public holidays</h2><p class="editor-hint">Choose the countries your team works in.</p>
+              <div class="country-picks" id="countryPicks" role="group" aria-labelledby="countriesLabel"></div>
+              <div class="country-more">
+                <select class="field field--country" id="addCountry" aria-label="Add another country"></select>
+                <label class="country-default" id="defaultWrap" hidden>Default holiday calendar
+                  <select class="field field--country" id="defaultCountry"></select>
+                </label>
+              </div>
+            </div>
+          </div>
+          <h2 class="editor-heading">Sprint schedule</h2>
+          <ol class="sprint-strip" id="sprintStrip" aria-label="Sprint dates"></ol>
+          <p class="cal-note" id="calNote"></p>
+          <div class="cal-days">
+            <h2 class="editor-heading">Holidays &amp; team days off</h2>
+            <p class="cal-days-head" id="calDaysHead"></p>
+            <ul class="day-chips" id="dayChips"></ul>
+            <form class="day-add" id="dayOffForm" autocomplete="off">
+              <label class="cal-field">Date<input type="date" class="field field--date" name="date" aria-label="Team day off date" required></label>
+              <label class="cal-field">Reason<input class="field" name="label" placeholder="Offsite, shutdown…" aria-label="Team day off reason" maxlength="60"></label>
+              <label class="cal-field" id="dayOffCountryWrap">Applies to<select class="field field--who" name="country" aria-label="Who gets the day off"><option value="">Everyone</option></select></label>
+              <button type="submit" class="btn btn--secondary btn--sm">Add team day off</button>
+            </form>
+          </div>
+          </div>
+        </details>
+      </section>
+
+      <div class="first-run" id="firstRun" role="note" hidden>
+        <div class="first-run-copy"><span data-icon="lightbulb"></span><p><strong>Explore an example plan.</strong> Try fixing a flag, or start fresh with your team.</p></div>
+        <div class="first-run-actions">
+          <button type="button" class="btn btn--primary btn--sm" data-action="blank">Start my own plan</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="dismiss-intro">Got it</button>
+        </div>
+      </div>
+
+      <section class="tiles" id="tiles" aria-label="Plan totals"></section>
+
+      <div class="workspace">
+        <!-- Roster and board share their own grid, so the sticky roster is bounded
+             by the board and cannot slide over the flags when they stack below. -->
+        <div class="workspace-main">
+        <aside class="roster" id="roster" data-drop="roster" aria-labelledby="rosterTitle">
+          <div class="panel-head">
+            <h2 class="panel-title" id="rosterTitle">Team</h2>
+            <span class="panel-count" id="rosterCount"></span>
+          </div>
+          <ul class="roster-list" id="rosterList"></ul>
+          <form class="roster-add" id="personForm" autocomplete="off">
+            <input class="field" id="personName" name="name" placeholder="Name" aria-label="New person's name" maxlength="80">
+            <input class="field" id="personRole" name="role" placeholder="Role" aria-label="New person's role" maxlength="80">
+            <button type="submit" class="btn btn--secondary btn--sm">Add</button>
+          </form>
+          <p class="panel-tip">Drag a person onto a deliverable, or click to pick them up.</p>
+          <details class="team-help">
+            <summary>How to split someone's time</summary>
+            <p>Click a share's number to change its percentage. Use the pencil beside a person to edit their full split, load, or leave. Drop a share back onto the team to remove it.</p>
+          </details>
+        </aside>
+
+        <section class="board" id="deliverables" aria-labelledby="boardTitle">
+          <div class="board-head">
+            <h2 class="board-title" id="boardTitle">Deliverables</h2>
+            <button type="button" class="btn btn--primary btn--sm" id="addDelivBtn" data-action="add-deliverable">Add deliverable</button>
+          </div>
+          <div class="board-bar" id="boardBar"></div>
+          <div class="board-filter-note" id="boardFilterNote" role="status" hidden></div>
+          <div class="carry-bar" id="carryBar" role="status" hidden></div>
+          <div class="board-grid" id="board"></div>
+          <div class="table-wrap" id="boardTable" hidden></div>
+          <div class="map-wrap" id="boardMap" hidden></div>
+        </section>
+        </div>
+
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Anchored popover for the estimate and share pickers (built by js/popover.js). -->
+  <div class="pop" id="pop" role="dialog" aria-modal="false" hidden></div>
+
+  <!-- Flags and item details are shown only when requested. -->
+  <div class="modal" id="flagsModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog flags-dialog" role="dialog" aria-modal="true" aria-labelledby="flagsTitle" tabindex="-1">
+      <div class="modal__header">
+        <div><p class="dialog-eyebrow" id="flagsEyebrow">Plan review</p><h2 id="flagsTitle">Flags</h2></div>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close flags"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal__body flags-body">
+        <div id="flagsContext"></div>
+        <div class="flags-toolbar"><span class="panel-count" id="flagCount" role="status"></span><button type="button" class="panel-link" id="allFlagsBtn" data-action="flags" hidden>All plan flags</button></div>
+        <div class="flag-filters" id="flagFilters" role="group" aria-label="Filter flags"></div>
+        <ol class="flag-list" id="flagList"></ol>
+        <button type="button" class="flag-more" id="flagMore" data-action="toggle-info" hidden></button>
+      </div>
+      <div class="modal__footer"><button type="button" class="btn btn--secondary btn--sm" data-action="export" data-table="flags"><span data-icon="download"></span>Export flags</button><button type="button" class="btn btn--primary btn--sm" data-modal-close>Done</button></div>
+    </div>
+  </div>
+
+  <div class="hover-tip" id="hoverTip" role="tooltip" hidden></div>
+
+  <!-- Person editor -->
+  <div class="modal" id="personModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="personModalTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="personModalTitle">Edit person</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <form class="modal__body person-form" id="personEdit" autocomplete="off">
+        <label class="lbl">Name <input class="field" name="name" maxlength="80"></label>
+        <label class="lbl">Role <input class="field" name="role" maxlength="80"></label>
+        <fieldset class="dist">
+          <legend class="lbl">How their capacity is split</legend>
+          <ul class="dist-list" id="distList"></ul>
+          <div class="dist-total" id="distTotal"></div>
+          <div class="dist-actions">
+            <select class="field" id="distAdd" aria-label="Add them to a deliverable"></select>
+            <button type="button" class="btn btn--ghost btn--sm" data-dist="even">Split evenly</button>
+          </div>
+        </fieldset>
+        <div class="form-row">
+          <label class="lbl">Load on this team
+            <select class="field" name="load">
+              <option value="100">100%</option><option value="80">80%</option><option value="75">75%</option>
+              <option value="60">60%</option><option value="50">50%</option><option value="40">40%</option>
+              <option value="25">25%</option><option value="20">20%</option>
+            </select>
+          </label>
+          <label class="lbl">Sprints away
+            <select class="field" name="sprintsOff"></select>
+          </label>
+        </div>
+        <label class="lbl">Public holidays
+          <select class="field" name="country"></select>
+        </label>
+        <fieldset class="vac">
+          <legend class="lbl">Vacations and leave</legend>
+          <ul class="vac-list" id="vacList"></ul>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="add-vacation">Add a vacation</button>
+        </fieldset>
+        <label class="check"><input type="checkbox" name="open"> Open role: counted in capacity, flagged until hired</label>
+        <p class="form-note" id="personCapNote"></p>
+        <p class="form-note warn-text" id="personLeaveWarn" hidden>Both sprints away and vacation dates take time out. If they are the same leave, keep only one.</p>
+      </form>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost btn--sm btn--quiet-danger modal__left" data-action="remove-person">Remove from team</button>
+        <button type="button" class="btn btn--ghost" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn--primary" form="personEdit">Save</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Export: pick a table, see it, take it out as a spreadsheet, CSV, a paste or Markdown -->
+  <div class="modal" id="exportModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog modal__dialog--wide export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="exportTitle">Export</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body export-body">
+        <div class="seg" id="exportTables" role="radiogroup" aria-label="Table"></div>
+        <p class="export-hint" id="exportHint"></p>
+        <div class="export-preview" id="exportPreview" tabindex="0" aria-label="Preview of the table"></div>
+        <p class="form-note">The spreadsheet holds every table on its own sheet, plus a Settings sheet with the numbers behind them. CSV and the copy buttons take the table shown above.</p>
+      </div>
+      <footer class="modal__footer export-actions">
+        <button type="button" class="btn btn--primary" data-export="xlsx">Download spreadsheet (.xlsx)</button>
+        <button type="button" class="btn btn--secondary" data-export="csv">Download CSV</button>
+        <button type="button" class="btn btn--secondary" data-export="tsv">Copy for Sheets or Excel</button>
+        <button type="button" class="btn btn--ghost" data-export="md-table">Copy as Markdown</button>
+        <span class="export-whole">Whole plan:
+          <button type="button" class="btn btn--ghost btn--sm" data-export="md">Report (Markdown)</button>
+          <button type="button" class="btn btn--ghost btn--sm" data-export="json">JSON</button>
+        </span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Plans deleted or wiped in this browser, kept to restore -->
+  <div class="modal" id="previousModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="previousTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="previousTitle">Restore a deleted plan</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body">
+        <p class="form-note">Plans you deleted or wiped in this browser, newest first. Restoring one opens it as a plan of its own; nothing is replaced.</p>
+        <ul class="previous-list" id="previousList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm: wipe a plan, delete a plan (js/confirm.js fills it) -->
+  <div class="modal" id="confirmModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog modal__dialog--narrow" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmBody" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="confirmTitle"></h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body confirm-body">
+        <p class="form-note" id="confirmBody"></p>
+        <label class="check" id="confirmCheckWrap" hidden><input type="checkbox" id="confirmCheck"> <span id="confirmCheckText"></span></label>
+        <p class="form-note confirm-safe" id="confirmSafe"></p>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-modal-close>Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirmOk"></button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- How the numbers work -->
+  <div class="modal" id="helpModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="helpModalTitle">How the numbers work</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body help">
+        <p><strong>A story point is one focus day.</strong> A week has five working days; with the meeting day on, one of them goes to ceremonies and does not count, so a week holds four points and a two-week sprint holds eight.</p>
+        <p><strong>A plan is a number of sprints, laid on a quarter.</strong> A quarter holds six two-week sprints; when two months of it go to planned work, the plan is four. One engineer's plan is points a sprint times sprints: 8 × 4 = 32. Pick the quarter under Calendar; quarters follow your fiscal year (with an October start, October to December 2026 is Q1 FY27).</p>
+        <p><strong>A deliverable can take less than the whole plan.</strong> Click the sprints on a card (or drag its bar on the Map) to run it over, say, S1 to S2. A share is then a percentage of the person's time in those sprints. By default the estimate scales with the sprints (21 over four sprints is 13 over two) and each person keeps their share of their time; you can instead keep the estimate and each person's points, so fewer sprints ask for a bigger share of their time there. Someone on two deliverables in the same sprints can be over-booked in those sprints even when the quarter adds up; the flags say which.</p>
+        <p><strong>Every deliverable has a landing date:</strong> the day its people's points add up to its estimate, counting only the days they work. Short of that, it keeps the same pace past its sprints (and past the plan, on the Map) and says so. The Map shows the whole quarter in two tables. In People, each row is that person's schedule: a vacation, a holiday or a team day off replaces the bar on its days, and each sprint shows the points they have there (drag across a row to add a vacation; on a phone, tap the first day, then the last). In Deliverables, each bar runs over its sprints (drag it, or an end) with a diamond where it lands.</p>
+        <p><strong>One full-time engineer lands on the Fibonacci scale</strong>, the same scale the work is sized on: 32 becomes 34, and 48 becomes 55. Everyone else is their own capacity scaled by that same factor, so a vacation day or a load step moves them a little instead of jumping them from 34 to 21. Pick <em>Fibonacci below</em> for a safer plan (32 becomes 21). The raw number is always shown next to the planned one.</p>
+        <p><strong>Load and sprints away</strong> scale one person: half-time on this team over four sprints is 16 raw, 17 planned. <strong>Buffer</strong> comes off after rounding and holds back a percentage of everyone's capacity for support and unplanned work: 10% of 34 leaves 31 bookable.</p>
+        <p><strong>The calendar takes days out.</strong> Sprints start on the date you pick. Public holidays come from the country you choose for the team (anyone can have their own), team days off apply to everyone or only to one country's people when you limit them to it, and vacations belong to one person. A day off only costs a focus day when it lands on a working day, and a week someone spends entirely away costs no meeting day either.</p>
+        <p><strong>A share is a percentage of what someone has for this plan</strong>, after load, days off and buffer, and its points follow that capacity: 50% of an engineer planned at 34 is 17 points, and if a vacation brings them to 30 it becomes 15 without anyone touching it. A person can hold shares on as many deliverables as you like, and a deliverable can have as many people. Dropping someone on a card gives it what they have free, up to what it still needs; someone already fully booked still gets one sprint's worth, and the over-booking flag says so. Click the number on a share to set a percentage, or a number of points kept as the matching percentage; the pencil on their row shows and edits their whole split.</p>
+        <p><strong>Plans, Later and Done.</strong> Every plan lives in this browser under <em>Plans</em>: a share link, an import or the example opens as a plan of its own, so nothing replaces yours. A deliverable you move to <em>Later</em> (a future plan) or <em>Done</em> (shipped) keeps its people but stops counting; move it back and its shares return as they were. <em>Wipe</em> empties the open plan, and Ctrl+Z brings it back.</p>
+        <h3>Keys</h3>
+        <ul class="keys">
+          <li><kbd>Enter</kbd> on a person or a share picks it up; <kbd>Enter</kbd> on a deliverable drops it there; <kbd>Esc</kbd> puts it back</li>
+          <li><kbd>Ctrl</kbd> <kbd>Z</kbd> undo, <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Z</kbd> redo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    Your plan stays in this browser; a share link carries it in the URL itself. Public holidays from <a href="https://github.com/commenthol/date-holidays" rel="noopener">date-holidays</a> (CC BY 3.0).
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

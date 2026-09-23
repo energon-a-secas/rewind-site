@@ -1,0 +1,431 @@
+# Pathfinder
+
+> Visual strategy canvas. You map a piece of work as typed blocks and labelled
+> connections, then export it as a structured prompt that tells an assistant
+> where things stand before it tells it what to do.
+
+- Live: https://pathfinder.neorgon.com/
+- Format spec: this file
+- Walkthrough: https://pathfinder.neorgon.com/tutorial.html
+- Examples (four loadable worked maps): https://pathfinder.neorgon.com/examples.html
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: strategy, canvas, ai-prompt, gap-detection, planning, investigation
+
+Everything runs client-side. No account, no backend, no telemetry. A canvas
+lives in the visitor's browser and travels as a file or a link.
+
+---
+
+## Two ways an LLM meets Pathfinder
+
+**1. You are handed an exported prompt.** It starts with `## Situation`. Read
+that section before anything else and take it literally: it tells you whether a
+codebase exists, whether you can reach it, and what to do first. The rest of the
+document is a plan somebody drew. It is not a record of what exists, and nothing
+in it is verified unless the Situation says so.
+
+The blocks most worth your attention are the ones people skim:
+
+- **Assumptions** are beliefs nobody has checked. If the Situation says you have
+  the repository open, several are probably settleable by reading it. Check
+  those rather than asking, and label each result verified or still open.
+- **Open Questions** are genuine unknowns. Answering them from a guess is the
+  main way a plan like this goes wrong.
+- **Connections** carry labels (`blocks`, `depends on`, `mitigates`). They are
+  the dependency order. Use them to sequence work rather than inventing an
+  order of your own.
+- A **Gap summary** at the end lists blocks the tool itself flagged as
+  unconnected or unsupported. Treat it as a list of things the author has not
+  finished thinking about.
+
+**2. You are asked to produce a canvas.** Emit the JSON below and the user
+imports it with Export ▾ → Import JSON. In the app, Export ▾ → **Copy AI
+diagram-builder prompt** gives the same instructions with the current schema
+inlined.
+
+---
+
+## Canvas JSON
+
+```json
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "goal",
+      "title": "Short imperative phrase",
+      "description": "One or two sentences. What and why.",
+      "notes": "",
+      "x": 0, "y": 0,
+      "actions": ["validate"],
+      "questions": [{ "text": "Open question?", "answer": "" }],
+      "criteria": ["Returns within 200ms"],
+      "priority": "high",
+      "status": "in-progress",
+      "highlight": "alert"
+    }
+  ],
+  "arrows": [
+    { "id": "a1", "from": "b1", "to": "b2", "label": "depends on", "style": "routed" }
+  ],
+  "groups": [{ "id": "g1", "label": "Phase 1" }],
+  "meta": {
+    "title": "Canvas title",
+    "contextBrief": "One or two lines of framing",
+    "cardStyle": "outline",
+    "spotlight": false,
+    "prompt": { "mode": "investigate", "tone": "auto", "detail": "standard", "pre": [] },
+    "situation": {
+      "codebase": "current",
+      "runtime": "code",
+      "firstMove": "read",
+      "repoHint": "org/repo",
+      "constraints": "One boundary per line"
+    }
+  }
+}
+```
+
+Only `id`, `type`, `title`, `x` and `y` are needed on a block; the rest default.
+Only `from` and `to` are needed on an arrow. Unknown fields and unknown enum
+values are dropped on import rather than rejected, so a partial canvas still
+loads. Positions can be rough: the user presses **Tidy** (or `L`) and the app
+lays the graph out properly.
+
+### Block types
+
+| `type` | Use for |
+|---|---|
+| `goal` | An outcome to achieve |
+| `problem` | A blocker or issue, stated as an observable symptom |
+| `requirement` | A hard constraint that must hold |
+| `assumption` | A belief being treated as true without having been checked |
+| `risk` | Something that could go wrong |
+| `decision` | A choice made, or one that needs making |
+| `question` | A genuine unknown |
+| `resource` | An available asset, tool, team, or budget |
+| `output` | An expected deliverable |
+| `process` | A step in a workflow |
+| `terminator` | The start or end of a workflow |
+| `context` | Background that frames the rest |
+| `custom` | Anything else. Prefer a real type; they produce better prompts |
+
+`assumption` versus `question`: an assumption is something you are acting on
+without checking, a question is something you know you do not know. The
+difference matters, because the export tells the reader to pressure-test the
+first and answer the second.
+
+### Other enums
+
+- `actions`: `resolve`, `prepare`, `recollect`, `reinforce`, `validate`
+- `priority`: `high`, `medium`, `low`
+- `status`: `not-started`, `in-progress`, `done`, `blocked`
+- `arrows[].style`: `routed` (default, steers around blocks), `curved`,
+  `straight`, `elbow`, `dashed`, `dotted`
+- `arrows[].portsBy`: `tidy` marks connection sides written by auto-layout
+  (released when a block moves). Omit it for sides a person chose
+- `meta.prompt.mode`: `plan`, `investigate`, `explore`, `build`, `clarify`.
+  Part of the canvas: set it so the recipient's export opens with the task
+  you intended
+- `meta.prompt.tone`: `auto`, `formal`, `casual`, `technical`
+- `meta.prompt.detail`: `standard`, `brief`, `detailed`
+- `meta.prompt.pre`: any of `tasks`, `edge`, `errors`, `docs`, `security`,
+  `typescript`
+- `blocks[].criteria`: short strings, the block's definition of done
+  (meaningful on `requirement`, `goal`, `output`). They feed the prompt's
+  acceptance criteria, tasks.md and the EARS export
+- `blocks[].rationale`: why a decision was made (string, `decision` blocks)
+- `meta.cardStyle`: `outline`, `bar`, `header`, `tint`, `plain`
+- `blocks[].highlight`: `alert`, `focus`, `go`, `hold`, `festive`, or omitted
+- `meta.situation.codebase`: `none`, `current`, `other`, `greenfield`
+- `meta.situation.runtime`: `chat`, `code`, `ide`
+- `meta.situation.firstMove`: `read`, `ask`, `plan`, `act`
+
+#### Highlights are presentation, not meaning
+
+`highlight` draws a coloured ring around a block, and `meta.spotlight` fades
+every block that does not have one. It exists for the moment a canvas gets
+shared or presented: five of thirty boxes are the point and the rest are
+context.
+
+Do not read meaning into a highlight, and do not set one to encode meaning. The
+block `type` carries what a block *is*; `priority` and `status` carry where it
+stands. A highlight only says somebody wanted it looked at. It is deliberately
+absent from the exported prompt for the same reason.
+
+## Arriving by URL, and being counted
+
+- **Share hash:** `https://pathfinder.neorgon.com/#s=<base64(encodeURIComponent(JSON))>`
+  carries a whole canvas in the link. Build it exactly that way when emitting
+  a link; the app offers replace-or-merge on arrival.
+- **`?src=`:** `https://pathfinder.neorgon.com/?src=<https url>` fetches canvas
+  JSON from a URL instead, for canvases too large for a hash. Allowed hosts:
+  GitHub raw and gist (`raw.githubusercontent.com`, `gist.githubusercontent.com`)
+  and the site itself; anything else is blocked by the page's CSP.
+- **`?via=`:** append `?via=<your-name>` (letters, digits, dashes) to any link
+  you emit toward Pathfinder. It is counted as an anonymous arrival event and
+  nothing more; no canvas content is ever sent anywhere.
+
+## Validating before handing over
+
+An emitted canvas can be proven loadable without opening the app:
+
+    curl -sO https://pathfinder.neorgon.com/validate.mjs
+    node validate.mjs canvas.json        # or -  (stdin), or a '#s=...' link
+
+It runs the app's own normalizer (fetched from this site when not local), so
+what it accepts is exactly what the canvas accepts. Exit 0 clean; exit 1 when
+items would be dropped or coerced (each one is named); exit 2 unreadable.
+
+## Other formats, in and out
+
+- **JSON Canvas** (jsoncanvas.org, the Obsidian canvas format): Export ▾ →
+  Download JSON Canvas writes the map as a `.canvas` file; the same Import
+  picker reads one, classifying text nodes into block types (correction chips
+  appear for uncertain calls).
+- **Mermaid flowcharts** import through the same picker (a fenced
+  ```mermaid block or a bare `flowchart`/`graph` file): shapes map to types
+  (rhombus → decision, stadium/circle → start/end), subgraphs become groups,
+  and positions come from the app's own layout.
+
+## Writing results back: the patch
+
+Every exported prompt ends by asking for a fenced ```pathfinder-patch``` block.
+The app finds it inside a pasted reply (Prompt tab, "Bring the answer back"),
+previews every operation, and applies them as one undo step. Address blocks by
+the ids the prompt lists (titles work too; exact matches are trusted, a unique
+fuzzy match is labeled, ambiguity is refused).
+
+```pathfinder-patch
+{
+  "format": "pathfinder-patch",
+  "version": 1,
+  "note": "one line the human sees first",
+  "answers":  [{ "block": "b3", "question": 0, "answer": "Staging is clean; production only." }],
+  "verify":   [{ "block": "b5", "verdict": "verified", "evidence": "The cert rotated on Wed; log line attached." }],
+  "status":   [{ "block": "b2", "status": "done" }],
+  "criteria": [{ "block": "b4", "add": ["fails before the fix, passes after"] }],
+  "notes":    [{ "block": "b2", "note": "check the cert dates too" }],
+  "blocks":   [{ "id": "n1", "type": "problem", "title": "Retry path swallows errors" }],
+  "arrows":   [{ "from": "n1", "to": "b2", "label": "explains" }]
+}
+```
+
+Semantics:
+
+- `answers`: fills a question's `answer` field. `question` is the index or the
+  question text; omit it when the block has exactly one question.
+- `verify`: an `assumption` becomes a `decision` **in place** (same id, so its
+  arrows survive); `verdict` is `verified` or `refuted`, and `evidence` is
+  required, because a verdict without evidence is still a guess.
+- `status`: `not-started`, `in-progress`, `done`, `blocked`.
+- `criteria`: appends acceptance criteria (deduplicated, capped at 30).
+- `notes`: appends to the block's freeform notes, prefixed "Review:". The
+  view-only link's review bar emits these; the author applies them with the
+  same preview as any patch.
+- `blocks` / `arrows`: the canvas JSON shapes above; new blocks may reference
+  each other and existing ids. Omitted positions are placed beside the canvas;
+  Tidy arranges them.
+
+Do not put answers you do not have in a patch. An empty patch is a valid reply.
+
+## Prompt modes
+
+`Investigate` establishes what is true and demands evidence per finding.
+`Explore` surfaces gaps and asks questions. `Plan` produces a phased plan.
+`Build` renders requirements as a task checklist. `Clarify` returns only
+questions. The mode reshapes section order and the task directive, so pick the
+one that matches what you actually want back.
+
+---
+
+## Using it from a terminal session
+
+There is no CLI and no API. The exchange is a file or a link:
+
+1. Export ▾ → **Download JSON** puts `pathfinder.json` in your downloads. Hand
+   that to a session directly; it is the whole canvas, situation included.
+2. Export ▾ → **Download Markdown** gives a readable version with one section
+   per block type, labelled connections, and a Mermaid graph of the topology.
+3. **Copy AI-ready prompt** (the pill on the canvas) copies the assembled
+   prompt, Situation first.
+4. **Share** → Copy link encodes the entire canvas in the URL hash. Nothing is
+   uploaded; the link is the data.
+
+To go the other way, write the JSON above to a file and import it. A session
+that has just finished an investigation can emit a canvas of what it found, and
+the next session picks it up with the situation already set.
+
+## Using it as a skill
+
+The useful shape is: read the canvas, do the work the Situation permits, then
+write an updated canvas back. Two rules make that work.
+
+**Respect the Situation rather than re-deriving it.** If it says `codebase:
+none`, do not reason about files. If it says `runtime: chat`, do not claim to
+have read anything.
+
+**Return blocks, not prose.** An answered question becomes
+`questions[].answer`. A checked assumption becomes a `decision` with the
+evidence in its description, and the assumption is either deleted or marked.
+A newly discovered unknown becomes a `question` block wired to what it affects.
+That way the canvas accumulates what was learned instead of resetting each time.
+
+---
+
+# Traces: troubleshooting trees and architecture maps
+
+A **trace** is Pathfinder's second document type, and it is a different tool
+from the canvas. The canvas is for reaching a decision with other people. A
+trace is for the moment something is broken: you write YAML, it renders a
+diagram, and the diagram is meant to be reused rather than discussed.
+
+- App: https://pathfinder.neorgon.com/trace.html
+- Validator: https://pathfinder.neorgon.com/validate-trace.mjs
+- Worked tree: https://pathfinder.neorgon.com/traces/aws-cross-account-connectivity.yaml
+- Worked map: https://pathfinder.neorgon.com/traces/aws-private-service-topology.yaml
+
+The YAML is the source of truth. There are no positions to author: the layout
+is computed, so a trace an assistant writes renders exactly as well as one a
+person writes. That is the difference from the canvas, where blocks carry `x`
+and `y`.
+
+## The shape
+
+```yaml
+trace:
+  title: A call from account A to a private service in account B fails
+  kind: tree              # tree | topology
+  intent: What this document is for
+  status: documented      # draft | investigating | resolved | documented
+  direction: LR           # LR (default) | TB
+  root: symptom           # trees: where a reader starts
+  nodes:
+    - id: symptom
+      kind: check
+      ask: What does the failure actually look like?
+      detail: |
+        Prose folds like Markdown: single newlines are joined, a blank line
+        starts a paragraph. Wrap the source file wherever you like.
+      probe: curl -sv --max-time 10 https://svc.internal.example.com/health
+      ref: https://docs.aws.amazon.com/...
+      branches:
+        - when: hangs, then times out
+          to: dns
+        - when: HTTP 403
+          to: iam
+    - id: dns
+      kind: action
+      title: Check resolution from the client host
+      next: done          # a single continuation, no decision
+```
+
+`id` is the only required field on a node; `kind` defaults from context and
+the headline may be written as `title`, `ask`, `do` or `label`. `probe` takes
+a string or a list. `nodes` may also be a mapping of id to body. Unknown
+fields and unknown enum values are reported and dropped rather than rejected,
+so a partial document still renders.
+
+### Tree node kinds
+
+| `kind` | Use for |
+|---|---|
+| `check` | A question with branches. The only kind that may carry `branches` |
+| `action` | Something to do. Continues to one `next` |
+| `cause` | The thing that was actually wrong |
+| `fix` | What resolves it |
+| `deadend` | Nothing more to try here. Escalate, or it is out of scope |
+| `note` | Context hanging off the flow |
+
+### Topology node kinds
+
+Containers, which hold others and draw as a labelled boundary: `account`,
+`region`, `vpc`, `subnet`, `zone`. Contents: `client`, `compute`, `service`,
+`gateway`, `endpoint`, `dns`, `store`, `identity`, `external`.
+
+Containment is **flat**, not nested: put `in: <container-id>` on a node.
+Containers nest without limit, so an account holds a VPC which holds a subnet.
+A flat list is what an agent can write and patch reliably.
+
+```yaml
+  nodes:
+    - { id: acct-a, kind: account, label: "Account A: prod-app" }
+    - { id: vpc-a,  kind: vpc,     label: "vpc-app 10.20.0.0/16", in: acct-a }
+    - { id: orders, kind: compute, label: Orders API,             in: vpc-a }
+  links:
+    - from: orders
+      to: alb
+      label: "TCP 443"
+      state: broken
+      evidence: dig from the task returns NXDOMAIN
+```
+
+### Link state
+
+| `state` | Meaning |
+|---|---|
+| `branch` | An outcome of a check. The default in a **tree**, and not a claim about anything |
+| `unknown` | Nobody has checked this hop. The default in a **topology** |
+| `ok` | Checked, and it works. Say how in `evidence` |
+| `broken` | Checked, and it fails |
+| `proposed` | A path that does not exist yet |
+
+`unknown` is deliberately the topology default. A format that defaults to `ok`
+invites a map that quietly claims every hop works, which is worse than no map.
+
+## What makes a trace worth reading
+
+The validator enforces the first two. The rest it cannot check, and they are
+what separates a runbook from a picture of one.
+
+1. **Branch on what can be observed.** "hangs, then times out" is a branch.
+   "the network is misconfigured" is not.
+2. **Only `check` makes decisions.** Anything else gets one `next:`.
+3. **Every check carries a `probe:`.** A check nobody can run is a check they
+   will guess at.
+4. **Order branches by what they cost to check.** The cheapest discriminating
+   test belongs at the root. In the AWS example that is "what does the failure
+   actually look like", because a timeout and a 403 share no next step.
+5. **Do not mark a hop `ok` you have not verified.**
+6. **Say `deadend` when a path leaves your control**, and say who owns it.
+
+## Arriving by URL, and embedding
+
+- **Share hash:** `https://pathfinder.neorgon.com/trace.html#t=<payload>` where
+  the payload is **base64url over the UTF-8 bytes** of the YAML: standard
+  base64 with `+`→`-`, `/`→`_`, padding stripped. Note this differs from the
+  canvas's `#s=`, which is `btoa(encodeURIComponent(json))`; the trace form is
+  about 45% shorter for the same document.
+- **`?src=`:** fetches YAML from an https URL. Allowed hosts are the same as
+  the canvas: GitHub raw and gist, and the site itself. 1 MB cap.
+- **Embed:** `?embed&readonly#t=<payload>` renders the diagram alone, with no
+  editor, header or footer. An embed never reads or writes the visitor's own
+  stored trace, and keeps its hash so it survives a reload. The app's
+  Export menu emits the whole `<iframe>` tag.
+
+## Validating before handing it over
+
+```bash
+curl -sO https://pathfinder.neorgon.com/validate-trace.mjs
+npm install js-yaml
+node validate-trace.mjs trace.yaml     # or a directory, or -, or a '#t=...' link
+```
+
+It runs the app's own `js/trace/parse.js`, fetched from this site when not
+local, so what it accepts is exactly what the page accepts. Exit **0** clean,
+**1** warnings only (it renders, something is off), **2** errors or unreadable.
+
+## Suggestions
+
+The app reads the trace's structure and words and offers things to check, from
+a pack of AWS connectivity knowledge (`js/trace/packs/aws.js`): run Reachability
+Analyzer, try the IP to take DNS out of the question, resolve from inside the
+VPC rather than a laptop, reach a host without SSH via Session Manager or the
+serial console, check the stateless NACL return path. They are suggestions
+against the document you wrote, not analysis of your account, and nothing about
+your trace leaves the browser.
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

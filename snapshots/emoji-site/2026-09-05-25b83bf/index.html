@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' esm.sh https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org; img-src 'self' data: blob: https://cdn.neorgon.org https://neorgon.goatcounter.com; connect-src 'self' *.convex.cloud https://neorgon.goatcounter.com https://cloudflareinsights.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Emoji Archive">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Emoji Archive | Slack Emoji Collection</title>
+  <meta name="description" content="Browse 202 custom Slack emojis across 7 categories. Search, filter, and copy emoji names instantly">
+  <meta property="og:title" content="Emoji Archive | Slack Emoji Collection">
+  <meta property="og:description" content="Browse 202 custom Slack emojis across 7 categories. Search, filter, copy names">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://emojis.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Emoji Archive | Slack Emoji Collection">
+  <meta name="twitter:description" content="Browse 202 custom Slack emojis across 7 categories. Search, filter, copy names">
+  <meta name="twitter:image" content="https://emojis.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://emojis.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#050c14">
+  <meta property="og:image" content="https://emojis.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Emoji Archive",
+    "description": "Browse 202 custom Slack emojis across 7 categories. Search, filter, and copy emoji names instantly",
+    "url": "https://emojis.neorgon.com/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+  <style>
+
+    /* ── Reset & base ─────────────────────────────────────────────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── Skip link & focus ────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute; top: -100%; left: 16px; z-index: 1000;
+      padding: 8px 16px; background: var(--accent); color: #050c14;
+      font-weight: 600; font-size: .875rem; border-radius: 0 0 6px 6px;
+      text-decoration: none; transition: top .2s;
+    }
+    .skip-link:focus { top: 0; }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /*
+     * ── Design tokens (arctic overlay) ────────────────────────────────
+     *
+     *  Colors
+     *  bg:                 #050c14
+     *  accent:             #38bdf8  (ice blue, replaces #0063e5)
+     *  accent-dim:         rgba(56,189,248,0.12)
+     *  accent-glow:        0 0 14px rgba(56,189,248,0.18)
+     *  surface-1 (cards):  rgba(255,255,255,.03)
+     *  surface-2 (hover):  rgba(56,189,248,.04)
+     *  border:             rgba(56,189,248,0.09) / .3 on hover
+     *  text muted:         rgba(255,255,255,.45)
+     *  header gradient:    135deg, #0369a1 0%, #0c1a2e 45%, #050c14 100%
+     *  font-mono:          "SF Mono", "Fira Code", monospace
+     */
+
+    :root {
+      --bg: #050c14;
+      --surface-1: rgba(255,255,255,.03);
+      --surface-2: rgba(56,189,248,.04);
+      --border: rgba(255,255,255,.1);
+      --card-border: rgba(56,189,248,.09);
+      --text-primary: #f9f9f9;
+      --text-secondary: #cacaca;
+      --text-muted: rgba(255,255,255,.45);
+      --accent: #38bdf8;
+      --accent-dim: rgba(56,189,248,.12);
+      --font: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --font-mono: "SF Mono", "Fira Code", monospace;
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-6: 24px; --space-8: 32px;
+      --radius-sm: 6px; --radius: 10px; --radius-lg: 15px;
+      --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur-fast: 120ms; --dur: 200ms;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header: layout owned by the Neorgon Header Kit.
+       Site keeps its blue dialect via kit token overrides;
+       scoped so a visitor-chosen theme (data-theme) still wins. ── */
+    html:not([data-theme]) .header-bar {
+      --header-bg-start: #0369a1;
+      --header-bg-mid: #0c1a2e;
+      --header-bg-end: #050c14;
+      --header-bg: linear-gradient(135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 45%, var(--header-bg-end) 100%);
+    }
+    .header-subtitle { font-family: var(--font-mono); }
+
+    .nav-link {
+      font-size: .8rem; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; padding: 5px 12px; border-radius: 20px;
+      border: 1px solid transparent;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .nav-link:hover { color: var(--text-primary); border-color: rgba(56,189,248,.25); background: rgba(56,189,248,.07); }
+
+    /* ── Main container ──────────────────────────────────────────────── */
+    .container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px;
+      flex: 1;
+    }
+
+    /* ── Search bar ──────────────────────────────────────────────────── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    #searchInput {
+      width: 100%;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px 12px 42px;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #searchInput::placeholder { color: var(--text-muted); }
+    #searchInput:focus {
+      border-color: rgba(56,189,248,.4);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.07);
+    }
+
+    /* ── Category chips ──────────────────────────────────────────────── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 13px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: var(--surface-1);
+      color: var(--text-secondary);
+      font-size: .8rem;
+      font-family: var(--font);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .15s, background .15s, color .15s;
+    }
+    .chip:hover {
+      border-color: rgba(56,189,248,.35);
+      color: var(--text-primary);
+    }
+    .chip.active {
+      background: rgba(56,189,248,.14);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .chip-count {
+      font-size: .72rem;
+      opacity: .6;
+      font-family: var(--font-mono);
+    }
+
+    /* ── Result info ─────────────────────────────────────────────────── */
+    .result-info {
+      font-size: .75rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-bottom: 14px;
+      letter-spacing: .3px;
+    }
+
+    /* ── Emoji grid ──────────────────────────────────────────────────── */
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+      gap: 10px;
+    }
+
+    /* ── Emoji card ──────────────────────────────────────────────────── */
+    .emoji-card {
+      position: relative;
+      background: var(--surface-1);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 14px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      transition: border-color var(--dur), box-shadow var(--dur), background var(--dur);
+    }
+    .emoji-card:hover {
+      border-color: rgba(56,189,248,.32);
+      box-shadow: 0 0 14px rgba(56,189,248,.18);
+      background: var(--surface-2);
+    }
+
+    .emoji-img {
+      width: 64px; height: 64px;
+      object-fit: contain;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .emoji-meta {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .emoji-name {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+    .emoji-badges {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .badge-ext {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(56,189,248,.09);
+      border: 1px solid rgba(56,189,248,.2);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      line-height: 1.6;
+    }
+    .badge-id {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: rgba(255,255,255,.22);
+      letter-spacing: .3px;
+    }
+
+    /* ── Hover overlay ───────────────────────────────────────────────── */
+    .emoji-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5,12,20,.80);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur);
+      border-radius: var(--radius);
+    }
+    .emoji-card:hover .emoji-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .overlay-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(56,189,248,.3);
+      background: rgba(56,189,248,.12);
+      color: var(--accent);
+      cursor: pointer;
+      transition: background .15s, transform .15s var(--ease-snap);
+    }
+    .overlay-btn:hover {
+      background: rgba(56,189,248,.24);
+      transform: scale(1.1);
+    }
+    .overlay-btn svg { width: 16px; height: 16px; display: block; }
+
+    /* ── Empty state ─────────────────────────────────────────────────── */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 20px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: .85rem;
+    }
+
+    /* ── Toast ───────────────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(56,189,248,.13);
+      border: 1px solid rgba(56,189,248,.35);
+      backdrop-filter: blur(12px);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      padding: 9px 20px;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .2s, transform .2s var(--ease-snap);
+      z-index: 999;
+      white-space: nowrap;
+    }
+    #toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── "New" badge (Convex uploads) ─────────────────────────────────── */
+    .badge-new {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(52,211,153,.14);
+      border: 1px solid rgba(52,211,153,.35);
+      color: #34d399;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      line-height: 1.6;
+    }
+
+    /* ── Upload panel ──────────────────────────────────────────────────── */
+    .upload-panel {
+      background: var(--surface-1);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .upload-panel.open { display: block; }
+
+    .upload-panel h3 {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--text-secondary);
+    }
+
+    .pw-row {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .pw-row input {
+      flex: 1;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font: inherit; font-size: .88rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .pw-row input:focus { border-color: rgba(56,189,248,.4); }
+    .pw-row button, .upload-submit-btn {
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(56,189,248,.3);
+      background: rgba(56,189,248,.12);
+      color: var(--accent);
+      font: inherit; font-size: .85rem; font-weight: 500;
+      cursor: pointer;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .pw-row button:hover, .upload-submit-btn:hover {
+      background: rgba(56,189,248,.22);
+    }
+    .pw-row button:disabled, .upload-submit-btn:disabled {
+      opacity: .45; cursor: not-allowed;
+    }
+
+    .drop-zone {
+      border: 2px dashed rgba(56,189,248,.2);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .85rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      margin-bottom: 14px;
+    }
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(56,189,248,.06);
+    }
+
+    .upload-preview {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .upload-preview img {
+      width: 64px; height: 64px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.03);
+    }
+    .upload-fields {
+      flex: 1; display: flex; flex-direction: column; gap: 8px;
+    }
+    .upload-fields input, .upload-fields select {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font: inherit; font-size: .85rem;
+      color: var(--text-primary);
+      outline: none;
+    }
+    .upload-fields select { cursor: pointer; }
+    .upload-fields select option { background: #0c1a2e; }
+    .upload-fields input:focus, .upload-fields select:focus {
+      border-color: rgba(56,189,248,.4);
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────── */
+
+    /* ── Emoji of the Day ──────────────────────────────────────────── */
+    .eotd-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface-1);
+      border: 1px solid rgba(56,189,248,.15);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .eotd-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(56,189,248,.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .eotd-emoji {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      flex-shrink: 0;
+      position: relative;
+      filter: drop-shadow(0 0 8px rgba(56,189,248,.25));
+    }
+    .eotd-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      min-width: 0;
+    }
+    .eotd-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+    .eotd-name {
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .eotd-cta {
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+    .eotd-copy {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(56,189,248,.2);
+      background: rgba(56,189,248,.08);
+      color: var(--accent);
+      font: inherit;
+      font-size: .72rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .eotd-copy:hover {
+      background: rgba(56,189,248,.16);
+      border-color: rgba(56,189,248,.35);
+    }
+    .eotd-copy svg { width: 13px; height: 13px; display: block; flex-shrink: 0; }
+
+    /* ── Mobile ──────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px; }
+      .emoji-grid { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+      .header-logo h1 { font-size: 1rem; }
+      .header-subtitle { display: none; }
+      .eotd-cta { display: none; }
+    }
+
+    /* ── Reduced motion ──────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+  </style>
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/emojis-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Emoji Archive</h1>
+        <div class="header-subtitle">202 preserved specimens</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <nav class="header-actions">
+        <button data-keep-mobile class="nav-link" id="uploadToggle" style="color:var(--accent);border-color:rgba(56,189,248,.2);background:none;cursor:pointer;font:inherit">Upload</button>
+        <a class="nav-link" href="https://github.com/energon-a-secas/emojis-site/issues/new?template=new-emoji.yml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);border-color:rgba(56,189,248,.2)">Submit</a>
+    
+      </nav>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+
+    <!-- Upload panel -->
+    <div class="upload-panel" id="uploadPanel">
+      <h3>Upload Emoji</h3>
+      <!-- Password gate -->
+      <div id="pwGate">
+        <div class="pw-row">
+          <input type="password" id="pwInput" placeholder="Enter upload password" autocomplete="off">
+          <button id="pwSubmit">Unlock</button>
+        </div>
+      </div>
+      <!-- Upload zone (hidden until authenticated) -->
+      <div id="uploadZone" style="display:none">
+        <div class="drop-zone" id="dropZone">Drop an image here, or click to browse</div>
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
+        <div id="uploadPreview" style="display:none">
+          <div class="upload-preview">
+            <img id="previewImg" src="" alt="preview">
+            <div class="upload-fields">
+              <input type="text" id="emojiNameInput" placeholder="Emoji name">
+              <select id="emojiCatSelect">
+                <option value="uncategorized">uncategorized</option>
+                <option value="argentina">argentina</option>
+                <option value="chile">chile</option>
+                <option value="development">development</option>
+                <option value="essentials">essentials</option>
+                <option value="logos">logos</option>
+                <option value="parrots">parrots</option>
+                <option value="think">think</option>
+              </select>
+            </div>
+          </div>
+          <button class="upload-submit-btn" id="uploadSubmit">Upload Emoji</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emoji of the Day -->
+    <div class="eotd-banner" id="eotdBanner" style="display:none">
+      <img class="eotd-emoji" id="eotdImg" src="" alt="">
+      <div class="eotd-text">
+        <div class="eotd-label">Emoji of the Day</div>
+        <div class="eotd-name" id="eotdName"></div>
+        <div class="eotd-cta">Try to use it today!</div>
+      </div>
+      <button class="eotd-copy" id="eotdCopy" title="Copy emoji name">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="Search 202 specimens…" aria-label="Search emojis by name" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <div class="result-info" id="resultInfo"></div>
+    <div class="emoji-grid" id="emojiGrid"></div>
+
+  </main>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+    &nbsp;&middot;&nbsp; GitHub
+  </footer>
+
+  <div id="toast"></div>
+
+  <script type="module">
+    import { ConvexHttpClient } from "https://esm.sh/convex@1.21.0/browser";
+
+    // ── Convex client ──────────────────────────────────────────────────
+    // Replace with your Convex deployment URL after running `npx convex dev`
+    const CONVEX_URL = "https://dev:majestic-rooster-231.convex.cloud";
+    const convex = new ConvexHttpClient(CONVEX_URL);
+
+    // Function references (strings at runtime — no build step needed)
+    const api = {
+      emojis: { list: "emojis:list", getUploadUrl: "emojis:getUploadUrl", saveEmoji: "emojis:saveEmoji" },
+      auth:   { checkPassword: "auth:checkPassword" },
+    };
+
+    // ── Convex emoji cache ─────────────────────────────────────────────
+    let convexEmojis = [];
+
+    const EMOJIS = [
+      { name: "josha", category: "argentina", path: "emojis/argentina/josha.png", ext: "png", id: 1 },
+      { name: "pipeno", category: "argentina", path: "emojis/argentina/pipeno.png", ext: "png", id: 2 },
+      { name: "asitalcual", category: "chile", path: "emojis/chile/asitalcual.png", ext: "png", id: 3 },
+      { name: "carabinero", category: "chile", path: "emojis/chile/carabinero.png", ext: "png", id: 4 },
+      { name: "chaleco_amarillo", category: "chile", path: "emojis/chile/chaleco_amarillo.png", ext: "png", id: 5 },
+      { name: "colocolo", category: "chile", path: "emojis/chile/colocolo.png", ext: "png", id: 6 },
+      { name: "comolosupo", category: "chile", path: "emojis/chile/comolosupo.png", ext: "png", id: 7 },
+      { name: "flaitechileno", category: "chile", path: "emojis/chile/flaitechileno.png", ext: "png", id: 8 },
+      { name: "gigiculo", category: "chile", path: "emojis/chile/gigiculo.png", ext: "png", id: 9 },
+      { name: "jabra", category: "chile", path: "emojis/chile/jabra.png", ext: "png", id: 10 },
+      { name: "jadue", category: "chile", path: "emojis/chile/jadue.png", ext: "png", id: 11 },
+      { name: "mapuche", category: "chile", path: "emojis/chile/mapuche.png", ext: "png", id: 12 },
+      { name: "mentholatum", category: "chile", path: "emojis/chile/mentholatum.png", ext: "png", id: 13 },
+      { name: "mesatacataca", category: "chile", path: "emojis/chile/mesatacataca.png", ext: "png", id: 14 },
+      { name: "miraesawea", category: "chile", path: "emojis/chile/miraesawea.png", ext: "png", id: 15 },
+      { name: "nyanchile", category: "chile", path: "emojis/chile/nyanchile.gif", ext: "gif", id: 16 },
+      { name: "palta", category: "chile", path: "emojis/chile/palta.png", ext: "png", id: 17 },
+      { name: "pare", category: "chile", path: "emojis/chile/pare.png", ext: "png", id: 18 },
+      { name: "pedro_engel", category: "chile", path: "emojis/chile/pedro_engel.png", ext: "png", id: 19 },
+      { name: "plop", category: "chile", path: "emojis/chile/plop.png", ext: "png", id: 20 },
+      { name: "quepaso", category: "chile", path: "emojis/chile/quepaso.gif", ext: "gif", id: 21 },
+      { name: "segundo", category: "chile", path: "emojis/chile/segundo.png", ext: "png", id: 22 },
+      { name: "sospechosalacuestion", category: "chile", path: "emojis/chile/sospechosalacuestion.png", ext: "png", id: 23 },
+      { name: "tepillamos", category: "chile", path: "emojis/chile/tepillamos.png", ext: "png", id: 24 },
+      { name: "thinking_vidal", category: "chile", path: "emojis/chile/thinking_vidal.jpg", ext: "jpg", id: 25 },
+      { name: "tostada", category: "chile", path: "emojis/chile/tostada.png", ext: "png", id: 26 },
+      { name: "udechile", category: "chile", path: "emojis/chile/udechile.png", ext: "png", id: 27 },
+      { name: "zico", category: "chile", path: "emojis/chile/zico.png", ext: "png", id: 28 },
+      { name: "auth0", category: "development", path: "emojis/development/auth0.jpg", ext: "jpg", id: 29 },
+      { name: "aws", category: "development", path: "emojis/development/aws.png", ext: "png", id: 30 },
+      { name: "firebase", category: "development", path: "emojis/development/firebase.png", ext: "png", id: 31 },
+      { name: "github", category: "development", path: "emojis/development/github.png", ext: "png", id: 32 },
+      { name: "go", category: "development", path: "emojis/development/go.png", ext: "png", id: 33 },
+      { name: "goland", category: "development", path: "emojis/development/goland.png", ext: "png", id: 34 },
+      { name: "google_cloud", category: "development", path: "emojis/development/google_cloud.png", ext: "png", id: 35 },
+      { name: "gopher_dancing", category: "development", path: "emojis/development/gopher_dancing.gif", ext: "gif", id: 36 },
+      { name: "grafana", category: "development", path: "emojis/development/grafana.png", ext: "png", id: 37 },
+      { name: "humo", category: "development", path: "emojis/development/humo.gif", ext: "gif", id: 38 },
+      { name: "javascript", category: "development", path: "emojis/development/javascript.png", ext: "png", id: 39 },
+      { name: "jenkins_ci", category: "development", path: "emojis/development/jenkins_ci.png", ext: "png", id: 40 },
+      { name: "jenkins_devil", category: "development", path: "emojis/development/jenkins_devil.png", ext: "png", id: 41 },
+      { name: "jenkins_explode", category: "development", path: "emojis/development/jenkins_explode.gif", ext: "gif", id: 42 },
+      { name: "jenkins_party", category: "development", path: "emojis/development/jenkins_party.gif", ext: "gif", id: 43 },
+      { name: "jenkins_triggered", category: "development", path: "emojis/development/jenkins_triggered.gif", ext: "gif", id: 44 },
+      { name: "jira", category: "development", path: "emojis/development/jira.png", ext: "png", id: 45 },
+      { name: "k8s", category: "development", path: "emojis/development/k8s.png", ext: "png", id: 46 },
+      { name: "kc", category: "development", path: "emojis/development/kc.jpg", ext: "jpg", id: 47 },
+      { name: "merge", category: "development", path: "emojis/development/merge.png", ext: "png", id: 48 },
+      { name: "merged-d", category: "development", path: "emojis/development/merged-d.png", ext: "png", id: 49 },
+      { name: "merged-e", category: "development", path: "emojis/development/merged-e.png", ext: "png", id: 50 },
+      { name: "merged-e2", category: "development", path: "emojis/development/merged-e2.png", ext: "png", id: 51 },
+      { name: "merged-g", category: "development", path: "emojis/development/merged-g.png", ext: "png", id: 52 },
+      { name: "merged-m", category: "development", path: "emojis/development/merged-m.png", ext: "png", id: 53 },
+      { name: "merged-r", category: "development", path: "emojis/development/merged-r.png", ext: "png", id: 54 },
+      { name: "nodejs", category: "development", path: "emojis/development/nodejs.png", ext: "png", id: 55 },
+      { name: "owasp", category: "development", path: "emojis/development/owasp.png", ext: "png", id: 56 },
+      { name: "php-ceo", category: "development", path: "emojis/development/php-ceo.png", ext: "png", id: 57 },
+      { name: "prometheus", category: "development", path: "emojis/development/prometheus.png", ext: "png", id: 58 },
+      { name: "pubsub", category: "development", path: "emojis/development/pubsub.png", ext: "png", id: 59 },
+      { name: "pulumi", category: "development", path: "emojis/development/pulumi.png", ext: "png", id: 60 },
+      { name: "python", category: "development", path: "emojis/development/python.png", ext: "png", id: 61 },
+      { name: "rabbitmq", category: "development", path: "emojis/development/rabbitmq.png", ext: "png", id: 62 },
+      { name: "ruby", category: "development", path: "emojis/development/ruby.png", ext: "png", id: 63 },
+      { name: "scrum_mom", category: "development", path: "emojis/development/scrum_mom.png", ext: "png", id: 64 },
+      { name: "sketch", category: "development", path: "emojis/development/sketch.png", ext: "png", id: 65 },
+      { name: "splunk", category: "development", path: "emojis/development/splunk.png", ext: "png", id: 66 },
+      { name: "stackoverflow", category: "development", path: "emojis/development/stackoverflow.png", ext: "png", id: 67 },
+      { name: "sublime", category: "development", path: "emojis/development/sublime.png", ext: "png", id: 68 },
+      { name: "swift", category: "development", path: "emojis/development/swift.png", ext: "png", id: 69 },
+      { name: "terraform", category: "development", path: "emojis/development/terraform.png", ext: "png", id: 70 },
+      { name: "victorops", category: "development", path: "emojis/development/victorops.jpg", ext: "jpg", id: 71 },
+      { name: "webstorm", category: "development", path: "emojis/development/webstorm.png", ext: "png", id: 72 },
+      { name: "clap2", category: "essentials", path: "emojis/essentials/clap2.gif", ext: "gif", id: 73 },
+      { name: "f", category: "essentials", path: "emojis/essentials/f.png", ext: "png", id: 74 },
+      { name: "notfound", category: "essentials", path: "emojis/essentials/notfound.png", ext: "png", id: 75 },
+      { name: "fruna", category: "logos", path: "emojis/logos/fruna.png", ext: "png", id: 76 },
+      { name: "hangouts", category: "logos", path: "emojis/logos/hangouts.png", ext: "png", id: 77 },
+      { name: "hoz_y_martillo", category: "logos", path: "emojis/logos/hoz_y_martillo.png", ext: "png", id: 78 },
+      { name: "instagram", category: "logos", path: "emojis/logos/instagram.png", ext: "png", id: 79 },
+      { name: "internet-explorer", category: "logos", path: "emojis/logos/internet-explorer.png", ext: "png", id: 80 },
+      { name: "knasta", category: "logos", path: "emojis/logos/knasta.png", ext: "png", id: 81 },
+      { name: "linkedin", category: "logos", path: "emojis/logos/linkedin.png", ext: "png", id: 82 },
+      { name: "mach", category: "logos", path: "emojis/logos/mach.jpg", ext: "jpg", id: 83 },
+      { name: "mcafee", category: "logos", path: "emojis/logos/mcafee.png", ext: "png", id: 84 },
+      { name: "medium", category: "logos", path: "emojis/logos/medium.png", ext: "png", id: 85 },
+      { name: "meet", category: "logos", path: "emojis/logos/meet.png", ext: "png", id: 86 },
+      { name: "meetup", category: "logos", path: "emojis/logos/meetup.png", ext: "png", id: 87 },
+      { name: "microsoft", category: "logos", path: "emojis/logos/microsoft.jpg", ext: "jpg", id: 88 },
+      { name: "netflix_n", category: "logos", path: "emojis/logos/netflix_n.png", ext: "png", id: 89 },
+      { name: "nintendo_switch", category: "logos", path: "emojis/logos/nintendo_switch.png", ext: "png", id: 90 },
+      { name: "oreo", category: "logos", path: "emojis/logos/oreo.jpg", ext: "jpg", id: 91 },
+      { name: "starbucks", category: "logos", path: "emojis/logos/starbucks.png", ext: "png", id: 92 },
+      { name: "tinder", category: "logos", path: "emojis/logos/tinder.png", ext: "png", id: 93 },
+      { name: "tor_onion", category: "logos", path: "emojis/logos/tor_onion.png", ext: "png", id: 94 },
+      { name: "walmart", category: "logos", path: "emojis/logos/walmart.png", ext: "png", id: 95 },
+      { name: "winamp", category: "logos", path: "emojis/logos/winamp.png", ext: "png", id: 96 },
+      { name: "windows10", category: "logos", path: "emojis/logos/windows10.png", ext: "png", id: 97 },
+      { name: "yapo", category: "logos", path: "emojis/logos/yapo.png", ext: "png", id: 98 },
+      { name: "fixparrot", category: "parrots", path: "emojis/parrots/fixparrot.gif", ext: "gif", id: 99 },
+      { name: "flowerparrot", category: "parrots", path: "emojis/parrots/flowerparrot.gif", ext: "gif", id: 100 },
+      { name: "gandalf_parrot", category: "parrots", path: "emojis/parrots/gandalf_parrot.gif", ext: "gif", id: 101 },
+      { name: "gentlemanparrot", category: "parrots", path: "emojis/parrots/gentlemanparrot.gif", ext: "gif", id: 102 },
+      { name: "githubparrot", category: "parrots", path: "emojis/parrots/githubparrot.gif", ext: "gif", id: 103 },
+      { name: "gothparrot", category: "parrots", path: "emojis/parrots/gothparrot.gif", ext: "gif", id: 104 },
+      { name: "halalparrot", category: "parrots", path: "emojis/parrots/halalparrot.gif", ext: "gif", id: 105 },
+      { name: "hamburgerparrot", category: "parrots", path: "emojis/parrots/hamburgerparrot.gif", ext: "gif", id: 106 },
+      { name: "hardhatparrot", category: "parrots", path: "emojis/parrots/hardhatparrot.gif", ext: "gif", id: 107 },
+      { name: "harrypotterparrot", category: "parrots", path: "emojis/parrots/harrypotterparrot.gif", ext: "gif", id: 108 },
+      { name: "ice-cream-parrot", category: "parrots", path: "emojis/parrots/ice-cream-parrot.gif", ext: "gif", id: 109 },
+      { name: "icecreamparrot", category: "parrots", path: "emojis/parrots/icecreamparrot.gif", ext: "gif", id: 110 },
+      { name: "inverseparrot", category: "parrots", path: "emojis/parrots/inverseparrot.gif", ext: "gif", id: 111 },
+      { name: "jediparrot", category: "parrots", path: "emojis/parrots/jediparrot.gif", ext: "gif", id: 112 },
+      { name: "laptopparrot", category: "parrots", path: "emojis/parrots/laptopparrot.gif", ext: "gif", id: 113 },
+      { name: "luckyparrot", category: "parrots", path: "emojis/parrots/luckyparrot.gif", ext: "gif", id: 114 },
+      { name: "mardigrasparrot", category: "parrots", path: "emojis/parrots/mardigrasparrot.gif", ext: "gif", id: 115 },
+      { name: "margaritaparrot", category: "parrots", path: "emojis/parrots/margaritaparrot.gif", ext: "gif", id: 116 },
+      { name: "matrixparrot", category: "parrots", path: "emojis/parrots/matrixparrot.gif", ext: "gif", id: 117 },
+      { name: "meowparrot", category: "parrots", path: "emojis/parrots/meowparrot.gif", ext: "gif", id: 118 },
+      { name: "middle_parrot", category: "parrots", path: "emojis/parrots/middle_parrot.gif", ext: "gif", id: 119 },
+      { name: "moonwalkingparrot", category: "parrots", path: "emojis/parrots/moonwalkingparrot.gif", ext: "gif", id: 120 },
+      { name: "nicolas_cage_parrot", category: "parrots", path: "emojis/parrots/nicolas_cage_parrot.gif", ext: "gif", id: 121 },
+      { name: "norwegianblueparrot", category: "parrots", path: "emojis/parrots/norwegianblueparrot.gif", ext: "gif", id: 122 },
+      { name: "nyan_parrot", category: "parrots", path: "emojis/parrots/nyan_parrot.gif", ext: "gif", id: 123 },
+      { name: "oldparrot", category: "parrots", path: "emojis/parrots/oldparrot.gif", ext: "gif", id: 124 },
+      { name: "opensourceparrot", category: "parrots", path: "emojis/parrots/opensourceparrot.gif", ext: "gif", id: 125 },
+      { name: "originalparrot", category: "parrots", path: "emojis/parrots/originalparrot.gif", ext: "gif", id: 126 },
+      { name: "papalparrot", category: "parrots", path: "emojis/parrots/papalparrot.gif", ext: "gif", id: 127 },
+      { name: "parrot-cop", category: "parrots", path: "emojis/parrots/parrot-cop.gif", ext: "gif", id: 128 },
+      { name: "parrot", category: "parrots", path: "emojis/parrots/parrot.gif", ext: "gif", id: 129 },
+      { name: "parrot_sleep", category: "parrots", path: "emojis/parrots/parrot_sleep.gif", ext: "gif", id: 130 },
+      { name: "parrot_with_mustache", category: "parrots", path: "emojis/parrots/parrot_with_mustache.gif", ext: "gif", id: 131 },
+      { name: "parrotbeer", category: "parrots", path: "emojis/parrots/parrotbeer.gif", ext: "gif", id: 132 },
+      { name: "parrotdad", category: "parrots", path: "emojis/parrots/parrotdad.gif", ext: "gif", id: 133 },
+      { name: "parrotmustache", category: "parrots", path: "emojis/parrots/parrotmustache.gif", ext: "gif", id: 134 },
+      { name: "parrotnotfound", category: "parrots", path: "emojis/parrots/parrotnotfound.gif", ext: "gif", id: 135 },
+      { name: "parrotsleep", category: "parrots", path: "emojis/parrots/parrotsleep.gif", ext: "gif", id: 136 },
+      { name: "parrotwave1", category: "parrots", path: "emojis/parrots/parrotwave1.gif", ext: "gif", id: 137 },
+      { name: "parrotwave2", category: "parrots", path: "emojis/parrots/parrotwave2.gif", ext: "gif", id: 138 },
+      { name: "parrotwave3", category: "parrots", path: "emojis/parrots/parrotwave3.gif", ext: "gif", id: 139 },
+      { name: "parrotwave4", category: "parrots", path: "emojis/parrots/parrotwave4.gif", ext: "gif", id: 140 },
+      { name: "parrotwave5", category: "parrots", path: "emojis/parrots/parrotwave5.gif", ext: "gif", id: 141 },
+      { name: "parrotwave6", category: "parrots", path: "emojis/parrots/parrotwave6.gif", ext: "gif", id: 142 },
+      { name: "parrotwave7", category: "parrots", path: "emojis/parrots/parrotwave7.gif", ext: "gif", id: 143 },
+      { name: "partyparrot", category: "parrots", path: "emojis/parrots/partyparrot.gif", ext: "gif", id: 144 },
+      { name: "pauliparrot", category: "parrots", path: "emojis/parrots/pauliparrot.gif", ext: "gif", id: 145 },
+      { name: "pingpongparrot", category: "parrots", path: "emojis/parrots/pingpongparrot.gif", ext: "gif", id: 146 },
+      { name: "pirate-parrot", category: "parrots", path: "emojis/parrots/pirate-parrot.gif", ext: "gif", id: 147 },
+      { name: "pirateparrot", category: "parrots", path: "emojis/parrots/pirateparrot.gif", ext: "gif", id: 148 },
+      { name: "pizzaparrot", category: "parrots", path: "emojis/parrots/pizzaparrot.gif", ext: "gif", id: 149 },
+      { name: "popcornparrot", category: "parrots", path: "emojis/parrots/popcornparrot.gif", ext: "gif", id: 150 },
+      { name: "portalblueparrot", category: "parrots", path: "emojis/parrots/portalblueparrot.gif", ext: "gif", id: 151 },
+      { name: "portalorangeparrot", category: "parrots", path: "emojis/parrots/portalorangeparrot.gif", ext: "gif", id: 152 },
+      { name: "portalparrot", category: "parrots", path: "emojis/parrots/portalparrot.gif", ext: "gif", id: 153 },
+      { name: "prideparrot", category: "parrots", path: "emojis/parrots/prideparrot.gif", ext: "gif", id: 154 },
+      { name: "reversecongaparrot", category: "parrots", path: "emojis/parrots/reversecongaparrot.gif", ext: "gif", id: 155 },
+      { name: "reverseparrot", category: "parrots", path: "emojis/parrots/reverseparrot.gif", ext: "gif", id: 156 },
+      { name: "revolution-parrot", category: "parrots", path: "emojis/parrots/revolution-parrot.gif", ext: "gif", id: 157 },
+      { name: "rightparrot", category: "parrots", path: "emojis/parrots/rightparrot.gif", ext: "gif", id: 158 },
+      { name: "ripparrot", category: "parrots", path: "emojis/parrots/ripparrot.gif", ext: "gif", id: 159 },
+      { name: "rotatingparrot", category: "parrots", path: "emojis/parrots/rotatingparrot.gif", ext: "gif", id: 160 },
+      { name: "ryangoslingparrot", category: "parrots", path: "emojis/parrots/ryangoslingparrot.gif", ext: "gif", id: 161 },
+      { name: "sadparrot", category: "parrots", path: "emojis/parrots/sadparrot.gif", ext: "gif", id: 162 },
+      { name: "sassyparrot", category: "parrots", path: "emojis/parrots/sassyparrot.gif", ext: "gif", id: 163 },
+      { name: "scienceparrot", category: "parrots", path: "emojis/parrots/scienceparrot.gif", ext: "gif", id: 164 },
+      { name: "sherlockparrot", category: "parrots", path: "emojis/parrots/sherlockparrot.gif", ext: "gif", id: 165 },
+      { name: "shipitparrot", category: "parrots", path: "emojis/parrots/shipitparrot.gif", ext: "gif", id: 166 },
+      { name: "shortparrot", category: "parrots", path: "emojis/parrots/shortparrot.gif", ext: "gif", id: 167 },
+      { name: "shuffleparrot", category: "parrots", path: "emojis/parrots/shuffleparrot.gif", ext: "gif", id: 168 },
+      { name: "shufflepartyparrot", category: "parrots", path: "emojis/parrots/shufflepartyparrot.gif", ext: "gif", id: 169 },
+      { name: "skiparrot", category: "parrots", path: "emojis/parrots/skiparrot.gif", ext: "gif", id: 170 },
+      { name: "sleepingparrot", category: "parrots", path: "emojis/parrots/sleepingparrot.gif", ext: "gif", id: 171 },
+      { name: "slomoparrot", category: "parrots", path: "emojis/parrots/slomoparrot.gif", ext: "gif", id: 172 },
+      { name: "slothparrot", category: "parrots", path: "emojis/parrots/slothparrot.gif", ext: "gif", id: 173 },
+      { name: "slowparrot", category: "parrots", path: "emojis/parrots/slowparrot.gif", ext: "gif", id: 174 },
+      { name: "sovjetparrot", category: "parrots", path: "emojis/parrots/sovjetparrot.gif", ext: "gif", id: 175 },
+      { name: "spyparrot", category: "parrots", path: "emojis/parrots/spyparrot.gif", ext: "gif", id: 176 },
+      { name: "stableparrot", category: "parrots", path: "emojis/parrots/stableparrot.gif", ext: "gif", id: 177 },
+      { name: "stalkerparrot", category: "parrots", path: "emojis/parrots/stalkerparrot.gif", ext: "gif", id: 178 },
+      { name: "stub_parrot", category: "parrots", path: "emojis/parrots/stub_parrot.gif", ext: "gif", id: 179 },
+      { name: "tacoparrot", category: "parrots", path: "emojis/parrots/tacoparrot.gif", ext: "gif", id: 180 },
+      { name: "taiparrot", category: "parrots", path: "emojis/parrots/taiparrot.gif", ext: "gif", id: 181 },
+      { name: "tennisparrot", category: "parrots", path: "emojis/parrots/tennisparrot.gif", ext: "gif", id: 182 },
+      { name: "thumbs-up-parrot", category: "parrots", path: "emojis/parrots/thumbs-up-parrot.gif", ext: "gif", id: 183 },
+      { name: "tiedyeparrot", category: "parrots", path: "emojis/parrots/tiedyeparrot.gif", ext: "gif", id: 184 },
+      { name: "tripletsparrot", category: "parrots", path: "emojis/parrots/tripletsparrot.gif", ext: "gif", id: 185 },
+      { name: "twinsparrot", category: "parrots", path: "emojis/parrots/twinsparrot.gif", ext: "gif", id: 186 },
+      { name: "ultrafastparrot", category: "parrots", path: "emojis/parrots/ultrafastparrot.gif", ext: "gif", id: 187 },
+      { name: "upvotepartyparrot", category: "parrots", path: "emojis/parrots/upvotepartyparrot.gif", ext: "gif", id: 188 },
+      { name: "whitewalkerparrot", category: "parrots", path: "emojis/parrots/whitewalkerparrot.gif", ext: "gif", id: 189 },
+      { name: "witnessparrot", category: "parrots", path: "emojis/parrots/witnessparrot.gif", ext: "gif", id: 190 },
+      { name: "overthinking", category: "think", path: "emojis/think/overthinking.gif", ext: "gif", id: 191 },
+      { name: "think-uwu", category: "think", path: "emojis/think/think-uwu.png", ext: "png", id: 192 },
+      { name: "think_winnie", category: "think", path: "emojis/think/think_winnie.jpg", ext: "jpg", id: 193 },
+      { name: "thinking-despacito", category: "think", path: "emojis/think/thinking-despacito.jpg", ext: "jpg", id: 194 },
+      { name: "thinking", category: "think", path: "emojis/think/thinking.gif", ext: "gif", id: 195 },
+      { name: "thinkkkk", category: "think", path: "emojis/think/thinkkkk.gif", ext: "gif", id: 196 },
+      { name: "thinksalt", category: "think", path: "emojis/think/thinksalt.jpg", ext: "jpg", id: 197 },
+      { name: "thonk_cool", category: "think", path: "emojis/think/thonk_cool.png", ext: "png", id: 198 },
+      { name: "thonk_cute", category: "think", path: "emojis/think/thonk_cute.png", ext: "png", id: 199 },
+      { name: "thonk_her", category: "think", path: "emojis/think/thonk_her.png", ext: "png", id: 200 },
+      { name: "thonk_octu", category: "think", path: "emojis/think/thonk_octu.png", ext: "png", id: 201 },
+      { name: "thonking", category: "think", path: "emojis/think/thonking.png", ext: "png", id: 202 },
+    ];
+
+    /* ── Category setup ──────────────────────────────────────────────── */
+    const CATEGORIES = ['argentina','chile','development','essentials','logos','parrots','think','uncategorized'];
+    const COUNTS = {};
+    EMOJIS.forEach(e => { COUNTS[e.category] = (COUNTS[e.category] || 0) + 1; });
+
+    let activeCategory = 'all';
+
+    /* ── Build chips ─────────────────────────────────────────────────── */
+    const chipsEl = document.getElementById('chips');
+
+    function rebuildChips() {
+      chipsEl.innerHTML = '';
+      const all = getAllEmojis();
+      const counts = {};
+      all.forEach(e => { counts[e.category] = (counts[e.category] || 0) + 1; });
+      // Collect all categories (hardcoded + any new ones from Convex)
+      const cats = [...new Set([...CATEGORIES, ...convexEmojis.map(e => e.category)])];
+      chipsEl.appendChild(makeChip('all', 'All', all.length));
+      cats.forEach(cat => {
+        if (counts[cat]) chipsEl.appendChild(makeChip(cat, cat, counts[cat]));
+      });
+    }
+
+    function makeChip(value, label, count) {
+      const c = document.createElement('button');
+      c.className = 'chip' + (value === activeCategory ? ' active' : '');
+      c.dataset.value = value;
+      c.innerHTML = `${label}<span class="chip-count">${count}</span>`;
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        activeCategory = value;
+        filterGrid();
+      });
+      return c;
+    }
+
+    /* ── Merge hardcoded + Convex emojis ─────────────────────────────── */
+    function getAllEmojis() {
+      const mapped = convexEmojis.map((e, i) => ({
+        name: e.name,
+        category: e.category,
+        path: e.url,
+        ext: e.ext,
+        id: EMOJIS.length + i + 1,
+        isNew: true,
+      }));
+      return [...EMOJIS, ...mapped];
+    }
+
+    /* ── Filter & render ─────────────────────────────────────────────── */
+    const grid = document.getElementById('emojiGrid');
+    const searchInput = document.getElementById('searchInput');
+    const resultInfo = document.getElementById('resultInfo');
+
+    function filterGrid() {
+      const q = searchInput.value.toLowerCase().trim();
+      const all = getAllEmojis();
+      const filtered = all.filter(e => {
+        const catMatch = activeCategory === 'all' || e.category === activeCategory;
+        const nameMatch = !q || e.name.toLowerCase().includes(q);
+        return catMatch && nameMatch;
+      });
+      renderGrid(filtered);
+    }
+
+    function renderGrid(emojis) {
+      grid.innerHTML = '';
+      if (emojis.length === 0) {
+        const el = document.createElement('div');
+        el.className = 'empty-state';
+        el.textContent = '// no specimens match';
+        grid.appendChild(el);
+      } else {
+        const frag = document.createDocumentFragment();
+        emojis.forEach(e => frag.appendChild(makeCard(e)));
+        grid.appendChild(frag);
+      }
+      resultInfo.textContent = `${emojis.length} specimen${emojis.length !== 1 ? 's' : ''}`;
+    }
+
+    /* ── Card builder ────────────────────────────────────────────────── */
+    const COPY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+    const DL_SVG   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+
+    function makeCard(e) {
+      const card = document.createElement('div');
+      card.className = 'emoji-card';
+
+      const img = document.createElement('img');
+      img.className = 'emoji-img';
+      img.src = e.path;
+      img.alt = e.name;
+      img.loading = 'lazy';
+      if (e.isNew) img.crossOrigin = 'anonymous';
+
+      const meta = document.createElement('div');
+      meta.className = 'emoji-meta';
+      const newBadge = e.isNew ? '<span class="badge-new">new</span>' : '';
+      meta.innerHTML = `
+        <div class="emoji-name" title="${e.name}">${e.name}</div>
+        <div class="emoji-badges">
+          <span class="badge-ext">${e.ext}</span>
+          ${newBadge}
+          <span class="badge-id">#${String(e.id).padStart(4,'0')}</span>
+        </div>`;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'emoji-overlay';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'overlay-btn';
+      copyBtn.title = 'Copy';
+      copyBtn.setAttribute('aria-label', `Copy ${e.name}`);
+      copyBtn.innerHTML = COPY_SVG;
+      copyBtn.addEventListener('click', () => copyEmoji(e.path, e.ext, e.isNew));
+
+      const dlBtn = document.createElement('button');
+      dlBtn.className = 'overlay-btn';
+      dlBtn.title = 'Download';
+      dlBtn.setAttribute('aria-label', `Download ${e.name}`);
+      dlBtn.innerHTML = DL_SVG;
+      dlBtn.addEventListener('click', () => downloadEmoji(e.path, `${e.name}.${e.ext}`));
+
+      overlay.appendChild(copyBtn);
+      overlay.appendChild(dlBtn);
+      card.appendChild(img);
+      card.appendChild(meta);
+      card.appendChild(overlay);
+      return card;
+    }
+
+    /* ── Copy to clipboard ───────────────────────────────────────────── */
+    async function copyEmoji(path, ext, isCrossOrigin) {
+      if (ext === 'gif') {
+        showToast("GIFs can't be clipboard-copied. Use Download instead");
+        return;
+      }
+      try {
+        const img = await new Promise((resolve, reject) => {
+          const i = new Image();
+          if (isCrossOrigin) i.crossOrigin = 'anonymous';
+          i.onload = () => resolve(i);
+          i.onerror = reject;
+          i.src = path;
+        });
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast('Copied to clipboard');
+      } catch (err) {
+        showToast('Copy failed. Try Download instead');
+      }
+    }
+
+    /* ── Download ────────────────────────────────────────────────────── */
+    function downloadEmoji(path, filename) {
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = filename;
+      a.click();
+    }
+
+    /* ── Toast ───────────────────────────────────────────────────────── */
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('visible'), 2000);
+    }
+
+    /* ── Convex: load remote emojis ──────────────────────────────────── */
+    async function loadConvexEmojis() {
+      try {
+        const results = await convex.query(api.emojis.list);
+        convexEmojis = results;
+        rebuildChips();
+        filterGrid();
+        // Update subtitle count
+        const total = EMOJIS.length + convexEmojis.length;
+        document.querySelector('.header-subtitle').textContent = `${total} preserved specimens`;
+        document.getElementById('searchInput').placeholder = `Search ${total} specimens…`;
+      } catch (e) {
+        // Convex not configured yet — just use hardcoded emojis
+        console.warn('Convex not available:', e.message);
+      }
+    }
+
+    /* ── Upload panel toggle ─────────────────────────────────────────── */
+    const uploadToggle = document.getElementById('uploadToggle');
+    const uploadPanel = document.getElementById('uploadPanel');
+    uploadToggle.addEventListener('click', () => {
+      uploadPanel.classList.toggle('open');
+    });
+
+    /* ── Password gate ───────────────────────────────────────────────── */
+    const pwGate = document.getElementById('pwGate');
+    const pwInput = document.getElementById('pwInput');
+    const pwSubmit = document.getElementById('pwSubmit');
+    const uploadZone = document.getElementById('uploadZone');
+
+    // Check sessionStorage for existing auth
+    if (sessionStorage.getItem('emoji-upload-auth') === 'true') {
+      pwGate.style.display = 'none';
+      uploadZone.style.display = 'block';
+    }
+
+    pwSubmit.addEventListener('click', async () => {
+      const pw = pwInput.value.trim();
+      if (!pw) return;
+      pwSubmit.disabled = true;
+      pwSubmit.textContent = 'Checking…';
+      try {
+        const ok = await convex.action(api.auth.checkPassword, { password: pw });
+        if (ok) {
+          sessionStorage.setItem('emoji-upload-auth', 'true');
+          pwGate.style.display = 'none';
+          uploadZone.style.display = 'block';
+          showToast('Unlocked');
+        } else {
+          showToast('Wrong password');
+        }
+      } catch (e) {
+        showToast('Auth error. Check Convex config');
+      }
+      pwSubmit.disabled = false;
+      pwSubmit.textContent = 'Unlock';
+    });
+
+    pwInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') pwSubmit.click();
+    });
+
+    /* ── Drag-and-drop / file picker ─────────────────────────────────── */
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const uploadPreview = document.getElementById('uploadPreview');
+    const previewImg = document.getElementById('previewImg');
+    const emojiNameInput = document.getElementById('emojiNameInput');
+    const emojiCatSelect = document.getElementById('emojiCatSelect');
+    const uploadSubmit = document.getElementById('uploadSubmit');
+
+    let selectedFile = null;
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) handleFileSelect(file);
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files[0]) handleFileSelect(fileInput.files[0]);
+    });
+
+    function handleFileSelect(file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Only image files allowed');
+        return;
+      }
+      selectedFile = file;
+      previewImg.src = URL.createObjectURL(file);
+      // Auto-fill name from filename (strip extension)
+      const baseName = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+      emojiNameInput.value = baseName;
+      uploadPreview.style.display = 'block';
+      dropZone.textContent = file.name;
+    }
+
+    /* ── Upload submit ───────────────────────────────────────────────── */
+    uploadSubmit.addEventListener('click', async () => {
+      if (!selectedFile) { showToast('No file selected'); return; }
+      const name = emojiNameInput.value.trim();
+      if (!name) { showToast('Name is required'); return; }
+
+      uploadSubmit.disabled = true;
+      uploadSubmit.textContent = 'Uploading…';
+
+      try {
+        // 1. Get upload URL from Convex
+        const uploadUrl = await convex.mutation(api.emojis.getUploadUrl);
+
+        // 2. Upload file to Convex storage
+        const res = await fetch(uploadUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': selectedFile.type },
+          body: selectedFile,
+        });
+        const { storageId } = await res.json();
+
+        // 3. Save emoji metadata
+        const ext = selectedFile.name.split('.').pop().toLowerCase();
+        await convex.mutation(api.emojis.saveEmoji, {
+          name,
+          category: emojiCatSelect.value,
+          ext,
+          storageId,
+        });
+
+        showToast('Emoji uploaded!');
+
+        // Reset form
+        selectedFile = null;
+        uploadPreview.style.display = 'none';
+        dropZone.textContent = 'Drop an image here, or click to browse';
+        emojiNameInput.value = '';
+        fileInput.value = '';
+
+        // Refresh gallery
+        await loadConvexEmojis();
+      } catch (e) {
+        showToast('Upload failed. ' + e.message);
+      }
+
+      uploadSubmit.disabled = false;
+      uploadSubmit.textContent = 'Upload Emoji';
+    });
+
+    /* ── Emoji of the Day ────────────────────────────────────────────── */
+    (function initEotd() {
+      if (EMOJIS.length === 0) return;
+      const d = new Date();
+      const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+      const idx = ((seed * 2654435761) >>> 0) % EMOJIS.length;
+      const emoji = EMOJIS[idx];
+      const banner = document.getElementById('eotdBanner');
+      document.getElementById('eotdImg').src = emoji.path;
+      document.getElementById('eotdImg').alt = emoji.name;
+      document.getElementById('eotdName').textContent = `:${emoji.name}:`;
+      banner.style.display = 'flex';
+      document.getElementById('eotdCopy').addEventListener('click', () => {
+        navigator.clipboard.writeText(`:${emoji.name}:`).then(() => showToast('Copied :' + emoji.name + ':'));
+      });
+    })();
+
+    /* ── Search listener & init ──────────────────────────────────────── */
+    searchInput.addEventListener('input', filterGrid);
+    rebuildChips();
+    filterGrid();
+    loadConvexEmojis();
+  </script>
+</body>
+</html>

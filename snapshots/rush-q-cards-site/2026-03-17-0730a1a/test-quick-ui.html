@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Quick Mode UI</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #1a1a2e; color: white; }
+    .test-section { margin: 20px 0; padding: 20px; background: #16213e; border-radius: 8px; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; }
+    code { background: #0f3460; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>🎯 Quick Mode UI Test</h1>
+
+  <div class="test-section">
+    <h2>✅ Mulligan Prevention Test</h2>
+    <p>Test that mulligan cannot be used after actions:</p>
+    <ul>
+      <li>Open Quick Mode and start a game</li>
+      <li>Verify "🔄 Mulligan" button is visible in Q1 before any actions</li>
+      <li>Draw a card or take any action</li>
+      <li>Verify Mulligan button disappears</li>
+    </ul>
+
+    <script type="module">
+      // Mock state for testing
+      const mockState = {
+        quarter: 1,
+        players: [{ _mulliganUsed: false, hasPassed: false }],
+        turnIndex: 0,
+        playerHasActed: false
+      };
+
+      // Test condition
+      const canMulligan = (s) => {
+        const human = s.players[0];
+        return s.quarter === 1 && !human._mulliganUsed && !human.hasPassed && s.turnIndex === 0 && !s.playerHasActed;
+      };
+
+      console.log('Before action:', canMulligan(mockState)); // Should be true
+      mockState.playerHasActed = true;
+      console.log('After action:', canMulligan(mockState)); // Should be false
+
+      document.write(`<p class="${canMulligan({...mockState, playerHasActed: false}) ? 'pass' : 'fail'}">✓ Can mulligan before actions</p>`);
+      document.write(`<p class="${canMulligan(mockState) ? 'fail' : 'pass'}">✓ Cannot mulligan after actions</p>`);
+    </script>
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Card Size Test</h2>
+    <p>Test card size toggle:</p>
+    <ul>
+      <li>Small (S): 130px wide</li>
+      <li>Medium (M): 200px wide</li>
+      <li>Large (L): 280px wide</li>
+    </ul>
+    <p>The view buttons should change card sizes in hand.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Board Layout Test</h2>
+    <p>Quick mode should use CSS Grid with:</p>
+    <ul>
+      <li>Main area (projects/people): flexible width</li>
+      <li>Player board: 320px (360px on large screens)</li>
+      <li>Better space utilization compared to old 280px fixed width</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📋 Test Steps</h2>
+    <ol>
+      <li>Start the HTTP server: <code>make serve</code></li>
+      <li>Navigate to <a href="http://localhost:8780/quick/">http://localhost:8780/quick/</a></li>
+      <li>Start a new game</li>
+      <li>Verify mulligan button appears</li>
+      <li>Draw a card → mulligan should disappear</li>
+      <li>Test S/M/L buttons change card sizes</li>
+    </ol>
+  </div>
+</body>
+</html>

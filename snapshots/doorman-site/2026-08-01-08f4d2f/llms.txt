@@ -1,0 +1,11 @@
+# Doorman
+
+> Build-vs-buy scoper — estimate the real cost to duplicate a vendor deliverable and price the invisible value a naive estimate skips
+
+- Live: https://doorman.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

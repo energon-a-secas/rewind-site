@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rewind | Site Design History</title>
+  <meta name="description" content="Browse the design history of every Neorgon site as replayable snapshots captured from git history and live pages">
+  <meta property="og:title" content="Rewind: Site Design History">
+  <meta property="og:description" content="Every past design, still clickable">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rewind.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rewind: Site Design History">
+  <meta name="twitter:description" content="Every past design, still clickable">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rewind.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/rewind-site">
+  <meta name="neo-updated" content="2026-08-11">
+  <meta property="og:image" content="https://rewind.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://rewind.neorgon.com/og-preview.jpg">
+  <link rel="icon" type="image/x-icon" href="https://cdn.neorgon.org/v1.0.0/favicon.ico" />
+  <!-- Fleet design tokens — canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css — the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rewind",
+    "description": "Browse the design history of every Neorgon site as replayable snapshots captured from git history and live pages",
+    "url": "https://rewind.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="Logo">
+      </a>
+      <a href="./" class="header-title-link">
+        <h1>Rewind</h1>
+        <div class="header-subtitle">Design history of the Neorgon fleet</div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <div class="header-actions">
+        <button type="button" class="btn btn--ghost btn--sm" id="captureBtn" data-keep-mobile>Capture</button>
+        <button type="button" class="btn btn--ghost btn--sm" id="helpBtn">How it works</button>
+      </div>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="rw-shell">
+      <aside class="rw-rail" id="railEl" aria-label="Archived sites"></aside>
+      <section class="rw-content" id="contentEl"></section>
+    </div>
+  </main>
+
+  <!-- Capture modal: in-browser live capture + import of exported captures -->
+  <div class="modal" id="captureModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="captureModalTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="captureModalTitle">Capture a live page</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body">
+        <label class="rw-label" for="captureUrl">Domain or URL</label>
+        <div class="rw-capture-row">
+          <input type="text" class="rw-input" id="captureUrl" list="captureDomains"
+                 placeholder="neorgon.com" autocomplete="off" spellcheck="false">
+          <datalist id="captureDomains"></datalist>
+          <button type="button" class="btn btn--primary" id="captureRun">Capture</button>
+        </div>
+        <p class="rw-hint" id="captureStatus" role="status" aria-live="polite"></p>
+        <p class="rw-hint">Stylesheets, images, and classic scripts are inlined into one file that
+          stays in this browser. Sites must allow cross-origin reads (GitHub Pages does, so the
+          whole fleet works). ES-module scripts stay tethered to the live site; for exact working
+          trees use the CLI: <code>python3 tools/capture.py live &lt;url&gt;</code></p>
+        <hr class="rw-sep">
+        <label class="rw-label" for="importInput">Import an exported capture (.html)</label>
+        <input type="file" id="importInput" class="rw-file" accept=".html,text/html">
+      </div>
+    </div>
+  </div>
+
+  <!-- Help modal: what the badges mean + the CLI cheatsheet -->
+  <div class="modal" id="helpModal" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="helpModalTitle">How Rewind works</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body">
+        <p class="rw-hint">Every snapshot is a real page, not just a picture. Pick a site, scrub
+          the filmstrip, and the old design loads in the stage, fully clickable.</p>
+        <ul class="rw-help-list">
+          <li><span class="rw-badge rw-badge--git">a1b2c3d</span> extracted from that commit of the project's git history</li>
+          <li><span class="rw-badge rw-badge--live">live</span> mirrored from the live domain by the CLI</li>
+          <li><span class="rw-badge rw-badge--browser">browser</span> captured right here, stored only in this browser</li>
+        </ul>
+        <p class="rw-hint">The archive is built by the CLI and committed to the repo:</p>
+        <pre class="rw-code">python3 tools/capture.py git neorgon-site --shots   # backfill from git history
+python3 tools/capture.py live neorgon.com --shots   # mirror the live page
+python3 tools/capture.py shot --missing             # screenshot anything new
+python3 tools/capture.py gif &lt;snapshot-id&gt;          # animated demo, plays on hover
+python3 tools/capture.py adopt saved.html --site x  # promote a browser capture
+python3 tools/capture.py list                       # what is in the archive</pre>
+        <p class="rw-hint">Keyboard: <kbd class="rw-kbd">←</kbd><kbd class="rw-kbd">→</kbd> step
+          through time · <kbd class="rw-kbd">C</kbd> compare two snapshots side by side</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    Snapshots are static copies committed to this repo. Browser captures never leave your browser until you export them.
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

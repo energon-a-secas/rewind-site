@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://esm.sh cdn.jsdelivr.net cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.convex.cloud https://img.clerk.com https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev https://i.ytimg.com https://yt3.ggpht.com https://www.google-analytics.com; connect-src 'self' https://*.convex.cloud https://*.clerk.accounts.dev https://*.accounts.dev https://clerk-telemetry.com https://api.clerk.com https://challenges.cloudflare.com https://*.workers.dev https://www.google-analytics.com https://www.googletagmanager.com https://plausible.io; frame-src 'self' https://challenges.cloudflare.com https://*.clerk.accounts.dev https://*.accounts.dev https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Agent Lore | AI Agent Tutorials for Claude Code, Cursor & Local AI</title>
+  <meta name="description" content="Free AI agent tutorials for Claude Code, Cursor, and local AI. Learn skills, slash commands, MCP servers, CLAUDE.md, Mermaid diagrams, Ollama, LM Studio, and cost-saving workflows">
+  <meta property="og:title" content="Agent Lore: AI Agent Tutorials">
+  <meta property="og:description" content="Quick reference cards for AI agent skills, commands, local AI, and workflows in Claude Code and Cursor">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentlore.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://agentlore.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Agent Lore — AI agent tutorials for Claude Code, Cursor, and local AI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent Lore: AI Agent Tutorials">
+  <meta name="twitter:description" content="Quick reference cards for AI agent skills, commands, local AI, and workflows in Claude Code and Cursor">
+  <meta name="twitter:image" content="https://agentlore.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://agentlore.neorgon.com/">
+  <link rel="alternate" hreflang="x-default" href="https://agentlore.neorgon.com/">
+  <meta name="theme-color" content="#040714">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="modulepreload" href="js/data.js">
+  <link rel="modulepreload" href="js/render.js">
+  <link rel="modulepreload" href="js/events.js">
+  <link rel="modulepreload" href="js/utils.js">
+  <link rel="modulepreload" href="js/state.js">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Agent Lore",
+    "description": "Browse tutorials for AI agent skills, commands, MCPs, diagrams, and local AI for Claude Code and Cursor",
+    "url": "https://agentlore.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer" aria-label="Neorgon home (opens in new tab)">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon" width="36" height="36">
+      </a>
+      <a href="./" class="header-title-link">
+        <h1>Agent Lore</h1>
+        <div class="header-subtitle">AI agent tutorials for Claude, Cursor & local AI</div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a class="nav-tab active" href="./">Browse</a>
+      <a class="nav-tab" href="path/">Learning Path</a>
+    </nav>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <p class="motto"><strong>Stop treating AI like a chatbot.</strong> Practical, copy-paste-ready tutorials that turn Claude Code, Cursor, and local AI into reliable coding partners.</p>
+
+      <div id="browse-view">
+        <div class="search-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input id="search-input" class="search-input" type="text" placeholder="Search tutorials by title, keyword..." aria-label="Search tutorials">
+          </div>
+          <button id="clear-search" class="clear-btn" aria-label="Clear search" type="button">Clear</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="dropdown" id="dd-category">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false" type="button">
+              <span class="dropdown-label">Category</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" id="dd-category-menu"></ul>
+          </div>
+
+          <div class="dropdown" id="dd-tool">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false" type="button">
+              <span class="dropdown-label">Tool</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" id="dd-tool-menu"></ul>
+          </div>
+
+          <span id="result-count" class="result-count" aria-live="polite"></span>
+        </div>
+
+        <noscript>
+          Agent Lore needs JavaScript to render the tutorial cards. You can still view the source tutorials in js/data.js.
+        </noscript>
+
+        <div id="tutorials-content"></div>
+
+        <div id="empty-state" class="empty-state" hidden>
+          <p>No tutorials match your filters.</p>
+          <button id="reset-filters" class="btn-secondary" type="button">Reset filters</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="tutorial-modal" class="modal-overlay">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <div class="modal-badges" id="modal-badges"></div>
+        <div class="modal-actions">
+          <button class="modal-share-btn" id="modal-share" title="Copy link" aria-label="Copy link to this tutorial" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            Share
+          </button>
+          <button class="modal-close-btn" id="modal-close" title="Close (Esc)" aria-label="Close tutorial" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="info-footer">
+    Part of <a class="footer-link" href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">Neorgon</a>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

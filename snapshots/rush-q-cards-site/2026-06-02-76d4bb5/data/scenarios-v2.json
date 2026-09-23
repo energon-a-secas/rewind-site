@@ -1,0 +1,1616 @@
+[
+  {
+    "id": "scope-creep-v2",
+    "version": 2,
+    "title": "The Scope Creep Crisis",
+    "role": "eng-manager",
+    "difficulty": "medium",
+    "category": "Stakeholder Management",
+    "profile": "cautious",
+    "counterProfile": "hero",
+    "setup": "Your Data Migration project is 75% complete when the PM adds three new requirements. The deadline is fixed. You can: push back (risk stakeholder friction), absorb it with extra resources (cost), or accept the delay (guaranteed penalty).",
+    "question": "How do you handle the scope creep while protecting your team?",
+    "initialState": {
+      "reputation": 26,
+      "teamMorale": 18,
+      "stakeholderTrust": 22,
+      "techDebt": 12
+    },
+    "hand": [
+      "Scope Negotiation",
+      "Pair Programming",
+      "Tech Lead",
+      "Contractor",
+      "Brainstorming"
+    ],
+    "profileHands": {
+      "hero": [
+        "Heroic Programming",
+        "All-nighter",
+        "Tech Lead",
+        "Ship It and Forget It",
+        "Debug Session"
+      ],
+      "delegator": [
+        "Pair Programming",
+        "Code Review",
+        "Knowledge Transfer",
+        "Contractor",
+        "Team Meeting"
+      ],
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Architecture Review",
+        "MVP Strategy"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "negotiate-scope",
+        "cards": [
+          "Scope Negotiation"
+        ],
+        "reasoning": "Push back diplomatically with data showing impact",
+        "effects": {
+          "reputation": [
+            -2,
+            0
+          ],
+          "teamMorale": [
+            0,
+            3
+          ],
+          "stakeholderTrust": [
+            -1,
+            2
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "Scope negotiation protects your team from churn. Short-term stakeholder friction is worth long-term delivery reliability. This is the sustainable choice.",
+        "tradeoffs": "Stakeholders may be disappointed initially, but they'll respect your discipline when you deliver on time.",
+        "profileNote": "This cautious approach prevents technical debt and protects team health."
+      },
+      {
+        "id": "absorb-with-talent",
+        "cards": [
+          "Tech Lead",
+          "Pair Programming"
+        ],
+        "reasoning": "Add senior talent to absorb the extra scope",
+        "effects": {
+          "reputation": [
+            -2,
+            2
+          ],
+          "teamMorale": [
+            -3,
+            2
+          ],
+          "stakeholderTrust": [
+            3,
+            -1
+          ],
+          "techDebt": [
+            2,
+            0
+          ]
+        },
+        "feedback": "Throwing people at scope creep is expensive. Works short-term but creates technical debt and risks burnout. The Tech Lead helps but can't prevent all churn.",
+        "tradeoffs": "You meet the deadline but your team pays the price. Watch for turnover next quarter.",
+        "profileNote": "Delegators often over-staff to absorb pressure. Consider if scope is truly valuable."
+      },
+      {
+        "id": "hero-mode",
+        "cards": [
+          "Heroic Programming"
+        ],
+        "reasoning": "You personally take on the extra scope",
+        "effects": {
+          "reputation": [
+            3,
+            -5
+          ],
+          "teamMorale": [
+            -4,
+            -3
+          ],
+          "stakeholderTrust": [
+            4,
+            -2
+          ],
+          "techDebt": [
+            3,
+            2
+          ]
+        },
+        "feedback": "Hero mode delivers short-term but creates learned helplessness. Your team doesn't grow when you do all the hard work. You're also taking on massive technical debt alone.",
+        "tradeoffs": "Stakeholders love the save, but your team resents being sidelined. Combined with burnout risk.",
+        "profileNote": "Classic hero profile. Delivers at massive personal and team cost."
+      },
+      {
+        "id": "contract-solution",
+        "cards": [
+          "Contractor"
+        ],
+        "reasoning": "Bring in external help to handle overflow",
+        "effects": {
+          "reputation": [
+            -1,
+            1
+          ],
+          "teamMorale": [
+            1,
+            -2
+          ],
+          "stakeholderTrust": [
+            1,
+            0
+          ],
+          "techDebt": [
+            1,
+            0
+          ]
+        },
+        "feedback": "Contractors provide flexible capacity but require onboarding and create knowledge silos. A reasonable middle ground that buys time.",
+        "tradeoffs": "Extra cost but spreads workload. Watch for contractor dependencies and documentation gaps.",
+        "profileNote": "Delegated solution. Works if contractors are plug-and-play."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 60,
+      "good": 40,
+      "fair": 20
+    }
+  },
+  {
+    "id": "hero-crisis-v2",
+    "version": 2,
+    "title": "The Hero Burnout",
+    "role": "eng-manager",
+    "difficulty": "hard",
+    "category": "Team Health",
+    "profile": "delegator",
+    "counterProfile": "hero",
+    "setup": "Your Tech Lead is in hero mode - working nights, taking on everything solo, and burning out fast. They're delivering but the team is checking out. You have 2 quarters to fix this before they quit and take critical knowledge with them.",
+    "question": "How do you de-escalate the hero and rebuild the team?",
+    "initialState": {
+      "reputation": 24,
+      "teamMorale": 12,
+      "stakeholderTrust": 28,
+      "techDebt": 14
+    },
+    "hand": [
+      "Knowledge Transfer",
+      "Pair Programming",
+      "Code Review",
+      "Documentation",
+      "Cross-Training"
+    ],
+    "profileHands": {
+      "delegator": [
+        "Knowledge Transfer",
+        "Pair Programming",
+        "Code Review",
+        "Contractor",
+        "Team Meeting"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "force-distribution",
+        "cards": [
+          "Knowledge Transfer",
+          "Pair Programming"
+        ],
+        "reasoning": "Force knowledge sharing and pair the hero with others",
+        "effects": {
+          "reputation": [
+            -1,
+            4
+          ],
+          "teamMorale": [
+            -2,
+            5
+          ],
+          "stakeholderTrust": [
+            0,
+            2
+          ],
+          "techDebt": [
+            0,
+            -3
+          ]
+        },
+        "feedback": "Perfect counter to hero mode! Knowledge transfer breaks the silo, pair programming forces collaboration. Short-term slowdown for long-term team health. Your hero might resist but it's leadership's job to protect them from themselves.",
+        "tradeoffs": "Hero won't like this. Be ready for tough conversations about sustainable pace.",
+        "profileNote": "Delegator counters hero by forcing distribution. This is the play."
+      },
+      {
+        "id": "document-everything",
+        "cards": [
+          "Documentation",
+          "Code Review"
+        ],
+        "reasoning": "Capture knowledge before it's lost",
+        "effects": {
+          "reputation": [
+            0,
+            2
+          ],
+          "teamMorale": [
+            0,
+            3
+          ],
+          "stakeholderTrust": [
+            1,
+            1
+          ],
+          "techDebt": [
+            -1,
+            -2
+          ]
+        },
+        "feedback": "Documentation provides insurance but doesn't solve the root problem. Code review spreads knowledge slowly. Better than nothing but slower than forced pairing.",
+        "tradeoffs": "Safer politically but less immediate impact on hero behavior.",
+        "profileNote": "Cautious approach. Works but takes longer."
+      },
+      {
+        "id": "do-nothing",
+        "cards": [],
+        "reasoning": "Let the hero continue - they're delivering",
+        "effects": {
+          "reputation": [
+            1,
+            -8
+          ],
+          "teamMorale": [
+            -3,
+            -6
+          ],
+          "stakeholderTrust": [
+            1,
+            -3
+          ],
+          "techDebt": [
+            2,
+            4
+          ]
+        },
+        "feedback": "Disaster in waiting. You're getting short-term delivery but team morale is collapsing and tech debt is compounding. When (not if) your hero quits, you'll have a catastrophe.",
+        "tradeoffs": "Stakeholders happy now, catastrophic failure looming.",
+        "profileNote": "Playing into hero mode. Worst long-term outcome."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "innovation-bet-v2",
+    "version": 2,
+    "title": "The Platform Strategy Bet",
+    "role": "vp-cto",
+    "difficulty": "hard",
+    "category": "Strategic Decisions",
+    "profile": "innovator",
+    "counterProfile": "cautious",
+    "setup": "Your CEO wants to turn internal tooling into a platform product. Could be $50M revenue line, but requires 12 engineers for 4 quarters and diverts from core product. Market is uncertain, competitors are entrenched. You need board approval.",
+    "question": "Do you bet the company on platform strategy?",
+    "initialState": {
+      "reputation": 35,
+      "teamMorale": 22,
+      "stakeholderTrust": 28,
+      "techDebt": 14
+    },
+    "hand": [
+      "Market Analysis",
+      "MVP Strategy",
+      "Build vs Buy",
+      "Partnership",
+      "Resource Reallocation"
+    ],
+    "profileHands": {
+      "innovator": [
+        "Platform Strategy",
+        "Tech Debt Paydown",
+        "Tiger Team",
+        "Architecture Review",
+        "Innovation Lab"
+      ],
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Architecture Review",
+        "MVP Strategy"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "mvp-validation",
+        "cards": [
+          "MVP Strategy",
+          "Market Analysis"
+        ],
+        "reasoning": "Validate demand before full commitment",
+        "effects": {
+          "reputation": [
+            0,
+            4
+          ],
+          "teamMorale": [
+            1,
+            1
+          ],
+          "stakeholderTrust": [
+            1,
+            3
+          ],
+          "techDebt": [
+            -2,
+            -2
+          ]
+        },
+        "feedback": "Perfect innovation profile play! Validate before committing. Market analysis de-risks the bet. MVP proves demand with minimal investment. You keep optionality while exploring upside.",
+        "tradeoffs": "Slower path to revenue but much higher probability of success. Board might push for bigger bet.",
+        "profileNote": "Innovator profile: high conviction but disciplined validation."
+      },
+      {
+        "id": "all-in-bet",
+        "cards": [
+          "Resource Reallocation"
+        ],
+        "reasoning": "Full commitment - go big or go home",
+        "effects": {
+          "reputation": [
+            -2,
+            8
+          ],
+          "teamMorale": [
+            -4,
+            -2
+          ],
+          "stakeholderTrust": [
+            -1,
+            5
+          ],
+          "techDebt": [
+            3,
+            5
+          ]
+        },
+        "feedback": "High-risk, high-reward. If platform succeeds, you're a hero. If it fails (70% chance for new platforms), you've derailed core product and burned team morale. Classic hero profile - personal bet on big outcome.",
+        "tradeoffs": "Career-defining decision. Make sure you have board/air cover if it fails.",
+        "profileNote": "Hero move. Huge upside but massive risk concentration."
+      },
+      {
+        "id": "risk-mitigation",
+        "cards": [
+          "Build vs Buy",
+          "Partnership"
+        ],
+        "reasoning": "De-risk through partnership or acquisition",
+        "effects": {
+          "reputation": [
+            1,
+            2
+          ],
+          "teamMorale": [
+            0,
+            0
+          ],
+          "stakeholderTrust": [
+            2,
+            1
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "Smart risk mitigation. Partnership shares investment and validates demand. Acquisition shortcuts build vs buy. More expensive but faster and lower risk than organic build.",
+        "tradeoffs": "Lower margin but higher probability. Good delegation strategy.",
+        "profileNote": "Politician profile: navigator, finds low-risk paths."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "cicd-crisis-v2",
+    "version": 2,
+    "title": "The CI/CD Pipeline Crisis",
+    "role": "tech-lead",
+    "difficulty": "medium",
+    "category": "Technical Operations",
+    "profile": "cautious",
+    "counterProfile": "hero",
+    "setup": "Your team's CI/CD pipeline is failing 40% of deployments. Developers are burning hours debugging environment issues. Leadership wants you to fix it while maintaining feature velocity. The longer you wait, the more tech debt compounds.",
+    "question": "How do you tackle the pipeline crisis without halting development?",
+    "initialState": {
+      "reputation": 22,
+      "teamMorale": 20,
+      "stakeholderTrust": 24,
+      "techDebt": 16
+    },
+    "hand": [
+      "CI/CD Improvements",
+      "Automated Testing",
+      "Testing",
+      "Documentation",
+      "CI/CD Migration"
+    ],
+    "profileHands": {
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Architecture Review",
+        "CI/CD Improvements"
+      ],
+      "hero": [
+        "Heroic Programming",
+        "All-nighter",
+        "Debug Session",
+        "Ship It and Forget It",
+        "Hotfix"
+      ],
+      "innovator": [
+        "Platform Strategy",
+        "CI/CD Migration",
+        "Automated Testing",
+        "Architecture Review",
+        "Innovation Lab"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "incremental-fixes",
+        "cards": [
+          "CI/CD Improvements",
+          "Automated Testing"
+        ],
+        "reasoning": "Incremental improvements while keeping pipeline running",
+        "effects": {
+          "reputation": [
+            -1,
+            3
+          ],
+          "teamMorale": [
+            -1,
+            4
+          ],
+          "stakeholderTrust": [
+            0,
+            3
+          ],
+          "techDebt": [
+            -2,
+            -2
+          ]
+        },
+        "feedback": "Prudent approach. You fix the worst issues first while keeping features flowing. Teams see immediate relief on common pain points. Takes discipline to not just rewrite everything.",
+        "tradeoffs": "Slower total fix but zero downtime. Stakeholders see progress every week.",
+        "profileNote": "Cautious profile: minimize risk, incremental gains compound."
+      },
+      {
+        "id": "hero-debug",
+        "cards": [
+          "Heroic Programming",
+          "Debug Session"
+        ],
+        "reasoning": "You personally dive in and fix everything in one marathon session",
+        "effects": {
+          "reputation": [
+            3,
+            -4
+          ],
+          "teamMorale": [
+            1,
+            -5
+          ],
+          "stakeholderTrust": [
+            2,
+            -2
+          ],
+          "techDebt": [
+            0,
+            1
+          ]
+        },
+        "feedback": "Classic hero move. You save the day but create dependency. Team learns that crises get 'hero'd' so they don't step up. You're also exhausted and behind on your actual work.",
+        "tradeoffs": "Fast fix, slow death of team ownership. You'll be debugging alone forever.",
+        "profileNote": "Hero profile delivers but destroys team resilience."
+      },
+      {
+        "id": "big-bang-migration",
+        "cards": [
+          "CI/CD Migration"
+        ],
+        "reasoning": "Replace the whole pipeline with modern tools",
+        "effects": {
+          "reputation": [
+            -3,
+            5
+          ],
+          "teamMorale": [
+            -4,
+            3
+          ],
+          "stakeholderTrust": [
+            -2,
+            4
+          ],
+          "techDebt": [
+            -4,
+            -1
+          ]
+        },
+        "feedback": "Big bet that pays off if successful. You're down for a quarter but emerge with state-of-the-art tooling. High risk - migrations fail 30% of the time and you'd be in worse shape.",
+        "tradeoffs": "All-or-nothing. If it works you're a legend. If it fails you're rebuilding from zero.",
+        "profileNote": "Innovator profile: big bets for big gains. Timing is everything."
+      },
+      {
+        "id": "test-first",
+        "cards": [
+          "Testing",
+          "Documentation"
+        ],
+        "reasoning": "Lock in behavior with tests before touching pipeline",
+        "effects": {
+          "reputation": [
+            -2,
+            3
+          ],
+          "teamMorale": [
+            0,
+            2
+          ],
+          "stakeholderTrust": [
+            -1,
+            2
+          ],
+          "techDebt": [
+            -1,
+            -2
+          ]
+        },
+        "feedback": "Smart! Testing gives you safety net. Documentation forces you to understand current state. Slower start but much safer changes. Tests catch regressions during fixes.",
+        "tradeoffs": "Upfront investment pays dividends. You can't fix what you don't understand.",
+        "profileNote": "Cautious profile: measure twice, cut once."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 60,
+      "good": 40,
+      "fair": 20
+    }
+  },
+  {
+    "id": "performance-bottleneck-v2",
+    "version": 2,
+    "title": "The Performance Bottleneck",
+    "role": "tech-lead",
+    "difficulty": "hard",
+    "category": "System Architecture",
+    "profile": "innovator",
+    "counterProfile": "cautious",
+    "setup": "Your payment system latency spiked from 200ms to 2s during peak load. The root cause is unclear - could be DB queries, network, or third-party API. Every hour of delay costs $50K in dropped transactions. The CEO is in your Slack DMs.",
+    "question": "How do you approach the performance crisis?",
+    "initialState": {
+      "reputation": 28,
+      "teamMorale": 18,
+      "stakeholderTrust": 20,
+      "techDebt": 15
+    },
+    "hand": [
+      "Performance Optimization",
+      "Automated Testing",
+      "Debug Session",
+      "Architecture Review",
+      "Technical Due Diligence"
+    ],
+    "profileHands": {
+      "innovator": [
+        "Platform Strategy",
+        "Performance Optimization",
+        "Tiger Team",
+        "Architecture Review",
+        "Innovation Lab"
+      ],
+      "hero": [
+        "Heroic Programming",
+        "All-nighter",
+        "Debug Session",
+        "Ship It and Forget It",
+        "Hotfix"
+      ],
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Architecture Review",
+        "Technical Due Diligence"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "systematic-profiling",
+        "cards": [
+          "Performance Optimization",
+          "Automated Testing"
+        ],
+        "reasoning": "Systematic profiling with proper measurement",
+        "effects": {
+          "reputation": [
+            -1,
+            4
+          ],
+          "teamMorale": [
+            -1,
+            3
+          ],
+          "stakeholderTrust": [
+            0,
+            4
+          ],
+          "techDebt": [
+            -2,
+            -1
+          ]
+        },
+        "feedback": "Methodical approach. You instrument everything, find the actual bottleneck (not the guess), and fix it properly. Takes 3 hours of measurement but saves 3 days of wrong fixes.",
+        "tradeoffs": "Delay is painful but fixing the right thing is faster than fixing everything.",
+        "profileNote": "Innovator profile: use tools and data, not intuition."
+      },
+      {
+        "id": "hero-debug-blitz",
+        "cards": [
+          "Debug Session",
+          "Heroic Programming"
+        ],
+        "reasoning": "Intense debugging session - you trust your gut",
+        "effects": {
+          "reputation": [
+            3,
+            -3
+          ],
+          "teamMorale": [
+            1,
+            -4
+          ],
+          "stakeholderTrust": [
+            2,
+            -1
+          ],
+          "techDebt": [
+            1,
+            1
+          ]
+        },
+        "feedback": "You're rolling dice with production. Maybe you get lucky and guess right. Maybe you waste 4 hours down wrong path while transactions keep dropping. Even if you win, you taught team that heroics beat process.",
+        "tradeoffs": "High variance. Right guess = fast fix. Wrong guess = catastrophic delay.",
+        "profileNote": "Hero profile: high risk, high reward, unsustainable."
+      },
+      {
+        "id": "arch-review-first",
+        "cards": [
+          "Architecture Review",
+          "Technical Due Diligence"
+        ],
+        "reasoning": "Review architecture before touching code",
+        "effects": {
+          "reputation": [
+            -3,
+            5
+          ],
+          "teamMorale": [
+            0,
+            2
+          ],
+          "stakeholderTrust": [
+            -2,
+            5
+          ],
+          "techDebt": [
+            -3,
+            0
+          ]
+        },
+        "feedback": "Slowest start, strongest finish. You discover the architecture has systemic issues that quick fixes won't solve. You fix the foundation instead of patching symptoms. Quarter-long solution but permanent.",
+        "tradeoffs": "CEO will be mad for a week, then impressed for a year.",
+        "profileNote": "Cautious profile: fix the system, not the symptom."
+      },
+      {
+        "id": "quick-wins",
+        "cards": [
+          "Performance Optimization"
+        ],
+        "reasoning": "Apply known performance patterns quickly",
+        "effects": {
+          "reputation": [
+            1,
+            0
+          ],
+          "teamMorale": [
+            0,
+            1
+          ],
+          "stakeholderTrust": [
+            1,
+            0
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You apply low-hanging fruit: add indexes, increase cache, optimize queries. Gets you from 2s to 400ms in 2 hours. Not perfect but buys breathing room for proper fix. Strategic compromise.",
+        "tradeoffs": "Good enough for now. True fix still needed later.",
+        "profileNote": "Politician profile: manage expectations while delivering value."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "security-vulnerability-v2",
+    "version": 2,
+    "title": "The Security Vulnerability",
+    "role": "tech-lead",
+    "difficulty": "hard",
+    "category": "Security & Risk",
+    "profile": "cautious",
+    "counterProfile": "hero",
+    "setup": "Security audit found a critical vulnerability in production. Exploit is public. You can: patch immediately (downtime during peak), workaround (temporary fix, some risk), or emergency review (safe but slow). Every hour increases breach probability.",
+    "question": "How do you handle the security crisis?",
+    "initialState": {
+      "reputation": 30,
+      "teamMorale": 20,
+      "stakeholderTrust": 26,
+      "techDebt": 13
+    },
+    "hand": [
+      "Security Vulnerability",
+      "Automated Testing",
+      "Testing",
+      "Risk Assessment",
+      "Patch Now"
+    ],
+    "profileHands": {
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Security Vulnerability",
+        "Audit Prep Team"
+      ],
+      "hero": [
+        "Heroic Programming",
+        "All-nighter",
+        "Debug Session",
+        "Ship It and Forget It",
+        "Hotfix"
+      ],
+      "delegator": [
+        "Pair Programming",
+        "Code Review",
+        "Knowledge Transfer",
+        "Security Vulnerability",
+        "Team Meeting"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "patch-immediately",
+        "cards": [
+          "Security Vulnerability",
+          "Automated Testing"
+        ],
+        "reasoning": "Patch immediately with full testing",
+        "effects": {
+          "reputation": [
+            2,
+            2
+          ],
+          "teamMorale": [
+            -2,
+            2
+          ],
+          "stakeholderTrust": [
+            3,
+            3
+          ],
+          "techDebt": [
+            -1,
+            -1
+          ]
+        },
+        "feedback": "Perfect security response. You accept short-term pain (downtime) for long-term safety. Testing ensures fix works. Stakeholders trust your decisiveness. Security is non-negotiable.",
+        "tradeoffs": "Downtime costs revenue but breach costs everything.",
+        "profileNote": "Cautious profile: do it right, do it once."
+      },
+      {
+        "id": "quick-workaround",
+        "cards": [
+          "Security Vulnerability"
+        ],
+        "reasoning": "Quick workaround to stop immediate threat",
+        "effects": {
+          "reputation": [
+            1,
+            -2
+          ],
+          "teamMorale": [
+            0,
+            -1
+          ],
+          "stakeholderTrust": [
+            1,
+            -2
+          ],
+          "techDebt": [
+            2,
+            1
+          ]
+        },
+        "feedback": "Temporary patches create technical debt. You stop the bleeding but the wound needs proper surgery. Risk: workaround might have holes. You also have to remember to do the real fix later.",
+        "tradeoffs": "Fast now, pay later. Hope you remember to come back.",
+        "profileNote": "Politician profile: manage perception, defer real work."
+      },
+      {
+        "id": "hero-fix",
+        "cards": [
+          "Heroic Programming",
+          "Security Vulnerability"
+        ],
+        "reasoning": "You personally code the fix over 20 hours",
+        "effects": {
+          "reputation": [
+            3,
+            -3
+          ],
+          "teamMorale": [
+            0,
+            -4
+          ],
+          "stakeholderTrust": [
+            2,
+            -1
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You save the day but create dependency. Team doesn't learn how to respond to security issues. You burn out. Next crisis, everyone waits for the hero instead of acting. Also you're single point of failure.",
+        "tradeoffs": "Fast fix, slow team death. Unsustainable security model.",
+        "profileNote": "Hero profile: personal sacrifice for company safety."
+      },
+      {
+        "id": "team-response",
+        "cards": [
+          "Pair Programming",
+          "Code Review"
+        ],
+        "reasoning": "Pair senior devs to fix together",
+        "effects": {
+          "reputation": [
+            -1,
+            4
+          ],
+          "teamMorale": [
+            -1,
+            4
+          ],
+          "stakeholderTrust": [
+            0,
+            4
+          ],
+          "techDebt": [
+            -2,
+            -2
+          ]
+        },
+        "feedback": "Best long-term play. Two seniors collaborate, both learn security response patterns, knowledge spreads. Slower initially but builds organizational capability. Next security issue, team handles without you.",
+        "tradeoffs": "Slower start but sustainable security culture.",
+        "profileNote": "Delegator profile: build team capability, not hero stories."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "team-burnout-crisis-v2",
+    "version": 2,
+    "title": "The Team Burnout Crisis",
+    "role": "eng-manager",
+    "difficulty": "hard",
+    "category": "Team Health",
+    "profile": "delegator",
+    "counterProfile": "hero",
+    "setup": "Your team's velocity dropped 40% this quarter. 1:1s reveal burnout: too many 'urgent' projects, constant context switching, weekend work normalized. Three people are interviewing elsewhere. Leadership wants you to 'get the team back on track'.",
+    "question": "How do you address the burnout crisis?",
+    "initialState": {
+      "reputation": 20,
+      "teamMorale": 10,
+      "stakeholderTrust": 24,
+      "techDebt": 16
+    },
+    "hand": [
+      "1:1 Meetings",
+      "Team Meeting",
+      "Documentation",
+      "Scope Negotiation",
+      "Risk Assessment"
+    ],
+    "profileHands": {
+      "delegator": [
+        "1:1 Meetings",
+        "Knowledge Transfer",
+        "Code Review",
+        "Team Meeting",
+        "Pair Programming"
+      ],
+      "politician": [
+        "Executive Review",
+        "Data-Driven Pitch",
+        "Stakeholder Alignment",
+        "Scope Negotiation",
+        "Transparency"
+      ],
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Testing",
+        "Architecture Review",
+        "Metrics Review"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "listening-tour",
+        "cards": [
+          "1:1 Meetings",
+          "Team Meeting"
+        ],
+        "reasoning": "Listen to team first before making changes",
+        "effects": {
+          "reputation": [
+            -1,
+            4
+          ],
+          "teamMorale": [
+            2,
+            6
+          ],
+          "stakeholderTrust": [
+            0,
+            3
+          ],
+          "techDebt": [
+            0,
+            -2
+          ]
+        },
+        "feedback": "You discover the real issues: two people are carrying the team, everyone else is in meetings, and priorities change daily. Team feels heard immediately. Morale improves before you even fix anything. Now you know what to fix.",
+        "tradeoffs": "Takes time but gives you correct diagnosis. Better than guessing.",
+        "profileNote": "Delegator profile: listen first, then lead."
+      },
+      {
+        "id": "shield-team",
+        "cards": [
+          "Scope Negotiation",
+          "Risk Assessment"
+        ],
+        "reasoning": "Negotiate relief from leadership",
+        "effects": {
+          "reputation": [
+            -3,
+            5
+          ],
+          "teamMorale": [
+            1,
+            5
+          ],
+          "stakeholderTrust": [
+            -2,
+            4
+          ],
+          "techDebt": [
+            -1,
+            -3
+          ]
+        },
+        "feedback": "You push back hard on leadership: 'team will deliver 30% less for 1 quarter to recover.' Stakeholders are mad initially, but see improved quality next quarter. Team feels protected and rallies. Trust in your leadership solidifies.",
+        "tradeoffs": "Political capital spent, but earns team loyalty. Long-term win.",
+        "profileNote": "Politician profile: manage up to protect down."
+      },
+      {
+        "id": "process-fixes",
+        "cards": [
+          "Documentation",
+          "Risk Assessment"
+        ],
+        "reasoning": "Document and standardize to reduce chaos",
+        "effects": {
+          "reputation": [
+            1,
+            3
+          ],
+          "teamMorale": [
+            0,
+            4
+          ],
+          "stakeholderTrust": [
+            1,
+            2
+          ],
+          "techDebt": [
+            -2,
+            -2
+          ]
+        },
+        "feedback": "You create runbooks for common tasks, document architecture, and add risk reviews to planning. Removes cognitive load. Team stops reinventing wheels. Burnout drops 30% just from reduced chaos.",
+        "tradeoffs": "Boring but effective. Process reduces friction.",
+        "profileNote": "Cautious profile: systematic fixes for systematic problems."
+      },
+      {
+        "id": "sprint-death-march",
+        "cards": [],
+        "reasoning": "Push team harder to hit targets",
+        "effects": {
+          "reputation": [
+            2,
+            -8
+          ],
+          "teamMorale": [
+            -5,
+            -8
+          ],
+          "stakeholderTrust": [
+            1,
+            -4
+          ],
+          "techDebt": [
+            2,
+            3
+          ]
+        },
+        "feedback": "Disaster. You get short-term velocity boost but accelerate departures. Two more people quit. Team stops trusting you. You're now known as the manager who chose targets over people. Recovery takes quarters.",
+        "tradeoffs": "Career suicide. Never worth it.",
+        "profileNote": "Hero profile applied to management - maximum damage."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "promotion-dilemma-v2",
+    "version": 2,
+    "title": "The Promotion Dilemma",
+    "role": "eng-manager",
+    "difficulty": "medium",
+    "category": "Career Development",
+    "profile": "politician",
+    "counterProfile": "delegator",
+    "setup": "You have 2 promotion slots and 5 deserving engineers. Senior leadership expects 'objective' decisions but also has favorites. The promotion cycle is in 2 weeks. Your choices will affect team morale for quarters. The wrong pick creates perception of favoritism.",
+    "question": "How do you decide who gets promoted?",
+    "initialState": {
+      "reputation": 25,
+      "teamMorale": 22,
+      "stakeholderTrust": 20,
+      "techDebt": 10
+    },
+    "hand": [
+      "Data-Driven Pitch",
+      "Executive Review",
+      "Transparency",
+      "Documentation",
+      "1:1 Meetings"
+    ],
+    "profileHands": {
+      "politician": [
+        "Executive Review",
+        "Data-Driven Pitch",
+        "Stakeholder Alignment",
+        "Scope Negotiation",
+        "Transparency"
+      ],
+      "delegator": [
+        "1:1 Meetings",
+        "Knowledge Transfer",
+        "Code Review",
+        "Team Meeting",
+        "Pair Programming"
+      ],
+      "innovator": [
+        "Platform Strategy",
+        "Innovation Lab",
+        "MVP Strategy",
+        "Data-Driven Pitch",
+        "Technical Due Diligence"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "data-driven-process",
+        "cards": [
+          "Data-Driven Pitch",
+          "Documentation"
+        ],
+        "reasoning": "Create objective promotion framework with clear criteria",
+        "effects": {
+          "reputation": [
+            0,
+            4
+          ],
+          "teamMorale": [
+            -1,
+            5
+          ],
+          "stakeholderTrust": [
+            1,
+            3
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "Brilliant! You create scorecard: impact, technical depth, mentorship, values. Share with team and leadership. Everyone knows the rules. Decisions feel fair even to people who didn't get promoted. Creates culture of meritocracy.",
+        "tradeoffs": "Takes time to create framework but pays dividends forever.",
+        "profileNote": "Politician profile: align stakeholders on process, not just outcomes."
+      },
+      {
+        "id": "transparent-process",
+        "cards": [
+          "Transparency",
+          "1:1 Meetings"
+        ],
+        "reasoning": "Be transparent about constraints and let team help decide",
+        "effects": {
+          "reputation": [
+            1,
+            3
+          ],
+          "teamMorale": [
+            2,
+            4
+          ],
+          "stakeholderTrust": [
+            1,
+            2
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You share the brutal truth: '2 slots, 5 people, all deserving. Let's discuss criteria together.' Team appreciates honesty. People self-nominate with evidence. Process feels collaborative not competitive. Those passed over respect the process.",
+        "tradeoffs": "Vulnerable but builds trust. Transparency beats perfect decisions.",
+        "profileNote": "Transparency is its own strategy."
+      },
+      {
+        "id": "leadership-alignment",
+        "cards": [
+          "Executive Review",
+          "Data-Driven Pitch"
+        ],
+        "reasoning": "Align leadership on criteria then decide",
+        "effects": {
+          "reputation": [
+            1,
+            2
+          ],
+          "teamMorale": [
+            0,
+            2
+          ],
+          "stakeholderTrust": [
+            2,
+            3
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You spend time with executives: 'Here are the 5 candidates, here are their strengths, who are we optimizing for?' Get alignment on criteria. Remind them favorites don't always equal best. Push for fairness. Takes political capital.",
+        "tradeoffs": "Protects team from executive whim but requires relationship capital.",
+        "profileNote": "Politician profile: manage up to protect down."
+      },
+      {
+        "id": "manager-discretion",
+        "cards": [],
+        "reasoning": "Use your judgment, announce decisions",
+        "effects": {
+          "reputation": [
+            1,
+            -2
+          ],
+          "teamMorale": [
+            -3,
+            -5
+          ],
+          "stakeholderTrust": [
+            0,
+            -1
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "Worst approach. Even if your picks are 'right', process feels arbitrary. People who didn't get promoted resent you. Team thinks it's favoritism. You lose trust. Morale drops and your top performers start looking elsewhere.",
+        "tradeoffs": "Fast decision, long-term damage.",
+        "profileNote": "Hero profile: manager knows best. Never works."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 60,
+      "good": 40,
+      "fair": 20
+    }
+  },
+  {
+    "id": "skip-level-surprise-v2",
+    "version": 2,
+    "title": "The Skip-Level Surprise",
+    "role": "director",
+    "difficulty": "hard",
+    "category": "Executive Relations",
+    "profile": "politician",
+    "counterProfile": "cautious",
+    "setup": "Your VP just blindsided you with feedback from your team: 'People feel disconnected from strategy, work is reactive not strategic, Project X is a waste of time.' The VP wants a plan by Monday. You weren't aware of these issues. Your credibility is at risk.",
+    "question": "How do you respond to the executive feedback?",
+    "initialState": {
+      "reputation": 26,
+      "teamMorale": 20,
+      "stakeholderTrust": 18,
+      "techDebt": 12
+    },
+    "hand": [
+      "Executive Review",
+      "Data-Driven Pitch",
+      "Stakeholder Alignment",
+      "Team Meeting",
+      "Transparency"
+    ],
+    "profileHands": {
+      "politician": [
+        "Executive Review",
+        "Data-Driven Pitch",
+        "Stakeholder Alignment",
+        "Scope Negotiation",
+        "Transparency"
+      ],
+      "delegator": [
+        "1:1 Meetings",
+        "Knowledge Transfer",
+        "Code Review",
+        "Team Meeting",
+        "Pair Programming"
+      ],
+      "hero": [
+        "Heroic Programming",
+        "All-nighter",
+        "Tech Lead",
+        "Ship It and Forget It",
+        "Debug Session"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "own-and-investigate",
+        "cards": [
+          "Executive Review",
+          "Team Meeting"
+        ],
+        "reasoning": "Acknowledge gap, get data, present plan",
+        "effects": {
+          "reputation": [
+            -2,
+            6
+          ],
+          "teamMorale": [
+            1,
+            3
+          ],
+          "stakeholderTrust": [
+            -1,
+            5
+          ],
+          "techDebt": [
+            0,
+            -1
+          ]
+        },
+        "feedback": "Perfect play. You tell VP: 'You're right, I missed this, here's my data gathering plan, I'll present findings Friday.' Show humility + action. Team sees you take feedback seriously. You turn crisis into trust-building.",
+        "tradeoffs": "Short-term credibility hit for long-term leadership growth.",
+        "profileNote": "Politician profile: turn feedback into action, not defensiveness."
+      },
+      {
+        "id": "defensive-response",
+        "cards": [
+          "Data-Driven Pitch"
+        ],
+        "reasoning": "Defend with data that team is wrong",
+        "effects": {
+          "reputation": [
+            1,
+            -4
+          ],
+          "teamMorale": [
+            -3,
+            -3
+          ],
+          "stakeholderTrust": [
+            0,
+            -3
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "Disaster. You argue team is wrong, VP thinks you're out of touch. Team hears you're dismissing their concerns. You lose trust both directions. Creates perception you can't handle feedback.",
+        "tradeoffs": "Defensive wins argument, loses war.",
+        "profileNote": "Hero profile: defend self instead of listening."
+      },
+      {
+        "id": "transparent-process",
+        "cards": [
+          "Transparency",
+          "Stakeholder Alignment"
+        ],
+        "reasoning": "Make feedback process transparent",
+        "effects": {
+          "reputation": [
+            0,
+            4
+          ],
+          "teamMorale": [
+            2,
+            4
+          ],
+          "stakeholderTrust": [
+            1,
+            4
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You share VP feedback with team: 'Here's what I heard, let's discuss.' Team appreciates transparency. You co-create solution. VP sees you including team. Turns feedback into collaborative problem-solving.",
+        "tradeoffs": "Vulnerable but builds trust at all levels.",
+        "profileNote": "Transparency creates alignment naturally."
+      },
+      {
+        "id": "rapid-action",
+        "cards": [
+          "Team Meeting",
+          "Transparency"
+        ],
+        "reasoning": "Quick team session then present fixes",
+        "effects": {
+          "reputation": [
+            -1,
+            3
+          ],
+          "teamMorale": [
+            1,
+            2
+          ],
+          "stakeholderTrust": [
+            0,
+            3
+          ],
+          "techDebt": [
+            0,
+            0
+          ]
+        },
+        "feedback": "You move fast: team session Monday, VP presentation Friday with 3 concrete changes. Shows you take it seriously. Some fixes are wrong (you moved too fast) but course-correct as you learn.",
+        "tradeoffs": "Fast action with some mistakes beats perfect planning with no action.",
+        "profileNote": "Delegator profile: rapid iteration with team input."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  },
+  {
+    "id": "ma-negotiation-v2",
+    "version": 2,
+    "title": "The M&A Negotiation",
+    "role": "vp-cto",
+    "difficulty": "hard",
+    "category": "CTO Strategy",
+    "profile": "politician",
+    "counterProfile": "innovator",
+    "setup": "Your company is acquiring a 30-person startup for $50M. Their CEO wants to be VP Engineering and keep full autonomy. Their architecture is incompatible, culture is 'move fast and break things', and they have no tests. You need to hit synergy targets in 2 quarters. Integration can destroy the value you paid for.",
+    "question": "How do you integrate the acquisition?",
+    "initialState": {
+      "reputation": 32,
+      "teamMorale": 24,
+      "stakeholderTrust": 30,
+      "techDebt": 18
+    },
+    "hand": [
+      "Culture Integration",
+      "Bridge Team",
+      "Tiger Team",
+      "Sunset Plan",
+      "Technical Due Diligence"
+    ],
+    "profileHands": {
+      "politician": [
+        "Executive Review",
+        "Data-Driven Pitch",
+        "Stakeholder Alignment",
+        "Culture Integration",
+        "Transparency"
+      ],
+      "innovator": [
+        "Platform Strategy",
+        "Technical Due Diligence",
+        "Architecture Review",
+        "Migration Strategy",
+        "Strangulation Pattern"
+      ],
+      "cautious": [
+        "Documentation",
+        "Risk Assessment",
+        "Technical Due Diligence",
+        "Sunset Plan",
+        "Audit Prep Team"
+      ]
+    },
+    "decisions": [
+      {
+        "id": "bridge-team",
+        "cards": [
+          "Bridge Team",
+          "Culture Integration"
+        ],
+        "reasoning": "Create bridge team with engineers from both sides",
+        "effects": {
+          "reputation": [
+            0,
+            5
+          ],
+          "teamMorale": [
+            -1,
+            5
+          ],
+          "stakeholderTrust": [
+            1,
+            4
+          ],
+          "techDebt": [
+            -2,
+            -3
+          ]
+        },
+        "feedback": "Perfect M&A play. Two engineers from each side form integration team. They learn each other's systems, create translation layer, document differences. Preserves startup speed while adding enterprise reliability. Culture integration from bottom-up, not top-down.",
+        "tradeoffs": "Slows them slightly but prevents culture clash catastrophe.",
+        "profileNote": "Politician profile: align interests, preserve value."
+      },
+      {
+        "id": "rip-replace",
+        "cards": [
+          "Tiger Team",
+          "Sunset Plan"
+        ],
+        "reasoning": "Re-architect their entire system in 1 quarter",
+        "effects": {
+          "reputation": [
+            -2,
+            7
+          ],
+          "teamMorale": [
+            -4,
+            2
+          ],
+          "stakeholderTrust": [
+            -1,
+            5
+          ],
+          "techDebt": [
+            -4,
+            -2
+          ]
+        },
+        "feedback": "High-risk technical play. You move their entire stack to your platform in 90 days. If successful, perfect integration. But 60% chance startup engineers quit (they didn't join to be enterprise). You might lose the talent you paid for.",
+        "tradeoffs": "Technical perfection vs people retention. People usually win.",
+        "profileNote": "Innovator profile: platform thinking, high technical risk."
+      },
+      {
+        "id": "preserve-autonomy",
+        "cards": [
+          "Technical Due Diligence",
+          "Documentation"
+        ],
+        "reasoning": "Leave them independent, document interfaces",
+        "effects": {
+          "reputation": [
+            1,
+            1
+          ],
+          "teamMorale": [
+            2,
+            2
+          ],
+          "stakeholderTrust": [
+            1,
+            0
+          ],
+          "techDebt": [
+            1,
+            2
+          ]
+        },
+        "feedback": "You keep them separate and document APIs. They stay fast, you stay stable. But synergy targets fail - you're just two companies under one roof. Board questions why you acquired them. No technical integration means no cost savings.",
+        "tradeoffs": "Preserves culture but fails acquisition thesis. Board will be unhappy.",
+        "profileNote": "Cautious profile: avoid conflict, but miss opportunity."
+      },
+      {
+        "id": "culture-first",
+        "cards": [
+          "Culture Integration",
+          "Technical Due Diligence"
+        ],
+        "reasoning": "Focus on culture integration before technical",
+        "effects": {
+          "reputation": [
+            0,
+            4
+          ],
+          "teamMorale": [
+            1,
+            4
+          ],
+          "stakeholderTrust": [
+            1,
+            3
+          ],
+          "techDebt": [
+            0,
+            -1
+          ]
+        },
+        "feedback": "You spend Q1 on joint offsites, shared values, unified vision. Engineers build relationships. Q2 technical integration becomes collaborative not combative. Culture alignment unlocks technical alignment. Most important M&A success factor.",
+        "tradeoffs": "Soft skills beat technical wizardry in M&A. Culture clash kills more deals than tech debt.",
+        "profileNote": "Politician profile: people first, systems second."
+      }
+    ],
+    "benchmarks": {
+      "excellent": 50,
+      "good": 30,
+      "fair": 10
+    }
+  }
+]

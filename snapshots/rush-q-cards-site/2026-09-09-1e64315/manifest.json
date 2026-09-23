@@ -1,0 +1,61 @@
+{
+  "name": "Rush Q Cards - Corporate Strategy Card Game",
+  "short_name": "Rush Q",
+  "description": "A corporate strategy card game where you manage projects, recruit talent, and outmaneuver AI opponents across 8 quarters.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#040714",
+  "background_color": "#040714",
+  "categories": ["games", "education", "strategy"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "assets/icons/ui/play-button.svg",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/card-types/project.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/card-types/soft.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/card-types/hard.svg",
+      "sizes": "384x384",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/card-types/power.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "features": [
+    "offline",
+    "fullscreen",
+    "orientation"
+  ],
+  "screenshots": [
+    {
+      "src": "og-preview.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
+  ]
+}

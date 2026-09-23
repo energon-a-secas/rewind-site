@@ -1,0 +1,410 @@
+/* Copyright (c) 2026 Luciano Adonis Villarroel. MIT License.
+   Game content (cards, art, mechanics) is proprietary — see LICENSE.CONTENT.
+   Room Compass — live cohort aggregation for a facilitated room.
+   Projector-first: large type, high contrast. Reuses the warm-dark shared
+   tokens and mirrors the solo Instinct compass (label + track + fill) so the
+   group compass reads as the same family. */
+
+.room-app {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+
+/* ── Shared type ────────────────────────────────────────────── */
+.room-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.room-lede {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  max-width: 760px;
+  margin-bottom: 22px;
+}
+.room-lede strong { color: var(--accent-bright); }
+
+.room-subhead {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── No-wrong-answers banner ────────────────────────────────── */
+.room-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.room-banner-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Landing ────────────────────────────────────────────────── */
+.room-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+.room-fact {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  color: var(--text-secondary);
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  flex: 1 1 200px;
+}
+.room-fact-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  color: var(--accent-bright);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.room-start-row { margin-bottom: 12px; }
+.room-hint { color: var(--text-muted); font-size: 0.9rem; }
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.room-btn {
+  min-height: 52px;
+  padding: 0 30px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 700;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.room-btn:hover { background: var(--accent-bright); transform: translateY(-2px); }
+.room-btn:focus-visible { outline: 3px solid var(--accent-bright); outline-offset: 3px; }
+.room-btn--ghost {
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.room-btn--ghost:hover { background: var(--film-2); color: var(--text-primary); }
+
+/* ── Round header ───────────────────────────────────────────── */
+.room-round-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.room-progress {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.room-round-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+.room-nav-btn {
+  min-height: 48px;
+  padding: 0 20px;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.room-nav-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--surface-1); }
+.room-nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.room-nav-btn:focus-visible { outline: 3px solid var(--accent-bright); outline-offset: 2px; }
+
+/* ── Projected prompt ───────────────────────────────────────── */
+.room-prompt {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+/* ── Card grid (name + archetype + move) ────────────────────── */
+.room-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.room-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--style-color);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+.room-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.room-card-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.room-card-lean {
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.room-card-move {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  margin: 0;
+}
+
+/* ── Tally block: counters ──────────────────────────────────── */
+.room-tally-block {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  margin-bottom: 24px;
+}
+.room-tally-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.room-round-total {
+  color: var(--text-muted);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 500;
+}
+.room-counters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.room-counter {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--style-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+}
+.room-counter-name {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.room-counter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.room-step {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+.room-step:hover { border-color: var(--style-color); background: var(--surface-2); transform: translateY(-1px); }
+.room-step:active { transform: translateY(0); }
+.room-step:focus-visible { outline: 3px solid var(--accent-bright); outline-offset: 2px; }
+.room-counter-num {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 2ch;
+}
+
+/* ── Compass bars (mirrors solo Instinct compass) ───────────── */
+.room-compass-block { margin-bottom: 24px; }
+.room-compass-block--cumulative {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+.room-cumulative-meta {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+.room-compass-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.room-compass-bars--final { margin-bottom: 24px; }
+.room-compass-row {
+  display: grid;
+  grid-template-columns: 170px 1fr 110px;
+  align-items: center;
+  gap: 16px;
+}
+.room-compass-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.room-compass-track {
+  position: relative;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.room-compass-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  border-radius: 11px;
+  min-width: 2px;
+  transition: width var(--transition-slow);
+}
+.room-compass-value {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: right;
+}
+.room-compass-of { color: var(--text-muted); font-weight: 500; }
+
+/* ── Facilitator note + discussion ──────────────────────────── */
+.room-facilitator {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+.room-facilitator-head,
+.room-discussion-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.room-discussion-title { margin-top: 16px; }
+.room-facilitator-note {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  margin: 0;
+}
+.room-discussion {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+}
+.room-discussion li { margin-bottom: 6px; }
+
+.room-reset-row { text-align: center; }
+
+/* ── Final Room Compass ─────────────────────────────────────── */
+.room-final-sub {
+  color: var(--text-secondary);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  margin-bottom: 24px;
+}
+.room-final-read {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  margin-bottom: 16px;
+}
+.room-blindspot {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  margin-bottom: 26px;
+}
+.room-blindspot-icon { color: var(--accent); font-size: 1.3rem; line-height: 1.4; flex-shrink: 0; }
+.room-final-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* ── Mobile / narrow projector fallback ─────────────────────── */
+@media (max-width: 760px) {
+  .room-cards { grid-template-columns: 1fr; }
+  .room-compass-row { grid-template-columns: 110px 1fr 80px; gap: 10px; }
+  .room-round-head { flex-direction: column; align-items: flex-start; }
+  .room-round-nav { width: 100%; }
+  .room-nav-btn { flex: 1; }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .room-compass-fill { transition: none; }
+  .room-btn:hover, .room-step:hover, .room-nav-btn:hover { transform: none; }
+}

@@ -2,8 +2,9 @@
 """Rewind capture CLI — builds the snapshot archive the viewer renders.
 
 Modes:
-  git <project>      extract full working trees from the project's git history,
-                     one snapshot per design-changing day (sampled to --limit)
+  git <project>      extract the design tree (pages, css, js, assets) from the
+                     project's git history, one snapshot per design-changing day
+                     (sampled to --limit); repo internals are left behind
   live <site|url>    mirror a live page: same-host assets + cdn.neorgon.org are
                      downloaded and re-pointed, everything else stays absolute
   shot [ids]         screenshot snapshots through headless Chrome (JPEG via sips)
@@ -11,6 +12,9 @@ Modes:
                      og-studio's record-gif.mjs; filmstrip cards play it on hover
   adopt <file.html>  promote a browser-exported capture into the archive
   fleet              live-capture every registry site (filtered by --lifecycle)
+  fleet-git          backfill git history across every registry site, capped per
+                     site so the archive stays inside the Pages size ceiling
+  prune              thin to N snapshots per site per month (dry run by default)
   list / rm          inspect or delete manifest entries
 
 Everything lands under snapshots/ + shots/ and is indexed in data/manifest.json,
@@ -28,6 +32,7 @@ import sys
 import tarfile
 import tempfile
 import threading
+import time
 import urllib.parse
 import urllib.request
 from functools import partial
@@ -88,6 +93,21 @@ UA = 'Mozilla/5.0 (Macintosh) RewindCapture/1.0 (+https://rewind.neorgon.com)'
 GIT_PATHSPECS = ['*.html', 'css', 'js', 'assets', 'styles', 'img', 'images', 'data']
 MAX_ASSETS = 300
 MAX_BYTES = 40 * 1024 * 1024
+
+# What a git snapshot *keeps*. GIT_PATHSPECS above decides which commits count as
+# design changes; these decide what is extracted once one does. Without them a
+# snapshot is the entire repo tree: neorgon's largest carried 3.5 MB of `post/`
+# and 1.3 MB of `blog/`, neither of which is the page. `git archive` exits 128
+# when any pathspec matches nothing (unlike `git log`, which tolerates it), so
+# the list is always intersected against the real tree at that commit first.
+TREE_DIRS = ('css', 'js', 'assets', 'styles', 'img', 'images', 'fonts', 'media', 'data')
+TREE_SUFFIXES = ('.html', '.svg', '.ico', '.png', '.jpg', '.jpeg', '.webp', '.gif',
+                 '.webmanifest', '.json', '.txt')
+
+# Per-site snapshot caps for repos heavy enough to dominate the archive, measured
+# lean at 52, 45, 34 and 5 MB per tree against a 720 KB fleet median. 0 means
+# fleet-git leaves it alone; capture it by hand with an explicit --limit.
+HEAVY_SITES = {'memes-site': 2, 'skill-map-site': 2, 'neorgon-site': 0, 'guild-hall-site': 3}
 
 
 def warn(msg):
@@ -161,6 +181,14 @@ def add_snapshot(m, entry):
     return True
 
 
+def latest_entry_file(m, sid):
+    """Entry HTML of the newest snapshot already recorded for `sid`, or None."""
+    snaps = [s for s in m['snapshots'] if s['site'] == sid]
+    if not snaps:
+        return None
+    return ROOT / PurePosixPath(max(snaps, key=lambda s: s['date'])['path'])
+
+
 # ── git mode ─────────────────────────────────────────────────────────────────
 
 def design_commits(repo):
@@ -176,7 +204,12 @@ def bucket_last_per(commits, every):
     buckets = {}
     for sha, ciso, subj in commits:
         day = datetime.date.fromisoformat(ciso[:10])
-        key = day.isocalendar()[:2] if every == 'week' else day
+        if every == 'month':
+            key = (day.year, day.month)
+        elif every == 'week':
+            key = day.isocalendar()[:2]
+        else:
+            key = day
         buckets[key] = (sha, ciso, subj)               # later commit wins the bucket
     return [buckets[k] for k in sorted(buckets)]
 
@@ -188,9 +221,25 @@ def sample(items, limit):
     return [items[i] for i in idxs]
 
 
+def design_pathspecs(repo, sha):
+    """Top-level entries at `sha` that carry the design, as archive pathspecs.
+
+    Returns [] when nothing matches, which the caller reads as "take the whole
+    tree": a repo that keeps its page somewhere unusual is better archived fat
+    than not archived at all.
+    """
+    names = [n for n in run(['git', '-C', str(repo), 'ls-tree', '--name-only', sha]).split('\n')
+             if n.strip()]
+    keep = [n for n in names if n in TREE_DIRS or n.lower().endswith(TREE_SUFFIXES)]
+    return [n for n in keep if n not in PRUNE_DIRS]
+
+
 def extract_tree(repo, sha, dest):
-    raw = subprocess.run(['git', '-C', str(repo), 'archive', sha],
-                         check=True, capture_output=True).stdout
+    cmd = ['git', '-C', str(repo), 'archive', sha]
+    specs = design_pathspecs(repo, sha)
+    if specs:
+        cmd += ['--'] + specs
+    raw = subprocess.run(cmd, check=True, capture_output=True).stdout
     dest.mkdir(parents=True, exist_ok=True)
     with tarfile.open(fileobj=BytesIO(raw)) as tf:
         try:
@@ -443,6 +492,12 @@ def cmd_live(a):
     saved, tethered = capture_live(url, dest)
     size, files = dir_stats(dest)
     m = load_manifest()
+    if a.if_changed:
+        prev, fresh = latest_entry_file(m, sid), dest / 'index.html'
+        if prev and prev.exists() and fresh.exists() and prev.read_bytes() == fresh.read_bytes():
+            shutil.rmtree(dest)
+            print(f'  = unchanged since {prev.parent.name}, nothing recorded')
+            return
     remember_site(m, sid, domain or urllib.parse.urlsplit(url).hostname, title)
     add_snapshot(m, {
         'id': snap_id, 'site': sid, 'date': now.astimezone().isoformat(timespec='seconds'),
@@ -488,6 +543,36 @@ def serve_root():
     return srv, srv.server_address[1]
 
 
+def shoot(args, png, grace=30.0):
+    """Run Chrome for one screenshot. True once the PNG is on disk and settled.
+
+    Chrome writes the screenshot and then frequently refuses to exit: measured on
+    an emoji-site snapshot, the file landed at 6.5s and the process was still
+    alive at 120s, in --headless=new, legacy --headless and with
+    --run-all-compositor-stages-before-draw alike. --timeout and
+    --virtual-time-budget do not end it. Waiting on the process therefore cost the
+    full subprocess timeout on every snapshot, three times over with retries,
+    which is why the archive accumulated snapshots faster than it could picture
+    them. Watch the file instead, and kill the process once it stops growing.
+    """
+    proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    deadline = time.monotonic() + grace
+    try:
+        while time.monotonic() < deadline:
+            if png.exists() and png.stat().st_size > 0:
+                size = png.stat().st_size
+                time.sleep(0.4)
+                if png.exists() and png.stat().st_size == size:
+                    return True
+            elif proc.poll() is not None:
+                break                                  # exited without producing one
+            time.sleep(0.2)
+        return png.exists() and png.stat().st_size > 0
+    finally:
+        proc.kill()
+        proc.wait()
+
+
 def do_shots(ids, width, height):
     chrome = find_chrome()
     if not chrome:
@@ -509,22 +594,19 @@ def do_shots(ids, width, height):
                 url = f'http://127.0.0.1:{port}/{s["path"]}'
                 # A fresh profile per attempt: Chrome's SingletonLock lingers
                 # after exit, and a reused profile makes launches silently no-op.
-                for attempt in range(3):
-                    flag = '--headless=new' if attempt < 2 else '--headless'
+                for attempt in range(2):
+                    flag = '--headless=new' if attempt == 0 else '--headless'
                     args = [chrome, flag, '--disable-gpu', '--hide-scrollbars',
                             '--no-first-run', '--no-default-browser-check', '--disable-extensions',
                             '--mute-audio', f'--user-data-dir={td}/p{n}-{attempt}',
                             '--force-device-scale-factor=1', f'--window-size={width},{height}',
                             '--virtual-time-budget=7000', '--timeout=20000',
                             f'--screenshot={png}', url]
-                    try:
-                        subprocess.run(args, capture_output=True, timeout=60, check=False)
-                    except subprocess.TimeoutExpired:
-                        warn(f'{s["id"]}: Chrome timed out (attempt {attempt + 1})')
-                    if png.exists():
+                    if shoot(args, png):
                         break
+                    warn(f'{s["id"]}: no screenshot on attempt {attempt + 1}')
                 if not png.exists():
-                    warn(f'{s["id"]}: no screenshot produced after 3 attempts')
+                    warn(f'{s["id"]}: no screenshot produced')
                     continue
                 out_dir = SHOT_DIR / s['site']
                 out_dir.mkdir(parents=True, exist_ok=True)
@@ -624,11 +706,101 @@ def cmd_fleet(a):
     print(f'fleet live capture: {len(sites)} sites (lifecycle={a.lifecycle})')
     for s in sites:
         ns = argparse.Namespace(target=s['id'], site=None, shots=a.shots,
-                                width=a.width, height=a.height)
+                                width=a.width, height=a.height,
+                                if_changed=a.if_changed)
         try:
             cmd_live(ns)
         except Exception as e:
             warn(f'{s["id"]}: capture failed ({e})')
+
+
+def cmd_fleet_git(a):
+    """Registry-wide counterpart to `fleet`: history, not just the present.
+
+    One bad repo must not end the run, so every failure is counted and reported
+    at the end rather than raised. cmd_git exits on an empty history, which is a
+    SystemExit and not an Exception, hence the separate clause.
+    """
+    sites = [s for s in registry_sites() if s.get('lifecycle') == a.lifecycle and s.get('id')]
+    print(f'fleet git capture: {len(sites)} sites (lifecycle={a.lifecycle}, limit={a.limit})')
+    done = skipped = failed = 0
+    for s in sites:
+        sid = s['id']
+        cap = HEAVY_SITES.get(sid, a.limit)
+        if cap == 0:
+            print(f'{sid}: heavy repo, skipped (capture by hand: capture.py git {sid} --limit N)')
+            skipped += 1
+            continue
+        if not (MONO / 'projects' / sid / '.git').exists():
+            warn(f'{sid}: no repo under projects/, skipping')
+            skipped += 1
+            continue
+        ns = argparse.Namespace(project=sid, limit=cap, every=a.every, repo=None,
+                                shots=a.shots, width=a.width, height=a.height)
+        try:
+            cmd_git(ns)
+            done += 1
+        except SystemExit as e:
+            warn(f'{sid}: {e}')
+            failed += 1
+        except Exception as e:
+            warn(f'{sid}: capture failed ({e})')
+            failed += 1
+    print(f'\nfleet git: {done} captured, {skipped} skipped, {failed} failed')
+
+
+def cmd_prune(a):
+    """Thin the archive to at most --per-month snapshots per site per month.
+
+    Keeps the earliest in each month: the one that shows what the month started
+    from, so the filmstrip still reads as a progression. Each site's newest
+    snapshot is kept whatever its month already holds, because a history viewer
+    whose last card is not the current design reads as broken rather than thinned.
+
+    Dry run unless --apply. Everything it removes is regenerable with
+    `capture.py fleet-git`, but it deletes directories, so it says so first.
+    """
+    m = load_manifest()
+    groups, newest = {}, {}
+    for s in m['snapshots']:
+        groups.setdefault((s['site'], s['date'][:7]), []).append(s)
+        cur = newest.get(s['site'])
+        if cur is None or s['date'] > cur['date']:
+            newest[s['site']] = s
+    protected = {s['id'] for s in newest.values()}
+
+    drop = []
+    for (sid, month), snaps in sorted(groups.items()):
+        if a.site and sid != a.site:
+            continue
+        kept = {s['id'] for s in sorted(snaps, key=lambda s: s['date'])[:a.per_month]}
+        drop += [s for s in snaps if s['id'] not in kept and s['id'] not in protected]
+
+    if not drop:
+        print(f'nothing to prune at {a.per_month}/month')
+        return
+    mb = sum(s['bytes'] for s in drop) // 1024 // 1024
+    by_site = {}
+    for s in drop:
+        by_site[s['site']] = by_site.get(s['site'], 0) + 1
+    for sid in sorted(by_site):
+        print(f'  {sid:<28}{by_site[sid]:>4} to drop')
+    print(f'\n{len(drop)} of {len(m["snapshots"])} snapshots, {mb} MB, '
+          f'across {len(by_site)} sites, at {a.per_month}/month')
+    if not a.apply:
+        print('dry run. re-run with --apply to delete.')
+        return
+
+    drop_ids = {s['id'] for s in drop}
+    for s in drop:
+        d = ROOT / PurePosixPath(s['path']).parent
+        if d.exists():
+            shutil.rmtree(d)
+        if s['shot'] and (ROOT / s['shot']).exists():
+            (ROOT / s['shot']).unlink()
+    m['snapshots'] = [s for s in m['snapshots'] if s['id'] not in drop_ids]
+    save_manifest(m)
+    print(f'pruned {len(drop)} snapshots, {mb} MB reclaimed')
 
 
 def cmd_list(a):
@@ -677,7 +849,7 @@ def main():
     p = sub.add_parser('git', help='snapshot a project\'s git history')
     p.add_argument('project')
     p.add_argument('--limit', type=int, default=20, help='max snapshots after day-bucketing (default 20)')
-    p.add_argument('--every', choices=['day', 'week', 'all'], default='day')
+    p.add_argument('--every', choices=['day', 'week', 'month', 'all'], default='day')
     p.add_argument('--repo', help='explicit repo path (default: ../../projects/<project>)')
     add_shot_flags(p)
     p.set_defaults(fn=cmd_git)
@@ -685,6 +857,8 @@ def main():
     p = sub.add_parser('live', help='mirror a live page')
     p.add_argument('target', help='registry site id, domain, or full URL')
     p.add_argument('--site', help='override the site id the snapshot files under')
+    p.add_argument('--if-changed', action='store_true',
+                   help='record nothing when the page is byte-identical to the last snapshot')
     add_shot_flags(p)
     p.set_defaults(fn=cmd_live)
 
@@ -713,8 +887,25 @@ def main():
 
     p = sub.add_parser('fleet', help='live-capture every registry site')
     p.add_argument('--lifecycle', default='live')
+    p.add_argument('--if-changed', action='store_true',
+                   help='skip sites whose page is byte-identical to their last snapshot')
     add_shot_flags(p)
     p.set_defaults(fn=cmd_fleet)
+
+    p = sub.add_parser('fleet-git', help='backfill git history across every registry site')
+    p.add_argument('--lifecycle', default='live')
+    p.add_argument('--limit', type=int, default=6,
+                   help='snapshots per site after day-bucketing (default 6; HEAVY_SITES cap lower)')
+    p.add_argument('--every', choices=['day', 'week', 'month', 'all'], default='week')
+    add_shot_flags(p)
+    p.set_defaults(fn=cmd_fleet_git)
+
+    p = sub.add_parser('prune', help='thin the archive to N snapshots per site per month')
+    p.add_argument('--per-month', type=int, default=1,
+                   help='snapshots to keep per site per month, earliest first (default 1)')
+    p.add_argument('--site', help='limit to one site')
+    p.add_argument('--apply', action='store_true', help='actually delete (default is a dry run)')
+    p.set_defaults(fn=cmd_prune)
 
     p = sub.add_parser('list', help='print the manifest')
     p.add_argument('--site')

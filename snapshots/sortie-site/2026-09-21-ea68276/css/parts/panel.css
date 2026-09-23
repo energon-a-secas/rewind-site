@@ -1,0 +1,41 @@
+/* ── Options drawer ──────────────────────────────────────────
+   A sheet, not a modal: the console stays visible and interactive behind it
+   so accent changes preview live. */
+
+.panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(360px, 92vw);
+  z-index: var(--z-modal);
+  display: flex; flex-direction: column;
+  background: linear-gradient(200deg, var(--hud-raised-start), var(--hud-raised-end));
+  border-left: 1px solid var(--hud-line-strong);
+  box-shadow: var(--shadow-modal);
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.panel.is-open { transform: translateX(0); }
+
+.panel__head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.panel__title {
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+
+.panel__body {
+  padding: var(--space-4);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.panel__note {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}

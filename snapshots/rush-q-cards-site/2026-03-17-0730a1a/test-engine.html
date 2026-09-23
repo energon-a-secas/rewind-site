@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Scoring Engine Fix | Rush Q Cards</title>
+</head>
+<body>
+  <h1>Testing Scoring Engine</h1>
+  <div id="output">Loading...</div>
+
+  <script>
+    // Simulate the browser environment
+    window.evaluationResult = null;
+  </script>
+
+  <script type="module">
+    try {
+      // Test imports
+      const { DIMENSIONS, evaluateDecision, findMatchingDecision } = await import('./js/exercises/scoring-engine.js');
+      const { PROFILES, getProfile } = await import('./js/exercises/profiles.js');
+
+      console.log('✅ All modules loaded');
+      console.log('PROFILES:', Object.keys(PROFILES));
+      console.log('DIMENSIONS:', Object.keys(DIMENSIONS));
+
+      // Test with a sample scenario
+      const mockScenario = {
+        id: 'test',
+        title: 'Test Scenario',
+        role: 'tech-lead',
+        profile: 'cautious',
+        counterProfile: 'hero',
+        initialState: {
+          reputation: 25,
+          teamMorale: 20,
+          stakeholderTrust: 20,
+          techDebt: 10
+        },
+        decisions: [{
+          id: 'test-decision',
+          cards: ['Testing', 'Documentation'],
+          reasoning: 'Test decision',
+          effects: {
+            reputation: [-1, 2],
+            teamMorale: [0, 3],
+            stakeholderTrust: [0, 2],
+            techDebt: [-1, -1]
+          },
+          feedback: 'Test feedback'
+        }]
+      };
+
+      const result = evaluateDecision(mockScenario, mockScenario.decisions[0], null, 'hero');
+
+      document.getElementById('output').innerHTML = `
+        <h2>✅ Test Passed!</h2>
+        <p><strong>Score:</strong> ${result.score}</p>
+        <p><strong>Classification:</strong> ${result.classification}</p>
+        <p><strong>Dimensions:</strong></p>
+        <ul>
+          ${Object.entries(result.dimensions).map(([k, d]) =>
+            `<li>${k}: ${d.q1} → ${d.q2} = ${d.total}</li>`
+          ).join('')}
+        </ul>
+      `;
+
+      console.log('✅ evaluateDecision worked:', result);
+
+    } catch (err) {
+      console.error('❌ Error:', err);
+      document.getElementById('output').innerHTML = `
+        <h2>❌ Error</h2>
+        <p>${err.message}</p>
+        <pre>${err.stack}</pre>
+      `;
+    }
+  </script>
+</body>
+</html>

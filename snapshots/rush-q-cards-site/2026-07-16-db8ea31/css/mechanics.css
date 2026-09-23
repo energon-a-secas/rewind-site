@@ -1,0 +1,296 @@
+/* ── mechanics.css — page-specific styles for the hidden Mechanics ─────────
+   & Interactions reference and the internal Product Assessment page.
+   Reuses tokens from shared.css and classes from content.css.
+   Do NOT duplicate rules that already live in content.css. */
+
+/* ── Static TOC (these pages hard-code their nav, no JS build) ─────────── */
+.toc-static { list-style: none; padding: 0; margin: 0; }
+.toc-static li { margin-bottom: 2px; }
+.toc-static a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: var(--text-xs);
+  padding: 5px 10px;
+  display: block;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  transition: color var(--dur), background var(--dur), border-color var(--dur);
+}
+.toc-static a:hover { color: var(--text-primary); background: var(--surface-1); }
+.toc-static a.sub { padding-left: 22px; font-size: 0.7rem; }
+.toc-title {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text-muted);
+  margin-bottom: 10px; padding-left: 10px;
+}
+
+/* ── Page lead / eyebrow ───────────────────────────────────────────────── */
+.page-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.7px;
+  padding: 4px 12px; border-radius: 20px;
+  background: var(--accent-soft); color: var(--accent-bright);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  margin-bottom: 14px;
+}
+.page-lead {
+  font-size: var(--text-lg); line-height: 1.65;
+  color: var(--text-secondary); margin: 4px 0 8px;
+}
+.source-note {
+  font-size: var(--text-xs); color: var(--text-muted);
+  background: var(--surface-1); border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px; margin: 12px 0 8px; line-height: 1.6;
+}
+.source-note code {
+  background: var(--surface-2); padding: 1px 5px; border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em;
+}
+
+/* ── Internal / confidential banner (assessment page) ──────────────────── */
+.internal-banner {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 18px; margin-bottom: 24px;
+  background: color-mix(in srgb, #ef4444 8%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 30%, transparent);
+  border-left: 4px solid #ef4444;
+  border-radius: var(--radius);
+  font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6;
+}
+.internal-banner strong { color: #f87171; }
+.internal-banner svg { width: 20px; height: 20px; flex-shrink: 0; color: #ef4444; margin-top: 1px; }
+
+/* ── Verdict headline box ──────────────────────────────────────────────── */
+.verdict-box {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface-1)), var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: var(--radius-lg);
+  padding: 22px 24px; margin: 8px 0 28px;
+}
+.verdict-box .verdict-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.verdict-box p { color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
+.verdict-box p:last-child { margin-bottom: 0; }
+
+/* ── Finding cards (weaknesses / gaps, ranked by impact) ───────────────── */
+.finding {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--find-color, var(--border-strong));
+  border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 14px;
+}
+.finding-head {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap; margin-bottom: 8px;
+}
+.finding-name { font-size: var(--text-base); font-weight: 700; color: var(--text-primary); }
+.finding-body { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.65; }
+.finding-body code {
+  background: var(--surface-2); padding: 1px 5px; border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em;
+}
+.finding-body strong { color: var(--text-primary); }
+
+.sev {
+  font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.6px; padding: 3px 9px; border-radius: 6px; white-space: nowrap;
+}
+.sev-p0 { background: rgba(239,68,68,.16); color: #f87171; border: 1px solid rgba(239,68,68,.35); }
+.sev-p1 { background: rgba(251,146,60,.16); color: #fb923c; border: 1px solid rgba(251,146,60,.32); }
+.sev-p2 { background: rgba(251,191,36,.14); color: #fbbf24; border: 1px solid rgba(251,191,36,.28); }
+.sev-p3 { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+
+.verified-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 3px 9px; border-radius: 6px;
+  background: rgba(52,211,153,.14); color: #34d399; border: 1px solid rgba(52,211,153,.3);
+  white-space: nowrap;
+}
+.verified-tag svg { width: 11px; height: 11px; }
+
+/* finding severity accent colors */
+.finding.p0 { --find-color: #ef4444; }
+.finding.p1 { --find-color: #fb923c; }
+.finding.p2 { --find-color: #fbbf24; }
+.finding.p3 { --find-color: var(--border-strong); }
+
+/* ── Strength cards (protect these) ────────────────────────────────────── */
+.strength-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px; margin: 4px 0 8px;
+}
+.strength {
+  background: color-mix(in srgb, #34d399 5%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, #34d399 20%, var(--border));
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.strength h4 {
+  font-size: var(--text-sm); font-weight: 700; color: #34d399;
+  margin: 0 0 6px; display: flex; align-items: center; gap: 6px;
+}
+.strength p { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.55; margin: 0; }
+
+/* ── Priority checklist (path to test launch) ──────────────────────────── */
+.checklist { display: flex; flex-direction: column; gap: 10px; margin: 8px 0; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.check-num {
+  width: 26px; height: 26px; flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 800;
+  background: var(--accent-soft); color: var(--accent-bright);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.check-body { flex: 1; min-width: 0; }
+.check-title { font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.check-body p { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.55; margin: 0; }
+.check-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip {
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  padding: 2px 8px; border-radius: 5px;
+  background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border);
+}
+.chip.risk-high { background: rgba(239,68,68,.12); color: #f87171; border-color: rgba(239,68,68,.28); }
+.chip.risk-low  { background: rgba(52,211,153,.12); color: #34d399; border-color: rgba(52,211,153,.26); }
+.chip.wave { background: var(--accent-soft); color: var(--accent-bright); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+.chip.done { background: rgba(52,211,153,.16); color: #34d399; border-color: rgba(52,211,153,.4); }
+.chip.partial { background: rgba(251,191,36,.14); color: #fbbf24; border-color: rgba(251,191,36,.34); }
+
+.check-item.done { border-color: rgba(52,211,153,.32); background: color-mix(in srgb, #34d399 6%, var(--surface-1)); }
+.check-item.done .check-num {
+  background: rgba(52,211,153,.16); color: #34d399;
+  border-color: rgba(52,211,153,.4);
+}
+
+/* ── Combo list ────────────────────────────────────────────────────────── */
+.combo-list { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 8px; }
+.combo {
+  display: flex; gap: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.combo-num {
+  font-family: var(--font-display);
+  font-size: 0.9rem; font-weight: 700; color: var(--accent);
+  flex-shrink: 0; min-width: 22px;
+}
+.combo-body { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6; }
+.combo-body strong { color: var(--text-primary); }
+.combo-body code {
+  background: var(--surface-2); padding: 1px 5px; border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--text-muted);
+}
+
+/* ── Vignette cards ────────────────────────────────────────────────────── */
+.vignette {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 12px;
+}
+.vignette-title {
+  font-size: var(--text-base); font-weight: 700; color: var(--text-primary);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+}
+.vignette-emoji { font-size: 1.1rem; }
+.vignette-body { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.65; margin-bottom: 8px; }
+.vignette-body code {
+  background: var(--surface-2); padding: 1px 5px; border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; color: var(--text-muted);
+}
+.vignette-lesson {
+  font-size: var(--text-sm); line-height: 1.55;
+  padding: 8px 12px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+.vignette-lesson strong { color: var(--accent-bright); }
+
+/* ── Mermaid diagram container ─────────────────────────────────────────── */
+.diagram-block { margin: 16px 0 24px; }
+.diagram-caption {
+  font-size: var(--text-xs); color: var(--text-muted);
+  margin-bottom: 10px; font-style: italic;
+}
+.mermaid {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  overflow-x: auto;
+  text-align: center;
+  line-height: normal;
+}
+/* Fallback: raw mermaid source shown if the library is blocked/unavailable */
+.diagram-fallback {
+  display: none;
+  background: var(--surface-1);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 14px; margin-top: 8px;
+  overflow-x: auto;
+}
+.diagram-fallback pre { margin: 0; }
+.diagram-fallback code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8rem; color: var(--text-secondary); white-space: pre;
+}
+.mermaid-failed .mermaid { display: none; }
+.mermaid-failed .diagram-fallback { display: block; }
+
+/* ── Cross-link footer between the two hidden pages ────────────────────── */
+.hidden-xlink {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 32px; padding: 16px 20px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm); color: var(--text-muted);
+}
+.hidden-xlink a {
+  color: var(--accent-bright); text-decoration: none; font-weight: 600;
+}
+.hidden-xlink a:hover { text-decoration: underline; }
+
+/* ── Legend for taxonomy color pips ────────────────────────────────────── */
+.type-pip {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 6px; vertical-align: middle;
+  box-shadow: 0 0 5px color-mix(in srgb, var(--pip-color) 60%, transparent);
+  background: var(--pip-color);
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .strength-grid { grid-template-columns: 1fr; }
+  .mermaid { padding: 12px; }
+}
+
+/* Resolution note appended to a fixed finding on the assessment page. */
+.fix-note {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid #34d399;
+  background: rgba(52, 211, 153, 0.08);
+  border-radius: 0 var(--radius-sm, 8px) var(--radius-sm, 8px) 0;
+  font-size: 0.9em;
+  color: var(--text-secondary, #d8cec2);
+}
+.fix-note strong { color: #34d399; }

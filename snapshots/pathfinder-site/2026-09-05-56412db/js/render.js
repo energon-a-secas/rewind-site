@@ -1,0 +1,645 @@
+// ════════════════════════════════════════════════════════════
+//  render.js — DOM rendering, block creation, canvas layout,
+//              selection, mutations, undo/redo
+// ════════════════════════════════════════════════════════════
+
+import { state, selection, ui, canvasMeta, debouncedSave, snapshot,
+         getUndoHistory, getRedoFuture } from './state.js'
+import { $, TYPES, SWATCH_COLORS, SWATCH_NAMES, ACTION_DEFS, STATUS_DEFS, PRIORITY_DEFS,
+         ARROW_LABEL_PRESETS, TYPE_EXPLANATIONS, DEFAULT_WIDTH, CARD_STYLES, DEFAULT_CARD_STYLE, BORDER_WIDTHS, HIGHLIGHTS,
+         escHtml, escHtmlMultiline, genId, getBlockEl, getBlockDims, getBlockVotes, getSmallIcon } from './utils.js'
+import { renderArrows, renderFrames, updateHint } from './canvas.js'
+import { runGapDetection, getGapFixes } from './gaps.js'
+import { refreshPrompt } from './prompt.js'
+import { askQuestion, detectSeeReference } from './doc-panel.js'
+
+function afterMutation() {
+  ui.promptDirty = true
+  if (ui.activeTab === 'prompt') refreshPrompt()
+  // The readiness pill is always visible, so refresh it on every change
+  // regardless of the active tab. Decoupled via event to avoid a cycle.
+  window.dispatchEvent(new CustomEvent('pf:canvas-changed'))
+}
+
+// ── Block rendering ──────────────────────────────────────────
+/**
+ * The highlight picker. One markup helper for both places it appears, so the
+ * single-block and multi-select versions cannot drift.
+ *
+ * `active` is the currently applied key, or `'mixed'` when a selection carries
+ * more than one, which is worth showing rather than silently picking the first.
+ */
+export function highlightRowHtml(active) {
+  return `<button class="hl-swatch hl-swatch-none${!active ? ' active' : ''}" data-hl=""
+            title="No highlight" aria-label="No highlight"></button>` +
+    Object.entries(HIGHLIGHTS).map(([key, h]) =>
+      `<button class="hl-swatch${key === 'festive' ? ' hl-swatch-festive' : ''}${active === key ? ' active' : ''}"
+               data-hl="${key}" style="--sw:${h.color}"
+               title="${escHtml(h.label)}: ${escHtml(h.hint)}" aria-label="${escHtml(h.label)}"></button>`
+    ).join('')
+}
+
+/** What a whole selection is set to: one key, null, or 'mixed'. */
+export function selectionHighlight(ids) {
+  const seen = new Set(ids.map(id => state.blocks[id]?.highlight || null))
+  if (seen.size > 1) return 'mixed'
+  return [...seen][0] || null
+}
+
+export function renderBlock(id) {
+  const b  = state.blocks[id]; if (!b) return
+  let el   = getBlockEl(id)
+  const isNew = !el
+  if (isNew) { el = document.createElement('div'); el.id = 'b-' + id; $.canvasRoot().appendChild(el) }
+
+  // Don't clobber live inline editing
+  const focused = document.activeElement
+  if (!isNew && el.contains(focused) && focused.contentEditable === 'true') {
+    el.style.left = b.x + 'px'; el.style.top = b.y + 'px'; return
+  }
+
+  el.className = 'block' + (selection.ids.has(id) ? ' selected' : '') + (b.collapsed ? ' collapsed' : '')
+  el.dataset.id   = id
+  el.dataset.type = b.type
+  const w = b.width || DEFAULT_WIDTH
+  el.style.cssText = `left:${b.x}px;top:${b.y}px;width:${w}px`
+  // Appearance. Both fall back to the canvas-wide default, so changing that
+  // one setting restyles every card that has not been overridden.
+  el.dataset.card = b.cardStyle || canvasMeta.cardStyle || DEFAULT_CARD_STYLE
+  if (b.highlight) el.dataset.highlight = b.highlight
+  else delete el.dataset.highlight
+  if (b.color) el.style.setProperty('--bc', b.color)
+  if (b.borderWidth) el.style.setProperty('--bw', b.borderWidth + 'px')
+
+  const actHtml = (b.actions || []).map(a => `<span class="action-badge ${a}" title="${ACTION_DEFS[a] || a}">${a}</span>`).join('')
+  const statusHtml = b.status && b.status !== 'not-started'
+    ? `<span class="status-badge status-${b.status}" title="${STATUS_DEFS[b.status]?.label || b.status}">${STATUS_DEFS[b.status]?.icon || ''} ${STATUS_DEFS[b.status]?.label || b.status}</span>` : ''
+  const priorityHtml = b.priority
+    ? `<span class="priority-badge priority-${b.priority}" title="${PRIORITY_DEFS[b.priority]?.label || b.priority} priority">${PRIORITY_DEFS[b.priority]?.label || b.priority}</span>` : ''
+  // Always rendered (even when empty) so the description is directly
+  // double-click editable on the card. Empty ones collapse via CSS `:empty`
+  // and show an "Add description…" hint only on hover/selection.
+  const descHtml = `<div class="block-desc">${escHtmlMultiline(b.description)}</div>`
+  const badgeStyle = b.color ? ` style="color:${b.color}"` : ''
+
+  // Voting indicator - show vote count if any votes exist
+  const voteCount = getBlockVotes(id).reduce((sum, v) => sum + v.dots, 0)
+  const voteClass = voteCount > 0 ? ' block-vote-indicator has-votes' : ' block-vote-indicator'
+  const voteHtml = voteCount > 0 ? `\n      <span class="${voteClass}" title="${voteCount} votes">${getSmallIcon('vote')} ${voteCount}</span>` : ''
+
+  // Living-doc markers: a link chip when a doc is wired (click → preview popup),
+  // and a check when at least one question has an answer stored.
+  const hasDoc = !!(b.docRef && (b.docRef.href || b.docRef.label))
+  const docTitle = hasDoc ? (b.docRef.label || b.docRef.href) : ''
+  const docHtml = hasDoc
+    ? `\n      <button class="block-doc-badge" data-doc-bid="${id}" title="View referenced doc: ${escHtml(docTitle)}" aria-label="View referenced documentation">${getSmallIcon('link')}</button>` : ''
+  const answered = (b.questions || []).some(q => q.answer?.trim())
+  const answeredHtml = answered
+    ? `\n      <span class="block-answered-badge" title="A question on this block has an answer">${getSmallIcon('check')}</span>` : ''
+
+  el.tabIndex = 0
+  el.setAttribute('role', 'article')
+  el.setAttribute('aria-label', `${TYPES[b.type]?.label || b.type}: ${b.title || 'Untitled'}`)
+  el.setAttribute('aria-selected', selection.ids.has(id) ? 'true' : 'false')
+
+  el.innerHTML = `
+    <div class="block-header">
+      <span class="block-type-badge"${badgeStyle}>${TYPES[b.type]?.label || b.type}</span>${voteHtml}${docHtml}${answeredHtml}
+      <div class="block-gap-icons" id="gi-${id}"></div>
+      <button class="block-collapse-btn" data-bid="${id}" title="${b.collapsed ? 'Expand' : 'Collapse'}" aria-label="${b.collapsed ? 'Expand block' : 'Collapse block'}">${b.collapsed ? '&#9654;' : '&#9660;'}</button>
+    </div>
+    <div class="block-title" id="bt-${id}">${escHtml(b.title) || '<span style="opacity:.35">Untitled</span>'}</div>
+    ${descHtml}
+    ${(statusHtml || priorityHtml) ? `<div class="block-meta">${priorityHtml}${statusHtml}</div>` : ''}
+    ${actHtml ? `<div class="block-actions">${actHtml}</div>` : ''}
+    <div class="port port-left"   data-port="left"   data-bid="${id}"></div>
+    <div class="port port-right"  data-port="right"  data-bid="${id}"></div>
+    <div class="port port-top"    data-port="top"    data-bid="${id}"></div>
+    <div class="port port-bottom" data-port="bottom" data-bid="${id}"></div>
+    <div class="block-resize-handle" data-bid="${id}"></div>`
+}
+
+export function renderAllBlocks() {
+  $.canvasRoot().querySelectorAll('.block').forEach(el => { if (!state.blocks[el.dataset.id]) el.remove() })
+  Object.keys(state.blocks).forEach(id => renderBlock(id))
+}
+
+// ── Inspector ────────────────────────────────────────────────
+export function renderInspector() {
+  const inspectorEmpty   = $.inspectorEmpty()
+  const inspectorContent = $.inspectorContent()
+  const inspectorMulti   = $.inspectorMulti()
+  const inspectorArrow   = $.inspectorArrow()
+  const inspTitle        = $.inspTitle()
+  const inspDesc         = $.inspDesc()
+  const inspNotes        = $.inspNotes()
+
+  if (selection.ids.size > 1) {
+    inspectorEmpty.style.display = 'none'
+    inspectorContent.style.display = 'none'
+    inspectorMulti.style.display = ''
+    inspectorArrow.style.display = 'none'
+    // A count by type, because "5 problems, 3 requirements, 1 goal" is what
+    // people actually want to say out loud when they present a canvas.
+    const tally = {}
+    selection.ids.forEach(id => { const t = state.blocks[id]?.type; if (t) tally[t] = (tally[t] || 0) + 1 })
+    const parts = Object.entries(tally)
+      .sort((a, b) => b[1] - a[1])
+      .map(([t, n]) => `${n} ${(TYPES[t]?.label || t).toLowerCase()}${n === 1 ? '' : 's'}`)
+    document.getElementById('multiCount').textContent =
+      `${selection.ids.size} blocks selected` + (parts.length > 1 ? ` \u2014 ${parts.join(', ')}` : '')
+
+    const multiHl = document.getElementById('multiHighlightRow')
+    if (multiHl) {
+      const active = selectionHighlight([...selection.ids])
+      multiHl.innerHTML = highlightRowHtml(active === 'mixed' ? null : active)
+      multiHl.dataset.mixed = active === 'mixed' ? '1' : ''
+    }
+    const spotBtn = document.getElementById('spotlightBtn')
+    if (spotBtn) {
+      spotBtn.classList.toggle('active', !!canvasMeta.spotlight)
+      spotBtn.textContent = canvasMeta.spotlight ? 'Spotlight: on' : 'Spotlight: off'
+    }
+
+    const frameSection = document.getElementById('frameSection')
+    const ungroupBtn = document.getElementById('ungroupBtn')
+    const groupBlocksBtn = document.getElementById('groupBlocksBtn')
+    if (frameSection && ungroupBtn && groupBlocksBtn) {
+      const hasGroup = selection.groupId && state.groups[selection.groupId]
+      frameSection.style.display = hasGroup ? '' : 'none'
+      groupBlocksBtn.style.display = hasGroup ? 'none' : ''
+      if (hasGroup) {
+        const lbl = document.getElementById('frameLabelInput')
+        if (lbl) lbl.value = state.groups[selection.groupId].label
+      }
+    }
+    return
+  }
+  inspectorMulti.style.display = 'none'
+  if (selection.arrowId) {
+    const a = state.arrows.find(arr => arr.id === selection.arrowId)
+    inspectorEmpty.style.display = 'none'
+    inspectorContent.style.display = 'none'
+    inspectorArrow.style.display = ''
+    if (a) {
+      const f = state.blocks[a.from], t = state.blocks[a.to]
+      document.getElementById('arrowInfo').textContent =
+        `${TYPES[f?.type]?.label||'?'} "${f?.title||'?'}" \u2192 ${TYPES[t?.type]?.label||'?'} "${t?.title||'?'}"`
+      document.getElementById('arrowLabelInput').value = a.label || ''
+      const arrowNoteEl = document.getElementById('arrowNoteInput')
+      if (arrowNoteEl) arrowNoteEl.value = a.note || ''
+      // Label presets
+      const presetsEl = document.getElementById('arrowLabelPresets')
+      if (presetsEl) {
+        presetsEl.innerHTML = ARROW_LABEL_PRESETS.map(p =>
+          `<button class="arrow-preset-chip${a.label === p ? ' active' : ''}" data-preset="${p}">${p}</button>`
+        ).join('')
+      }
+      // Style buttons
+      document.querySelectorAll('[data-arrow-style]').forEach(btn =>
+        btn.classList.toggle('active', (a.style || 'curved') === btn.dataset.arrowStyle))
+      // Bidirectional toggle
+      document.getElementById('arrowBidir').classList.toggle('active', !!a.bidirectional)
+      // Color swatches
+      const arrowSwatches = $.arrowColorSwatches()
+      if (arrowSwatches) {
+        arrowSwatches.innerHTML =
+          `<div class="color-swatch swatch-reset${!a.color ? ' active' : ''}" data-color="reset" role="button" aria-label="Default color" title="Default"></div>` +
+          SWATCH_COLORS.map(c =>
+            `<div class="color-swatch${a.color === c ? ' active' : ''}" data-color="${c}" style="background:${c}" role="button" aria-label="${SWATCH_NAMES[c] || c}" title="${SWATCH_NAMES[c] || c}"></div>`
+          ).join('')
+      }
+      // Weight buttons
+      document.querySelectorAll('[data-arrow-weight]').forEach(btn =>
+        btn.classList.toggle('active', (a.weight || 2) === +btn.dataset.arrowWeight))
+      // Connection points. An unpinned end reads as Auto; the canvas still picks
+      // a side for it, but the user has not committed to one.
+      document.querySelectorAll('.port-pick').forEach(group => {
+        const pinned = (group.dataset.portEnd === 'from' ? a.fromPort : a.toPort) || ''
+        group.querySelectorAll('[data-port-side]').forEach(btn =>
+          btn.classList.toggle('active', btn.dataset.portSide === pinned))
+      })
+    }
+    return
+  }
+  inspectorArrow.style.display = 'none'
+  if (!selection.blockId) {
+    inspectorEmpty.style.display = ''
+    inspectorContent.style.display = 'none'
+    return
+  }
+  const b = state.blocks[selection.blockId]
+  if (!b) { inspectorEmpty.style.display = ''; inspectorContent.style.display = 'none'; return }
+
+  inspectorEmpty.style.display = 'none'
+  inspectorContent.style.display = ''
+
+  // type picker
+  const TYPE_TIPS = {
+    goal: 'What you want to achieve', problem: 'Blocker or issue', requirement: 'Needed to proceed',
+    assumption: 'A belief you’re treating as true', risk: 'What might go wrong',
+    question: 'A genuine unknown', decision: 'A choice already made',
+    resource: 'Available asset', output: 'Expected result',
+    process: 'A workflow step or action', terminator: 'Workflow start or end',
+    context: 'Background information', custom: 'Free-form block',
+  }
+  $.typePicker().innerHTML = Object.entries(TYPES).map(([t, cfg]) =>
+    `<span class="type-pill${t===b.type?' active':''}" data-type="${t}" style="color:${cfg.color}" title="${TYPE_TIPS[t] || t}">${cfg.label}</span>`
+  ).join('')
+
+  // Contextual nudge: a question stated as a belief should become an Assumption
+  // so the AI is told to pressure-test it rather than just answer it.
+  const promoteEl = document.getElementById('promoteAssumption')
+  if (promoteEl) {
+    if (b.type === 'question') {
+      promoteEl.style.display = ''
+      promoteEl.dataset.bid = b.id
+    } else {
+      promoteEl.style.display = 'none'
+    }
+  }
+
+  // Status picker
+  const statusPicker = document.getElementById('statusPicker')
+  if (statusPicker) {
+    statusPicker.innerHTML = `<button class="status-opt${!b.status || b.status === 'not-started' ? ' active' : ''}" data-status="">None</button>` +
+      Object.entries(STATUS_DEFS).filter(([k]) => k !== 'not-started').map(([k, v]) =>
+        `<button class="status-opt${b.status === k ? ' active' : ''}" data-status="${k}">${v.icon} ${v.label}</button>`
+      ).join('')
+  }
+
+  // Priority picker
+  const priorityPicker = document.getElementById('priorityPicker')
+  if (priorityPicker) {
+    priorityPicker.innerHTML = `<button class="priority-opt${!b.priority ? ' active' : ''}" data-priority="">None</button>` +
+      Object.entries(PRIORITY_DEFS).map(([k, v]) =>
+        `<button class="priority-opt${b.priority === k ? ' active' : ''}" data-priority="${k}" style="--pc:${v.color}">${v.label}</button>`
+      ).join('')
+  }
+
+  inspTitle.value = b.title
+  inspDesc.value  = b.description
+  inspNotes.value = b.notes || ''
+
+  // Acceptance criteria for the block types that can be "done"; rationale for
+  // decisions. Hidden everywhere else so the inspector stays short.
+  const criteriaSection = document.getElementById('criteriaSection')
+  if (criteriaSection) {
+    const wants = b.type === 'requirement' || b.type === 'goal' || b.type === 'output'
+    criteriaSection.style.display = wants ? '' : 'none'
+    if (wants) $.inspCriteria().value = (b.criteria || []).join('\n')
+  }
+  const rationaleSection = document.getElementById('rationaleSection')
+  if (rationaleSection) {
+    rationaleSection.style.display = b.type === 'decision' ? '' : 'none'
+    if (b.type === 'decision') $.inspRationale().value = b.rationale || ''
+  }
+
+  // Documentation reference fields + "promote See:" nudge
+  const docHref = document.getElementById('docRefHref')
+  const docLabel = document.getElementById('docRefLabel')
+  const docAnchor = document.getElementById('docRefAnchor')
+  if (docHref && docLabel && docAnchor) {
+    docHref.value = b.docRef?.href || ''
+    docLabel.value = b.docRef?.label || ''
+    docAnchor.value = b.docRef?.anchor || ''
+    const previewBtn = document.getElementById('docRefPreviewBtn')
+    if (previewBtn) previewBtn.style.display = b.docRef?.href ? '' : 'none'
+  }
+  const promoteSee = document.getElementById('promoteSeeRef')
+  if (promoteSee) {
+    const seeRef = detectSeeReference(b.description)
+    if (seeRef && !b.docRef) {
+      promoteSee.style.display = ''
+      promoteSee.textContent = `↳ Use "See: ${seeRef.label || seeRef.href}" as this block's doc`
+    } else {
+      promoteSee.style.display = 'none'
+    }
+  }
+
+  document.querySelectorAll('.action-toggle').forEach(btn => {
+    const isActive = b.actions.includes(btn.dataset.action)
+    btn.classList.toggle('active', isActive)
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false')
+  })
+
+  // Color swatches
+  const swatchesEl = $.colorSwatches()
+  if (swatchesEl) {
+    swatchesEl.innerHTML =
+      `<div class="color-swatch swatch-reset${!b.color ? ' active' : ''}" data-color="reset" role="button" aria-label="Reset to type color" title="Reset to type color"></div>` +
+      SWATCH_COLORS.map(c =>
+        `<div class="color-swatch${b.color === c ? ' active' : ''}" data-color="${c}" style="background:${c}" role="button" aria-label="${SWATCH_NAMES[c] || c}" title="${SWATCH_NAMES[c] || c}"></div>`
+      ).join('')
+  }
+
+  // Appearance. "Default" is a real choice, not an absent one: it means this
+  // block follows the canvas, so changing the canvas default still moves it.
+  const cardPicker = document.getElementById('cardStylePicker')
+  if (cardPicker) {
+    const canvasDefault = CARD_STYLES[canvasMeta.cardStyle]?.label || 'Outline'
+    cardPicker.innerHTML =
+      `<button class="radio-opt${!b.cardStyle ? ' active' : ''}" data-card-style="" title="Follow the canvas default (${escHtml(canvasDefault)})">Default</button>` +
+      Object.entries(CARD_STYLES).map(([k, v]) =>
+        `<button class="radio-opt${b.cardStyle === k ? ' active' : ''}" data-card-style="${k}" title="${escHtml(v.hint)}">${escHtml(v.label)}</button>`
+      ).join('')
+  }
+  const borderPicker = document.getElementById('borderWidthPicker')
+  if (borderPicker) {
+    borderPicker.innerHTML =
+      `<button class="radio-opt${!b.borderWidth ? ' active' : ''}" data-border-width="" style="flex:1">Default</button>` +
+      BORDER_WIDTHS.map(w =>
+        `<button class="radio-opt${b.borderWidth === w ? ' active' : ''}" data-border-width="${w}" style="flex:1">${w}px</button>`
+      ).join('')
+  }
+
+  const hlRow = document.getElementById('blockHighlightRow')
+  if (hlRow) hlRow.innerHTML = highlightRowHtml(b.highlight)
+
+  renderQuestions(b)
+
+  // Gap fix suggestions
+  const gapFixesEl = document.getElementById('gapFixes')
+  if (gapFixesEl) {
+    const fixes = getGapFixes(b)
+    if (fixes.length) {
+      gapFixesEl.style.display = ''
+      gapFixesEl.innerHTML =
+        '<div class="insp-label" style="margin-bottom:8px">Suggestions</div>' +
+        fixes.map(f => `
+          <div class="gap-fix-item">
+            <span class="gap-fix-icon">${f.icon}</span>
+            <div class="gap-fix-text">${escHtml(f.text)}</div>
+            ${f.action ? `<button class="gap-fix-btn" data-fix="${f.id}" data-bid="${b.id}">${escHtml(f.action)}</button>` : ''}
+          </div>`).join('')
+    } else {
+      gapFixesEl.style.display = 'none'
+    }
+  }
+}
+
+export function renderQuestions(b) {
+  const questionsList = $.questionsList()
+  questionsList.innerHTML = (b.questions||[]).map((q, i) => `
+    <div class="question-item${q.answer ? ' answered' : ''}">
+      <div class="question-row">
+        <input type="text" value="${escHtml(q.text)}" placeholder="Enter question\u2026" data-qi="${i}">
+        <button class="q-ask" data-qi="${i}" title="Copy a grounded prompt for this question">Ask</button>
+        <button class="q-del" data-qi="${i}" title="Delete">\u00D7</button>
+      </div>
+      <textarea class="question-answer" data-qi="${i}" rows="2"
+        placeholder="Paste the assistant's answer here\u2026">${escHtml(q.answer || '')}</textarea>
+    </div>`).join('')
+
+  questionsList.querySelectorAll('input[data-qi]').forEach(inp =>
+    inp.addEventListener('input', () => {
+      const b2 = state.blocks[selection.blockId]; if (!b2) return
+      const q = b2.questions[+inp.dataset.qi]; if (!q) return
+      q.text = inp.value
+      debouncedSave(); ui.promptDirty = true
+    })
+  )
+  questionsList.querySelectorAll('.question-answer').forEach(ta =>
+    ta.addEventListener('input', () => {
+      const b2 = state.blocks[selection.blockId]; if (!b2) return
+      const q = b2.questions[+ta.dataset.qi]; if (!q) return
+      if (ta.value.trim()) q.answer = ta.value; else delete q.answer
+      ta.closest('.question-item')?.classList.toggle('answered', !!ta.value.trim())
+      debouncedSave(); ui.promptDirty = true
+    })
+  )
+  questionsList.querySelectorAll('.q-ask').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const b2 = state.blocks[selection.blockId]; if (!b2) return
+      askQuestion(b2, +btn.dataset.qi)
+    })
+  )
+  questionsList.querySelectorAll('.q-del').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const b2 = state.blocks[selection.blockId]; if (!b2) return
+      b2.questions.splice(+btn.dataset.qi, 1)
+      renderQuestions(b2); debouncedSave(); ui.promptDirty = true
+    })
+  )
+}
+
+// ── Selection ────────────────────────────────────────────────
+export function selectBlock(id) {
+  selection.ids.forEach(sid => getBlockEl(sid)?.classList.remove('selected'))
+  selection.ids.clear()
+  selection.blockId = null; selection.groupId = null
+  if (selection.arrowId) { selection.arrowId = null; renderArrows() }
+  if (id) {
+    selection.ids.add(id); selection.blockId = id
+    getBlockEl(id)?.classList.add('selected')
+  }
+  renderFrames()
+  renderInspector()
+}
+
+export function addToSelection(id) {
+  if (selection.arrowId) { selection.arrowId = null; renderArrows() }
+  if (selection.ids.has(id)) {
+    selection.ids.delete(id); getBlockEl(id)?.classList.remove('selected')
+  } else {
+    selection.ids.add(id); getBlockEl(id)?.classList.add('selected')
+  }
+  selection.blockId = selection.ids.size === 1 ? [...selection.ids][0] : null
+  renderInspector()
+}
+
+export function setSelection(ids) {
+  selection.ids.forEach(sid => getBlockEl(sid)?.classList.remove('selected'))
+  selection.ids.clear()
+  if (selection.arrowId) { selection.arrowId = null; renderArrows() }
+  ids.forEach(id => {
+    if (state.blocks[id]) { selection.ids.add(id); getBlockEl(id)?.classList.add('selected') }
+  })
+  selection.blockId = selection.ids.size === 1 ? [...selection.ids][0] : null
+  renderInspector()
+}
+
+export function selectArrow(id) {
+  selection.ids.forEach(sid => getBlockEl(sid)?.classList.remove('selected'))
+  selection.ids.clear(); selection.blockId = null
+  selection.arrowId = id
+  renderArrows()
+  renderInspector()
+}
+
+export function deselectAll() {
+  selection.ids.forEach(sid => getBlockEl(sid)?.classList.remove('selected'))
+  selection.ids.clear(); selection.blockId = null; selection.groupId = null
+  if (selection.arrowId) { selection.arrowId = null; renderArrows() }
+  renderFrames()
+  renderInspector()
+}
+
+// ── Block / arrow mutations ──────────────────────────────────
+export function mutateBlock(id, changes) {
+  if (!state.blocks[id]) return
+  Object.assign(state.blocks[id], changes)
+  renderBlock(id)
+  renderArrows()
+  renderFrames()
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+}
+
+function nextUntitledTitle() {
+  const used = Object.values(state.blocks)
+    .map(b => /^Untitled (\d+)$/.exec(b.title))
+    .filter(Boolean)
+    .map(m => +m[1])
+  return `Untitled ${(used.length ? Math.max(...used) : 0) + 1}`
+}
+
+export function createBlock(type, wx, wy) {
+  snapshot()
+  const id = genId()
+  const count = Object.keys(state.blocks).length
+  state.blocks[id] = {
+    id, type,
+    title: nextUntitledTitle(),
+    description: '', notes: '',
+    x: wx - DEFAULT_WIDTH/2 + (count % 5) * 12,
+    y: wy - 50            + (count % 5) * 10,
+    actions: [], questions: [],
+    docRef: null,
+    width: null, color: null, collapsed: false, groupId: null,
+    status: null, priority: null,
+    cardStyle: null, borderWidth: null,   // null = follow the canvas default
+    highlight: null,                      // presentation emphasis, not meaning
+  }
+  renderBlock(id)
+  updateHint()
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+  return id
+}
+
+export function deleteBlock(id) {
+  if (!state.blocks[id]) return
+  snapshot()
+  delete state.blocks[id]
+  getBlockEl(id)?.remove()
+  state.arrows = state.arrows.filter(a => a.from !== id && a.to !== id)
+  renderArrows()
+  renderFrames()
+  if (selection.blockId === id) {
+    selection.ids.delete(id); selection.blockId = null; selection.groupId = null; renderInspector()
+  }
+  updateHint()
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+}
+
+export function addArrow(fromId, toId, fromPort = null, toPort = null) {
+  if (fromId === toId) return
+  if (state.arrows.some(a => a.from === fromId && a.to === toId)) return
+  snapshot()
+  state.arrows.push({ id: genId(), from: fromId, to: toId,
+    style: 'routed', bidirectional: false, color: null, weight: 2, fromPort, toPort })
+  renderArrows()
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+}
+
+export function deleteArrow(id) {
+  snapshot()
+  state.arrows = state.arrows.filter(a => a.id !== id)
+  $.arrowsGroup().querySelector(`[data-aid="${id}"]`)?.remove()
+  if (selection.arrowId === id) { selection.arrowId = null; renderInspector() }
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+}
+
+export function duplicateBlock(id) {
+  const b = state.blocks[id]; if (!b) return null
+  snapshot()
+  const newId = genId()
+  state.blocks[newId] = { ...JSON.parse(JSON.stringify(b)), id: newId, x: b.x + 32, y: b.y + 32 }
+  renderBlock(newId)
+  updateHint()
+  runGapDetection()
+  debouncedSave()
+  afterMutation()
+  return newId
+}
+
+export function deleteBlocksBatch(ids) {
+  if (!ids.length) return
+  snapshot()
+  ids.forEach(id => {
+    if (!state.blocks[id]) return
+    delete state.blocks[id]; getBlockEl(id)?.remove()
+    state.arrows = state.arrows.filter(a => a.from !== id && a.to !== id)
+  })
+  selection.ids.clear(); selection.blockId = null; selection.groupId = null
+  renderArrows(); renderFrames(); updateHint(); runGapDetection(); renderInspector()
+  debouncedSave()
+  afterMutation()
+}
+
+// ── Undo / Redo ──────────────────────────────────────────────
+export function undo() {
+  const history = getUndoHistory()
+  if (!history.length) return
+  const future = getRedoFuture()
+  future.push(JSON.stringify({ blocks: state.blocks, arrows: state.arrows, groups: state.groups }))
+  const d = JSON.parse(history.pop())
+  state.blocks = d.blocks; state.arrows = d.arrows; state.groups = d.groups || {}
+  renderAllBlocks(); renderArrows(); renderFrames(); runGapDetection(); renderInspector()
+  deselectAll(); debouncedSave()
+}
+
+export function redo() {
+  const future = getRedoFuture()
+  if (!future.length) return
+  const history = getUndoHistory()
+  history.push(JSON.stringify({ blocks: state.blocks, arrows: state.arrows, groups: state.groups }))
+  const d = JSON.parse(future.pop())
+  state.blocks = d.blocks; state.arrows = d.arrows; state.groups = d.groups || {}
+  renderAllBlocks(); renderArrows(); renderFrames(); runGapDetection(); renderInspector()
+  deselectAll(); debouncedSave()
+}
+
+// ── Groups ───────────────────────────────────────────────────
+export function createGroup(ids, label = 'Group') {
+  if (ids.length < 2) return null
+  snapshot()
+  const gid = genId()
+  state.groups[gid] = { id: gid, label }
+  ids.forEach(id => { if (state.blocks[id]) state.blocks[id].groupId = gid })
+  selection.groupId = gid
+  renderFrames()
+  renderInspector()
+  debouncedSave()
+  afterMutation()
+  return gid
+}
+
+export function deleteGroup(gid) {
+  if (!state.groups[gid]) return
+  snapshot()
+  Object.values(state.blocks).forEach(b => { if (b.groupId === gid) b.groupId = null })
+  delete state.groups[gid]
+  $.framesLayer()?.querySelector(`[data-gid="${gid}"]`)?.remove()
+  selection.groupId = null
+  renderInspector()
+  debouncedSave()
+  afterMutation()
+}
+
+// ── Canvas title ─────────────────────────────────────────────
+export function updateCanvasTitle() {
+  const el = $.canvasTitle()
+  const t = canvasMeta.title || 'Strategy canvas'
+  if (el.contentEditable !== 'true') el.textContent = t
+  document.title = canvasMeta.title ? canvasMeta.title + ' | Pathfinder' : 'Pathfinder | Strategy Canvas'
+}

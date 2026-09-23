@@ -1,0 +1,76 @@
+// ── Master render ────────────────────────────────────────────
+import { state } from './state.js';
+import { t } from './strings.js';
+import { escHtml } from './utils.js';
+import { NAV_VIEWS } from './navigate.js';
+import { DECKS } from './data/cards.js';
+import { glyphSvg } from './cards/glyphs.js';
+import { renderLearn } from './views/learn.js';
+import { renderCards } from './views/cards.js';
+import { renderPlay } from './views/play.js';
+import { renderBalance } from './views/balance.js';
+import { renderAbout } from './views/about.js';
+
+const NAV_ICON = { learn: 'book', cards: 'dice', play: 'play', about: 'star', balance: 'trend-up' };
+
+/**
+ * Keep the tab you are on inside a strip that scrolls.
+ *
+ * Measured at 360x740: #skNav is 108px wide holding 359px of tabs (429px in
+ * Spanish), its scrollbar is hidden by css/style.css, and it is opted out of the
+ * header kit's overflow menu. So on any view but the default, the header showed
+ * one unselected tab and no sign that three more existed. The Learn rail already
+ * solved exactly this (js/views/learn.js keepRailDotInView) and said so in its
+ * comment; the nav never got the same six lines.
+ */
+function keepNavTabInView(nav) {
+  if (typeof requestAnimationFrame !== 'function') return;
+  requestAnimationFrame(() => {
+    const cur = nav.querySelector('[aria-current="page"]');
+    if (!cur || nav.scrollWidth <= nav.clientWidth) return;
+    const c = cur.getBoundingClientRect(), n = nav.getBoundingClientRect();
+    if (c.left >= n.left && c.right <= n.right) return;
+    nav.scrollLeft += (c.left + c.width / 2) - (n.left + n.width / 2);
+  });
+}
+
+export function renderNav(s) {
+  const nav = document.getElementById('skNav');
+  if (!nav) return;
+  nav.innerHTML = NAV_VIEWS.map((v) => `
+    <a class="sk-tab" href="#/${v}"${s.view === v ? ' aria-current="page"' : ''} data-view="${v}">
+      ${glyphSvg(NAV_ICON[v], '', 16)}<span>${escHtml(t(`nav.${v}`))}</span>
+    </a>`).join('');
+  keepNavTabInView(nav);
+}
+
+export function render(s) {
+  renderNav(s);
+  const root = document.getElementById('viewRoot');
+  if (!root) return;
+  if (!s.cards) {
+    root.innerHTML = `<div class="container"><p class="muted">${escHtml(t('common.loading'))}</p></div>`;
+    return;
+  }
+  switch (s.view) {
+    case 'cards':
+      // #/cards/<deck> (the Learn view links these) selects the deck chip once.
+      if (s.param && (s.param === 'all' || DECKS.includes(s.param))) { s.deckFilter = s.param; s.param = null; }
+      root.innerHTML = renderCards(s);
+      break;
+    case 'play': root.innerHTML = renderPlay(s); break;
+    case 'about': root.innerHTML = renderAbout(s); break;
+    case 'balance': root.innerHTML = renderBalance(s); break;
+    default: root.innerHTML = renderLearn(s);
+  }
+  document.title = `${t(`nav.${s.view}`)} | Enjeu`;
+  // The active view on the root element, so a view's own stylesheet can claim the
+  // viewport (Learn is a slide deck and Play is a board: both are sized to fit and
+  // scroll inside their panels, while Cards and Balance are ordinary long pages).
+  document.documentElement.dataset.view = s.view;
+}
+
+export function renderError(msg) {
+  const root = document.getElementById('viewRoot');
+  if (root) root.innerHTML = `<div class="container"><div class="panel panel--danger">${escHtml(msg)}</div></div>`;
+}

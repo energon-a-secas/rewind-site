@@ -1,0 +1,35 @@
+# Runbook
+
+> A field manual for troubleshooting: how to work out what is wrong, what to do first, and what to do when you are blocked
+
+- Live: https://runbook.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: troubleshooting, debugging, incident response, on-call, root cause analysis, escalation
+
+## What it covers
+
+Method rather than any single technology. Nine chapters plus a failure-mode
+reference, each section deep-linkable as https://runbook.neorgon.com/#<section-id>.
+
+- 1. Reacting to a Problem: triage questions, scope and blast radius, the four usual suspects, status updates for leadership
+- 2. Preemptive Strategies: negative thinking, bounds set while rested, questions to answer while calm, the escalation ladder
+- 3. Quick Methods: time correlation, reproduction, differential comparison, reading errors, one variable at a time, searching well
+- 4. Long Methods: bisection, mocking and substitution, ruling out in writing, the scientific method, instrumenting instead of guessing
+- 5. Understanding Is Half the Battle: notes as a debugging tool, drawing the request path, rubber duck debugging, naming assumptions
+- 6. Proper Escalation: checklists for infrastructure, development, dependencies, and everything else, plus how to hand off
+- 7. Plan B: restore before you understand, rollback, kill switches, graceful degradation, asking for help, stopping
+- 8. Experience and Sharing: pattern recognition, writing runbooks, blameless post-mortems, not being a single point of failure
+- 9. The Classics: cache, DNS, certificate expiry, IAM changes, works-in-development, never-exercised code paths
+- A. Failure-Mode Reference: twelve common alerts with signal, first moves, and the usual misdiagnosis
+
+## Related Neorgon tools
+
+- [Infra Drills](https://infradrills.neorgon.com/): Local break-fix labs for AWS, Kubernetes, and GitLab CI.
+- [Snippets](https://snippets.neorgon.com/): Copy-paste terminal commands for debugging and recovery.
+- [SafeGuard](https://safeguard.neorgon.com/): Device and account hardening guides.
+- [Lockdown](https://lockdown.neorgon.com/): External security scanner for your domains.
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

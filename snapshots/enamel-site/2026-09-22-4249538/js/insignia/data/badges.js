@@ -1,0 +1,372 @@
+/**
+ * Insignia catalogue: the badge presets.
+ *
+ * Sixteen finished designs, not skeletons. Each names a shape, a palette, a
+ * pattern, rings, a centre and a foot, and each passes `validateDesign` from
+ * `../schema.js` with zero problems. `data/presets.js` assembles these with the
+ * certificate presets into the one `PRESETS` list a picker reads.
+ *
+ * Six rules these designs follow, and every one of them is a control rather
+ * than taste:
+ *
+ *   **Colour is assigned to the mood of the preset, never to the shape**
+ *   (C12 DO NOT #7). The flame here is cold violet and cyan, the leaf is slate
+ *   blue and the star is pink on near-black. Nothing pairs a silhouette with
+ *   the colour anyone would guess for it.
+ *
+ *   **`palette.ink` is always dark, whatever the ground is.** The renderer
+ *   fills the provenance strip with `palette.ink` and sets white text on it, so
+ *   a light ink makes the one element C11.1 requires to be legible the one
+ *   element that is not. `parchment` is the light-ground preset and it still
+ *   carries a near-black ink for exactly that reason.
+ *
+ *   **An arc only sits on a shape wide enough to hold it.** A badge exports
+ *   with a transparent ground, so arc text that falls outside the silhouette
+ *   vanishes the moment the PNG lands on a light page. Measured, per preset,
+ *   by sampling points along each arc against the shape path: the star, leaf,
+ *   diamond, wave and flame presets carry their words on a ribbon instead,
+ *   because the ribbon draws its own plate.
+ *
+ *   **A bottom arc and a ribbon are not combined unless they were measured to
+ *   clear each other.** The bottom arc runs on a circle of radius 174, so a
+ *   long string climbs the sides into the ribbon band at y 336 to 394. The
+ *   example design in C1.1 pairs a nine-glyph bottom arc with a ribbon, and the
+ *   two overlap.
+ *
+ *   **A body colour is not a dark ground with one neon accent.** An export
+ *   lands on a white page, and seven of the first twelve presets were a
+ *   near-black body whose strip merged with it there. The four presets added
+ *   in design round 2 (cobalt-pin, oxblood-crest, forest-merit,
+ *   tangerine-console) are the other register: a saturated body, a metal or
+ *   cord rim, a light mark. Their rims are rings in the `bevel`, `rope` and
+ *   `gear` styles rather than `finish.kind`, because `finish` is one value and
+ *   the pin wants its gloss there.
+ *
+ *   **A plate carries no edition mark.** The centre plate is a circle of
+ *   radius 88 x scale + 8 about y 214, so at scale 1 its top edge is y 118,
+ *   which is where the mark draws. A preset with a plate leaves `mark` empty.
+ *
+ * Owned by D1. Vendored into `<site>/js/insignia/data/badges.js`.
+ */
+import { normalizeDesign } from '../schema.js';
+
+/**
+ * Presets are declared as the fields that differ and completed by the kit's own
+ * `normalizeDesign`, so every exported `design` is a whole C1 document with no
+ * absent field for a consumer to guess at. Declaring them whole by hand would
+ * be 900 lines of repetition, and a preset that stored only its differences
+ * would silently change appearance the day a default moved.
+ */
+export const badge = (d) => normalizeDesign({ ...d, schemaVersion: 1, kind: 'badge' });
+
+export const BADGE_PRESETS = [
+  {
+    id: 'energon-hex',
+    name: 'Energon Hex',
+    note: 'The fleet mark, violet and gold. The default a new badge starts from. The year rides the ribbon so nothing sits between the top arc and the glyph.',
+    design: badge({
+      palette: { base: '#7c3aed', accent: '#f5d67b', ink: '#0b1020', metal: 'none' },
+      shape: 'hexagon',
+      rings: [
+        { style: 'solid', width: 16, color: '#f5d67b', inset: 0 },
+        { style: 'beaded', width: 6, color: '#0b1020', inset: 24 },
+      ],
+      pattern: { kind: 'hexgrid', color: '#ffffff', opacity: 0.14, scale: 1 },
+      arcs: {
+        // 34 with tracking 3 clears both shoulders of the hexagon; 40 with 4 sat on them.
+        top: { text: 'RUBBER DUCK', font: 'display', size: 34, tracking: 3, color: '#ffffff' },
+        // Measured against the ribbon band below it in all five faces: at 22
+        // with tracking 1 the serif's glyph box reached 0.5 units into the band
+        // and the studio warned; 21 with tracking 1 clears it by 1.4 in the
+        // serif and by 2.1 or more in the other four, and stays on the hexagon.
+        bottom: { text: 'WHISPERER', font: 'display', size: 21, tracking: 1, color: '#ffffff' },
+      },
+      centre: { kind: 'glyph', glyph: 'sparkles', color: '#ffffff', scale: 1, dy: -6 },
+      ribbon: { text: '2026', color: '#f5d67b', textColor: '#0b1020', font: 'display', size: 24 },
+      mark: { edition: '', year: null },
+    }),
+  },
+  {
+    id: 'midnight-disc',
+    name: 'Midnight Disc',
+    note: 'Fleet blue on the fleet ground. A disc with a double rim and a low count of pips.',
+    design: badge({
+      palette: { base: '#040714', accent: '#0063e5', ink: '#040714', metal: 'none' },
+      shape: 'circle',
+      rings: [
+        { style: 'double', width: 14, color: '#0063e5', inset: 0 },
+        { style: 'solid', width: 3, color: '#0080ff', inset: 28 },
+      ],
+      pattern: { kind: 'dots', color: '#0080ff', opacity: 0.22, scale: 1.2 },
+      arcs: {
+        top: { text: 'ON CALL', font: 'sans', size: 38, tracking: 6, color: '#f9f9f9' },
+        bottom: null,
+      },
+      centre: { kind: 'glyph', glyph: 'hourglass', color: '#0080ff', scale: 1, dy: -8 },
+      ribbon: { text: '03:00', color: '#0063e5', textColor: '#ffffff', font: 'mono', size: 22 },
+      pips: { count: 2, max: 5, style: 'dot', color: '#0080ff' },
+    }),
+  },
+  {
+    id: 'terminal',
+    name: 'Terminal',
+    note: 'Phosphor on black, fixed width throughout, a dashed rim and a circuit ground.',
+    design: badge({
+      palette: { base: '#04120a', accent: '#29ff9c', ink: '#04120a', metal: 'none' },
+      shape: 'rounded-square',
+      rings: [{ style: 'dashed', width: 8, color: '#29ff9c', inset: 12 }],
+      pattern: { kind: 'circuit', color: '#29ff9c', opacity: 0.18, scale: 1 },
+      arcs: {
+        top: { text: 'ROOT CAUSE', font: 'mono', size: 32, tracking: 2, color: '#d8ffe9' },
+        // 22, not 26: at 26 the line cleared the ribbon in the mono face and not in the serif a pairing swaps in.
+        bottom: { text: 'FOUND', font: 'mono', size: 22, tracking: 6, color: '#29ff9c' },
+      },
+      centre: { kind: 'glyph', glyph: 'bot', color: '#29ff9c', scale: 1, dy: -6 },
+      ribbon: { text: 'exit 0', color: '#29ff9c', textColor: '#04120a', font: 'mono', size: 22 },
+    }),
+  },
+  {
+    id: 'gold-rosette',
+    name: 'Gold Rosette',
+    note: 'The metal gradient on a scalloped disc, with a full row of star pips. Gold because the scalloped disc is a medal before it is anything else, and the near-black ink keeps the words legible on the metal.',
+    design: badge({
+      palette: { base: '#b98b2e', accent: '#2b1c05', ink: '#2b1c05', metal: 'gold' },
+      shape: 'rosette',
+      rings: [
+        { style: 'solid', width: 10, color: '#2b1c05', inset: 8 },
+        { style: 'beaded', width: 5, color: '#f6e2a8', inset: 26 },
+      ],
+      pattern: { kind: 'rays', color: '#ffffff', opacity: 0.12, scale: 1 },
+      arcs: {
+        top: { text: 'TEN YEARS', font: 'display', size: 34, tracking: 3, color: '#2b1c05' },
+        bottom: { text: 'OF UPTIME', font: 'display', size: 26, tracking: 5, color: '#2b1c05' },
+      },
+      centre: { kind: 'glyph', glyph: 'medal', color: '#2b1c05', scale: 0.95, dy: -10 },
+      pips: { count: 5, max: 5, style: 'star', color: '#2b1c05' },
+    }),
+  },
+  {
+    id: 'alert-star',
+    name: 'Alert Star',
+    note: 'Pink on near-black with a ray burst. The loudest thing in the list.',
+    design: badge({
+      palette: { base: '#12040a', accent: '#ff4d6d', ink: '#12040a', metal: 'none' },
+      shape: 'star',
+      rings: [{ style: 'solid', width: 9, color: '#ff4d6d', inset: 0 }],
+      pattern: { kind: 'rays', color: '#ff4d6d', opacity: 0.2, scale: 1.4 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'zap', color: '#ffe3e9', scale: 0.9, dy: -10 },
+      ribbon: { text: 'BLAST RADIUS', color: '#ff4d6d', textColor: '#12040a', font: 'mono', size: 22 },
+    }),
+  },
+  {
+    id: 'field-notes',
+    name: 'Field Notes',
+    note: 'A leaf drawn in cold slate rather than the green anyone would expect.',
+    design: badge({
+      palette: { base: '#1b2733', accent: '#9fb4c7', ink: '#0d141b', metal: 'none' },
+      shape: 'leaf',
+      rings: [{ style: 'rope', width: 9, color: '#9fb4c7', inset: 10 }],
+      pattern: { kind: 'noise', color: '#ffffff', opacity: 0.1, scale: 1 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'telescope', color: '#e6eef5', scale: 0.95, dy: -6 },
+      ribbon: { text: 'FIELD NOTES', color: '#9fb4c7', textColor: '#0d141b', font: 'slab', size: 24 },
+      mark: { edition: 'II', year: 2026 },
+    }),
+  },
+  {
+    id: 'parchment',
+    name: 'Parchment',
+    note: 'The light-ground preset. Dark ink, hairline stripes, a double rim.',
+    design: badge({
+      palette: { base: '#f0ece0', accent: '#7a5a1e', ink: '#1b1a17', metal: 'none' },
+      shape: 'shield',
+      rings: [{ style: 'double', width: 10, color: '#7a5a1e', inset: 12 }],
+      pattern: { kind: 'stripes', color: '#1b1a17', opacity: 0.07, scale: 1.6 },
+      arcs: {
+        top: { text: 'ARCHIVIST', font: 'display', size: 34, tracking: 4, color: '#1b1a17' },
+        bottom: { text: 'SECOND CLASS', font: 'display', size: 22, tracking: 4, color: '#4a4437' },
+      },
+      centre: { kind: 'glyph', glyph: 'scroll', color: '#7a5a1e', scale: 1, dy: -4 },
+      ribbon: null,
+      pips: { count: 3, max: 5, style: 'bar', color: '#7a5a1e' },
+      mark: { edition: '', year: 2026 },
+    }),
+  },
+  {
+    id: 'blueprint',
+    name: 'Blueprint',
+    note: 'Drafting blue, a chevron ground and two rims, one of them dashed.',
+    design: badge({
+      palette: { base: '#06243f', accent: '#7fd4ff', ink: '#04182a', metal: 'none' },
+      shape: 'diamond',
+      rings: [
+        { style: 'solid', width: 8, color: '#7fd4ff', inset: 0 },
+        { style: 'dashed', width: 4, color: '#ffffff', inset: 20 },
+      ],
+      pattern: { kind: 'chevrons', color: '#7fd4ff', opacity: 0.16, scale: 1 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'ruler', color: '#dff2ff', scale: 0.85, dy: -8 },
+      ribbon: { text: 'SPEC WRITTEN', color: '#7fd4ff', textColor: '#04182a', font: 'mono', size: 22 },
+      mark: { edition: 'v1', year: 2026 },
+    }),
+  },
+  {
+    id: 'undertow',
+    name: 'Undertow',
+    note: 'A guilloche ground under a banded silhouette, no rim, four pips of five. Teal at two depths because water is the only thing a wave reads as, and one hue keeps the guilloche from fighting the glyph.',
+    design: badge({
+      palette: { base: '#04252b', accent: '#45e0c8', ink: '#012025', metal: 'none' },
+      shape: 'wave',
+      rings: [],
+      pattern: { kind: 'guilloche', color: '#45e0c8', opacity: 0.2, scale: 1 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'umbrella', color: '#d9fff7', scale: 1, dy: -4 },
+      ribbon: { text: 'STEADY STATE', color: '#45e0c8', textColor: '#012025', font: 'rounded', size: 24 },
+    }),
+  },
+  {
+    id: 'ribbon-award',
+    name: 'Ribbon Award',
+    note: 'The scalloped disc with tails, claret and gold. The words ride the outer band, a beaded ring sits inside them around the trophy, and the tails take the foot, so no ribbon and no bottom arc. Claret and gold because a prize rosette is the one object whose colours everyone already knows; the cream lettering is what stays legible on claret.',
+    design: badge({
+      palette: { base: '#7a0f22', accent: '#f5d67b', ink: '#2b0209', metal: 'none' },
+      shape: 'ribbon-rosette',
+      // Inset 56 puts the ring inside the arc rather than through it: the disc is
+      // scalloped, so a ring near its edge crosses the words at every valley.
+      rings: [{ style: 'beaded', width: 6, color: '#f5d67b', inset: 56 }],
+      pattern: { kind: 'rays', color: '#f5d67b', opacity: 0.14, scale: 1 },
+      arcs: {
+        top: { text: 'FIRST PLACE', font: 'display', size: 30, tracking: 3, color: '#ffe9c9' },
+        bottom: null,
+      },
+      centre: { kind: 'glyph', glyph: 'trophy', color: '#f5d67b', scale: 1, dy: 0 },
+      ribbon: null,
+      mark: { edition: '', year: 2026 },
+    }),
+  },
+  {
+    id: 'steel-drop',
+    name: 'Steel Drop',
+    note: 'The silver gradient, a hex ground, one word on a slab ribbon and the tolerance as the edition mark. No bottom arc: the ribbon takes the foot. Silver because the drop is the machined part and the material is the point; the near-black accent is the one colour that holds on brushed steel at every size.',
+    design: badge({
+      palette: { base: '#8a9099', accent: '#1a1d21', ink: '#1a1d21', metal: 'silver' },
+      shape: 'drop',
+      rings: [{ style: 'solid', width: 8, color: '#1a1d21', inset: 12 }],
+      pattern: { kind: 'hexgrid', color: '#ffffff', opacity: 0.1, scale: 1.2 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'wrench', color: '#1a1d21', scale: 1, dy: 14 },
+      ribbon: { text: 'MACHINED', color: '#1a1d21', textColor: '#d9dde1', font: 'slab', size: 22 },
+      // The mark sits at y 118, where the drop is 116 units wide at the cap line:
+      // "tolerance 0.01" draws 148 wide there and left the neck on both sides, so
+      // the abbreviation, at 85, is the longest form that stays on the drop.
+      mark: { edition: 'tol. 0.01', year: null },
+    }),
+  },
+  {
+    id: 'cold-flame',
+    name: 'Cold Flame',
+    note: 'A flame silhouette in violet and cyan. Warm colours are the obvious answer, so it does not use them.',
+    design: badge({
+      palette: { base: '#1d0b3a', accent: '#66e0ff', ink: '#0a0418', metal: 'none' },
+      shape: 'flame',
+      rings: [],
+      pattern: { kind: 'stripes', color: '#66e0ff', opacity: 0.12, scale: 2 },
+      arcs: { top: null, bottom: null },
+      centre: { kind: 'glyph', glyph: 'lightbulb', color: '#66e0ff', scale: 0.9, dy: -14 },
+      ribbon: { text: 'SLOW BURN', color: '#66e0ff', textColor: '#0a0418', font: 'rounded', size: 24 },
+    }),
+  },
+  // Design round 2 (2026-09-22): the four body-colour presets. Colours are
+  // named by mood and chosen for what the material does with them, never
+  // after anyone's trade dress; each note says why.
+  {
+    id: 'cobalt-pin',
+    name: 'Cobalt Pin',
+    note: 'Hard enamel in cobalt under an epoxy dome, a gold rim and a white mark on an ink plate, the words on the banner. The blue was chosen because it is the colour that reads as glass under a gloss, and the gold rim and dark plate are there so it is never one flat blue.',
+    design: badge({
+      palette: { base: '#1240a8', accent: '#d9ab3f', ink: '#0b1020', metal: 'none' },
+      shape: 'hexagon',
+      // Inset 6 at width 12 keeps the whole rim inside the silhouette, so the
+      // export's outline is still the hexagon; the hairline lands at 13.
+      rings: [{ style: 'bevel', width: 12, color: '#d9ab3f', inset: 6 }],
+      // Hard enamel is a flat field of colour: no pattern is the register.
+      pattern: { kind: 'none' },
+      finish: { kind: 'gloss', strength: 0.6 },
+      // No top arc. On the top arc the cap line sits at a radius of about 212
+      // whatever the size (the radius shrinks as the size grows), and a
+      // pointy-top hexagon is inside that radius only within 15 degrees of
+      // the apex, about 97 units of arc: SHIPPED IT at 30 left 15 glyph
+      // corners above the shoulders, white on a white page. The banner holds
+      // the words, which is where a pin carries them anyway.
+      arcs: { top: null, bottom: null },
+      // The plate at scale 0.9 spans y 127 to 301: clear of the ribbon band at
+      // 336 below it.
+      centre: { kind: 'glyph', glyph: 'rocket', color: '#ffffff', scale: 0.9, dy: 0, plate: 'solid', plateColor: '#0b1020' },
+      ribbon: { text: 'SHIPPED IT', color: '#d9ab3f', textColor: '#0b1020', font: 'sans', size: 22 },
+      mark: { edition: '', year: null },
+    }),
+  },
+  {
+    id: 'oxblood-crest',
+    name: 'Oxblood Crest',
+    note: 'A shield in oxblood with a brass cord and cream lettering in the display face. Dark red and brass are the two colours a cord and a shield look oldest in; the hatching fades toward the centre so the blades sit on clear ground.',
+    design: badge({
+      palette: { base: '#5a1020', accent: '#c9a24a', ink: '#1a0509', metal: 'none' },
+      shape: 'shield',
+      rings: [{ style: 'rope', width: 10, color: '#c9a24a', inset: 14 }],
+      pattern: { kind: 'hatch', color: '#c9a24a', opacity: 0.1, scale: 1.2, fade: 0.5 },
+      arcs: {
+        top: { text: 'HOLD THE LINE', font: 'display', size: 30, tracking: 3, color: '#f3e6c8' },
+        // Eight glyphs at 21 with tracking 3: measured to stay below the ribbon
+        // band in all five faces (at 22 with tracking 4 the serif's glyph box
+        // reached 1.5 units into it), so a ribbon added later is safe even
+        // though this preset draws none.
+        bottom: { text: 'AND HELD', font: 'display', size: 21, tracking: 3, color: '#f3e6c8' },
+      },
+      centre: { kind: 'glyph', glyph: 'swords', color: '#f3e6c8', scale: 0.9, dy: -2 },
+      ribbon: null,
+      mark: { edition: '', year: 2026 },
+    }),
+  },
+  {
+    id: 'forest-merit',
+    name: 'Forest Merit',
+    note: 'A round patch in forest green with a cream twisted cord, slab lettering and a heavier mark: the embroidered register. Green and cream are the two threads that read as cloth rather than paint, and the pips count the levels.',
+    design: badge({
+      palette: { base: '#1f4d2e', accent: '#efe6c8', ink: '#0f2418', metal: 'none' },
+      shape: 'circle',
+      rings: [{ style: 'rope', width: 10, color: '#efe6c8', inset: 12 }],
+      pattern: { kind: 'noise', color: '#efe6c8', opacity: 0.08, scale: 1 },
+      arcs: {
+        top: { text: 'TRAIL BLAZED', font: 'slab', size: 30, tracking: 3, color: '#efe6c8' },
+        bottom: { text: 'AT DAWN', font: 'slab', size: 22, tracking: 4, color: '#efe6c8' },
+      },
+      centre: { kind: 'glyph', glyph: 'compass', color: '#efe6c8', scale: 0.95, dy: -8, style: 'bold' },
+      ribbon: null,
+      pips: { count: 3, max: 5, style: 'dot', color: '#efe6c8' },
+      mark: { edition: '', year: null },
+    }),
+  },
+  {
+    id: 'tangerine-console',
+    name: 'Tangerine Console',
+    note: 'A rounded square in tangerine with a navy gear rim, a halftone ground and a fixed-width ribbon. Orange on navy rather than on black: the ground is the loud colour and the navy carries the type, so the strip is the dark band and the body is not.',
+    design: badge({
+      palette: { base: '#ff7a1a', accent: '#0b1020', ink: '#0b1020', metal: 'none' },
+      shape: 'rounded-square',
+      // Teeth are 1.4 widths tall about the path at inset 10, so they span
+      // inset 3 to 17 and stay inside the corner radius.
+      rings: [{ style: 'gear', width: 10, color: '#0b1020', inset: 10 }],
+      pattern: { kind: 'halftone', color: '#0b1020', opacity: 0.1, scale: 1, fade: 0.6 },
+      arcs: {
+        top: { text: 'PRESS START', font: 'mono', size: 30, tracking: 2, color: '#0b1020' },
+        bottom: null,
+      },
+      centre: { kind: 'glyph', glyph: 'gamepad-2', color: '#0b1020', scale: 1, dy: -6 },
+      ribbon: { text: 'INSERT COIN', color: '#0b1020', textColor: '#ff7a1a', font: 'mono', size: 22 },
+      pips: { count: 4, max: 5, style: 'bar', color: '#0b1020' },
+      mark: { edition: '', year: null },
+    }),
+  },
+];

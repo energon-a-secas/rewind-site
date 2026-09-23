@@ -1,0 +1,10 @@
+{
+  "name": "agentlore-site",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent Lore — learn the agents, pick the model, ship the skill.",
+  "scripts": {
+    "build": "node scripts/build-pages.mjs"
+  }
+}

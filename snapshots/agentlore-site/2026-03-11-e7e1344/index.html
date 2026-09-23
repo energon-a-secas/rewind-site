@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Lore — AI Agent Tutorials</title>
+  <meta name="description" content="Browse tutorials for AI agent skills, commands, MCPs, and diagrams tooling. Quick reference cards for Claude and Cursor workflows">
+  <meta property="og:title" content="Agent Lore — AI Agent Tutorials">
+  <meta property="og:description" content="Quick reference cards for AI agent skills, commands, and workflows in Claude and Cursor">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentlore.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agent Lore — AI Agent Tutorials">
+  <meta name="twitter:description" content="Quick reference cards for AI agent skills, commands, and workflows in Claude and Cursor">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://agentlore.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://agentlore.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Agent Lore",
+    "description": "Browse tutorials for AI agent skills, commands, MCPs, and diagrams tooling for Claude and Cursor",
+    "url": "https://agentlore.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Logo">
+      </a>
+      <div>
+        <h1>Agent Lore</h1>
+        <div class="header-subtitle">AI agent tutorials for Claude and Cursor</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a class="nav-tab active" href="./">Browse</a>
+      <a class="nav-tab" href="path/">Learning Path</a>
+    </nav>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <p class="motto"><strong>Learn once, apply everywhere.</strong> Bite-sized tutorials for AI-assisted development.</p>
+
+      <div id="browse-view">
+        <div class="search-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input id="search-input" class="search-input" type="text" placeholder="Search tutorials by title, keyword..." aria-label="Search tutorials">
+          </div>
+          <button id="clear-search" class="clear-btn">Clear<span class="kbd">/</span></button>
+        </div>
+
+        <div class="filter-row">
+          <div class="dropdown" id="dd-category">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Category</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" id="dd-category-menu"></ul>
+          </div>
+
+          <div class="dropdown" id="dd-tool">
+            <button class="dropdown-toggle" aria-haspopup="listbox" aria-expanded="false">
+              <span class="dropdown-label">Tool</span>
+              <span class="dropdown-value">All</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="dropdown-menu" role="listbox" id="dd-tool-menu"></ul>
+          </div>
+
+          <span id="result-count" class="result-count"></span>
+        </div>
+
+        <div id="tutorials-content"></div>
+
+        <div id="empty-state" class="empty-state" hidden>
+          <p>No tutorials match your filters.</p>
+          <button id="reset-filters" class="btn-secondary">Reset filters</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="tutorial-modal" class="modal-overlay">
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-badges" id="modal-badges"></div>
+        <div class="modal-actions">
+          <button class="modal-share-btn" id="modal-share" title="Copy link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            Share
+          </button>
+          <button class="modal-close-btn" id="modal-close" title="Close (Esc)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="info-footer">
+    Part of <a class="footer-link" href="https://neorgon.com/">Neorgon</a>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

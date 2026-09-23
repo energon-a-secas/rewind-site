@@ -1,0 +1,114 @@
+{
+  "lists": [
+    {
+      "id": "video",
+      "label": "Video",
+      "description": "Cutting, effects, and complementary tools for working with video and related exports.",
+      "siteIds": ["capcut", "davinci-resolve", "mp3-juices", "anyflip"]
+    },
+    {
+      "id": "colors-fonts",
+      "label": "Colors & fonts",
+      "description": "Palettes, typefaces, and ready-made text styles for memes and layouts.",
+      "siteIds": ["color-hex", "myfonts", "text-studio"]
+    },
+    {
+      "id": "image-edition",
+      "label": "Image edition",
+      "description": "Design templates and photo editing—ads, backgrounds, and touch-up workflows.",
+      "siteIds": ["canva", "capcut", "adobe-lightroom"]
+    },
+    {
+      "id": "image-modification",
+      "label": "Image modification",
+      "description": "Remove backgrounds, erase objects, upscale, compress, and add borders.",
+      "siteIds": [
+        "remove-background",
+        "cleanup-pictures",
+        "upscale-media",
+        "borderize",
+        "tinypng",
+        "bulk-resize-photos"
+      ]
+    },
+    {
+      "id": "image-cutting",
+      "label": "Image cutting",
+      "description": "Crop, batch crop, and round avatars—coordinates included when you need them.",
+      "siteIds": ["autocropper", "iloveimg", "photoaid"]
+    },
+    {
+      "id": "image-content",
+      "label": "Image content",
+      "description": "Stock photos, wallpapers, generators, and flat fills for slides and memes.",
+      "siteIds": [
+        "unsplash",
+        "wallpaper-access",
+        "wallpaper-cave",
+        "dark-souls-text-generator",
+        "solid-color-generator"
+      ]
+    },
+    {
+      "id": "text-content",
+      "label": "Text content",
+      "description": "Structured text and diagrams without building layouts by hand.",
+      "siteIds": ["tree-generator"]
+    },
+    {
+      "id": "icons-gifs",
+      "label": "Icons & GIFs",
+      "description": "Capture, edit, and source icons and short animations.",
+      "siteIds": [
+        "giphy-capture",
+        "ezgif",
+        "loading-io",
+        "freeicons",
+        "flaticon",
+        "app-icon-co"
+      ]
+    },
+    {
+      "id": "sites",
+      "label": "Sites",
+      "description": "Meta tags, link previews, and title formatting for publishing.",
+      "siteIds": ["metatags-io", "opengraph-preview", "capitalize-my-title"]
+    },
+    {
+      "id": "music",
+      "label": "Music",
+      "description": "AI music and vocal/instrumental separation.",
+      "siteIds": ["suno-ai", "easeus-vocal-remover"]
+    },
+    {
+      "id": "random-fun",
+      "label": "Random — funny",
+      "description": "Morale tools when you need a laugh between commits.",
+      "siteIds": ["hackertyper", "what-the-commit"]
+    },
+    {
+      "id": "random-dev",
+      "label": "Random — developer",
+      "description": "Cheat sheets, folder trees, and terminal-friendly references.",
+      "siteIds": ["tldr-pages", "cheat-sh", "tree-generator"]
+    },
+    {
+      "id": "random-reviews",
+      "label": "Random — reviews",
+      "description": "Cameras, fragrance, and measured tech comparisons.",
+      "siteIds": ["dxomark", "fragrantica", "rtings"]
+    },
+    {
+      "id": "whiteboard",
+      "label": "Whiteboard",
+      "description": "Diagram and sketch tools that stay in the browser.",
+      "siteIds": ["excalidraw", "tldraw", "drawio"]
+    },
+    {
+      "id": "devops",
+      "label": "DevOps",
+      "description": "Backends, data tools, mesh VPN, and tunnels for shipping and operating software.",
+      "siteIds": ["convex", "airtable", "tailscale", "sqlitebrowser", "ngrok"]
+    }
+  ]
+}

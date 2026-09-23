@@ -18,6 +18,24 @@ make serve
 
 Then open http://localhost:8862. It must be served over HTTP. The app is ES modules, and `file://` blocks them.
 
+## Filling the archive
+
+```bash
+make capture     # live-capture the fleet, recording only pages that changed
+make backfill    # git history for every live site, capped per site
+make shots       # screenshot every snapshot that has none
+make test        # the capture.py checks
+```
+
+`make capture` is the one to schedule. `--if-changed` compares the new page byte
+for byte against the site's newest snapshot and records nothing when they match,
+so a repeat run costs bandwidth and nothing else.
+
+Until 2026-09-23 the archive held 33 snapshots of neorgon-site and exactly one of
+everything else. Nothing was broken: `git` mode takes one project at a time and had
+only ever been pointed at the hub, and `fleet` is live-only and produces one snapshot
+per run. `fleet-git` is the registry-wide counterpart that was missing.
+
 ## Architecture
 
 | Module | Lines | Owns |
@@ -45,7 +63,38 @@ Vendored from `packages/neorgon-ui/`: never edit in place, run the sync script i
 
 ## Gotchas
 
-TODO: the non-obvious failures. What broke here before, what looks wrong but is deliberate, what a reasonable change would break. This is the highest-value section, leave it empty rather than filling it with generic advice.
+**Headless Chrome writes the screenshot and then refuses to exit.** Measured on an
+emoji-site snapshot: the PNG landed at 6.5s, the process was still alive at 120s.
+`--timeout` and `--virtual-time-budget` do not end it, and this is true of
+`--headless=new`, legacy `--headless` and `--run-all-compositor-stages-before-draw`
+alike. `do_shots` used to wait on the process, paying a 60s timeout three times over
+per snapshot, which is why snapshots accumulated faster than pictures of them.
+`shoot()` watches the file and kills the process once it stops growing. If you
+replace it with a plain `subprocess.run(timeout=...)`, the pipeline silently returns
+to taking hours.
+
+**`git archive` exits 128 when any pathspec matches nothing.** `git log` tolerates a
+pathspec that matches nothing; `git archive` aborts the whole call. affinity-site has
+no `assets/` directory, so a fixed list produces an empty tarball and no snapshot.
+`design_pathspecs()` intersects the wanted list against `git ls-tree` at that commit
+first. Do not pass `TREE_DIRS` straight through.
+
+**The archive is size-bound, not material-bound.** 80 of 94 repos have enough history
+for 5 or more snapshots; what limits the backfill is GitHub Pages' 1 GB ceiling on a
+published site. `cmd_git` extracts design paths only for this reason (full trees ran
+~2.4x larger: neorgon-site is 45 MB at HEAD, 1.7 MB lean), and `HEAVY_SITES` caps the
+four repos whose own design directories dominate the total. Raising `--limit` fleet-wide
+is the fastest way to blow the ceiling.
+
+**neorgon-site's 33 snapshots predate lean extraction** and are still full repo trees,
+carrying `post/`, `blog/` and `convex/`. They are ~50 MB that a re-capture would
+reclaim, but re-extracting them also sanitizes beacons the older ones deliberately
+kept as dated records, so it is a judgment call rather than a cleanup.
+
+**Live snapshots taken before 2026-09-23 have broken icon paths.** `capture_live`'s
+CSS rewriting emitted `css/assets/icons/*.svg` instead of `assets/icons/*.svg`, so
+`neorgon-site/2026-08-30-1716-live` throws 60+ 404s when you open it in the stage.
+The rewriting bug is unfixed; the affected snapshots are dated records.
 
 ## Do not touch
 

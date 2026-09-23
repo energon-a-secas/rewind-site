@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Antenne">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; script-src 'self' https://clerk.neorgon.com https://challenges.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://cdn.neorgon.org https://img.clerk.com; connect-src 'self' https://clerk.neorgon.com https://hearty-dog-787.convex.cloud; frame-src https://challenges.cloudflare.com; worker-src blob:; upgrade-insecure-requests">
+  <title>Antenne Desk | Draft Approval</title>
+  <meta name="description" content="Review, edit, and approve Antenne stories before they publish. Sign in with a Neorgon account that holds a desk role">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="neo-analytics" content="off">
+  <meta name="theme-color" content="#040714">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme-boot.js"></script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/dispatch-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <!-- Neorgon Auth Kit (vendored by packages/neorgon-ui/sync-auth.sh). The Convex URL
+       stays empty until the setup wizard writes the deployment URL here and into
+       connect-src; empty means the desk connects nowhere. -->
+  <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
+  <meta name="neo-convex-url" content="https://hearty-dog-787.convex.cloud">
+  <link rel="stylesheet" href="css/neorgon-auth.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="desk.html" class="header-title-link">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Antenne Desk</h1>
+        <div class="header-subtitle">Approve drafts before they ship</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <div class="header-actions">
+        <a class="btn btn--ghost btn--sm" href="./" data-keep-mobile>Open the feed</a>
+      </div>
+      <div class="neo-auth" data-neo-auth data-keep-mobile hidden></div>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container stack">
+      <section class="section" aria-label="Desk status">
+        <div class="card desk-banner" id="deskBanner" data-state="loading"><p>Loading the desk.</p></div>
+        <p class="desk-notice" id="deskNotice" role="status"></p>
+      </section>
+
+      <section class="section" id="accountSection" aria-labelledby="accountTitle" hidden>
+        <h2 class="section__title" id="accountTitle">Your account</h2>
+        <div class="card desk-account" id="deskAccount"></div>
+      </section>
+
+      <section class="section" id="publishSection" aria-labelledby="publishTitle" hidden>
+        <h2 class="section__title" id="publishTitle">Publishing</h2>
+        <div class="card desk-status" id="publishBar"></div>
+      </section>
+
+      <section class="section" id="lanesSection" aria-labelledby="lanesTitle" hidden>
+        <div class="section__header">
+          <div class="section__titles">
+            <h2 class="section__title" id="lanesTitle">Stories</h2>
+            <p class="section__lead">An approved story publishes by itself once the publish delay has passed.
+              Withdraw it before then to stop it.</p>
+          </div>
+          <div class="toolbar">
+            <button type="button" class="btn btn--secondary btn--sm" id="newStoryBtn">New story</button>
+            <button type="button" class="btn btn--primary btn--sm" id="approveAllBtn" hidden>Approve all shown</button>
+          </div>
+        </div>
+        <div id="newStory" hidden></div>
+        <div class="desk-lanes" id="lanes"></div>
+      </section>
+
+      <section class="section" id="peopleSection" aria-labelledby="peopleTitle" hidden>
+        <h2 class="section__title" id="peopleTitle">People and settings</h2>
+        <div class="desk-people" id="people"></div>
+      </section>
+    </div>
+
+    <dialog class="desk-dialog" id="deskDialog" aria-labelledby="deskDialogTitle">
+      <h2 class="desk-dialog__title" id="deskDialogTitle">Confirm</h2>
+      <p class="desk-dialog__lead" id="deskDialogLead"></p>
+      <ol class="desk-dialog__list" id="deskDialogList" hidden></ol>
+      <div class="toolbar desk-dialog__actions">
+        <button type="button" class="btn btn--ghost btn--sm" id="deskDialogCancel">Cancel</button>
+        <button type="button" class="btn btn--primary btn--sm" id="deskDialogConfirm">Confirm</button>
+      </div>
+    </dialog>
+  </main>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    Stories wait on this desk, out of public view, until someone with a desk role approves them. Approved stories publish by themselves.
+  </footer>
+
+  <script type="module" src="js/desk.js"></script>
+</body>
+</html>

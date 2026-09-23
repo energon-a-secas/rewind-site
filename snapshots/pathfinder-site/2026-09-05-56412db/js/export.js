@@ -1,0 +1,419 @@
+// ════════════════════════════════════════════════════════════
+//  export.js — JSON/Markdown export/import
+// ════════════════════════════════════════════════════════════
+
+import { state, selection, ui, canvasMeta, saveState, serializeCanvas, applyPromptOpts } from './state.js'
+import { $, TYPES, DEFAULT_CARD_STYLE, SITUATION_DEFAULT, genId, getAllVotes, SVG_ICONS } from './utils.js'
+import { normalizeCanvas } from './normalize.js'
+import { renderArrows, renderFrames, updateHint, fitView } from './canvas.js'
+import { renderBlock, renderInspector } from './render.js'
+import { runGapDetection } from './gaps.js'
+import { generatePrompt, refreshPrompt, situationSection } from './prompt.js'
+
+// ── Import JSON ───────────────────────────────────────────────
+/**
+ * Apply an imported/shared canvas payload after sanitizing it.
+ * mode: 'replace' | 'merge'. Returns { imported, dropped } so the
+ * caller can report how many items were added vs skipped.
+ */
+export function applyImport(data, mode, opts = {}) {
+  const fit = opts.fit !== false
+  const clean = normalizeCanvas(data)
+  const cleanBlocks = Object.values(clean.blocks)
+
+  if (mode === 'replace') {
+    state.blocks = {}; state.arrows = []; state.groups = {}
+    $.canvasRoot().querySelectorAll('.block').forEach(el => el.remove())
+    $.arrowsGroup().innerHTML = ''
+    $.framesLayer()?.querySelectorAll('.frame').forEach(el => el.remove())
+    selection.ids.clear(); selection.blockId = null; selection.arrowId = null; selection.groupId = null
+
+    // Canvas-level settings land before any block renders, because renderBlock
+    // resolves each card against canvasMeta.cardStyle. A merge deliberately
+    // keeps the existing framing: the canvas being merged into is the one
+    // somebody set up.
+    if (clean.meta.title) canvasMeta.title = clean.meta.title
+    canvasMeta.contextBrief = clean.meta.contextBrief || ''
+    canvasMeta.cardStyle = clean.meta.cardStyle || DEFAULT_CARD_STYLE
+    canvasMeta.spotlight = !!clean.meta.spotlight
+    canvasMeta.situation = { ...SITUATION_DEFAULT, ...(clean.meta.situation || {}) }
+    // The prompt options are part of how a canvas is meant to be read, so a
+    // replace carries them. A merge leaves the existing framing alone, same
+    // rule as the situation. The event lets the Prompt tab controls resync.
+    applyPromptOpts(clean.meta.prompt)
+    window.dispatchEvent(new CustomEvent('pf:prompt-opts-changed'))
+  }
+
+  // Build ID remap (merge needs fresh IDs to avoid collisions)
+  const idMap = {}
+  cleanBlocks.forEach(b => {
+    const newId = (mode === 'replace') ? b.id : genId()
+    idMap[b.id] = newId
+    state.blocks[newId] = { ...b, id: newId }
+    renderBlock(newId)
+  })
+
+  // Import groups first, remapping IDs on merge, so block groupIds resolve
+  const groupIdMap = {}
+  Object.values(clean.groups).forEach(g => {
+    const newGid = (mode === 'replace') ? g.id : genId()
+    groupIdMap[g.id] = newGid
+    state.groups[newGid] = { ...g, id: newGid }
+  })
+  cleanBlocks.forEach(b => {
+    const newId = idMap[b.id]
+    if (b.groupId && state.blocks[newId]) {
+      state.blocks[newId].groupId = groupIdMap[b.groupId] || null
+    }
+  })
+
+  clean.arrows.forEach(a => {
+    const fId = idMap[a.from] || a.from
+    const tId = idMap[a.to]   || a.to
+    if (state.blocks[fId] && state.blocks[tId] && fId !== tId &&
+        !state.arrows.some(x => x.from === fId && x.to === tId)) {
+      const extra = {}
+      if (a.label) extra.label = a.label
+      if (a.note) extra.note = a.note
+      if (a.style && a.style !== 'curved') extra.style = a.style
+      if (a.weight && a.weight !== 2) extra.weight = a.weight
+      if (a.bidirectional) extra.bidirectional = a.bidirectional
+      if (a.color) extra.color = a.color
+      if (a.fromPort) extra.fromPort = a.fromPort
+      if (a.toPort) extra.toPort = a.toPort
+      if (a.portsBy) extra.portsBy = a.portsBy
+      state.arrows.push({ id: genId(), from: fId, to: tId, ...extra })
+    }
+  })
+
+  updateHint()
+  requestAnimationFrame(() => {
+    renderArrows(); renderFrames(); runGapDetection()
+    if (fit && Object.keys(state.blocks).length) fitView()
+    renderInspector()
+    ui.promptDirty = true; if (ui.activeTab === 'prompt') refreshPrompt()
+  })
+  saveState()
+
+  return { imported: cleanBlocks.length, dropped: clean.dropped, idMap }
+}
+
+// ── Export JSON ───────────────────────────────────────────────
+export function exportJSON() {
+  // Blocks go out as an array (the shape llms.txt documents); meta comes from
+  // the shared serializer so the file carries the prompt options too.
+  const payload = { blocks: Object.values(state.blocks), arrows: state.arrows, groups: state.groups, meta: serializeCanvas().meta, exportedAt: new Date().toISOString() }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+  a.download = 'pathfinder.json'; a.click(); URL.revokeObjectURL(a.href)
+}
+
+// ── Export Markdown ──────────────────────────────────────────
+export function exportMarkdown() {
+  // Every type in the registry gets a section. Leaving one out silently drops
+  // those blocks from the file, which is how assumptions, context and custom
+  // blocks used to vanish on export.
+  const order   = ['goal','problem','requirement','assumption','risk','question','decision',
+                   'resource','output','process','terminator','context','custom']
+  const headings = { goal:'Goals', problem:'Problems / Blockers', requirement:'Requirements',
+    assumption:'Assumptions (validate before building)', risk:'Risks', question:'Open Questions',
+    decision:'Decisions', resource:'Resources', output:'Outputs',
+    process:'Workflow Steps', terminator:'Workflow Start / End', context:'Context', custom:'Other' }
+  const missing = Object.keys(TYPES).filter(t => !order.includes(t))
+  if (missing.length) order.push(...missing)
+  const byType = {}
+  Object.values(state.blocks).forEach(b => { (byType[b.type]??=[]).push(b) })
+  const title = (canvasMeta.title || '').trim() || 'Pathfinder Canvas'
+  let md = `# ${title}\n_${new Date().toLocaleDateString()}_\n\n`
+  // The markdown export gets handed to sessions too, so it carries the same
+  // framing the prompt does. A plan read without its situation is a plan that
+  // gets acted on wrongly, whichever file format it arrived in.
+  md += situationSection()
+  const brief = (canvasMeta.contextBrief || '').trim()
+  if (brief) md += `## Engagement Context\n${brief}\n\n`
+  order.forEach(t => {
+    const items = byType[t]; if (!items?.length) return
+    md += `## ${headings[t]}\n\n`
+    items.forEach(b => {
+      const tags = []
+      if (b.priority) tags.push(b.priority.toUpperCase())
+      if (b.status && b.status !== 'not-started') tags.push(b.status)
+      md += `### ${b.title}${tags.length ? ' [' + tags.join(', ') + ']' : ''}\n`
+      if (b.description) md += `${b.description}\n\n`
+      if (b.criteria?.length) {
+        md += `**Acceptance criteria:**\n`
+        b.criteria.forEach(c => { md += `- [ ] ${c}\n` })
+        md += '\n'
+      }
+      if (b.rationale?.trim()) md += `**Rationale:** ${b.rationale.trim()}\n\n`
+      if (b.actions?.length) md += `**Actions:** ${b.actions.join(', ')}\n\n`
+      if (b.docRef && (b.docRef.href || b.docRef.label)) {
+        const ref = b.docRef.label || b.docRef.href
+        const anchor = b.docRef.anchor ? `#${b.docRef.anchor}` : ''
+        md += b.docRef.href ? `**Doc:** [${ref}](${b.docRef.href}${anchor})\n\n` : `**Doc:** ${ref}${anchor}\n\n`
+      }
+      if (b.questions?.length) {
+        md += `**Open questions:**\n`
+        b.questions.forEach(q => { md += `- ${q.text}${q.answer?.trim() ? `\n  - _Answer:_ ${q.answer.trim().replace(/\n/g, ' ')}` : ''}\n` })
+        md += '\n'
+      }
+      if (b.notes) md += `**Notes:** ${b.notes}\n\n`
+    })
+  })
+  if (state.arrows.length) {
+    md += '## Connections\n\n'
+    state.arrows.forEach(a => {
+      const f = state.blocks[a.from], t = state.blocks[a.to]
+      if (!f || !t) return
+      // Labels and notes round-trip through JSON but used to be thrown away
+      // here, so the exported list said what connected to what and never why.
+      const label = (a.label || '').trim()
+      const note  = (a.note  || '').trim().replace(/\s*\n\s*/g, ' ')
+      const arrow = a.bidirectional ? '\u2194' : '\u2192'
+      md += `- **${f.title}** ${arrow} **${t.title}**`
+      if (label) md += `: _${label}_`
+      md += '\n'
+      if (note) md += `  - ${note}\n`
+    })
+    md += '\n'
+    md += mermaidBlock()
+  }
+  const blob = new Blob([md], { type: 'text/markdown' })
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+  a.download = 'pathfinder.md'; a.click(); URL.revokeObjectURL(a.href)
+}
+
+/**
+ * A Mermaid graph of the same connections.
+ *
+ * The flat list above says what links to what, one pair at a time. A reader
+ * (or an AI being handed this file) has to rebuild the shape in their head
+ * from it. The graph states the shape directly, and Mermaid renders natively
+ * in GitHub, Obsidian and most Markdown viewers.
+ */
+export function mermaidBlock() {
+  const ids = new Map()
+  const key = id => {
+    if (!ids.has(id)) ids.set(id, 'n' + (ids.size + 1))
+    return ids.get(id)
+  }
+  const clean = s => String(s || 'Untitled').replace(/["\\]/g, '').replace(/\s+/g, ' ').slice(0, 60)
+  const lines = []
+  state.arrows.forEach(a => {
+    const f = state.blocks[a.from], t = state.blocks[a.to]
+    if (!f || !t) return
+    const label = (a.label || '').trim()
+    const edge = a.bidirectional ? '<-->' : '-->'
+    lines.push(`  ${key(a.from)}["${clean(f.title)}"] ${edge}${label ? `|${clean(label)}|` : ''} ${key(a.to)}["${clean(t.title)}"]`)
+  })
+  if (!lines.length) return ''
+  return '```mermaid\ngraph LR\n' + lines.join('\n') + '\n```\n\n'
+}
+
+// ── Export copy prompt ───────────────────────────────────────
+export function exportCopyPrompt() {
+  navigator.clipboard.writeText(generatePrompt())
+}
+
+// ── Export to Presentation Sage ──────────────────────────────
+export function exportToPresentationSage() {
+  const order = ['goal','problem','requirement','risk','question','decision','resource','output']
+  const headings = { goal:'Goals', problem:'Problems', requirement:'Requirements',
+    risk:'Risks', question:'Open Questions', decision:'Decisions', resource:'Resources', output:'Outputs' }
+  const byType = {}
+  Object.values(state.blocks).forEach(b => { (byType[b.type]??=[]).push(b) })
+
+  let yaml = `presentation:\n  title: "${(canvasMeta.title || 'Pathfinder Plan').replace(/"/g, '\\"')}"\n  subtitle: "Exported from Pathfinder"\n  author: "Neorgon"\n  slides:\n    - type: title\n      heading: "${(canvasMeta.title || 'Pathfinder Plan').replace(/"/g, '\\"')}"\n      subtitle: "${Object.values(state.blocks).length} blocks, ${state.arrows.length} connections"\n`
+
+  order.forEach(t => {
+    const items = byType[t]; if (!items?.length) return
+    yaml += `    - type: bullets\n      heading: "${headings[t]}"\n      bullets:\n`
+    items.forEach(b => {
+      yaml += `        - "${b.title.replace(/"/g, '\\"')}"\n`
+    })
+  })
+
+  // Presentation Sage's share contract: the deck travels in the fragment as
+  // base64url UTF-8, never hits a server, and ?via= lets the arrival be counted.
+  // (?yaml= still works there, but raw YAML in a query string had no size guard.)
+  const bytes = new TextEncoder().encode(yaml)
+  let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b) })
+  const payload = btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  window.open('https://slides.neorgon.com/?via=pathfinder#d=' + payload, '_blank')
+}
+
+// ── Export Meeting Summary ───────────────────────────────────
+export function exportMeetingSummary() {
+  const now = new Date()
+  const blocks = Object.values(state.blocks)
+  const arrows = state.arrows
+  const votes = getAllVotes()
+
+  let md = `# Meeting Summary\n_${now.toLocaleDateString()} at ${now.toLocaleTimeString()}_\n\n`
+
+  // Meeting metadata
+  const totalParticipants = new Set(Object.values(votes).flat().map(v => v.userId)).size
+  if (totalParticipants > 0) {
+    md += `**Participants:** ${totalParticipants}\n\n`
+  }
+
+  // Canvas link if shareable
+  try {
+    const shareUrl = location.origin + location.pathname + location.search + location.hash
+    md += `**Canvas:** ${shareUrl}\n\n`
+  } catch (e) {}
+
+  // Decisions Made
+  const decisions = blocks.filter(b => b.type === 'decision')
+  if (decisions.length) {
+    md += `## ${SVG_ICONS.decision} Decisions Made\n\n`
+    decisions.forEach(b => {
+      md += `- **${b.title}**`
+      if (b.description) md += `: ${b.description}`
+      if (b.notes) md += `\n  *Notes: ${b.notes}*`
+      md += `\n`
+    })
+  } else {
+    md += `## ${SVG_ICONS.decision} Decisions Made\n\n_No decision blocks found. Add blocks of type "Decision" to capture decisions here._\n\n`
+  }
+
+  // Voting Results (if voting happened)
+  const votingBlocks = Object.entries(votes)
+    .map(([blockId, voteArray]) => {
+      const block = state.blocks[blockId]
+      if (!block) return null
+      const totalDots = voteArray.reduce((sum, v) => sum + v.dots, 0)
+      return { blockId, title: block.title, type: block.type, dots: totalDots }
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.dots - a.dots)
+
+  if (votingBlocks.length) {
+    md += `## ${SVG_ICONS.vote} Voting Results\n\n`
+    md += `| Rank | Item | Votes |\n|------|------|-------|\n`
+    votingBlocks.forEach((item, i) => {
+      const typeLabel = TYPES[item.type]?.label || item.type
+      md += `| ${i + 1} | ${item.title} (${typeLabel}) | ${item.dots}\n`
+    })
+    md += `\n`
+  }
+
+  // Action Items (blocks with resolve/prepare actions)
+  const actionBlocks = blocks.filter(b => b.actions && b.actions.length)
+  if (actionBlocks.length) {
+    md += `## ${SVG_ICONS.action} Action Items\n\n`
+    actionBlocks.forEach(b => {
+      b.actions.forEach(action => {
+        md += `- [ ] **${b.title}** (${action})`
+        if (b.notes) md += `\n  *Context: ${b.notes}*`
+        md += `\n`
+      })
+    })
+  } else {
+    md += `## ${SVG_ICONS.action} Action Items\n\n_No action items marked. Add actions to blocks (resolve, prepare, etc.) to create action items._\n\n`
+  }
+
+  // Open Questions
+  const questions = blocks.filter(b => b.type === 'question')
+  if (questions.length) {
+    md += `## ${SVG_ICONS.question} Open Questions\n\n`
+    questions.forEach(b => {
+      md += `- ${b.title}`
+      if (b.description) md += `: ${b.description}`
+      if (b.questions?.length) {
+        md += `\n  - ${b.questions.map(q => q.text + (q.answer?.trim() ? `: answered: ${q.answer.trim().replace(/\n/g, ' ')}` : '')).join('\n  - ')}`
+      }
+      md += `\n`
+    })
+  } else {
+    md += `## ${SVG_ICONS.question} Open Questions\n\n_No questions recorded. Add "Question" blocks to track open questions._\n\n`
+  }
+
+  // Resource Inventory
+  const resources = blocks.filter(b => b.type === 'resource')
+  if (resources.length) {
+    md += `## ${SVG_ICONS.resource || SVG_ICONS.star} Available Resources\n\n`
+    resources.forEach(b => {
+      md += `- ${b.title}`
+      if (b.description) md += ` - ${b.description}`
+      md += `\n`
+    })
+    md += `\n`
+  }
+
+  // Risks Identified
+  const risks = blocks.filter(b => b.type === 'risk')
+  if (risks.length) {
+    md += `## ${SVG_ICONS.warning} Risks Identified\n\n`
+    risks.forEach(b => {
+      md += `- **${b.title}**`
+      if (b.description) md += `: ${b.description}`
+      md += `\n`
+    })
+    md += `\n`
+  }
+
+  // Goals / Objectives
+  const goals = blocks.filter(b => b.type === 'goal')
+  if (goals.length) {
+    md += `## ${SVG_ICONS.target || SVG_ICONS.flag} Goals / Objectives\n\n`
+    goals.forEach(b => {
+      md += `- ${b.title}`
+      if (b.description) md += `: ${b.description}`
+      md += `\n`
+    })
+    md += `\n`
+  }
+
+  // Connection Summary
+  const connectedCount = arrows.length
+  const isolatedCount = blocks.filter(b => {
+    const hasIncoming = arrows.some(a => a.to === b.id)
+    const hasOutgoing = arrows.some(a => a.from === b.id)
+    return !hasIncoming && !hasOutgoing
+  }).length
+
+  if (connectedCount > 0 || isolatedCount > 0) {
+    md += `## ${SVG_ICONS.link} Connection Summary\n\n`
+    md += `- Total connections made: ${connectedCount}\n`
+    md += `- Isolated items (no connections): ${isolatedCount}\n`
+    md += `- Connected items: ${blocks.length - isolatedCount}\n\n`
+  }
+
+  // Next Steps Recommendation
+  const emptySections = []
+  if (!decisions.length) emptySections.push('Decisions')
+  if (!actionBlocks.length) emptySections.push('Action Items')
+  if (!questions.length) emptySections.push('Open Questions')
+
+  if (emptySections.length) {
+    md += `## ${SVG_ICONS.info} Recommendations\n\nTo improve future meeting summaries:\n`
+    if (emptySections.includes('Decisions')) {
+      md += `- Add blocks of type "Decision" to capture decisions clearly\n`
+    }
+    if (emptySections.includes('Action Items')) {
+      md += `- Use action badges (resolve, prepare, etc.) to mark tasks\n`
+    }
+    if (emptySections.includes('Open Questions')) {
+      md += `- Add "Question" blocks to track what needs answering\n`
+    }
+    md += `\n`
+  }
+
+  md += `---\n*Summary generated from Pathfinder canvas*\n
+**Tips for better meeting summaries:**
+1. Use clear, descriptive titles for blocks
+2. Add context in descriptions and notes
+3. Mark decisions with "Decision" blocks
+4. Assign actions using action badges
+5. Vote on priorities to see team consensus`
+
+  // Download as markdown
+  const blob = new Blob([md], { type: 'text/markdown' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `meeting-summary-${now.toISOString().slice(0, 10)}.md`
+  a.click()
+  URL.revokeObjectURL(a.href)
+  return md
+}

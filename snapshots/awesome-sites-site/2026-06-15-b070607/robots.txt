@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://awesomesites.neorgon.com/sitemap.xml

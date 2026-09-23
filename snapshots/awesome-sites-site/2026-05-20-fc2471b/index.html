@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Awesome Sites | Curated links you leave open</title>
+  <meta name="description" content="Edition and content tools — video, images, fonts, GIFs, music, and handy sites for memes and publishing. JSON API for the Neorgon hub">
+  <meta property="og:title" content="Awesome Sites — Curated links you leave open">
+  <meta property="og:description" content="Labeled lists of external sites worth keeping in a tab. Browse on the web or pull cards from the JSON API">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://awesomesites.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Awesome Sites — Curated links you leave open">
+  <meta name="twitter:description" content="Labeled lists of external sites worth keeping in a tab">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://awesomesites.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#070a12">
+  <link rel="icon" type="image/x-icon" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/favicon.ico" />
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Awesome Sites",
+    "description": "Curated external sites and labeled lists with a JSON catalog API",
+    "url": "https://awesomesites.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
+      </a>
+      <a href="./" class="header-title-link">
+        <h1>Awesome Sites</h1>
+        <div class="header-subtitle">Curated links you leave open</div>
+      </a>
+    </div>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main id="main">
+    <div class="page">
+      <header class="intro">
+        <p class="intro-kicker" id="catalogMeta" aria-live="polite"></p>
+        <p class="intro-lede">Edition and content tools for memes, slides, and publishing—video, colors, image work, stock assets, icons, music, and the random tabs worth keeping. Pick a list, search, open in a new tab.</p>
+      </header>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input id="searchInput" class="search-input" type="search" placeholder="Search name, labels, URL…" aria-label="Search sites" autocomplete="off">
+        </div>
+        <button type="button" id="clearSearch" class="btn-ghost">Clear</button>
+        <span id="resultCount" class="result-count" aria-live="polite"></span>
+      </div>
+
+      <div class="catalog-layout">
+        <aside class="lists-aside" aria-label="Curated lists">
+          <p class="lists-label">Lists</p>
+          <div id="listPills" class="list-pills" role="tablist"></div>
+          <p id="listHint" class="list-hint" hidden></p>
+        </aside>
+
+        <section class="feed" aria-label="Sites">
+          <div id="sitesFeed" class="sites-feed" aria-live="polite"></div>
+          <p id="emptyState" class="empty-state" hidden>No sites match this filter.</p>
+        </section>
+      </div>
+
+      <details class="api-panel">
+        <summary>JSON API for editors and the Neorgon hub</summary>
+        <p class="api-note">Edit <code>data/sites.json</code>, run <code>make api</code>. Hub cards read <code>/api/v1/catalog.json</code>.</p>
+        <ul>
+          <li><a href="api/v1/catalog.json">GET /api/v1/catalog.json</a> — sites, lists, hub metadata</li>
+          <li><a href="api/v1/sites.json">GET /api/v1/sites.json</a></li>
+          <li><a href="api/v1/lists.json">GET /api/v1/lists.json</a></li>
+        </ul>
+      </details>
+    </div>
+  </main>
+
+  <footer class="info-footer">
+    Part of <a class="footer-link" href="https://neorgon.com/">Neorgon</a>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

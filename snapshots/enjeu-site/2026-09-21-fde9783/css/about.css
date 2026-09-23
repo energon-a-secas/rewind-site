@@ -1,0 +1,90 @@
+/*
+ * ── About view ─────────────────────────────────────────────────
+ * A reading page, and the only one on the site with no controls: where the
+ * game came from, then the art credits built from data/art-manifest.json.
+ *
+ * Only this page's own blocks live here. The panel, the kicker and the
+ * .table-wrap sideways scroller are shared primitives in style.css. The two
+ * tables below are deliberately not a second .bal-grid: that one is a numeric
+ * grid, right-aligned and tabular, and these two are text.
+ */
+
+/* Prose measure. .panel__lead already carries it for the section leads; the
+   body paragraphs are plain <p> inside a .stack, so they set their own. */
+.about-prose p { color: var(--text-secondary); max-width: 62ch; }
+
+/* The three counts. Every one is read off the manifest at render time, so
+   none of them can be typed wrong here or go stale after a download. */
+.about-stats { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+.about-stat { display: flex; flex-direction: column; gap: 2px; min-width: 7rem; }
+.about-stat b {
+  font-size: var(--text-2xl); font-weight: 900; line-height: 1;
+  color: var(--text-primary); font-variant-numeric: tabular-nums;
+}
+.about-stat span {
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+
+/* Attribution is a condition of the licence, not a footnote, so this list is
+   never folded behind a toggle and never truncated. On a phone it scrolls
+   sideways inside .table-wrap, the way every other wide table here does. */
+.about-credits, .about-licence {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm); text-align: left;
+}
+.about-credits th, .about-credits td,
+.about-licence th, .about-licence td {
+  padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top;
+}
+.about-credits th, .about-licence th {
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+}
+/* The slot id is the join key between the manifest, art/ and the card face.
+   It wraps nowhere: a broken id is a broken lookup and reads as two things. */
+.about-credits td:first-child { white-space: nowrap; }
+.about-credits tbody tr:hover { background: var(--surface-2); }
+.about-licence td:last-child { font-weight: 700; }
+
+@media (max-width: 600px) {
+  .about-stats { gap: var(--space-4); }
+  .about-credits { font-size: var(--text-xs); }
+}
+
+/* ── Section spines ─────────────────────────────────────────
+   Each section's heading stands on its edge down its own left margin, the same
+   move the setup screen makes. It is the page's one piece of typography a
+   generic layout would not produce, and it earns its place twice: the prose
+   gets its column back from a full-width heading that was mostly empty line,
+   and six of them running down the page give About a rhythm that a stack of
+   identical panels did not have.
+
+   The visible copy is aria-hidden and an sr-only h2 carries the real heading,
+   because a rotated string is read letter by letter by some screen readers. */
+/* min-height so the spine always has room: align-self:start stopped a long
+   label stretching the section, and then it simply ran off the bottom instead.
+   The labels are single words for the same reason, so the floor stays low. */
+.about-sec { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-5); align-items: start; min-height: 9.5rem; }
+.about-sec__body { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.spine--sec {
+  /* start, not stretch: a spine that stretches makes the SECTION as tall as its
+     own rotated label, which left a column of empty paper beside three lines. */
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: clamp(15px, 1.7vw, 20px); font-weight: 900; line-height: 1;
+  letter-spacing: -0.01em; text-transform: uppercase;
+  color: transparent; -webkit-text-stroke: 1.2px var(--gold-deep);
+  border-inline-end: 2px solid var(--gold-deep);
+  padding-inline-end: var(--space-3);
+  align-self: start; user-select: none;
+}
+@media (max-width: 760px) {
+  /* Lying back down: a 90-degree heading on a phone costs more width than the
+     empty line it was buying back. */
+  .about-sec { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+  .spine--sec {
+    writing-mode: horizontal-tb; transform: none;
+    font-size: var(--text-lg); border-inline-end: 0; padding-inline-end: 0;
+    border-block-end: 2px solid var(--gold-deep); padding-block-end: var(--space-2);
+  }
+}

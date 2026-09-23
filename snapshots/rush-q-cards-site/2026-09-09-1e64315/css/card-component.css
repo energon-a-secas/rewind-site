@@ -1,0 +1,786 @@
+/* ── Card component ────────────────────────────────────────── */
+/* Self-contained CSS for rendered HTML cards. Used by card     */
+/* browser and game views. Does not override existing styles.   */
+
+/* ── Base card container ────────────────────────────────────── */
+/* All type colors derived from --card-type-color set by JS via typeColor() */
+.rush-card {
+  --card-type-color: #888;
+  --rc-grad-from: var(--card-type-color);
+  --rc-grad-to: color-mix(in srgb, var(--card-type-color) 50%, #000);
+  aspect-ratio: 5 / 7;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md, 12px);
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--card-type-color) 15%, var(--bg-elev)) 0%,
+      var(--bg) 100%
+    );
+  border: 2px solid var(--card-type-color);
+  box-shadow:
+    inset 0 0 0 1px var(--film-2),
+    var(--shadow-soft, 0 6px 24px rgba(10,6,2,.5));
+  transition: border-color var(--dur, 200ms) var(--ease-out, ease), box-shadow var(--dur, 200ms) var(--ease-out, ease), transform var(--dur, 200ms) var(--ease-out, ease);
+  position: relative;
+  font-family: var(--font, 'Avenir Next', -apple-system, sans-serif);
+  color: var(--text-primary);
+  container-type: inline-size;
+  /* The single scale knob. Every internal metric is em against this, so the
+     card scales as one piece. 17 is tuned so 200px lands on the old rc-md
+     type size. */
+  width: var(--rc-w);
+  font-size: calc(var(--rc-w) / 17);
+}
+
+/* ── Header bar ─────────────────────────────────────────────── */
+.rc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .42em .6em;
+  background: linear-gradient(135deg, var(--rc-grad-from), var(--rc-grad-to));
+  min-height: 0;
+  flex-shrink: 0;
+}
+.rc-title {
+  font-size: 1em;
+  font-weight: 700;
+  color: #000;
+  line-height: 1.2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.rc-deck {
+  font-size: .84em;
+  font-weight: 600;
+  color: rgba(0,0,0,.55);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: .5em;
+}
+/* Type category badge in the header (replaces the plain deck text) */
+.rc-type-badge {
+  font-weight: 800;
+  font-size: .78em;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: rgba(0,0,0,.62);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: .5em;
+}
+
+/* ── Trigger badges (cost / timing / effect) ─────────────────── */
+.rc-trigger-row {
+  display: flex;
+  align-items: center;
+  gap: .34em;
+  padding: .34em .5em .17em;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.rc-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: .26em;
+  font-size: .76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  padding: .09em .5em;
+  border-radius: .5em;
+  line-height: 1.5;
+  background: var(--film-2);
+  color: var(--text-muted);
+  border: 1px solid var(--film-2);
+  white-space: nowrap;
+}
+.rc-trigger-sym { font-weight: 800; opacity: .95; display: inline-flex; align-items: center; }
+
+/* Cost tokens scale with the card like every other em metric, and sit on the
+   text baseline rather than floating above it. */
+.rc-cost {
+  width: 1.05em;
+  height: 1.05em;
+  display: inline-block;
+  vertical-align: -.15em;
+  flex-shrink: 0;
+}
+/* Only tokens in a run need separating — a lone token gets its spacing from
+   the flex gap of whatever badge it sits in. */
+.rc-cost + .rc-cost { margin-left: .14em; }
+/* Cost badges echo the OpEx/CapEx palette */
+.rc-trigger.cost.rc-stat--opex  { color: var(--type-soft);   border-color: color-mix(in srgb, var(--type-soft) 40%, transparent); }
+.rc-trigger.cost.rc-stat--capex { color: var(--type-project);border-color: color-mix(in srgb, var(--type-project) 40%, transparent); }
+.rc-trigger.cost.rc-stat--value { color: var(--text-secondary); }
+/* Timing + gate badges are neutral/quiet */
+.rc-trigger.timing { color: var(--text-muted); }
+.rc-trigger.gate   { color: var(--warn); border-color: rgba(251,191,36,.35); }
+/* Effect badges pick up the type accent */
+.rc-trigger.effect {
+  color: var(--card-type-color);
+  background: color-mix(in srgb, var(--card-type-color) 14%, transparent);
+  border-color: color-mix(in srgb, var(--card-type-color) 32%, transparent);
+}
+
+/* ── RQ brand mark (top-left corner) ─────────────────────────── */
+.rc-brand {
+  position: absolute;
+  bottom: .26em;
+  right: .34em;
+  font-size: .62em;
+  font-weight: 800;
+  color: var(--film-2);
+  letter-spacing: .05em;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Category pill row ──────────────────────────────────────── */
+.rc-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .34em;
+  padding: .17em .5em;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.rc-pill {
+  font-size: .76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .09em .6em;
+  border-radius: .68em;
+  background: color-mix(in srgb, var(--card-type-color) 20%, transparent);
+  color: var(--card-type-color);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 35%, transparent);
+  line-height: 1.4;
+}
+.rc-effect-pill {
+  font-size: .76em;
+  font-weight: 700;
+  padding: .09em .5em;
+  border-radius: .5em;
+  line-height: 1.4;
+  background: var(--film-2);
+  color: var(--text-muted);
+  border: 1px solid var(--film-2);
+}
+
+/* ── Icon / image area ─────────────────────────────────────── */
+.rc-image-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: .5em 0 .17em;
+}
+/* Icon-accent panel: a quiet type-tinted band the icon sits on */
+.rc-image-area--icon {
+  padding: .68em 0;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      color-mix(in srgb, var(--card-type-color) 16%, transparent) 0%,
+      transparent 70%
+    );
+}
+.rc-emoji {
+  display: flex;
+  width: 4.9em;
+  height: 4.9em;
+  font-size: 1em;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--card-type-color);
+  background: color-mix(in srgb, var(--card-type-color) 12%, transparent);
+  flex-shrink: 0;
+}
+/* The type glyph sits on a recessed disc ringed in the card's own colour.
+   Masking keeps the glyph tinted by --card-type-color in either theme; an
+   <img> could not, because it cannot inherit currentColor. */
+.rc-type-svg {
+  position: relative;
+  display: block;
+  width: 4.9em;
+  height: 4.9em;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--card-type-color);
+  background: color-mix(in srgb, var(--card-type-color) 16%, var(--surface-inset));
+}
+.rc-type-svg::after {
+  content: '';
+  position: absolute;
+  inset: 18%;
+  background: var(--card-type-color);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+.rc-icon-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card art image */
+.rc-card-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* rc-role removed — type info now in header deck label */
+
+/* ── Flavor text ────────────────────────────────────────────── */
+.rc-flavor {
+  text-align: center;
+  font-size: .83em;
+  font-style: italic;
+  color: var(--text-muted);
+  padding: 0 .68em;
+  line-height: 1.3;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Description / skill box ────────────────────────────────── */
+.rc-desc {
+  flex: 1;
+  min-height: 0;
+  font-size: .86em;
+  margin: .34em .5em;
+  padding: .42em .6em;
+  border: 1px solid var(--film-2);
+  border-radius: .5em;
+  background: var(--film-1);
+  color: var(--text-muted);
+  line-height: 1.45;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+/* ── Stat footer ────────────────────────────────────────────── */
+.rc-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+  font-size: .83em;
+  padding: .34em .5em;
+  border-top: 1px solid var(--film-2);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.rc-stat {
+  display: flex;
+  align-items: center;
+  gap: .17em;
+  background: var(--film-2);
+  padding: .09em .42em;
+  border-radius: .34em;
+}
+.rc-stat-icon { opacity: .7; }
+.rc-stat-val { font-weight: 600; }
+
+/* Stat-specific color hints */
+.rc-stat--value .rc-stat-val   { color: var(--stat-value); }
+.rc-stat--members .rc-stat-val { color: var(--stat-members); }
+.rc-stat--deadline .rc-stat-val{ color: var(--stat-deadline); }
+.rc-stat--reward .rc-stat-val  { color: var(--stat-reward); }
+.rc-stat--penalty .rc-stat-val { color: var(--stat-penalty); }
+.rc-stat--negation .rc-stat-val{ color: var(--stat-negation); }
+.rc-stat--opex .rc-stat-icon  { color: var(--type-soft); }
+.rc-stat--opex .rc-stat-val   { color: var(--type-soft); }
+.rc-stat--capex .rc-stat-icon { color: var(--type-project); }
+.rc-stat--capex .rc-stat-val  { color: var(--type-project); }
+.rc-stat--min-quarter .rc-stat-icon { color: var(--text-muted); }
+.rc-stat--min-quarter .rc-stat-val  { color: var(--text-muted); }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Size: sm  (130 x 182) — hand fan, gameplay, compact view     */
+/* Shows: name, type color, emoji, category pill, key stats     */
+/* Hides: flavor, description, deck label, stat icons           */
+/* ══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════ */
+/* Size                                                          */
+/*                                                               */
+/* One knob: --rc-w. Everything inside the card is expressed in   */
+/* em against a font-size derived from it, so a card is only ever  */
+/* the same card at a different scale — nothing appears or         */
+/* disappears between the hand and its hover zoom.                 */
+/*                                                                 */
+/* --rc-w inherits, so any wrapper can set it and win without a    */
+/* specificity fight. That replaces the old block of               */
+/* `.hand-card .rush-card { width: 100% }` rules, which lost to    */
+/* `.rush-card.rc-md` and silently did nothing.                    */
+/* ══════════════════════════════════════════════════════════════ */
+/* A wrapper sets --rc-size; the size class only supplies the default. Written
+   the other way round the card's own declaration would beat the wrapper's
+   inherited one and the wrapper could never win. */
+.rush-card    { --rc-w: var(--rc-size, 200px); }
+.rush-card.rc-sm { --rc-w: var(--rc-size, 150px); }
+.rush-card.rc-md { --rc-w: var(--rc-size, 200px); }
+.rush-card.rc-lg { --rc-w: var(--rc-size, 280px); }
+.rush-card.rc-xl {
+  --rc-w: var(--rc-size, 2.5in);
+  height: 3.5in;
+  aspect-ratio: auto;
+  border-radius: 12px;
+  border-width: 3px;
+}
+/* Print cards have room to run, so the skill text is never clamped. */
+.rush-card.rc-xl .rc-desc { -webkit-line-clamp: unset; overflow-y: auto; }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Legibility floor                                              */
+/*                                                               */
+/* Below a real rendered width some elements stop being readable   */
+/* and start being noise. That is a property of the card's actual  */
+/* size, not of which size class it was given — a 92px board       */
+/* thumbnail and a 150px hand card are both `rc-sm`. Container     */
+/* queries ask the right question. (.rush-card declares            */
+/* container-type: inline-size.)                                   */
+/* ══════════════════════════════════════════════════════════════ */
+@container (max-width: 128px) {
+  .rc-desc, .rc-flavor { display: none; }
+  /* .rc-desc was the flex child absorbing slack; without it the icon would
+     sit at the top of a half-empty card. */
+  .rc-image-area { flex: 1; }
+}
+@container (max-width: 104px) {
+  .rc-trigger-row, .rc-brand { display: none; }
+  .rc-stat-icon { display: none; }
+}
+
+/* ── Responsive adjustments for card component ──────────────── */
+@media (max-width: 768px) {
+  .rush-card.rc-lg { --rc-w: var(--rc-size, 240px); }
+}
+@media (max-width: 480px) {
+  .rush-card.rc-sm { --rc-w: var(--rc-size, 118px); }
+  .rush-card.rc-md { --rc-w: var(--rc-size, 170px); }
+  .rush-card.rc-lg { --rc-w: var(--rc-size, 200px); }
+}
+
+/* SVG type icons rendered inline by JS via buildIconHtml() */
+
+/* Card type is read from the single full 2px type-colored border (set in the
+   .rush-card base rule) plus the header badge — no side-stripe accent, per
+   DESIGN.md (side-stripe borders are an absolute ban). */
+
+/* ── Budget card symbols ───────────────────────────────────── */
+.rc-budget-desc {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  -webkit-box-orient: unset;
+  -webkit-line-clamp: unset;
+}
+.rc-budget-sym {
+  font-size: 1.8em;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.rc-budget-tri { color: var(--pos); }
+.rc-budget-sq  { color: var(--info-ink); }
+.rush-card.rc-sm .rc-budget-sym { font-size: 1.1em; }
+.rush-card.rc-sm .rc-budget-desc { gap: 6px; display: flex !important; }
+.rush-card.rc-xl .rc-budget-sym { font-size: 2.4em; }
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Variant: mini — compact card for exercises & lists            */
+/* Shows: emoji, name, type pill, effect summary, info tooltip   */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card.rc-mini {
+  width: 140px;
+  min-height: 160px;
+  aspect-ratio: auto;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+.rush-card.rc-mini .rc-header,
+.rush-card.rc-mini .rc-pill-row,
+.rush-card.rc-mini .rc-image-area,
+.rush-card.rc-mini .rc-flavor,
+.rush-card.rc-mini .rc-desc,
+.rush-card.rc-mini .rc-stats,
+.rush-card.rc-mini .rc-brand { display: none; }
+.rc-mini-icon { margin-bottom: 6px; display: flex; align-items: center; justify-content: center; }
+.rc-mini-icon .rc-type-svg { width: 40px; height: 40px; }
+.rc-mini-icon .rc-emoji { width: 40px; height: 40px; font-size: 1.5rem; }
+.rc-mini-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.rc-mini-type {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--card-type-color);
+  margin-top: 3px;
+}
+.rc-mini-effect {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.3;
+}
+.rc-mini-info {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-type-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 30%, transparent);
+  color: var(--card-type-color);
+  font-size: 0.6rem;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: all 0.2s ease;
+  padding: 0;
+  outline: none;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.rush-card.rc-mini:hover .rc-mini-info {
+  background: color-mix(in srgb, var(--card-type-color) 22%, transparent);
+  transform: scale(1.1);
+}
+
+/* ── Mini card tooltip ──────────────────────────────────────── */
+.rc-mini-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max(180px, calc(100% + 40px));
+  max-width: 260px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(24, 18, 12, .96);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 35%, transparent);
+  box-shadow: 0 8px 24px var(--shadow-tint);
+  backdrop-filter: blur(8px);
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 100;
+}
+.rc-mini-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(24, 18, 12, .96);
+}
+
+/* Desktop: show on card hover */
+@media (hover: hover) {
+  .rush-card.rc-mini:hover .rc-mini-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Mobile: show on tap toggle via .rc-mini--tip-open or data attribute */
+.rush-card.rc-mini.rc-mini--tip-open .rc-mini-tooltip,
+.rush-card.rc-mini[data-tip-open="true"] .rc-mini-tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+/* Also handle direct button press for immediate feedback */
+.rush-card.rc-mini .rc-mini-info:active + .rc-mini-tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+/* Selection state for mini cards (toggled by parent context) */
+.rush-card.rc-mini.rc-selected {
+  border-color: var(--accent-bright);
+  box-shadow: var(--shadow-lift, 0 0 0 1px var(--accent-soft), 0 10px 30px var(--shadow-tint));
+  transform: translateY(-6px);
+}
+
+@media (max-width: 768px) {
+  .rush-card.rc-mini { width: 120px; min-height: 140px; padding: 10px 8px; }
+  .rc-mini-emoji { font-size: 1.5rem; }
+  .rc-mini-name { font-size: 0.7rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Variant: chip — inline colored dot + name for text references */
+/* ══════════════════════════════════════════════════════════════ */
+.rush-card-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--card-type-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--card-type-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-type-color) 25%, transparent);
+  white-space: nowrap;
+  font-family: var(--font, 'Avenir Next', -apple-system, sans-serif);
+}
+.rush-card-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--card-type-color);
+  flex-shrink: 0;
+  box-shadow: 0 0 4px color-mix(in srgb, var(--card-type-color) 50%, transparent);
+}
+
+/* ── T4C: Hover/Tap visual feedback ─────────────────────────── */
+/* Desktop hover */
+@media (hover: hover) {
+  .rush-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 0 0 1px var(--film-2),
+      var(--shadow-lift, 0 0 0 1px var(--accent-soft), 0 10px 30px var(--shadow-tint));
+    transition: transform var(--dur, 200ms) var(--ease-out), box-shadow var(--dur, 200ms) var(--ease-out);
+  }
+  .rush-card:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 0.1s;
+  }
+}
+
+/* Mobile touch feedback */
+@media (hover: none) {
+  .rush-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rush-card:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .rush-card:hover,
+  .rush-card:active {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* Print layout for xl cards — poker-size sheets                */
+/* ══════════════════════════════════════════════════════════════ */
+@media print {
+  .rush-card.rc-xl {
+    break-inside: avoid;
+    box-shadow: none;
+    border-color: #888;
+    /* Print-safe backgrounds */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .rush-card.rc-xl .rc-brand { display: block; color: rgba(0,0,0,.2); }
+}
+
+/* ── "View in Card Gallery" link (game/quick/exercises → canonical card) ── */
+.rc-gallery-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease-out);
+}
+.rc-gallery-link:hover { color: var(--accent-bright); text-decoration: underline; }
+.rc-gallery-link-row { margin-top: 12px; }
+.rc-tip-gallery { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--film-2); }
+.rc-tip-gallery .rc-gallery-link { font-size: .62rem; }
+
+/* ── Card legend ───────────────────────────────────────────────
+   The key to the card face. Lives with the card component because it
+   documents it — if the card gains a symbol, this is the file to update. */
+.card-legend-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  background: var(--scrim);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: clFade var(--dur) var(--ease-out);
+}
+@keyframes clFade { from { opacity: 0; } to { opacity: 1; } }
+
+.card-legend {
+  display: flex;
+  flex-direction: column;
+  width: min(880px, 100%);
+  max-height: min(760px, 92dvh);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.cl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+.cl-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -.012em;
+  color: var(--text-primary);
+}
+.cl-close {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--dur), background var(--dur);
+}
+.cl-close:hover { color: var(--text-primary); background: var(--film-2); }
+
+.cl-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-8);
+  padding: var(--space-6);
+  overflow-y: auto;
+}
+/* The example is the anchor — it stays put while the definitions scroll. */
+.cl-example {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+.cl-example-note {
+  max-width: 280px;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.cl-defs { display: flex; flex-direction: column; gap: var(--space-6); }
+.cl-group h3 {
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cl-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: 5px 0;
+}
+.cl-sym {
+  display: grid;
+  place-items: center;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  line-height: 1.3;
+}
+.cl-sym i { font-style: italic; }
+.cl-tint { display: inline-flex; }
+.cl-tint--opex { color: var(--type-soft); }
+.cl-tint--capex { color: var(--type-project); }
+.cl-tint--value { color: var(--text-secondary); }
+.cl-def { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cl-def b { font-size: var(--text-sm); font-weight: 650; color: var(--text-primary); }
+.cl-def span { font-size: var(--text-xs); line-height: 1.55; color: var(--text-secondary); }
+.cl-def em { color: var(--text-primary); font-style: italic; }
+
+/* Stat swatches borrow the real stat colours so the legend and the card agree. */
+.cl-stat { display: block; width: 11px; height: 11px; border-radius: 3px; }
+.cl-stat--people { background: var(--stat-members); }
+.cl-stat--quarters { background: var(--stat-deadline); }
+.cl-stat--reward { background: var(--stat-reward); }
+.cl-stat--penalty { background: var(--stat-penalty); }
+.cl-stat--negation { background: var(--stat-negation); }
+
+@media (max-width: 760px) {
+  .cl-body { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .cl-example { position: static; }
+}

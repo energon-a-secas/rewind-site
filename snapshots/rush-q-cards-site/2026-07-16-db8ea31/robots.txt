@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Allow AI search engine bots
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+# Disallow admin/crawlers
+User-agent: *
+Disallow: /node_modules/
+Disallow: /convex/
+
+Sitemap: https://rush-q-cards.neorgon.com/sitemap.xml

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-season="off">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Sortie">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Sortie | Mech Console</title>
+  <meta name="description" content="Boot a sci-fi mech console, watch parts come online from the core, forge your own components, and fire burst modes that repaint the whole HUD">
+  <meta property="og:title" content="Sortie: Mech Console">
+  <meta property="og:description" content="Seat a device in the core, bring the frame online part by part, forge your own components, and fire burst modes">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sortie.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sortie: Mech Console">
+  <meta name="twitter:description" content="Seat a device in the core, bring the frame online part by part, forge your own components, and fire burst modes">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sortie.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://sortie.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://sortie.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (PROJECTS.md section 5) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/parts/tokens.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/parts/boot.css">
+  <link rel="stylesheet" href="css/parts/matrix.css">
+  <link rel="stylesheet" href="css/parts/hud.css">
+  <link rel="stylesheet" href="css/parts/cards.css">
+  <link rel="stylesheet" href="css/parts/forge.css">
+  <link rel="stylesheet" href="css/parts/modes.css">
+  <link rel="stylesheet" href="css/parts/panel.css">
+  <link rel="stylesheet" href="css/parts/responsive.css">
+  <!-- NeoKeys Kit (vendored): H chrome toggle + ? sheet. The guard applies a
+       cookie-hidden chrome before first paint. -->
+  <meta name="neo-chrome-toggle" content="full">
+  <script>try{document.documentElement.dataset.chromeScope='full';if(/(?:^|;\s*)neo_chrome=off/.test(document.cookie))document.documentElement.dataset.chrome='off'}catch(e){}</script>
+  <link rel="stylesheet" href="css/neorgon-keys.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css. The kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <meta name="neo-repo" content="https://github.com/energon-a-secas/sortie-site">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sortie",
+    "description": "Boot a sci-fi mech console, watch parts come online from the core, forge your own components, and fire burst modes that repaint the whole HUD",
+    "url": "https://sortie.neorgon.com/",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body data-phase="locked">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app" data-header-skin="aurora">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Sortie</h1>
+        <div class="header-subtitle" data-fr="Bonne chasse.">Mech console</div>
+      
+        </div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <div class="header-actions">
+        <button class="btn btn--ghost btn--sm" id="navConsole" data-keep-mobile>Console</button>
+        <button class="btn btn--ghost btn--sm" id="navForge" data-keep-mobile>Forge</button>
+        <button class="btn btn--ghost btn--sm" id="navModes">Modes</button>
+        <button class="btn btn--ghost btn--sm" id="navTransform">Transform</button>
+        <button class="btn btn--ghost btn--sm" id="navShare">Share</button>
+        <button class="btn btn--ghost btn--sm" id="navPoster">Poster</button>
+        <button class="btn btn--ghost btn--sm" id="navPanel">Options</button>
+        <button class="btn btn--ghost btn--sm" id="navLock">Re-lock</button>
+      </div>
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Ambient cockpit layer. Purely decorative; fx.js owns the canvas. -->
+  <div class="fx" aria-hidden="true">
+    <canvas class="fx__canvas" id="fxCanvas"></canvas>
+    <div class="fx__grid"></div>
+    <div class="fx__scan"></div>
+    <div class="fx__vignette"></div>
+  </div>
+
+  <main id="main">
+
+    <!-- ── LOCKED ─────────────────────────────────────────── -->
+    <section class="screen boot" id="screenBoot" aria-labelledby="bootHeading">
+      <div class="boot__stage">
+        <svg class="boot__tethers" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M60 60 L150 150 M340 60 L250 150 M60 340 L150 250 M340 340 L250 250"/>
+        </svg>
+        <div class="boot__socket">
+          <span class="boot__ring"></span>
+          <span class="boot__ring boot__ring--outer"></span>
+          <span class="boot__pulse"></span>
+          <svg class="core-a" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M40 4 H60 L96 96 H74 L50 30 L26 96 H4 Z M17.3 62 H82.7 L88.2 76 H11.8 Z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="boot__panel">
+        <p class="hud-eyebrow" id="bootHeading">System locked</p>
+        <h2 class="boot__title">Device ID required</h2>
+        <p class="boot__lead">The frame holds no charge until a device is seated in the core socket.</p>
+
+        <form class="boot__form" id="bootForm" novalidate>
+          <label class="hud-label" for="bootCode">Device ID</label>
+          <input class="boot__input" id="bootCode" name="code" type="text" maxlength="8"
+                 autocomplete="off" autocapitalize="characters" spellcheck="false"
+                 aria-describedby="bootStatus" placeholder="- - - -">
+          <button class="btn btn--primary" type="submit" id="bootSubmit">Engage</button>
+        </form>
+
+        <p class="boot__hint" id="bootHint" hidden></p>
+        <p class="boot__status" id="bootStatus" role="status" aria-live="polite"></p>
+        <p class="boot__note">The device ID is a stage prop, not a lock. Nothing on this page is private.</p>
+      </div>
+    </section>
+
+    <!-- ── CONSOLE ────────────────────────────────────────── -->
+    <section class="screen console" id="screenConsole" aria-labelledby="consoleHeading" hidden>
+      <h2 class="sr-only" id="consoleHeading">Frame console</h2>
+
+      <div class="readouts">
+        <div class="readout"><span class="readout__k">Mode</span><span class="readout__v" id="roMode">Standby</span></div>
+        <div class="readout"><span class="readout__k">Frame rating</span><span class="readout__v" id="roRating">0000</span></div>
+        <div class="readout"><span class="readout__k">Online</span><span class="readout__v" id="roOnline">00 / 21</span></div>
+        <div class="readout"><span class="readout__k">Load</span><span class="readout__v" id="roLoad">0 / 0</span></div>
+        <div class="readout"><span class="readout__k">EN</span><span class="readout__v" id="roEn">0 / 0</span></div>
+        <div class="readout"><span class="readout__k">Layout</span><span class="readout__v" id="roLayout">Frame</span></div>
+      </div>
+
+      <div class="hud">
+        <div class="hud__col hud__col--left" id="hudLeft"></div>
+
+        <div class="matrix" id="matrix">
+          <svg class="hud__ring" viewBox="0 0 400 400" aria-hidden="true">
+            <circle class="hud__ring-track" cx="200" cy="200" r="186"/>
+            <path class="hud__ring-arc" d="M200 8 A192 192 0 0 1 356 96"/>
+            <path class="hud__ring-arc" d="M200 392 A192 192 0 0 1 44 304"/>
+            <path class="hud__ring-tick" d="M200 0v18M200 400v-18M0 200h18M400 200h-18"/>
+          </svg>
+        <div class="matrix__stage" id="matrixStage">
+          <svg class="matrix__traces" id="matrixTraces" aria-hidden="true"></svg>
+          <div class="matrix__core">
+            <svg class="core-a core-a--sm" viewBox="0 0 100 100" aria-hidden="true">
+              <path d="M40 4 H60 L96 96 H74 L50 30 L26 96 H4 Z M17.3 62 H82.7 L88.2 76 H11.8 Z"/>
+            </svg>
+          </div>
+          <div class="matrix__tiles" id="matrixTiles" role="grid" aria-label="Frame components"></div>
+        </div>
+        </div>
+
+        <div class="hud__col hud__col--right" id="hudRight"></div>
+      </div>
+
+      <p class="sr-only" id="matrixStatus" role="status" aria-live="polite"></p>
+
+      <div class="stats" id="frameStats"></div>
+
+      <div class="rail-head">
+        <h3 class="hud-eyebrow">Components</h3>
+        <span class="rail-hint">Pick a card or a tile to swap that slot</span>
+      </div>
+      <div class="rail" id="rail"></div>
+    </section>
+
+    <!-- ── FORGE ──────────────────────────────────────────── -->
+    <section class="screen forge" id="screenForge" aria-labelledby="forgeHeading" hidden>
+      <div class="forge__head">
+        <h2 class="forge__title" id="forgeHeading">Forge</h2>
+        <p class="forge__lead">Paint a 16 by 16 glyph in four inks, name it, give it a slot and a stat spread. The grid is the tile, so what you paint is what the frame shows. Outline wraps a flat silhouette in a lit contour. Saved parts join the matrix.</p>
+      </div>
+
+      <div class="forge__grid">
+        <div class="forge__col">
+          <div class="paint">
+            <div class="paint__grid" id="paintGrid" role="group" aria-label="Glyph editor, 16 by 16 cells"></div>
+          </div>
+          <div class="inks" id="paintInks" role="group" aria-label="Ink level"></div>
+          <div class="toolbar toolbar--wrap">
+            <button class="btn btn--secondary btn--sm" id="paintShade" type="button">Outline</button>
+            <button class="btn btn--secondary btn--sm" id="paintFlat" type="button">Flatten</button>
+            <button class="btn btn--secondary btn--sm" id="paintMirror" type="button">Mirror</button>
+            <button class="btn btn--secondary btn--sm" id="paintInvert" type="button">Invert</button>
+            <button class="btn btn--secondary btn--sm" id="paintRandom" type="button">Scatter</button>
+            <button class="btn btn--secondary btn--sm" id="paintFill" type="button">Fill</button>
+            <button class="btn btn--secondary btn--sm" id="paintClear" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="forge__col">
+          <div class="field">
+            <label class="hud-label" for="forgeName">Name</label>
+            <input class="input" id="forgeName" type="text" maxlength="28" placeholder="Untitled unit">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="hud-label" for="forgeSlot">Slot</label>
+              <select class="input" id="forgeSlot"></select>
+            </div>
+            <div class="field">
+              <label class="hud-label" for="forgeClass">Class</label>
+              <input class="input" id="forgeClass" type="text" maxlength="18" placeholder="Frame">
+            </div>
+          </div>
+          <div class="field">
+            <span class="hud-label">Stats</span>
+            <div class="sliders" id="forgeSliders"></div>
+          </div>
+          <div class="toolbar toolbar--wrap">
+            <button class="btn btn--primary" id="forgeSave" type="button">Save part</button>
+            <button class="btn btn--secondary" id="forgeNew" type="button">New</button>
+            <button class="btn btn--ghost" id="forgeEquip" type="button">Save and equip</button>
+            <button class="btn btn--danger" id="forgeDelete" type="button" hidden>Delete</button>
+          </div>
+        </div>
+
+        <div class="forge__col forge__col--preview">
+          <span class="hud-label">Preview</span>
+          <div class="forge__preview" id="forgePreview"></div>
+        </div>
+      </div>
+
+      <div class="forge__library">
+        <div class="rail-head">
+          <h3 class="hud-eyebrow">Your parts</h3>
+          <div class="toolbar">
+            <button class="btn btn--ghost btn--sm" id="forgeExport" type="button">Export JSON</button>
+            <button class="btn btn--ghost btn--sm" id="forgeImport" type="button">Import JSON</button>
+            <input type="file" id="forgeFile" accept="application/json,.json" hidden>
+          </div>
+        </div>
+        <div class="rail" id="libraryRail"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Burst mode overlay ─────────────────────────────── -->
+  <div class="modal mode-overlay" id="modeOverlay" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog mode-dialog" role="dialog" aria-modal="true" aria-labelledby="modeBannerText" tabindex="-1">
+      <div class="mode-quad mode-quad--tl"><span class="mode-quad__k">Mode-1</span><span class="mode-quad__v" id="q1">SRT/SYS/CORE</span></div>
+      <div class="mode-quad mode-quad--tr"><span class="mode-quad__k">Mode-2</span><span class="mode-quad__v" id="q2">PWR/GEN/CTRL</span></div>
+      <div class="mode-quad mode-quad--bl"><span class="mode-quad__k">Mode-3</span><span class="mode-quad__v" id="q3">MAP/SYS/SNSR</span></div>
+      <div class="mode-quad mode-quad--br"><span class="mode-quad__k">Mode-4</span><span class="mode-quad__v" id="q4">WEP/SYS/SLCT</span></div>
+
+      <div class="mode-core">
+        <svg class="mode-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="mode-ring__track" cx="100" cy="100" r="88"/>
+          <circle class="mode-ring__sweep" id="modeSweep" cx="100" cy="100" r="88"/>
+        </svg>
+        <svg class="core-a core-a--ghost" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M40 4 H60 L96 96 H74 L50 30 L26 96 H4 Z M17.3 62 H82.7 L88.2 76 H11.8 Z"/>
+        </svg>
+        <div class="mode-banner" id="modeBanner"><span id="modeBannerText">Burst mode operation</span></div>
+      </div>
+
+      <div class="mode-picker" id="modePicker" role="group" aria-label="Select mode"></div>
+
+      <div class="mode-actions">
+        <button class="btn btn--ghost btn--sm" data-modal-close type="button">Return to console</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Part picker ────────────────────────────────────── -->
+  <div class="modal" id="partPicker" hidden>
+    <div class="modal__backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="pickerTitle" tabindex="-1">
+      <header class="modal__header">
+        <h2 id="pickerTitle">Swap part</h2>
+        <button type="button" class="btn btn--ghost btn--icon" data-modal-close aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div class="modal__body">
+        <div class="rail rail--picker" id="pickerRail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Options drawer ─────────────────────────────────── -->
+  <aside class="panel" id="panel" aria-labelledby="panelTitle" hidden>
+    <div class="panel__head">
+      <h2 class="panel__title" id="panelTitle">Console options</h2>
+      <button type="button" class="btn btn--ghost btn--icon" id="panelClose" aria-label="Close options">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="panel__body">
+      <div class="field">
+        <span class="hud-label">Accent</span>
+        <div class="swatches" id="accentSwatches"></div>
+        <label class="hud-label hud-label--sub" for="accentHue">Hue</label>
+        <input class="slider" id="accentHue" type="range" min="0" max="360" step="1" value="187">
+        <label class="hud-label hud-label--sub" for="accentSat">Intensity</label>
+        <input class="slider" id="accentSat" type="range" min="35" max="100" step="1" value="94">
+      </div>
+
+      <div class="field">
+        <span class="hud-label">Layout</span>
+        <div class="chips" id="layoutChips" role="group" aria-label="Matrix layout"></div>
+      </div>
+
+      <div class="field">
+        <span class="hud-label">Effects</span>
+        <div class="switches" id="fxSwitches"></div>
+      </div>
+
+      <div class="field">
+        <span class="hud-label">Motion</span>
+        <div class="chips" id="motionChips" role="group" aria-label="Motion level"></div>
+        <p class="panel__note" id="motionNote"></p>
+      </div>
+
+      <div class="field">
+        <button class="btn btn--secondary btn--block" id="panelReset" type="button">Reset options</button>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    Parts, colors and loadouts live in your browser's local storage. The device ID is a prop, not a lock.
+  </footer>
+
+  <script type="module" src="js/neokeys/boot.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Vibes — Behavioral Assessment Scorecard for Technical Interviews</title>
+    <meta name="description" content="Free interviewer scorecard tool. Rate candidates across 18 behavioral questions in 6 categories — communication, story consistency, technical credibility, ownership, problem-solving, and vibe. Generate internal review and candidate feedback reports as markdown.">
+    <meta name="author" content="Luciano Adonis">
+    <meta name="keywords" content="interview scorecard, candidate assessment tool, behavioral interview questions, hiring rubric, interviewer evaluation form, technical interview scoring, DevOps interview, Cloud engineer interview, candidate feedback template, interview rating system, structured interview, hiring decision tool">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://lucianoadonis.github.io/Interview-Insight/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Interview Vibes — Behavioral Assessment Scorecard">
+    <meta property="og:description" content="Stop relying on gut feeling. Score candidates across communication, consistency, technical depth, ownership, problem-solving, and vibe. Generate internal and candidate-facing reports. Free, no sign-up, runs in your browser.">
+    <meta property="og:url" content="https://lucianoadonis.github.io/Interview-Insight/">
+    <meta property="og:site_name" content="Interview Vibes">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://lucianoadonis.github.io/Interview-Insight/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Interview Vibes — A behavioral assessment scorecard showing candidate scoring across 6 categories">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Interview Vibes — Behavioral Assessment Scorecard">
+    <meta name="twitter:description" content="Free interview scorecard. 18 questions, 6 categories, downloadable markdown reports. Quantify the vibes you get from someone.">
+    <meta name="twitter:image" content="https://lucianoadonis.github.io/Interview-Insight/og-image.png">
+    <meta name="twitter:image:alt" content="Interview Vibes — Candidate behavioral assessment scorecard">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#040714">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Interview Vibes">
+
+    <!-- Google Analytics -->
+    
+    
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Interview Vibes",
+        "headline": "Behavioral Assessment Scorecard for Technical Interviews",
+        "description": "A free, browser-based behavioral assessment scorecard for interviewers. Rate candidates across 18 questions in 6 categories — communication, story consistency, technical credibility, ownership, problem-solving, and vibe. Generates downloadable internal review and candidate feedback reports.",
+        "url": "https://lucianoadonis.github.io/Interview-Insight/",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Human Resources",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern web browser with JavaScript",
+        "softwareVersion": "1.0",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "18 behavioral assessment questions across 6 categories",
+            "Real-time scoring with pass probability percentage",
+            "Optional probe questions for deeper investigation",
+            "Downloadable internal review report (Markdown)",
+            "Downloadable candidate feedback report (Markdown)",
+            "Help tooltips with suggested interview questions",
+            "No server required — runs entirely in the browser"
+        ],
+        "author": {
+            "@type": "Person",
+            "name": "Luciano Adonis",
+            "url": "https://lucianoadonis.medium.com",
+            "sameAs": [
+                "https://lucianoadonis.medium.com",
+                "https://github.com/LucianoAdonis"
+            ]
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Luciano Adonis"
+        },
+        "datePublished": "2026-02-21",
+        "keywords": "interview scorecard, behavioral assessment, candidate evaluation, hiring rubric, technical interview"
+    }
+    </script>
+
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What does Interview Vibes assess?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Interview Vibes scores candidates across 6 behavioral categories: Communication & Clarity, Story Consistency, Technical Credibility, Ownership & Accountability, Problem-Solving & Pressure, and The Vibe. Each category has 3 questions scored 0-2, for a maximum of 36 points."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How is the pass probability calculated?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pass probability is the candidate's score divided by 36 (maximum), expressed as a percentage. Verdicts range from Strong Pass (83-100%), Likely Pass (67-82%), Borderline (50-66%), Unlikely (33-49%), to No Pass (0-32%)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does Interview Vibes store any data?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Interview Vibes runs entirely in your browser. No data is sent to any server. Reports are generated locally and downloaded as markdown files."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #040714;
+            min-height: 100vh;
+            color: #f9f9f9;
+        }
+
+        .header-bar {
+            background: rgba(4, 7, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-logo { display: flex; align-items: center; gap: 15px; }
+        .header-logo h1 { font-size: 1.3em; font-weight: 600; color: #f9f9f9; letter-spacing: 0.5px; }
+        .header-subtitle { font-size: 0.85em; color: #cacaca; font-weight: 400; }
+        nav { display: flex; gap: 5px; }
+        nav a { color: #f9f9f9; text-decoration: none; padding: 8px 16px; border-radius: 5px; transition: all 0.3s ease; font-size: 0.95em; font-weight: 500; }
+        nav a:hover { background: rgba(255, 255, 255, 0.1); }
+        nav a.active { background: #0063e5; }
+
+        .main-container { display: flex; max-width: 1400px; margin: 0 auto; padding: 30px; gap: 30px; }
+        .content-area { flex: 1; max-width: 900px; }
+
+        /* Sidebar */
+        .score-sidebar { position: sticky; top: 100px; width: 300px; height: fit-content; }
+        .score-card {
+            background: linear-gradient(135deg, #0063e5 0%, #0080ff 100%);
+            border-radius: 20px; padding: 30px 25px; text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 99, 229, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.6s ease, box-shadow 0.6s ease;
+            position: relative; overflow: hidden;
+        }
+        .score-card::before {
+            content: ''; position: absolute; top: -30px; right: -30px;
+            width: 150px; height: 150px; opacity: 0.12;
+            font-size: 100px; transition: opacity 0.6s ease;
+        }
+        .score-card.verdict-strong-pass { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 8px 32px rgba(34,197,94,0.4); }
+        .score-card.verdict-strong-pass::before { content: '\2713'; }
+        .score-card.verdict-likely-pass { background: linear-gradient(135deg, #0063e5 0%, #0080ff 100%); box-shadow: 0 8px 32px rgba(0,99,229,0.3); }
+        .score-card.verdict-likely-pass::before { content: '\2197'; }
+        .score-card.verdict-borderline { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 8px 32px rgba(245,158,11,0.4); }
+        .score-card.verdict-borderline::before { content: '~'; }
+        .score-card.verdict-unlikely { background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); box-shadow: 0 8px 32px rgba(74,85,104,0.5); }
+        .score-card.verdict-unlikely::before { content: '\2198'; }
+        .score-card.verdict-no-pass { background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); box-shadow: 0 8px 32px rgba(229,62,62,0.6); }
+        .score-card.verdict-no-pass::before { content: '\2717'; }
+
+        .score-label { font-size: 0.9em; opacity: 0.9; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+        .score-value { font-size: 4.5em; font-weight: 700; line-height: 1; margin-bottom: 5px; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+        .score-value span { font-size: 0.4em; font-weight: 500; opacity: 0.8; }
+        .verdict-label { font-size: 1.1em; font-weight: 600; margin-bottom: 20px; letter-spacing: 0.5px; opacity: 0.95; }
+
+        .breakdown-section { padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.2); text-align: left; }
+        .breakdown-item { display: flex; align-items: center; margin: 7px 0; font-size: 0.8em; }
+        .breakdown-label { width: 95px; opacity: 0.85; font-weight: 500; }
+        .breakdown-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 10px; overflow: hidden; }
+        .breakdown-fill { height: 100%; border-radius: 2px; background: rgba(255,255,255,0.75); transition: width 0.4s ease; }
+        .breakdown-val { width: 30px; text-align: right; opacity: 0.85; font-weight: 500; }
+        .score-total { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 0.85em; opacity: 0.8; }
+
+        .sidebar-buttons { margin-top: 20px; }
+        .download-btn { width: 100%; padding: 12px 16px; border-radius: 10px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; margin-top: 10px; display: block; text-align: center; }
+        .download-btn:hover { transform: translateY(-2px); }
+        .download-btn:active { transform: translateY(0); }
+        .download-btn-primary { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.35); color: white; }
+        .download-btn-primary:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .download-btn-secondary { background: transparent; border: 2px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+        .download-btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .reset-button { width: 100%; margin-top: 16px; padding: 12px 16px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; color: rgba(255,255,255,0.6); font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
+        .reset-button:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); transform: translateY(-2px); }
+        .reset-button:active { transform: translateY(0); }
+
+        /* Auto-advance highlight */
+        @keyframes questionPulse {
+            0% { box-shadow: inset 0 0 0 0 rgba(0, 99, 229, 0); background: transparent; }
+            20% { box-shadow: inset 0 0 0 2px rgba(0, 99, 229, 0.35); background: rgba(0, 99, 229, 0.04); }
+            100% { box-shadow: inset 0 0 0 0 rgba(0, 99, 229, 0); background: transparent; }
+        }
+        @keyframes sectionPulse {
+            0% { border-color: rgba(255, 255, 255, 0.1); }
+            25% { border-color: rgba(0, 99, 229, 0.45); }
+            100% { border-color: rgba(255, 255, 255, 0.1); }
+        }
+        .control-group.highlight-next {
+            animation: questionPulse 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 10px;
+        }
+        .card.highlight-section {
+            animation: sectionPulse 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Cards */
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 30px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .section-title { font-size: 1.4em; margin-bottom: 25px; color: #f9f9f9; font-weight: 600; letter-spacing: 0.3px; display: flex; align-items: center; justify-content: space-between; }
+        .category-badge { font-size: 0.5em; padding: 5px 14px; border-radius: 20px; background: rgba(255,255,255,0.1); font-weight: 500; letter-spacing: 0; transition: background 0.3s ease, color 0.3s ease; }
+        .category-badge.score-high { background: rgba(34,197,94,0.25); color: #4ade80; }
+        .category-badge.score-mid { background: rgba(245,158,11,0.25); color: #fbbf24; }
+        .category-badge.score-low { background: rgba(229,62,62,0.25); color: #f87171; }
+
+        .control-group { margin-bottom: 28px; }
+        .control-group:last-child { margin-bottom: 0; }
+
+        /* Question header with help button */
+        .control-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .control-header .control-label { margin-bottom: 0; }
+        .control-label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 1em; color: #f9f9f9; }
+        .control-description { font-size: 0.85em; color: #cacaca; margin-bottom: 12px; }
+
+        /* Help trigger button */
+        .help-trigger {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.45); font-size: 0.7em; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .help-trigger:hover { background: rgba(0,99,229,0.3); border-color: #0063e5; color: #fff; }
+
+        /* Help modal */
+        .help-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(4,7,20,0.8); backdrop-filter: blur(4px);
+            z-index: 200; align-items: center; justify-content: center;
+        }
+        .help-overlay.visible { display: flex; }
+        .help-modal {
+            background: #1a1d2e; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px; padding: 28px; max-width: 460px; width: 90%;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5); position: relative;
+            max-height: 80vh; overflow-y: auto;
+        }
+        .help-modal-close {
+            position: absolute; top: 14px; right: 16px; background: none; border: none;
+            color: rgba(255,255,255,0.4); font-size: 1.3em; cursor: pointer; padding: 4px 8px;
+            transition: color 0.2s; font-family: inherit;
+        }
+        .help-modal-close:hover { color: #fff; }
+        .help-modal h3 { font-size: 1.1em; margin-bottom: 18px; color: #f9f9f9; padding-right: 30px; line-height: 1.4; }
+        .help-section { margin-bottom: 16px; }
+        .help-section:last-child { margin-bottom: 0; }
+        .help-section-label { font-size: 0.72em; text-transform: uppercase; letter-spacing: 1.2px; color: #0080ff; font-weight: 600; margin-bottom: 8px; }
+        .help-section p { font-size: 0.88em; color: #cacaca; line-height: 1.6; }
+        .help-section ul { list-style: none; padding: 0; }
+        .help-section li { font-size: 0.88em; color: #cacaca; padding: 3px 0 3px 16px; position: relative; line-height: 1.5; }
+        .help-section li::before { content: '\2022'; position: absolute; left: 0; color: rgba(255,255,255,0.3); }
+
+        .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .radio-option { flex: 1; min-width: 90px; position: relative; }
+        .radio-option input[type="radio"] { display: none; }
+        .radio-option label { display: block; padding: 14px 10px; border: 2px solid rgba(255,255,255,0.15); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; font-weight: 500; font-size: 0.95em; background: rgba(255,255,255,0.02); }
+        .radio-option input[type="radio"]:checked + label { background: #0063e5; color: white; border-color: #0063e5; box-shadow: 0 4px 16px rgba(0,99,229,0.4); }
+        .radio-option label:hover { border-color: #0063e5; background: rgba(0,99,229,0.1); }
+        .radio-option.opt-good input[type="radio"]:checked + label { background: #16a34a; border-color: #16a34a; box-shadow: 0 4px 16px rgba(22,163,74,0.4); }
+        .radio-option.opt-bad input[type="radio"]:checked + label { background: #dc2626; border-color: #dc2626; box-shadow: 0 4px 16px rgba(220,38,38,0.4); }
+
+        .text-input { width: 100%; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15); border-radius: 8px; color: #f9f9f9; padding: 14px; font-family: inherit; font-size: 1em; transition: border-color 0.2s ease; }
+        .text-input:focus { outline: none; border-color: #0063e5; }
+        .text-input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .notes-textarea { width: 100%; min-height: 120px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15); border-radius: 8px; color: #f9f9f9; padding: 14px; font-family: inherit; font-size: 0.95em; resize: vertical; transition: border-color 0.2s ease; }
+        .notes-textarea:focus { outline: none; border-color: #0063e5; }
+        .notes-textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+        /* Probe dropdown */
+        .probe-dropdown { margin-top: 24px; border-left: 3px solid rgba(245,158,11,0.3); margin-left: 8px; padding-left: 20px; }
+        .probe-dropdown[open] { border-left-color: #f59e0b; }
+        .probe-toggle {
+            font-size: 0.85em; font-weight: 600; color: rgba(245,158,11,0.6);
+            text-transform: uppercase; letter-spacing: 1.2px; cursor: pointer;
+            list-style: none; padding: 8px 0; transition: color 0.2s; user-select: none;
+        }
+        .probe-toggle::-webkit-details-marker { display: none; }
+        .probe-toggle::before { content: '\25B8'; display: inline-block; margin-right: 8px; transition: transform 0.2s; }
+        .probe-dropdown[open] .probe-toggle::before { transform: rotate(90deg); }
+        .probe-toggle:hover { color: #f59e0b; }
+        .probe-dropdown[open] .probe-toggle { color: #f59e0b; }
+        .probe-tag { font-size: 1em; font-weight: 400; letter-spacing: 0; text-transform: none; transition: color 0.3s; }
+        .probe-dropdown.recommended .probe-toggle { color: #f59e0b; }
+        .probe-dropdown.recommended .probe-tag { color: #fbbf24; }
+        .probe-hint { font-size: 0.82em; color: #cacaca; margin: 8px 0 20px 0; line-height: 1.5; }
+        .probe-content .control-group { margin-bottom: 24px; }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column-reverse; }
+            .score-sidebar { position: relative; top: 0; width: 100%; max-width: 400px; margin: 0 auto; }
+            .content-area { max-width: 100%; }
+        }
+        @media (max-width: 600px) {
+            .header-bar { padding: 12px 16px; flex-direction: column; gap: 10px; }
+            .main-container { padding: 16px; }
+            .card { padding: 20px; }
+            .radio-group { gap: 8px; }
+            .radio-option { min-width: 70px; }
+            .radio-option label { padding: 10px 6px; font-size: 0.85em; }
+            .help-modal { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bar" role="banner">
+        <div class="header-logo">
+            <div>
+                <h1>Interview Vibes</h1>
+                <div class="header-subtitle">Candidate Assessment Tool</div>
+            </div>
+        </div>
+        <nav aria-label="Main navigation">
+            <a href="javascript:void(0)" onclick="resetAssessment()" class="active">Reset</a>
+            <a href="https://lucianoadonis.medium.com/list/tips-entrevistas-32c6eb8c1547" target="_blank" rel="noopener noreferrer">Medium</a>
+        </nav>
+    </header>
+
+    <div class="main-container" role="main">
+        <main class="content-area" aria-label="Assessment form">
+
+            <!-- Candidate Info -->
+            <div class="card">
+                <h2 class="section-title">Candidate</h2>
+                <div class="control-group">
+                    <label class="control-label">Name</label>
+                    <input type="text" id="candidate-name" class="text-input" placeholder="Enter candidate name">
+                </div>
+            </div>
+
+            <!-- Communication & Clarity -->
+            <div class="card">
+                <h2 class="section-title">Communication & Clarity <span class="category-badge" id="badge-comm">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Does this person explain themselves clearly?</label>
+                        <button class="help-trigger" onclick="showHelp('comm-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Ability to articulate ideas, experiences, and technical concepts</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="comm-1-a" name="comm-1" value="2"><label for="comm-1-a">Clearly</label></div>
+                        <div class="radio-option"><input type="radio" id="comm-1-b" name="comm-1" value="1" checked><label for="comm-1-b">Somewhat</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="comm-1-c" name="comm-1" value="0"><label for="comm-1-c">Barely</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Can they structure and organize their thoughts?</label>
+                        <button class="help-trigger" onclick="showHelp('comm-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Logical flow when presenting ideas or answering questions</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="comm-2-a" name="comm-2" value="2"><label for="comm-2-a">Well</label></div>
+                        <div class="radio-option"><input type="radio" id="comm-2-b" name="comm-2" value="1" checked><label for="comm-2-b">Partially</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="comm-2-c" name="comm-2" value="0"><label for="comm-2-c">Poorly</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do they adapt their level of detail to the conversation?</label>
+                        <button class="help-trigger" onclick="showHelp('comm-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Reads the room and adjusts communication style accordingly</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="comm-3-a" name="comm-3" value="2"><label for="comm-3-a">Naturally</label></div>
+                        <div class="radio-option"><input type="radio" id="comm-3-b" name="comm-3" value="1" checked><label for="comm-3-b">With effort</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="comm-3-c" name="comm-3" value="0"><label for="comm-3-c">Rigid</label></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Story Consistency -->
+            <div class="card">
+                <h2 class="section-title">Story Consistency <span class="category-badge" id="badge-story">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Is their experience narrative consistent throughout?</label>
+                        <button class="help-trigger" onclick="showHelp('story-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Timeline, roles, and responsibilities stay coherent across the conversation</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="story-1-a" name="story-1" value="2"><label for="story-1-a">Consistent</label></div>
+                        <div class="radio-option"><input type="radio" id="story-1-b" name="story-1" value="1" checked><label for="story-1-b">Minor gaps</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="story-1-c" name="story-1" value="0"><label for="story-1-c">Contradictory</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do details hold when approached from different angles?</label>
+                        <button class="help-trigger" onclick="showHelp('story-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Asking the same thing differently still produces a coherent answer</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="story-2-a" name="story-2" value="2"><label for="story-2-a">Solid</label></div>
+                        <div class="radio-option"><input type="radio" id="story-2-b" name="story-2" value="1" checked><label for="story-2-b">Wavering</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="story-2-c" name="story-2" value="0"><label for="story-2-c">Falls apart</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Can they provide specific examples on demand?</label>
+                        <button class="help-trigger" onclick="showHelp('story-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">When asked for concrete details, they deliver without hesitation</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="story-3-a" name="story-3" value="2"><label for="story-3-a">Readily</label></div>
+                        <div class="radio-option"><input type="radio" id="story-3-b" name="story-3" value="1" checked><label for="story-3-b">With effort</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="story-3-c" name="story-3" value="0"><label for="story-3-c">Cannot</label></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Credibility -->
+            <div class="card">
+                <h2 class="section-title">Technical Credibility <span class="category-badge" id="badge-tech">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Are there technical gaps in their story?</label>
+                        <button class="help-trigger" onclick="showHelp('tech-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Claimed experience vs. actual depth when probed on specifics</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="tech-1-a" name="tech-1" value="2"><label for="tech-1-a">None</label></div>
+                        <div class="radio-option"><input type="radio" id="tech-1-b" name="tech-1" value="1" checked><label for="tech-1-b">Some</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="tech-1-c" name="tech-1" value="0"><label for="tech-1-c">Major</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do they understand the "why" behind their decisions?</label>
+                        <button class="help-trigger" onclick="showHelp('tech-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Can explain reasoning, trade-offs, and alternatives — not just what they did</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="tech-2-a" name="tech-2" value="2"><label for="tech-2-a">Deep</label></div>
+                        <div class="radio-option"><input type="radio" id="tech-2-b" name="tech-2" value="1" checked><label for="tech-2-b">Surface</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="tech-2-c" name="tech-2" value="0"><label for="tech-2-c">None</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Can they go beyond rehearsed answers?</label>
+                        <button class="help-trigger" onclick="showHelp('tech-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">When pushed past their prepared talking points, do they still have substance?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="tech-3-a" name="tech-3" value="2"><label for="tech-3-a">Yes</label></div>
+                        <div class="radio-option"><input type="radio" id="tech-3-b" name="tech-3" value="1" checked><label for="tech-3-b">Partially</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="tech-3-c" name="tech-3" value="0"><label for="tech-3-c">No</label></div>
+                    </div>
+                </div>
+
+                <details class="probe-dropdown" id="tech-probes">
+                    <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="tech-probe-tag">(Optional)</span></summary>
+                    <div class="probe-content">
+                        <p class="probe-hint">Use these follow-up questions to investigate technical depth further.</p>
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Does their exposure come from hands-on work?</label>
+                                <button class="help-trigger" onclick="showHelp('tech-p1')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Determine if knowledge is from direct experience or observation</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="tp1-a" name="tech-p1" value="2"><label for="tp1-a">Hands-on</label></div>
+                                <div class="radio-option"><input type="radio" id="tp1-b" name="tech-p1" value="1" checked><label for="tp1-b">Mixed</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="tp1-c" name="tech-p1" value="0"><label for="tp1-c">Observed</label></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Can they elaborate on specific implementations?</label>
+                                <button class="help-trigger" onclick="showHelp('tech-p2')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Ask for concrete details about tools, configs, or code they worked with</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="tp2-a" name="tech-p2" value="2"><label for="tp2-a">Detailed</label></div>
+                                <div class="radio-option"><input type="radio" id="tp2-b" name="tech-p2" value="1" checked><label for="tp2-b">Vague</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="tp2-c" name="tech-p2" value="0"><label for="tp2-c">Cannot</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Ownership & Accountability -->
+            <div class="card">
+                <h2 class="section-title">Ownership & Accountability <span class="category-badge" id="badge-own">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do they distinguish their work from team contributions?</label>
+                        <button class="help-trigger" onclick="showHelp('own-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Can they clearly say "I did X" vs "the team did Y"?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="own-1-a" name="own-1" value="2"><label for="own-1-a">Clearly</label></div>
+                        <div class="radio-option"><input type="radio" id="own-1-b" name="own-1" value="1" checked><label for="own-1-b">Vaguely</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="own-1-c" name="own-1" value="0"><label for="own-1-c">Claims all</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Does their ownership claim hold under deeper probing?</label>
+                        <button class="help-trigger" onclick="showHelp('own-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">When you ask follow-ups, does the story stay solid or start crumbling?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="own-2-a" name="own-2" value="2"><label for="own-2-a">Holds up</label></div>
+                        <div class="radio-option"><input type="radio" id="own-2-b" name="own-2" value="1" checked><label for="own-2-b">Partially</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="own-2-c" name="own-2" value="0"><label for="own-2-c">Falls apart</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Can they explain decisions they personally made?</label>
+                        <button class="help-trigger" onclick="showHelp('own-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Specific choices, trade-offs, and reasoning that were their own call</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="own-3-a" name="own-3" value="2"><label for="own-3-a">Detailed</label></div>
+                        <div class="radio-option"><input type="radio" id="own-3-b" name="own-3" value="1" checked><label for="own-3-b">Vague</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="own-3-c" name="own-3" value="0"><label for="own-3-c">Cannot</label></div>
+                    </div>
+                </div>
+
+                <details class="probe-dropdown" id="own-probes">
+                    <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="own-probe-tag">(Optional)</span></summary>
+                    <div class="probe-content">
+                        <p class="probe-hint">Ownership concerns? Dig into whether the experience is genuinely theirs.</p>
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Is this their direct experience or a coworker's?</label>
+                                <button class="help-trigger" onclick="showHelp('own-p1')" type="button">?</button>
+                            </div>
+                            <p class="control-description">People sometimes absorb team stories as their own — probe for first-person details</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="op1-a" name="own-p1" value="2"><label for="op1-a">Their own</label></div>
+                                <div class="radio-option"><input type="radio" id="op1-b" name="own-p1" value="1" checked><label for="op1-b">Shared</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="op1-c" name="own-p1" value="0"><label for="op1-c">Someone else's</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Problem-Solving & Pressure -->
+            <div class="card">
+                <h2 class="section-title">Problem-Solving & Pressure <span class="category-badge" id="badge-solve">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">How do they handle not knowing something?</label>
+                        <button class="help-trigger" onclick="showHelp('solve-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Do they acknowledge gaps honestly and try to reason through it?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="solve-1-a" name="solve-1" value="2"><label for="solve-1-a">Reasons</label></div>
+                        <div class="radio-option"><input type="radio" id="solve-1-b" name="solve-1" value="1" checked><label for="solve-1-b">Deflects</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="solve-1-c" name="solve-1" value="0"><label for="solve-1-c">Freezes</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Can they reason through problems in real-time?</label>
+                        <button class="help-trigger" onclick="showHelp('solve-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Given a scenario or challenge, can they think on their feet?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="solve-2-a" name="solve-2" value="2"><label for="solve-2-a">Strong</label></div>
+                        <div class="radio-option"><input type="radio" id="solve-2-b" name="solve-2" value="1" checked><label for="solve-2-b">Moderate</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="solve-2-c" name="solve-2" value="0"><label for="solve-2-c">Weak</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do they stay engaged under pressure?</label>
+                        <button class="help-trigger" onclick="showHelp('solve-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">When the interview gets challenging, do they lean in or check out?</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="solve-3-a" name="solve-3" value="2"><label for="solve-3-a">Engaged</label></div>
+                        <div class="radio-option"><input type="radio" id="solve-3-b" name="solve-3" value="1" checked><label for="solve-3-b">Fading</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="solve-3-c" name="solve-3" value="0"><label for="solve-3-c">Checked out</label></div>
+                    </div>
+                </div>
+
+                <details class="probe-dropdown" id="solve-probes">
+                    <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="solve-probe-tag">(Optional)</span></summary>
+                    <div class="probe-content">
+                        <p class="probe-hint">Use hypothetical scenarios to test whether they truly understand design patterns and system logic, or just memorized answers.</p>
+
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Can they reason through a design trade-off they haven't rehearsed?</label>
+                                <button class="help-trigger" onclick="showHelp('solve-p1')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Present a trade-off between two valid approaches and see if they reason through it or freeze</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="sp1-a" name="solve-p1" value="2"><label for="sp1-a">Reasons well</label></div>
+                                <div class="radio-option"><input type="radio" id="sp1-b" name="solve-p1" value="1" checked><label for="sp1-b">Partial</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="sp1-c" name="solve-p1" value="0"><label for="sp1-c">Cannot</label></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Do they understand what breaks when you change a constraint?</label>
+                                <button class="help-trigger" onclick="showHelp('solve-p2')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Change a variable in their own story and see if they can predict the consequences</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="sp2-a" name="solve-p2" value="2"><label for="sp2-a">Predicts it</label></div>
+                                <div class="radio-option"><input type="radio" id="sp2-b" name="solve-p2" value="1" checked><label for="sp2-b">Guesses</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="sp2-c" name="solve-p2" value="0"><label for="sp2-c">No idea</label></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Can they explain when NOT to use a pattern they mentioned?</label>
+                                <button class="help-trigger" onclick="showHelp('solve-p3')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Someone who really understands a tool knows its limits, not just its strengths</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="sp3-a" name="solve-p3" value="2"><label for="sp3-a">Knows limits</label></div>
+                                <div class="radio-option"><input type="radio" id="sp3-b" name="solve-p3" value="1" checked><label for="sp3-b">Vague sense</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="sp3-c" name="solve-p3" value="0"><label for="sp3-c">Blindly applies</label></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Can they simplify an over-engineered proposal?</label>
+                                <button class="help-trigger" onclick="showHelp('solve-p4')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Propose something unnecessarily complex and see if they push back or blindly agree</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="sp4-a" name="solve-p4" value="2"><label for="sp4-a">Simplifies</label></div>
+                                <div class="radio-option"><input type="radio" id="sp4-b" name="solve-p4" value="1" checked><label for="sp4-b">Hesitates</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="sp4-c" name="solve-p4" value="0"><label for="sp4-c">Agrees blindly</label></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-header">
+                                <label class="control-label">Can they walk through debugging a system they didn't build?</label>
+                                <button class="help-trigger" onclick="showHelp('solve-p5')" type="button">?</button>
+                            </div>
+                            <p class="control-description">Describe a broken scenario and see if they have a systematic approach or just guess</p>
+                            <div class="radio-group">
+                                <div class="radio-option opt-good"><input type="radio" id="sp5-a" name="solve-p5" value="2"><label for="sp5-a">Systematic</label></div>
+                                <div class="radio-option"><input type="radio" id="sp5-b" name="solve-p5" value="1" checked><label for="sp5-b">Ad hoc</label></div>
+                                <div class="radio-option opt-bad"><input type="radio" id="sp5-c" name="solve-p5" value="0"><label for="sp5-c">Lost</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- The Vibe -->
+            <div class="card">
+                <h2 class="section-title">The Vibe <span class="category-badge" id="badge-vibe">3/6</span></h2>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Would you want to work with this person daily?</label>
+                        <button class="help-trigger" onclick="showHelp('vibe-1')" type="button">?</button>
+                    </div>
+                    <p class="control-description">The gut check — personality, energy, and how they'd fit the team</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="vibe-1-a" name="vibe-1" value="2"><label for="vibe-1-a">Definitely</label></div>
+                        <div class="radio-option"><input type="radio" id="vibe-1-b" name="vibe-1" value="1" checked><label for="vibe-1-b">Maybe</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="vibe-1-c" name="vibe-1" value="0"><label for="vibe-1-c">No</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Do they show genuine interest in the role?</label>
+                        <button class="help-trigger" onclick="showHelp('vibe-2')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Curiosity about the team, the work, and the challenges ahead</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="vibe-2-a" name="vibe-2" value="2"><label for="vibe-2-a">Very</label></div>
+                        <div class="radio-option"><input type="radio" id="vibe-2-b" name="vibe-2" value="1" checked><label for="vibe-2-b">Somewhat</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="vibe-2-c" name="vibe-2" value="0"><label for="vibe-2-c">Not really</label></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-header">
+                        <label class="control-label">Is their response pace reasonable?</label>
+                        <button class="help-trigger" onclick="showHelp('vibe-3')" type="button">?</button>
+                    </div>
+                    <p class="control-description">Confident and timely answers vs. long pauses or rambling</p>
+                    <div class="radio-group">
+                        <div class="radio-option opt-good"><input type="radio" id="vibe-3-a" name="vibe-3" value="2"><label for="vibe-3-a">Good pace</label></div>
+                        <div class="radio-option"><input type="radio" id="vibe-3-b" name="vibe-3" value="1" checked><label for="vibe-3-b">Slow</label></div>
+                        <div class="radio-option opt-bad"><input type="radio" id="vibe-3-c" name="vibe-3" value="0"><label for="vibe-3-c">Very slow</label></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="card">
+                <h2 class="section-title">Interviewer Notes</h2>
+                <div class="control-group">
+                    <p class="control-description">Free-form observations, red flags, highlights, or anything else worth noting</p>
+                    <textarea id="notes" class="notes-textarea" placeholder="Add your notes here..."></textarea>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="score-sidebar" aria-label="Score summary">
+            <div class="score-card" id="score-card">
+                <div class="score-label">Pass Probability</div>
+                <div class="score-value" id="score-pct">50<span>%</span></div>
+                <div class="verdict-label" id="verdict-label">Borderline</div>
+                <div class="breakdown-section">
+                    <div class="breakdown-item"><span class="breakdown-label">Comm.</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-comm" style="width:50%"></div></div><span class="breakdown-val" id="val-comm">3/6</span></div>
+                    <div class="breakdown-item"><span class="breakdown-label">Story</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-story" style="width:50%"></div></div><span class="breakdown-val" id="val-story">3/6</span></div>
+                    <div class="breakdown-item"><span class="breakdown-label">Technical</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-tech" style="width:50%"></div></div><span class="breakdown-val" id="val-tech">3/6</span></div>
+                    <div class="breakdown-item"><span class="breakdown-label">Ownership</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-own" style="width:50%"></div></div><span class="breakdown-val" id="val-own">3/6</span></div>
+                    <div class="breakdown-item"><span class="breakdown-label">Problem</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-solve" style="width:50%"></div></div><span class="breakdown-val" id="val-solve">3/6</span></div>
+                    <div class="breakdown-item"><span class="breakdown-label">Vibe</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-vibe" style="width:50%"></div></div><span class="breakdown-val" id="val-vibe">3/6</span></div>
+                    <div class="score-total">Total: <strong><span id="score-total">18</span>/36</strong></div>
+                </div>
+                <div class="sidebar-buttons">
+                    <button class="download-btn download-btn-primary" onclick="downloadInternal()">Download Internal Review</button>
+                    <button class="download-btn download-btn-secondary" onclick="downloadFeedback()">Download Candidate Feedback</button>
+                </div>
+                <button class="reset-button" onclick="resetAssessment()">Reset Assessment</button>
+            </div>
+        </aside>
+    </div>
+
+    <noscript>
+        <div style="background:#0063e5;color:#fff;padding:20px;text-align:center;font-family:sans-serif;">
+            This assessment tool requires JavaScript to calculate scores and generate reports. Please enable JavaScript to use Interview Vibes.
+        </div>
+    </noscript>
+
+    <!-- Help Modal -->
+    <div class="help-overlay" id="help-overlay" onclick="if(event.target===this)closeHelp()">
+        <div class="help-modal">
+            <button class="help-modal-close" onclick="closeHelp()" type="button">&times;</button>
+            <h3 id="help-title"></h3>
+            <div id="help-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // ── Category definitions ──
+        const CATEGORIES = {
+            comm:  { questions: ['comm-1','comm-2','comm-3'],    name: 'Communication & Clarity',    short: 'Communication' },
+            story: { questions: ['story-1','story-2','story-3'], name: 'Story Consistency',          short: 'Consistency' },
+            tech:  { questions: ['tech-1','tech-2','tech-3'],    name: 'Technical Credibility',      short: 'Technical' },
+            own:   { questions: ['own-1','own-2','own-3'],       name: 'Ownership & Accountability', short: 'Ownership' },
+            solve: { questions: ['solve-1','solve-2','solve-3'], name: 'Problem-Solving & Pressure', short: 'Problem-Solving' },
+            vibe:  { questions: ['vibe-1','vibe-2','vibe-3'],    name: 'The Vibe',                   short: 'Vibe' }
+        };
+
+        const QUESTION_TEXT = {
+            'comm-1':  'Does this person explain themselves clearly?',
+            'comm-2':  'Can they structure and organize their thoughts?',
+            'comm-3':  'Do they adapt their level of detail to the conversation?',
+            'story-1': 'Is their experience narrative consistent throughout?',
+            'story-2': 'Do details hold when approached from different angles?',
+            'story-3': 'Can they provide specific examples on demand?',
+            'tech-1':  'Are there technical gaps in their story?',
+            'tech-2':  'Do they understand the "why" behind their decisions?',
+            'tech-3':  'Can they go beyond rehearsed answers?',
+            'own-1':   'Do they distinguish their work from team contributions?',
+            'own-2':   'Does their ownership claim hold under deeper probing?',
+            'own-3':   'Can they explain decisions they personally made?',
+            'solve-1': 'How do they handle not knowing something?',
+            'solve-2': 'Can they reason through problems in real-time?',
+            'solve-3': 'Do they stay engaged under pressure?',
+            'vibe-1':  'Would you want to work with this person daily?',
+            'vibe-2':  'Do they show genuine interest in the role?',
+            'vibe-3':  'Is their response pace reasonable?',
+            'tech-p1': 'Does their exposure come from hands-on work?',
+            'tech-p2': 'Can they elaborate on specific implementations?',
+            'own-p1':  'Is this their direct experience or a coworker\'s?',
+            'solve-p1': 'Can they reason through a design trade-off they haven\'t rehearsed?',
+            'solve-p2': 'Do they understand what breaks when you change a constraint?',
+            'solve-p3': 'Can they explain when NOT to use a pattern they mentioned?',
+            'solve-p4': 'Can they simplify an over-engineered proposal?',
+            'solve-p5': 'Can they walk through debugging a system they didn\'t build?'
+        };
+
+        const PROBE_NAMES = ['tech-p1', 'tech-p2', 'own-p1', 'solve-p1', 'solve-p2', 'solve-p3', 'solve-p4', 'solve-p5'];
+
+        // ── Help content for each question ──
+        const HELP_CONTENT = {
+            'comm-1': {
+                title: 'Assessing Communication Clarity',
+                objective: 'How they explain in an interview is how they\'ll explain in a meeting with your client. This is the most visible skill.',
+                ask: [
+                    '"Walk me through your most recent project"',
+                    '"Explain [something from their resume] to me like I\'m new to it"',
+                    '"How would you describe what you do to a non-technical person?"'
+                ],
+                lookFor: [
+                    'Uses clear, direct sentences without unnecessary jargon',
+                    'Gets to the point — doesn\'t take 5 minutes for a 30-second answer',
+                    'When they do use technical terms, they explain them naturally'
+                ]
+            },
+            'comm-2': {
+                title: 'Thought Structure & Organization',
+                objective: 'Structured communication signals structured thinking. This person will write docs, explain things in stand-ups, and present to stakeholders.',
+                ask: [
+                    '"How did you approach solving [problem they mentioned]?"',
+                    '"Walk me through your decision process for choosing [technology]"',
+                    '"What steps did you follow when [situation]?"'
+                ],
+                lookFor: [
+                    'Has a clear beginning, middle, and end to their answers',
+                    'Doesn\'t jump between unrelated topics randomly',
+                    'Can break complex topics into logical steps'
+                ]
+            },
+            'comm-3': {
+                title: 'Conversational Adaptability',
+                objective: 'Client-facing roles require reading the room. Can they tell when you need more detail or less? Do they adjust?',
+                ask: [
+                    'Start with a high-level question, then ask to go deeper',
+                    'Show slight confusion to see if they notice and adjust',
+                    'Switch context suddenly to see how they handle the pivot'
+                ],
+                lookFor: [
+                    'Adjusts depth when you seem lost or disengaged',
+                    'Doesn\'t give 10-minute answers to simple questions',
+                    'Notices your reactions and adapts pace accordingly'
+                ]
+            },
+            'story-1': {
+                title: 'Narrative Consistency',
+                objective: 'Inconsistencies can indicate inflated or fabricated experience. A real story stays the same because it actually happened.',
+                ask: [
+                    'Ask about the same project at two different points in the conversation',
+                    '"Earlier you mentioned [X] — tell me more about that timeline"',
+                    '"How long were you in that role? What was the team size?"'
+                ],
+                lookFor: [
+                    'Same timeline, same roles, same technologies each time',
+                    'Numbers stay consistent (team size, duration, metrics)',
+                    'Doesn\'t backtrack or contradict earlier statements'
+                ]
+            },
+            'story-2': {
+                title: 'Multi-Angle Consistency',
+                objective: 'Real experience creates a 3D picture you can examine from any angle. Fabricated stories are flat — they only work from one direction.',
+                ask: [
+                    '"You mentioned [X] — how does that connect to [Y] you said earlier?"',
+                    '"Who else was involved in that? What was their role?"',
+                    'Rephrase a previous question differently and compare answers'
+                ],
+                lookFor: [
+                    'Answers coherently regardless of which direction you approach from',
+                    'Doesn\'t get confused or nervous when you rephrase things',
+                    'Can explain relationships between different parts of their story'
+                ]
+            },
+            'story-3': {
+                title: 'Concrete Examples on Demand',
+                objective: 'Real experience comes with specifics. Vague answers usually mean vague experience — or someone else\'s experience.',
+                ask: [
+                    '"Give me a concrete example of when you did that"',
+                    '"What exactly did you do? What was the outcome?"',
+                    '"What were the numbers? How did you measure success?"'
+                ],
+                lookFor: [
+                    'Provides names, dates, metrics, specific tools',
+                    'Doesn\'t default to vague generalities like "we improved things"',
+                    'Can zoom into details without losing the thread'
+                ]
+            },
+            'tech-1': {
+                title: 'Identifying Technical Gaps',
+                objective: 'Claimed skills need to have real depth behind them. Buzzwords without substance won\'t survive client interactions.',
+                ask: [
+                    '"How would you set up [X] from scratch?"',
+                    '"What happens when [Y] fails? Walk me through your troubleshooting"',
+                    '"What are the limitations of [tool they mentioned]?"'
+                ],
+                lookFor: [
+                    'Goes beyond buzzwords into actual implementation details',
+                    'Knows limitations and trade-offs, not just features',
+                    'Can describe failure scenarios, not just happy paths'
+                ]
+            },
+            'tech-2': {
+                title: 'Understanding the "Why"',
+                objective: 'Senior engineers explain reasoning. Junior engineers describe actions. If they can\'t explain why, they were probably following instructions.',
+                ask: [
+                    '"Why did you choose [X] over [Y]?"',
+                    '"What alternatives did you consider?"',
+                    '"If you had to do it again, would you make the same choice?"'
+                ],
+                lookFor: [
+                    'Mentions alternatives that were considered and rejected',
+                    'Explains trade-offs specific to their situation',
+                    'Can discuss what they\'d change with hindsight'
+                ]
+            },
+            'tech-3': {
+                title: 'Beyond Rehearsed Answers',
+                objective: 'Test if knowledge is memorized or battle-tested. Anyone can prepare talking points. Real experience handles curve balls.',
+                ask: [
+                    '"What would happen if [unexpected scenario]?"',
+                    '"How about [edge case they didn\'t mention]?"',
+                    '"What if [constraint] was different — how would that change your approach?"'
+                ],
+                lookFor: [
+                    'Thinks through the problem instead of panicking',
+                    'Attempts to reason even when unsure of the answer',
+                    'Draws on related experience to work through unknowns'
+                ]
+            },
+            'own-1': {
+                title: 'Individual vs. Team Contributions',
+                objective: 'Honest scoping of contributions shows maturity and self-awareness. Over-claiming everything shows insecurity or dishonesty.',
+                ask: [
+                    '"What was YOUR specific part in that project?"',
+                    '"How many people worked on this? What did they handle?"',
+                    '"Which decisions were yours vs. the team\'s?"'
+                ],
+                lookFor: [
+                    'Uses "I" for their work and "we" for team efforts naturally',
+                    'Doesn\'t claim solo credit for what was clearly a team effort',
+                    'Can name teammates and their contributions'
+                ]
+            },
+            'own-2': {
+                title: 'Ownership Under Scrutiny',
+                objective: 'Inflated claims collapse under scrutiny. Real ownership doesn\'t — because it actually happened that way.',
+                ask: [
+                    '"Walk me through the implementation step by step"',
+                    '"Who made the final call on [X]? Why?"',
+                    '"What was the hardest part YOU personally dealt with?"'
+                ],
+                lookFor: [
+                    'Consistent level of detail throughout',
+                    'Doesn\'t suddenly get vague when you press for specifics',
+                    'Can describe the messy parts, not just the highlight reel'
+                ]
+            },
+            'own-3': {
+                title: 'Personal Decision-Making',
+                objective: 'People who actually drove decisions can explain the context and constraints. People who followed instructions can\'t.',
+                ask: [
+                    '"Why did YOU choose that approach?"',
+                    '"What constraints did you personally have to work around?"',
+                    '"What would you have done differently now?"'
+                ],
+                lookFor: [
+                    'First-person reasoning with specific context',
+                    'Mentions constraints they personally dealt with',
+                    'Has genuine opinions about what worked and what didn\'t'
+                ]
+            },
+            'solve-1': {
+                title: 'Handling Unknown Territory',
+                objective: 'Nobody knows everything. How they handle gaps reveals character and how they\'ll perform in real work situations.',
+                ask: [
+                    'Ask something slightly outside their stated expertise',
+                    '"Have you worked with [something adjacent to their stack]?"',
+                    'Observe their reaction more than the answer itself'
+                ],
+                lookFor: [
+                    'Says "I don\'t know" honestly, then attempts to reason through it',
+                    'Doesn\'t bluff or make things up — that\'s worse than not knowing',
+                    'Connects to what they DO know to make educated guesses'
+                ]
+            },
+            'solve-2': {
+                title: 'Real-Time Reasoning',
+                objective: 'Troubleshooting and architecture require on-the-spot thinking. This can\'t be pre-rehearsed — it shows how they actually work.',
+                ask: [
+                    '"Imagine [scenario] — what\'s the first thing you\'d check?"',
+                    '"How would you debug [X] if you had no documentation?"',
+                    '"A service is down in production. Walk me through your process."'
+                ],
+                lookFor: [
+                    'Systematic approach — doesn\'t just guess randomly',
+                    'Asks clarifying questions before diving in',
+                    'Thinks aloud so you can follow their reasoning'
+                ]
+            },
+            'solve-3': {
+                title: 'Engagement Under Pressure',
+                objective: 'Client work involves pressure and tight deadlines. You need someone who leans in, not someone who checks out.',
+                ask: [
+                    'Push back on one of their answers. Play devil\'s advocate.',
+                    '"I disagree — why not [alternative approach]?"',
+                    'Increase the pace of questions slightly'
+                ],
+                lookFor: [
+                    'Stays constructive and doesn\'t get defensive',
+                    'Maintains energy and eye contact',
+                    'Takes pushback as a conversation, not an attack'
+                ]
+            },
+            'vibe-1': {
+                title: 'The Daily Colleague Test',
+                objective: 'Trust your gut. You\'ll be in meetings with this person regularly. This is the question you answer with your instinct, not analysis.',
+                ask: [],
+                lookFor: [
+                    'Your natural reaction throughout the entire conversation',
+                    'Did you enjoy talking to them? Did time fly or drag?',
+                    'Would you grab a coffee with them? That\'s your answer.'
+                ]
+            },
+            'vibe-2': {
+                title: 'Genuine Role Interest',
+                objective: 'Engaged candidates become engaged employees. People who are just looking for any job act differently from people who want THIS job.',
+                ask: [
+                    'Wait for them to ask YOU questions — do they?',
+                    '"What attracted you to this role specifically?"',
+                    '"What do you want to learn in the next year?"'
+                ],
+                lookFor: [
+                    'Asks specific questions about the role, team, or challenges',
+                    'Shows genuine curiosity, not just going through the motions',
+                    'Has clearly researched the company or position'
+                ]
+            },
+            'vibe-3': {
+                title: 'Response Pace & Confidence',
+                objective: 'Response time in an interview predicts response time in real work. Clients expect timely, confident answers.',
+                ask: [],
+                lookFor: [
+                    'Answers simple questions quickly and concisely',
+                    'Takes appropriate time for complex questions — thinking is fine, stalling isn\'t',
+                    'Doesn\'t ramble for 5 minutes on a question that needs 30 seconds'
+                ]
+            },
+            'tech-p1': {
+                title: 'Hands-On vs. Observed Knowledge',
+                objective: 'There\'s a big difference between "I configured it" and "I saw someone configure it". This probe separates the two.',
+                ask: [
+                    '"What was the exact command / config you used?"',
+                    '"What errors did you run into?"',
+                    '"How long did it take you to get it working?"'
+                ],
+                lookFor: [
+                    'Can describe specific errors, gotchas, and workarounds',
+                    'Remembers the frustrating parts — that\'s a sign they actually did it',
+                    'Knows operational details, not just architectural overview'
+                ]
+            },
+            'tech-p2': {
+                title: 'Implementation Detail Depth',
+                objective: 'Anyone can describe architecture at a high level. Implementation details reveal who actually built it.',
+                ask: [
+                    '"Show me how you would set that up — step by step"',
+                    '"What config files did you modify? What parameters?"',
+                    '"What monitoring did you add? How did you know it was working?"'
+                ],
+                lookFor: [
+                    'Provides file names, config keys, CLI commands',
+                    'Knows the order of operations and dependencies',
+                    'Can describe what broke and how they fixed it'
+                ]
+            },
+            'own-p1': {
+                title: 'Direct vs. Borrowed Experience',
+                objective: 'People sometimes absorb team accomplishments as their own story. This probe identifies whether the experience is firsthand.',
+                ask: [
+                    '"Were you the one who wrote that code / made that decision?"',
+                    '"Who came up with that approach? Walk me through how it happened."',
+                    '"If I asked your teammate, what would they say your role was?"'
+                ],
+                lookFor: [
+                    'First-person details with emotional memory (frustration, pride, relief)',
+                    'Can describe their specific contribution without hesitation',
+                    'Doesn\'t get nervous when you ask "who exactly did what"'
+                ]
+            },
+            'solve-p1': {
+                title: 'Unrehearsed Design Trade-offs',
+                objective: 'Anyone can memorize "use microservices for scalability." This probe tests if they actually understand the WHY behind architectural decisions by presenting a trade-off they haven\'t prepared for.',
+                ask: [
+                    '"Your service needs to process payments. Would you go sync or async? Why?"',
+                    '"You\'re choosing between a monolith and microservices for a new project with 3 devs. Walk me through your thinking."',
+                    '"REST or event-driven for this communication? What changes your answer?"'
+                ],
+                lookFor: [
+                    'Asks clarifying questions before jumping to an answer (team size, traffic, timeline)',
+                    'Weighs pros and cons instead of giving a one-size-fits-all answer',
+                    'Can change their recommendation when you change the constraints'
+                ]
+            },
+            'solve-p2': {
+                title: 'Constraint Change Impact',
+                objective: 'Take something from their own project and change a variable. If they built it, they\'ll instantly know what breaks. If they memorized it, they\'ll stall.',
+                ask: [
+                    '"You said you used [X]. What if the traffic was 100x — what breaks first?"',
+                    '"What if you couldn\'t use [the database they mentioned]? What changes?"',
+                    '"What happens to your pipeline if that service goes down at 2 AM?"'
+                ],
+                lookFor: [
+                    'Immediately identifies the bottleneck or failure point',
+                    'Thinks in terms of cascading effects, not isolated components',
+                    'Has war stories about when constraints actually changed on them'
+                ]
+            },
+            'solve-p3': {
+                title: 'Knowing When NOT to Use Something',
+                objective: 'The strongest signal of real understanding is knowing the limits. If someone says "I use Kubernetes," ask them when they wouldn\'t. Memorized knowledge only covers the happy path.',
+                ask: [
+                    '"You mentioned [pattern/tool]. When would you NOT use it?"',
+                    '"What\'s the worst scenario for using [their mentioned technology]?"',
+                    '"If a junior dev suggested [pattern] for a simple CRUD app, what would you tell them?"'
+                ],
+                lookFor: [
+                    'Can articulate specific downsides, not just "it depends"',
+                    'Gives real examples of where it\'s overkill or a bad fit',
+                    'Shows judgment — knows the difference between "can" and "should"'
+                ]
+            },
+            'solve-p4': {
+                title: 'Simplification Under Pressure',
+                objective: 'Propose something needlessly complex and see if they push back. People who truly understand systems prefer simplicity. People who memorized patterns will agree with anything that sounds sophisticated.',
+                ask: [
+                    '"What if we add a message queue, a cache layer, and a separate auth service for this internal tool with 10 users?"',
+                    '"Should we use a multi-region active-active setup for this dev environment?"',
+                    '"Let\'s add Kubernetes orchestration for these 2 containers — good idea?"'
+                ],
+                lookFor: [
+                    'Pushes back — "that\'s overkill for this use case"',
+                    'Proposes a simpler alternative with reasoning',
+                    'Doesn\'t just agree because the interviewer suggested it'
+                ]
+            },
+            'solve-p5': {
+                title: 'Debugging an Unfamiliar System',
+                objective: 'Describe a broken scenario they\'ve never seen and watch their methodology. Real engineers have a systematic approach. Memorizers will guess randomly or give textbook answers.',
+                ask: [
+                    '"Users report the app is slow but only after 3 PM. Where do you start?"',
+                    '"Deploys work fine but the service crashes 10 minutes later every time. Walk me through it."',
+                    '"Logs show intermittent 503s from one service. How do you narrow it down?"'
+                ],
+                lookFor: [
+                    'Starts with data: logs, metrics, recent changes — not guessing',
+                    'Has a structured approach: reproduce, isolate, identify, fix',
+                    'Asks smart questions about the system before proposing solutions'
+                ]
+            }
+        };
+
+        // ── Suggestions data ──
+        const SUGGESTIONS = {
+            comm: {
+                strengthInternal: 'Clear and effective communicator — client-ready',
+                strengthCandidate: 'You communicated your ideas clearly and effectively',
+                concernInternal: 'Difficulty articulating ideas — may struggle in client-facing interactions',
+                growthCandidate: 'Practice structuring your responses more concisely',
+                tipsInternal: ['Consider a prep session on communication clarity before client interviews', 'May benefit from practicing technical explanations with non-technical audiences'],
+                tipsCandidate: ['Try the STAR method (Situation, Task, Action, Result) for structuring responses', 'Practice explaining your experience out loud before interviews']
+            },
+            story: {
+                strengthInternal: 'Consistent and well-prepared narrative',
+                strengthCandidate: 'Your experience narrative was well-structured and consistent',
+                concernInternal: 'Inconsistencies in experience narrative — possible experience inflation',
+                growthCandidate: 'Prepare to discuss your experience from multiple perspectives',
+                tipsInternal: ['Story inconsistencies suggest possible experience gaps', 'Recommend deeper reference checks on recent projects'],
+                tipsCandidate: ['Review your project timeline and key milestones before your next interview', 'Prepare concrete examples with specific metrics and outcomes']
+            },
+            tech: {
+                strengthInternal: 'Solid technical foundation — depth matches claimed experience',
+                strengthCandidate: 'You demonstrated solid technical knowledge and understanding',
+                concernInternal: 'Technical depth does not match claimed experience level',
+                growthCandidate: 'Deepen your understanding of the tools and decisions in your background',
+                tipsInternal: ['Consider a technical assessment or coding challenge as next step', 'Technical gaps may become more evident in client-facing scenarios'],
+                tipsCandidate: ['Focus on the "why" behind your technical choices, not just the "what"', 'Consider hands-on labs or side projects to strengthen practical knowledge']
+            },
+            own: {
+                strengthInternal: 'Clear accountability — can articulate personal contributions precisely',
+                strengthCandidate: 'You clearly articulated your personal contributions and decisions',
+                concernInternal: 'Ownership claims may be inflated — verify with references',
+                growthCandidate: 'Be more specific about what you personally contributed vs. team efforts',
+                tipsInternal: ['Candidate may have been in a supportive rather than leading role', 'Claims of ownership did not hold up under probing'],
+                tipsCandidate: ['It\'s perfectly fine to say "I contributed to X" rather than "I built X"', 'Interviewers value honesty about scope over breadth of claims']
+            },
+            solve: {
+                strengthInternal: 'Strong problem-solving under pressure — good troubleshooting instincts',
+                strengthCandidate: 'You showed good composure and reasoning when working through challenges',
+                concernInternal: 'Under-pressure performance is a concern for client-facing roles',
+                growthCandidate: 'Practice working through unfamiliar problems out loud',
+                tipsInternal: ['May struggle with production incidents or tight deadlines', 'Consider how this person would perform in high-pressure client scenarios'],
+                tipsCandidate: ['Remember: saying "I don\'t know, but here\'s how I\'d approach it" is a strong answer', 'Practice thinking out loud — it shows your reasoning process']
+            },
+            vibe: {
+                strengthInternal: 'Positive cultural fit — engaging personality, good energy',
+                strengthCandidate: 'You showed genuine enthusiasm and engagement throughout',
+                concernInternal: 'Cultural fit concerns — low engagement or apparent lack of interest',
+                growthCandidate: 'Show more curiosity about the role and team during conversations',
+                tipsInternal: ['Low engagement could signal lack of interest in this specific opportunity', 'May not integrate well with client team dynamics'],
+                tipsCandidate: ['Research the team and role beforehand to ask informed questions', 'Aim for conversational, concise answers rather than monologues']
+            }
+        };
+
+        const VERDICTS = [
+            { min: 83, label: 'Strong Pass',  cls: 'verdict-strong-pass' },
+            { min: 67, label: 'Likely Pass',   cls: 'verdict-likely-pass' },
+            { min: 50, label: 'Borderline',    cls: 'verdict-borderline' },
+            { min: 33, label: 'Unlikely',      cls: 'verdict-unlikely' },
+            { min: 0,  label: 'No Pass',       cls: 'verdict-no-pass' }
+        ];
+
+        // ── Helpers ──
+        function getVal(name) {
+            const el = document.querySelector('input[name="' + name + '"]:checked');
+            return el ? parseInt(el.value) : 1;
+        }
+        function getLabel(name) {
+            const el = document.querySelector('input[name="' + name + '"]:checked');
+            if (!el) return 'Not rated';
+            return el.parentElement.querySelector('label').textContent.trim();
+        }
+        function getCatScore(catKey) {
+            return CATEGORIES[catKey].questions.reduce(function(s, q) { return s + getVal(q); }, 0);
+        }
+        function getVerdict(pct) {
+            return VERDICTS.find(function(v) { return pct >= v.min; }) || VERDICTS[VERDICTS.length - 1];
+        }
+        function sanitizeName(name) {
+            return name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'candidate';
+        }
+        function today() {
+            return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // ── Help modal ──
+        function showHelp(questionId) {
+            var data = HELP_CONTENT[questionId];
+            if (!data) return;
+            document.getElementById('help-title').textContent = data.title;
+            var html = '<div class="help-section"><div class="help-section-label">Objective</div><p>' + data.objective + '</p></div>';
+            if (data.ask && data.ask.length > 0) {
+                html += '<div class="help-section"><div class="help-section-label">Try Asking</div><ul>';
+                data.ask.forEach(function(a) { html += '<li>' + a + '</li>'; });
+                html += '</ul></div>';
+            }
+            html += '<div class="help-section"><div class="help-section-label">Look For</div><ul>';
+            data.lookFor.forEach(function(l) { html += '<li>' + l + '</li>'; });
+            html += '</ul></div>';
+            document.getElementById('help-body').innerHTML = html;
+            document.getElementById('help-overlay').classList.add('visible');
+        }
+        function closeHelp() {
+            document.getElementById('help-overlay').classList.remove('visible');
+        }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeHelp(); });
+
+        // ── Core calculation ──
+        function calculate() {
+            var total = 0;
+            for (var key in CATEGORIES) {
+                var s = getCatScore(key);
+                total += s;
+                var badge = document.getElementById('badge-' + key);
+                badge.textContent = s + '/6';
+                badge.className = 'category-badge ' + (s >= 5 ? 'score-high' : s >= 3 ? 'score-mid' : 'score-low');
+                document.getElementById('bar-' + key).style.width = ((s / 6) * 100) + '%';
+                document.getElementById('val-' + key).textContent = s + '/6';
+            }
+            var pct = Math.round((total / 36) * 100);
+            var verdict = getVerdict(pct);
+            document.getElementById('score-pct').innerHTML = pct + '<span>%</span>';
+            document.getElementById('verdict-label').textContent = verdict.label;
+            document.getElementById('score-total').textContent = total;
+            document.getElementById('score-card').className = 'score-card ' + verdict.cls;
+            updateProbeIndicators();
+        }
+
+        // ── Probe indicators ──
+        function updateProbeIndicators() {
+            var techWeak = ['tech-1','tech-2','tech-3'].some(function(n) { return getVal(n) === 0; });
+            var techEl = document.getElementById('tech-probes');
+            var techTag = document.getElementById('tech-probe-tag');
+            if (techWeak) {
+                techEl.classList.add('recommended');
+                techTag.textContent = '(Recommended)';
+            } else {
+                techEl.classList.remove('recommended');
+                techTag.textContent = '(Optional)';
+            }
+
+            var ownWeak = ['own-1','own-2','own-3'].some(function(n) { return getVal(n) === 0; });
+            var ownEl = document.getElementById('own-probes');
+            var ownTag = document.getElementById('own-probe-tag');
+            if (ownWeak) {
+                ownEl.classList.add('recommended');
+                ownTag.textContent = '(Recommended)';
+            } else {
+                ownEl.classList.remove('recommended');
+                ownTag.textContent = '(Optional)';
+            }
+
+            var solveWeak = ['solve-1','solve-2','solve-3'].some(function(n) { return getVal(n) === 0; });
+            var solveEl = document.getElementById('solve-probes');
+            var solveTag = document.getElementById('solve-probe-tag');
+            if (solveWeak) {
+                solveEl.classList.add('recommended');
+                solveTag.textContent = '(Recommended)';
+            } else {
+                solveEl.classList.remove('recommended');
+                solveTag.textContent = '(Optional)';
+            }
+        }
+
+        // ── Internal Report ──
+        function generateInternalReport() {
+            var name = document.getElementById('candidate-name').value.trim() || 'Unnamed Candidate';
+            var notes = document.getElementById('notes').value.trim();
+            var total = 0;
+            for (var k in CATEGORIES) total += getCatScore(k);
+            var pct = Math.round((total / 36) * 100);
+            var verdict = getVerdict(pct);
+
+            var md = '# Interview Assessment — Internal Review\n\n';
+            md += '**Candidate:** ' + name + '  \n';
+            md += '**Date:** ' + today() + '  \n\n';
+            md += '---\n\n## Result Summary\n\n';
+            md += '| Metric | Value |\n|--------|-------|\n';
+            md += '| **Score** | ' + total + '/36 (' + pct + '%) |\n';
+            md += '| **Verdict** | ' + verdict.label + ' |\n';
+            md += '| **Pass Probability** | ' + pct + '% |\n\n';
+            md += '---\n\n## Detailed Assessment\n\n';
+
+            for (var key in CATEGORIES) {
+                var cat = CATEGORIES[key];
+                var catScore = getCatScore(key);
+                md += '### ' + cat.name + ' — ' + catScore + '/6\n\n';
+                md += '| Question | Rating | Score |\n|----------|--------|-------|\n';
+                cat.questions.forEach(function(q) {
+                    md += '| ' + QUESTION_TEXT[q] + ' | ' + getLabel(q) + ' | ' + getVal(q) + '/2 |\n';
+                });
+                md += '\n';
+                if (key === 'tech' && document.getElementById('tech-probes').open) {
+                    md += '> **Probe Findings:**  \n';
+                    md += '> - Hands-on exposure: **' + getLabel('tech-p1') + '** (' + getVal('tech-p1') + '/2)  \n';
+                    md += '> - Implementation detail: **' + getLabel('tech-p2') + '** (' + getVal('tech-p2') + '/2)  \n\n';
+                }
+                if (key === 'own' && document.getElementById('own-probes').open) {
+                    md += '> **Probe Findings:**  \n';
+                    md += '> - Direct experience: **' + getLabel('own-p1') + '** (' + getVal('own-p1') + '/2)  \n\n';
+                }
+                if (key === 'solve' && document.getElementById('solve-probes').open) {
+                    md += '> **Probe Findings:**  \n';
+                    md += '> - Design trade-offs: **' + getLabel('solve-p1') + '** (' + getVal('solve-p1') + '/2)  \n';
+                    md += '> - Constraint changes: **' + getLabel('solve-p2') + '** (' + getVal('solve-p2') + '/2)  \n';
+                    md += '> - Pattern limitations: **' + getLabel('solve-p3') + '** (' + getVal('solve-p3') + '/2)  \n';
+                    md += '> - Simplification: **' + getLabel('solve-p4') + '** (' + getVal('solve-p4') + '/2)  \n';
+                    md += '> - Unfamiliar debugging: **' + getLabel('solve-p5') + '** (' + getVal('solve-p5') + '/2)  \n\n';
+                }
+            }
+            md += '---\n\n';
+
+            var strengths = [], concerns = [], weakCats = [];
+            for (var k2 in CATEGORIES) {
+                var sc = getCatScore(k2);
+                if (sc >= 5) strengths.push(SUGGESTIONS[k2].strengthInternal);
+                if (sc <= 2) concerns.push(SUGGESTIONS[k2].concernInternal);
+                if (sc <= 3) weakCats.push(k2);
+            }
+
+            md += '## Strengths\n\n';
+            if (strengths.length) strengths.forEach(function(s) { md += '- ' + s + '\n'; });
+            else md += '- No standout strengths identified — assessment is mostly neutral\n';
+            md += '\n## Concerns\n\n';
+            if (concerns.length) concerns.forEach(function(c) { md += '- ' + c + '\n'; });
+            else md += '- No major concerns identified\n';
+            md += '\n';
+
+            if (weakCats.length) {
+                md += '## Action Items\n\n';
+                weakCats.forEach(function(wk) {
+                    md += '**' + CATEGORIES[wk].short + ':**\n';
+                    SUGGESTIONS[wk].tipsInternal.forEach(function(t) { md += '- ' + t + '\n'; });
+                    md += '\n';
+                });
+            }
+
+            md += '---\n\n## Recommendation\n\n';
+            var weakNames = weakCats.map(function(wk) { return CATEGORIES[wk].short; }).join(', ');
+            if (pct >= 83) md += '**Proceed to client interview.** Candidate demonstrates strong readiness across all assessment areas. Minimal preparation needed.\n';
+            else if (pct >= 67) md += '**Proceed with preparation.** Schedule a brief prep session' + (weakNames ? ' focusing on ' + weakNames : '') + ' before client interview.\n';
+            else if (pct >= 50) md += '**Hold for further evaluation.** Consider a second internal interview or technical assessment before client exposure.' + (weakNames ? ' Key areas: ' + weakNames + '.' : '') + '\n';
+            else if (pct >= 33) md += '**Do not proceed at this time.** Significant gaps identified.' + (weakNames ? ' Focus areas: ' + weakNames + '.' : '') + ' Recommend targeted preparation before reconsidering.\n';
+            else md += '**Do not proceed.** Candidate is not ready for client interviews. Consider alternative placement or an extended preparation period.\n';
+
+            if (notes) md += '\n---\n\n## Interviewer Notes\n\n' + notes + '\n';
+            md += '\n---\n\n*Generated by Interview Vibes — ' + today() + '*\n';
+            return md;
+        }
+
+        // ── Candidate Feedback Report ──
+        function generateCandidateReport() {
+            var name = document.getElementById('candidate-name').value.trim() || 'Candidate';
+            var total = 0;
+            for (var k in CATEGORIES) total += getCatScore(k);
+            var pct = Math.round((total / 36) * 100);
+
+            var md = '# Interview Feedback\n\n';
+            md += '**Candidate:** ' + name + '  \n';
+            md += '**Date:** ' + today() + '  \n\n---\n\n## Overall Impression\n\n';
+            if (pct >= 83) md += 'Your interview demonstrated excellent preparation and strong alignment with what we\'re looking for. You communicated effectively, showed solid technical depth, and engaged naturally throughout the conversation.\n\n';
+            else if (pct >= 67) md += 'You showed solid performance in your interview with clear strengths in several areas. There are a few areas where additional preparation could make your profile even stronger.\n\n';
+            else if (pct >= 50) md += 'Thank you for your time in the interview. You showed potential in some areas, while other areas would benefit from further development. Below are specific insights to help you prepare.\n\n';
+            else if (pct >= 33) md += 'We appreciate the time you invested in the interview process. We identified several areas where focused preparation would significantly strengthen your profile for roles like this.\n\n';
+            else md += 'Thank you for taking the time to interview with us. Based on our conversation, we believe there are foundational areas where additional experience and preparation would be beneficial.\n\n';
+
+            var strengths = [], growth = [];
+            for (var k2 in CATEGORIES) {
+                var sc = getCatScore(k2);
+                if (sc >= 5) strengths.push(SUGGESTIONS[k2].strengthCandidate);
+                if (sc <= 3) growth.push({ key: k2, text: SUGGESTIONS[k2].growthCandidate, tips: SUGGESTIONS[k2].tipsCandidate });
+            }
+
+            md += '## What Went Well\n\n';
+            if (strengths.length) strengths.forEach(function(s) { md += '- ' + s + '\n'; });
+            else md += '- You participated actively and showed willingness to engage with the interview process\n';
+            md += '\n## Areas for Growth\n\n';
+            if (growth.length) {
+                growth.forEach(function(g) {
+                    md += '**' + CATEGORIES[g.key].short + ':** ' + g.text + '\n';
+                    g.tips.forEach(function(t) { md += '- ' + t + '\n'; });
+                    md += '\n';
+                });
+            } else md += '- Minor refinements could further strengthen an already strong showing\n\n';
+
+            md += '## Suggested Next Steps\n\n';
+            if (pct >= 83) md += 'Based on your strong performance, we\'re optimistic about moving forward. We\'ll be in touch with next steps soon.\n';
+            else if (pct >= 67) md += 'We recommend reviewing the areas noted above before the next stage. A focused preparation session on the highlighted points would be beneficial.\n';
+            else if (pct >= 50) md += 'We recommend dedicated preparation in the areas listed above. Consider practicing with mock interviews and preparing concrete examples from your experience.\n';
+            else md += 'We recommend building additional hands-on experience and practicing interview scenarios. Focus on the specific areas identified above, and consider seeking mentorship or structured practice opportunities.\n';
+
+            md += '\n---\n\n*This feedback is meant to support your professional development. We wish you the best in your career journey.*\n';
+            return md;
+        }
+
+        // ── Downloads ──
+        function downloadMarkdown(content, filename) {
+            var blob = new Blob([content], { type: 'text/markdown' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        }
+        function downloadInternal() {
+            downloadMarkdown(generateInternalReport(), sanitizeName(document.getElementById('candidate-name').value.trim()) + '-internal-review.md');
+        }
+        function downloadFeedback() {
+            downloadMarkdown(generateCandidateReport(), sanitizeName(document.getElementById('candidate-name').value.trim()) + '-feedback.md');
+        }
+
+        // ── Reset ──
+        function resetAssessment() {
+            document.getElementById('candidate-name').value = '';
+            document.getElementById('notes').value = '';
+            var allGroups = Object.keys(CATEGORIES).reduce(function(arr, k) { return arr.concat(CATEGORIES[k].questions); }, []).concat(PROBE_NAMES);
+            allGroups.forEach(function(name) {
+                var mid = document.querySelector('input[name="' + name + '"][value="1"]');
+                if (mid) mid.checked = true;
+            });
+            document.getElementById('tech-probes').removeAttribute('open');
+            document.getElementById('own-probes').removeAttribute('open');
+            document.getElementById('solve-probes').removeAttribute('open');
+            calculate();
+        }
+
+        // ── Auto-advance logic ──
+        // Build ordered list of all question groups (base + probes) with their parent cards
+        var questionOrder = [];
+        var cards = document.querySelectorAll('.content-area > .card');
+        cards.forEach(function(card) {
+            // Get direct control-groups (base questions)
+            var groups = card.querySelectorAll(':scope > .control-group');
+            groups.forEach(function(g) {
+                var radio = g.querySelector('input[type="radio"]');
+                if (radio) questionOrder.push({ group: g, card: card, name: radio.name, isProbe: false });
+            });
+            // Get probe control-groups inside details
+            var probeGroups = card.querySelectorAll('.probe-content > .control-group');
+            probeGroups.forEach(function(g) {
+                var radio = g.querySelector('input[type="radio"]');
+                if (radio) questionOrder.push({ group: g, card: card, name: radio.name, isProbe: true });
+            });
+        });
+
+        function scrollToElement(el, highlightClass) {
+            var headerHeight = document.querySelector('.header-bar').offsetHeight + 30;
+            var rect = el.getBoundingClientRect();
+            var scrollTop = window.pageYOffset + rect.top - headerHeight;
+            window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+            // Wait for scroll to settle before highlighting
+            setTimeout(function() {
+                el.classList.remove(highlightClass);
+                void el.offsetWidth;
+                el.classList.add(highlightClass);
+                el.addEventListener('animationend', function handler() {
+                    el.classList.remove(highlightClass);
+                    el.removeEventListener('animationend', handler);
+                });
+            }, 350);
+        }
+
+        function advanceToNext(radioName) {
+            var currentIdx = -1;
+            for (var i = 0; i < questionOrder.length; i++) {
+                if (questionOrder[i].name === radioName) { currentIdx = i; break; }
+            }
+            if (currentIdx === -1) return;
+
+            var current = questionOrder[currentIdx];
+            var next = questionOrder[currentIdx + 1];
+
+            // If last question in a section, try to go to next card
+            if (!next || next.card !== current.card) {
+                // Find next card that isn't the notes card
+                var cardIdx = Array.prototype.indexOf.call(cards, current.card);
+                var nextCard = cards[cardIdx + 1];
+                if (nextCard && nextCard.querySelector('.control-group')) {
+                    setTimeout(function() {
+                        scrollToElement(nextCard, 'highlight-section');
+                    }, 500);
+                }
+                return;
+            }
+
+            // If next question is a probe inside a closed details, skip to next card
+            if (next.isProbe) {
+                var details = next.group.closest('details');
+                if (details && !details.open) {
+                    var cardIdx2 = Array.prototype.indexOf.call(cards, current.card);
+                    var nextCard2 = cards[cardIdx2 + 1];
+                    if (nextCard2 && nextCard2.querySelector('.control-group')) {
+                        setTimeout(function() {
+                            scrollToElement(nextCard2, 'highlight-section');
+                        }, 300);
+                    }
+                    return;
+                }
+            }
+
+            // Advance to next question
+            setTimeout(function() {
+                scrollToElement(next.group, 'highlight-next');
+            }, 500);
+        }
+
+        // ── Event listeners ──
+        var allRadioNames = Object.keys(CATEGORIES).reduce(function(arr, k) { return arr.concat(CATEGORIES[k].questions); }, []).concat(PROBE_NAMES);
+        allRadioNames.forEach(function(name) {
+            document.querySelectorAll('input[name="' + name + '"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    calculate();
+                    advanceToNext(name);
+                });
+            });
+        });
+
+        // ── Init ──
+        calculate();
+    </script>
+</body>
+</html>

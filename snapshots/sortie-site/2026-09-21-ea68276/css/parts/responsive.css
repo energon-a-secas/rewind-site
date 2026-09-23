@@ -1,0 +1,79 @@
+/* ── Narrow screens ──────────────────────────────────────────
+   Desktop is the design target; below 900px the console gives up its
+   side-by-side layouts before it gives up any of the effects. */
+
+@media (max-width: 1100px) {
+  /* Below this the flanking panels would squeeze the frame, so they stack
+     under it in two columns and the ring is dropped with them. */
+  .hud { grid-template-columns: minmax(0, 1fr); }
+  .matrix { width: min(100%, var(--stage-max)); margin-inline: auto; }
+  .hud__col { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-items: stretch; }
+  .hud__col--left { order: 3; }
+  .hud__col--right { order: 2; }
+  .matrix { order: 1; }
+  .hudp { width: 100%; }
+  .hud__col--left .hudp__head { flex-direction: row; }
+  .hud__col--left .hudp__lines { text-align: left; }
+}
+
+@media (max-width: 900px) {
+  .forge__grid { grid-template-columns: minmax(0, 1fr); }
+  .forge__col--preview { position: static; }
+  .forge__preview { grid-auto-flow: column; align-items: center; justify-content: start; }
+  .forge__preview .pcard { width: 260px; }
+}
+
+@media (max-width: 720px) {
+  .screen { padding: var(--space-4) var(--space-3) var(--space-6); gap: var(--space-4); }
+  .readouts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rail { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .field-row { grid-template-columns: minmax(0, 1fr); }
+
+  /* On a phone the pitch is width-limited, so a fixed stage height leaves a
+     block of dead space above and below the frame. Tracking the frame's own
+     ratio makes it hug its contents instead. */
+  .matrix__stage { height: auto; aspect-ratio: 7 / 6; }
+
+  .boot { min-height: 62vh; }
+  .boot__stage { width: min(38vh, 240px); }
+  .boot__title { font-size: var(--text-xl); }
+
+  .mode-dialog { aspect-ratio: auto; height: 88vh; width: 100%; }
+  .mode-quad { padding: var(--space-1) var(--space-2); }
+  .mode-quad__v { font-size: var(--text-xs); }
+  .mode-ring { width: 78%; }
+  .core-a--ghost { width: 42%; }
+  .mode-banner { width: 92%; padding: var(--space-2) var(--space-3); }
+  .mode-picker { bottom: clamp(48px, 12%, 76px); width: 96%; }
+
+  .forge__preview { grid-auto-flow: row; justify-items: center; }
+  .forge__preview .pcard { width: 100%; }
+}
+
+@media (max-width: 420px) {
+  /* Two columns, not one — four stacked readouts pushed the frame itself
+     entirely below the fold. */
+  .readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .readout { padding: var(--space-2) var(--space-3); }
+  .readout__v { font-size: var(--text-base); }
+  .rail { grid-template-columns: minmax(0, 1fr); }
+  .boot__form { flex-direction: column; align-items: stretch; }
+  .boot__input { width: 100%; }
+}
+
+/* Visitors who ask the OS for less motion get the reduced profile before any
+   JS runs; panel.js can still raise or lower it afterwards. */
+@media (prefers-reduced-motion: reduce) {
+  body:not([data-motion='full']) {
+    --dur-slow: 200ms;
+    --dur-boot: 500ms;
+  }
+  body:not([data-motion='full']) .fx__grid,
+  body:not([data-motion='full']) .boot__ring,
+  body:not([data-motion='full']) .core-a,
+  body:not([data-motion='full']) .boot__tethers path,
+  body:not([data-motion='full']) .readout__v.is-live {
+    animation: none;
+  }
+}

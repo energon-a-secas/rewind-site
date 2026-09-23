@@ -1,0 +1,216 @@
+/*
+ * Rush Q Cards — Perspectives page
+ * Copyright (c) 2026 Luciano Adonis Villarroel. Code under MIT.
+ * Game content (cards, art, mechanics) proprietary — see LICENSE.CONTENT.
+ *
+ * Layout for the bridge page: decoder entries (card ↔ situation),
+ * the hands-as-people explorer, and the learning-path columns.
+ * All colours come from css/theme.css tokens — no hex values here.
+ */
+
+/* ── Decoder ───────────────────────────────────────────────── */
+
+.pv-decoder-grid {
+  display: grid;
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.pv-decode {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 20px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.pv-decode-card { --rc-size: 220px; }
+
+.pv-decode-name { margin: 0 0 6px; font-size: var(--text-lg); }
+
+.pv-decode-label {
+  margin: 14px 0 2px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pv-decode-text p { margin: 0 0 4px; }
+.pv-decode-text .rc-gallery-link { display: inline-block; margin-top: 12px; }
+
+@media (max-width: 720px) {
+  .pv-decode { grid-template-columns: 1fr; }
+  .pv-decode-card { justify-self: center; }
+}
+
+/* ── Baseline strip ────────────────────────────────────────── */
+
+.pv-baseline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+}
+
+/* ── Style switcher ────────────────────────────────────────── */
+
+.pv-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.pv-tab {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+
+.pv-tab:hover { border-color: var(--tab-hue); }
+
+.pv-tab:focus-visible {
+  outline: 2px solid var(--tab-hue);
+  outline-offset: 2px;
+}
+
+.pv-tab.active {
+  border-color: var(--tab-hue);
+  background: color-mix(in srgb, var(--tab-hue) 16%, var(--surface-1));
+}
+
+/* ── Profile view ──────────────────────────────────────────── */
+
+.pv-profile {
+  padding: 24px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.pv-profile-head {
+  padding-left: 12px;
+  border-left: 3px solid var(--profile-hue);
+  margin-bottom: 14px;
+}
+
+.pv-profile-head h3 { margin: 0; }
+
+.pv-profile-philosophy {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.pv-profile-who { color: var(--text-primary); }
+
+.pv-hand {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 0;
+  margin: 20px 0;
+  list-style: none;
+}
+
+.pv-hand-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pv-hand-card .rush-card.rc-mini { width: 100%; }
+
+.pv-hand-badge {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.pv-badge-locked { background: var(--surface-3); color: var(--text-muted); }
+.pv-badge-emph   { background: color-mix(in srgb, var(--accent) 22%, var(--surface-3)); color: var(--text-primary); }
+.pv-badge-added  { background: color-mix(in srgb, var(--type-talent) 22%, var(--surface-3)); color: var(--text-primary); }
+
+.pv-hand-card.is-locked .pv-hand-face { opacity: 0.45; filter: grayscale(0.7); }
+.pv-hand-card.is-emphasized .pv-hand-face .rush-card { box-shadow: 0 0 0 2px var(--accent); }
+.pv-hand-card.is-added .pv-hand-face .rush-card { box-shadow: 0 0 0 2px var(--type-talent); }
+
+.pv-hand-reason {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.pv-profile-cta { margin-top: 18px; }
+
+/* ── Learning paths ────────────────────────────────────────── */
+
+.pv-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .pv-paths { grid-template-columns: 1fr; }
+}
+
+.pv-path-col h3 { margin-top: 0; }
+
+.pv-path {
+  padding: 0;
+  margin: 14px 0 0;
+  list-style: none;
+}
+
+.pv-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pv-step:last-child { border-bottom: 0; }
+
+.pv-step-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.pv-step-link { font-weight: 700; }
+
+.pv-step-when {
+  margin: 3px 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

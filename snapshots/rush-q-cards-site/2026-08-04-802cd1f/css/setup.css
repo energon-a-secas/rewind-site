@@ -1,0 +1,241 @@
+/*
+ * Rush Q Cards — mode setup screens
+ * Copyright (c) 2026 Luciano Adonis Villarroel. Code under MIT.
+ * Game content all rights reserved (see LICENSE.CONTENT).
+ *
+ * Shared by Classic and Quick. Both need the same briefing shape, so it lives
+ * here rather than in either mode's stylesheet.
+ */
+
+/* ── Setup screen ──────────────────────────────────────────────
+   The briefing before the game, not a settings dialog. Two columns: the
+   choices you make on the left, what you are walking into on the right, so
+   the defaults are safe to accept and the year has shape before Q1. */
+#setup-screen.container { max-width: 1060px; }
+
+.setup-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .82fr);
+  gap: var(--space-10);
+  margin: var(--space-10) auto var(--space-16);
+  padding: var(--space-10);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+.setup-head { grid-column: 1 / -1; }
+.setup-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+.setup-icon svg { width: 21px; height: 21px; }
+.setup-card h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.022em;
+  margin-bottom: var(--space-3);
+}
+.setup-desc {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  max-width: 60ch;
+}
+
+/* ── Form ──────────────────────────────────────────────────── */
+.setup-form { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.setup-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+.setup-group-title {
+  grid-column: 1 / -1;
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.setup-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.setup-field-wide { grid-column: 1 / -1; }
+
+.setup-form label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.setup-hint { font-size: var(--text-xs); line-height: 1.5; color: var(--text-muted); }
+
+.setup-form input[type="text"],
+.setup-form select {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: var(--text-sm);
+  transition: border-color var(--dur), box-shadow var(--dur);
+}
+.setup-form input[type="text"]::placeholder { color: var(--text-faint); }
+.setup-form input[type="text"]:focus,
+.setup-form select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.setup-toggle {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  cursor: pointer;
+  transition: border-color var(--dur), background var(--dur);
+}
+.setup-toggle:hover { border-color: var(--border); background: var(--surface-3); }
+.setup-toggle input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.setup-toggle > span { font-size: var(--text-sm); font-weight: 600; color: var(--text-secondary); }
+.setup-toggle .setup-hint { font-weight: 400; display: block; margin-top: 2px; }
+
+/* Forecast is a real commitment, so it gets its own frame and its own tone. */
+.setup-forecast {
+  padding: var(--space-5);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+}
+.setup-forecast-title {
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 3px;
+}
+.setup-forecast-hint {
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+/* Three fields, three columns — never two-plus-an-orphan. */
+.setup-forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+@media (max-width: 620px) { .setup-forecast-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.setup-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.setup-actions .btn { flex: 1 1 auto; min-width: 180px; }
+.setup-starter-note {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: left;
+}
+.setup-starter-note a { color: var(--accent-ink); font-weight: 600; text-decoration: none; }
+.setup-starter-note a:hover { text-decoration: underline; }
+
+/* ── Briefing column ───────────────────────────────────────────
+   The year at a glance. A new player should know what Q5 means before they
+   get there, and an onlooker should understand the arc without playing. */
+.setup-aside { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.setup-panel {
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+.setup-panel h3 {
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--space-4);
+}
+
+.setup-year { display: flex; flex-direction: column; gap: 0; }
+.setup-year-row {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.setup-year-row:last-child { border-bottom: none; }
+.setup-year-q {
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--beat-hue, var(--text-muted));
+}
+.setup-year-what { display: block; font-size: var(--text-sm); font-weight: 650; color: var(--text-primary); margin-bottom: 2px; }
+.setup-year-why { display: block; font-size: var(--text-xs); line-height: 1.5; color: var(--text-muted); }
+
+.rules-summary { padding: var(--space-5); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-2); }
+.rules-summary h3 {
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--space-3);
+}
+.rules-summary ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
+.rules-summary li {
+  position: relative;
+  padding-left: 18px;
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.rules-summary li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .52em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .setup-card { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); padding: var(--space-6); }
+  .setup-aside { order: 3; }
+}
+

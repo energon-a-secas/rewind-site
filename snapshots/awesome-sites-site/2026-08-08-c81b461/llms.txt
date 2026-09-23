@@ -1,0 +1,12 @@
+# Awesome Sites
+
+> Curated external sites with labeled lists; JSON API feeds featured cards on the hub
+
+- Live: https://awesomesites.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: curated, external, api, hub-feed
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

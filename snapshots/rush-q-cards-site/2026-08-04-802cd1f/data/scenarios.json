@@ -1,0 +1,1240 @@
+[
+  {
+    "id": "deadline-crunch",
+    "difficulty": "easy",
+    "title": "The Deadline Crunch",
+    "category": "Project Management",
+    "setup": "Your App Modernization project needs 4 members and has 1 quarter left on its deadline. You currently have 2 people assigned. Missing the deadline costs you 5 reputation.",
+    "hand": [
+      "Tech Lead",
+      "Contractor",
+      "Brainstorming",
+      "QA",
+      "Domain Collision"
+    ],
+    "context": {
+      "project": "App Modernization",
+      "quarter": 5,
+      "reputation": 22
+    },
+    "question": "Which cards do you play to save this project?",
+    "solutions": [
+      {
+        "cards": [
+          "Tech Lead",
+          "Contractor"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Tech Lead counts as 2 members for staffing, and Contractor fills the last slot. Project saved!"
+      },
+      {
+        "cards": [
+          "Tech Lead",
+          "QA"
+        ],
+        "score": 80,
+        "feedback": "Good! Tech Lead counts as 2, and QA adds another. You still need one more member though."
+      }
+    ],
+    "hints": [
+      "Tech Lead counts as 2 members",
+      "Contractors can be assigned immediately"
+    ],
+    "role": "tech-lead"
+  },
+  {
+    "id": "event-shield",
+    "difficulty": "easy",
+    "title": "Shield Up",
+    "category": "Event Management",
+    "setup": "It's Q3 and a Knowledge Silo event just fired. Your highest-value team member (Senior Dev, assigned to your critical project) is about to quit, losing all project progress.",
+    "hand": [
+      "Documentation",
+      "Automated Testing",
+      "Brainstorming",
+      "Contractor",
+      "Refactoring Sprint"
+    ],
+    "context": {
+      "project": "Cloud Migration",
+      "quarter": 3,
+      "reputation": 15
+    },
+    "question": "Which card can negate the Knowledge Silo?",
+    "solutions": [
+      {
+        "cards": [
+          "Documentation"
+        ],
+        "score": 100,
+        "feedback": "Exactly! Documentation specifically protects against Knowledge Silo events."
+      },
+      {
+        "cards": [
+          "Automated Testing"
+        ],
+        "score": 60,
+        "feedback": "Automated Testing shields against the NEXT event, but doesn't help with one already in play."
+      }
+    ],
+    "hints": [
+      "Read each card's skill text carefully",
+      "One card specifically mentions Knowledge Silo protection"
+    ],
+    "role": "tech-lead"
+  },
+  {
+    "id": "market-trade",
+    "difficulty": "easy",
+    "title": "Smart Trading",
+    "category": "Market Strategy",
+    "setup": "The For Hire market has a Senior Dev (value 4) available. You need more team members for your project but your hand is full of low-value skill cards.",
+    "hand": [
+      "Brainstorming",
+      "Code Review",
+      "Pair Programming",
+      "Refactoring Sprint",
+      "Foresight"
+    ],
+    "context": {
+      "project": "Data Pipeline",
+      "quarter": 2,
+      "reputation": 10
+    },
+    "question": "Which cards do you trade to hire the Senior Dev?",
+    "solutions": [
+      {
+        "cards": [
+          "Brainstorming",
+          "Code Review"
+        ],
+        "score": 100,
+        "feedback": "Smart! Their combined trade value of 4 exactly meets the Senior Dev's cost. Minimum waste."
+      },
+      {
+        "cards": [
+          "Refactoring Sprint",
+          "Code Review"
+        ],
+        "score": 80,
+        "feedback": "This works but you're overpaying slightly. Refactoring Sprint (value 3) + Code Review (value 2) = 5, but you only need 4."
+      }
+    ],
+    "hints": [
+      "Check each card's trade value",
+      "Try to match the cost exactly to avoid waste"
+    ],
+    "role": "tech-lead"
+  },
+  {
+    "id": "innovation-tax",
+    "difficulty": "medium",
+    "title": "Innovation Tax Warning",
+    "category": "Strategy",
+    "setup": "It's the end of Q4 and you haven't completed a project since Q2. If you don't complete one this quarter, you'll lose 10 reputation to the Innovation Tax. Your Data Pipeline project needs 1 more quarter of progress.",
+    "hand": [
+      "Code Review",
+      "Pair Programming",
+      "Brainstorming",
+      "Ad Hoc Support",
+      "Contractor"
+    ],
+    "context": {
+      "project": "Data Pipeline",
+      "quarter": 4,
+      "reputation": 18
+    },
+    "question": "How do you accelerate project completion?",
+    "solutions": [
+      {
+        "cards": [
+          "Code Review",
+          "Pair Programming"
+        ],
+        "score": 100,
+        "feedback": "Perfect combo! Code Review adds 1 progress, and Pair Programming makes your team produce 3 progress instead of 2. That's enough to finish this quarter."
+      },
+      {
+        "cards": [
+          "Code Review"
+        ],
+        "score": 70,
+        "feedback": "Code Review adds 1 progress, which helps but might not be enough on its own. Consider combining with another card."
+      }
+    ],
+    "hints": [
+      "Code Review adds 1 progress directly",
+      "Pair Programming boosts team output"
+    ],
+    "role": "tech-lead"
+  },
+  {
+    "id": "layoff-survival",
+    "difficulty": "medium",
+    "title": "Layoff Survival",
+    "category": "Crisis Management",
+    "setup": "It's Q5 and layoffs just started. Your reputation is at 12, which puts you in the danger zone. A layoff card with negation cost 8 just appeared. If you can't pay, you'll lose a team member and a project.",
+    "hand": [
+      "Defensive Maneuver",
+      "Foresight",
+      "Brainstorming",
+      "Code Review",
+      "Contractor"
+    ],
+    "context": {
+      "project": "Platform Rebuild",
+      "quarter": 5,
+      "reputation": 12
+    },
+    "question": "How do you survive this layoff?",
+    "solutions": [
+      {
+        "cards": [
+          "Defensive Maneuver"
+        ],
+        "score": 100,
+        "feedback": "Defensive Maneuver lets you pay 10 rep to negate any targeting card. At 12 rep, you can afford it and survive with 2 rep remaining."
+      },
+      {
+        "cards": [
+          "Brainstorming",
+          "Code Review"
+        ],
+        "score": 50,
+        "feedback": "These are skill cards but they don't help with layoff negation directly. You need to either pay the reputation cost or use a shield card."
+      }
+    ],
+    "hints": [
+      "Check which cards can negate threats",
+      "Consider the reputation cost vs losing team members"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "rush-q-prep",
+    "difficulty": "medium",
+    "title": "Bracing for Rush Q",
+    "category": "Risk Management",
+    "setup": "It's Q3 and you know a Rush Quarter event will hit ALL players at quarter end. Your projects are on track but your hand is thin. You want to minimize damage.",
+    "hand": [
+      "Foresight",
+      "Automated Testing",
+      "Brainstorming",
+      "QA",
+      "Pair Programming"
+    ],
+    "context": {
+      "project": "App Modernization",
+      "quarter": 3,
+      "reputation": 20
+    },
+    "question": "Which card best prepares you for the upcoming Rush Q event?",
+    "solutions": [
+      {
+        "cards": [
+          "Foresight"
+        ],
+        "score": 100,
+        "feedback": "Foresight gives immunity to events for 2 quarters. This shields you from both the Rush Q and any other events coming your way."
+      },
+      {
+        "cards": [
+          "Automated Testing"
+        ],
+        "score": 80,
+        "feedback": "Automated Testing blocks the next event targeting you. Good reactive defense, though Foresight gives longer protection."
+      }
+    ],
+    "hints": [
+      "Rush Q events hit everyone simultaneously",
+      "Some cards provide multi-turn protection"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "anti-pattern-risk",
+    "difficulty": "hard",
+    "title": "The Heroic Gambit",
+    "category": "Risk Assessment",
+    "setup": "It's Q6 and your Platform Rebuild (3 members needed, deadline Q7) has only 1 person assigned. You're at 25 rep in 2nd place. First place has 30. Completing this project gives +8 rep.",
+    "hand": [
+      "Heroic Programming",
+      "Contractor",
+      "Brainstorming",
+      "Ship It and Forget It",
+      "Code Review"
+    ],
+    "context": {
+      "project": "Platform Rebuild",
+      "quarter": 6,
+      "reputation": 25
+    },
+    "question": "How do you close the gap and try to win?",
+    "solutions": [
+      {
+        "cards": [
+          "Heroic Programming"
+        ],
+        "score": 100,
+        "feedback": "Heroic Programming lets one person solo a 3-person project for 1 quarter! The debt token and burnout are worth it when you're fighting for first place in Q6."
+      },
+      {
+        "cards": [
+          "Ship It and Forget It"
+        ],
+        "score": 70,
+        "feedback": "Ship It completes the project immediately but has a 50% chance of Failed Release, losing you the reward. High risk when you need the points."
+      },
+      {
+        "cards": [
+          "Contractor",
+          "Code Review"
+        ],
+        "score": 60,
+        "feedback": "Contractor helps with staffing and Code Review adds progress, but you still need more people. This is the safe but slow approach."
+      }
+    ],
+    "hints": [
+      "You need the project done THIS quarter to have a chance at winning",
+      "Anti-pattern cards are powerful but have costs"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "multi-project",
+    "difficulty": "hard",
+    "title": "Portfolio Juggling",
+    "category": "Resource Management",
+    "setup": "You have 3 active projects: Data Pipeline (needs 2 more people), Cloud Migration (on track), and Ad Hoc Support (bonus, needs 1 person). You only have 3 unassigned team members.",
+    "hand": [
+      "Tech Lead",
+      "Pair Programming",
+      "Resume-Driven Development",
+      "Brainstorming",
+      "Contractor"
+    ],
+    "context": {
+      "project": "Multiple",
+      "quarter": 4,
+      "reputation": 18
+    },
+    "question": "How do you optimally assign resources across your projects?",
+    "solutions": [
+      {
+        "cards": [
+          "Tech Lead",
+          "Contractor"
+        ],
+        "score": 100,
+        "feedback": "Play Tech Lead on Data Pipeline (counts as 2, filling both slots) and Contractor on Ad Hoc Support. Cloud Migration is already on track. Maximum output!"
+      },
+      {
+        "cards": [
+          "Tech Lead"
+        ],
+        "score": 70,
+        "feedback": "Tech Lead on Data Pipeline fills 2 of the needed slots, but you're leaving the Ad Hoc Support bonus on the table."
+      }
+    ],
+    "hints": [
+      "Tech Lead counts as 2 members",
+      "Bonus projects still earn reputation",
+      "Don't neglect easy wins"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "promotion-choice",
+    "difficulty": "hard",
+    "title": "The Promotion Dilemma",
+    "category": "Strategic Decisions",
+    "setup": "A Promotion Cycle event fires. You can promote one team member (+2 progress on their project, +1 Favor) or decline all promotions (each teammate gets +2 frustration = -2 rep next quarter). You have 4 team members across 2 projects.",
+    "hand": [
+      "Brainstorming",
+      "Code Review",
+      "Pair Programming",
+      "QA",
+      "Foresight"
+    ],
+    "context": {
+      "project": "Cloud Migration",
+      "quarter": 4,
+      "reputation": 20
+    },
+    "question": "Do you promote someone, and if so, who benefits most from the +2 progress?",
+    "solutions": [
+      {
+        "cards": [
+          "Code Review"
+        ],
+        "score": 100,
+        "feedback": "Promote a member on your closest-to-deadline project. The +2 progress combined with Code Review's +1 could push it to completion this quarter. Plus you gain a Favor for later."
+      },
+      {
+        "cards": [
+          "Foresight"
+        ],
+        "score": 60,
+        "feedback": "Foresight protects from future events but doesn't help with the promotion decision. Take the promotion — declining costs -2 rep per teammate next quarter."
+      }
+    ],
+    "hints": [
+      "Declining promotions has a cost per teammate",
+      "The Favor from promoting can be used later",
+      "+2 progress might complete a project early"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "skip-level-trap",
+    "difficulty": "hard",
+    "title": "The Skip-Level Trap",
+    "category": "Strategic Decisions",
+    "setup": "A Skip-Level Surprise event fires. Your skip-level wants a private meeting. You can discard 1 active project to gain +10 rep, or decline and lose 5 rep. You have 2 projects: one nearly complete (+6 reward) and one just started (+3 reward).",
+    "hand": [
+      "Brainstorming",
+      "Automated Testing",
+      "Contractor",
+      "Pair Programming",
+      "Code Review"
+    ],
+    "context": {
+      "project": "Multiple",
+      "quarter": 5,
+      "reputation": 15
+    },
+    "question": "Do you sacrifice a project for +10 rep, and if so, which one?",
+    "solutions": [
+      {
+        "cards": [
+          "Brainstorming"
+        ],
+        "score": 100,
+        "feedback": "Sacrifice the just-started project (+3 reward). You gain +10 rep now vs losing a mere +3 future reward. Net gain of +7. Keep the nearly-complete project for its +6 reward."
+      },
+      {
+        "cards": [
+          "Automated Testing"
+        ],
+        "score": 40,
+        "feedback": "Automated Testing doesn't help here — this isn't a negatable event, it's a choice. Consider the math: +10 now vs +3 later."
+      }
+    ],
+    "hints": [
+      "Compare the rep gain from accepting vs the project reward you'd lose",
+      "Sacrifice the lower-value project",
+      "Declining costs you -5 rep which is worse than losing a +3 project"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "endgame-push",
+    "difficulty": "hard",
+    "title": "The Final Quarter",
+    "category": "Endgame Strategy",
+    "setup": "It's Q8, the final quarter. You're at 28 rep, tied for first. Your opponent also has 28. You have 1 project that needs 1 more progress to complete for +5 rep. No more events will fire.",
+    "hand": [
+      "Code Review",
+      "Undermine Reputation",
+      "Brainstorming",
+      "Pair Programming",
+      "Ship It and Forget It"
+    ],
+    "context": {
+      "project": "Final Push",
+      "quarter": 8,
+      "reputation": 28
+    },
+    "question": "How do you guarantee the win?",
+    "solutions": [
+      {
+        "cards": [
+          "Code Review",
+          "Undermine Reputation"
+        ],
+        "score": 100,
+        "feedback": "Code Review adds the 1 progress to complete your project (+5 rep = 33). Undermine Reputation takes 5 from your opponent (23). A decisive 10-point swing to guarantee the win!"
+      },
+      {
+        "cards": [
+          "Code Review"
+        ],
+        "score": 70,
+        "feedback": "Code Review completes your project for +5, putting you at 33. But if your opponent also scores, you might still tie. Consider a two-pronged approach."
+      },
+      {
+        "cards": [
+          "Ship It and Forget It"
+        ],
+        "score": 50,
+        "feedback": "Ship It completes immediately but 50% chance of failure. In Q8, you can't afford the gamble when Code Review guarantees the progress."
+      }
+    ],
+    "hints": [
+      "You need both offense and defense in the final quarter",
+      "Undermine Reputation affects your opponent",
+      "Code Review adds guaranteed progress"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "early-game-setup",
+    "difficulty": "easy",
+    "title": "First Quarter Foundation",
+    "category": "Early Game",
+    "setup": "It's Q1. You have a starter project (needs 3 members, deadline Q4, +5 reward) and 2 team members assigned. Your hand has a mix of people and skill cards.",
+    "hand": [
+      "QA",
+      "Brainstorming",
+      "Code Review",
+      "Ad Hoc Support",
+      "Contractor"
+    ],
+    "context": {
+      "project": "Starter Project",
+      "quarter": 1,
+      "reputation": 0
+    },
+    "question": "What's your best opening move?",
+    "solutions": [
+      {
+        "cards": [
+          "QA",
+          "Contractor"
+        ],
+        "score": 100,
+        "feedback": "Fill your project first! QA and Contractor bring you to 4 members (3 needed + 1 buffer). Your starter project is now fully staffed and will progress on schedule."
+      },
+      {
+        "cards": [
+          "QA"
+        ],
+        "score": 70,
+        "feedback": "QA fills the third slot which is critical, but having a buffer member protects against events that remove people."
+      },
+      {
+        "cards": [
+          "Ad Hoc Support"
+        ],
+        "score": 50,
+        "feedback": "Starting a second project in Q1 splits your focus. Better to staff your first project fully before expanding."
+      }
+    ],
+    "hints": [
+      "Staff your starter project before anything else",
+      "Buffer members protect against events",
+      "Q1 has no events so it's the safest time to build your team"
+    ],
+    "role": "tech-lead"
+  },
+  {
+    "id": "scope-creep",
+    "difficulty": "medium",
+    "title": "The Scope Creep",
+    "category": "Stakeholder Management",
+    "setup": "Your Data Migration project is 75% complete when the PM adds three new requirements. The deadline is fixed. You can: push back (risk -3 rep), absorb it with extra resources (cost), or accept the delay (guaranteed -3 rep).",
+    "hand": [
+      "Scope Negotiation",
+      "Pair Programming",
+      "Tech Lead",
+      "Contractor",
+      "Brainstorming"
+    ],
+    "context": {
+      "project": "Data Migration",
+      "quarter": 4,
+      "reputation": 26
+    },
+    "question": "How do you handle scope creep while protecting your timeline?",
+    "solutions": [
+      {
+        "cards": [
+          "Scope Negotiation"
+        ],
+        "score": 100,
+        "feedback": "Excellent! Pushing back on scope is a critical management skill. Your team can focus on delivering the original scope successfully."
+      },
+      {
+        "cards": [
+          "Pair Programming",
+          "Tech Lead"
+        ],
+        "score": 70,
+        "feedback": "Adding senior talent can help absorb scope, but it's expensive. Negotiation is usually better."
+      }
+    ],
+    "hints": [
+      "Not every request needs to be accepted",
+      "Scope Negotiation is designed for this situation",
+      "Protecting your team from churn has long-term value"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "bus-factor",
+    "difficulty": "hard",
+    "title": "The Bus Factor",
+    "category": "Risk Management",
+    "setup": "Your Senior Dev Lv.4 (value 6) is the only person who understands your legacy system. They're threatening to leave if you don't give them a 2-quarter sabbatical. You have no documentation and the system needs maintenance this quarter.",
+    "hand": [
+      "Documentation",
+      "Pair Programming",
+      "Cross-Training",
+      "Knowledge Transfer",
+      "Retention Bonus"
+    ],
+    "context": {
+      "project": "Legacy System",
+      "quarter": 5,
+      "reputation": 20
+    },
+    "question": "How do you mitigate the knowledge silo risk?",
+    "solutions": [
+      {
+        "cards": [
+          "Documentation",
+          "Cross-Training"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Documentation captures the knowledge and cross-training creates backup expertise. This prevents future disasters."
+      },
+      {
+        "cards": [
+          "Pair Programming",
+          "Knowledge Transfer"
+        ],
+        "score": 80,
+        "feedback": "Good combo. Pairing spreads knowledge while the expert is still here."
+      }
+    ],
+    "hints": [
+      "The Bus Factor principle: no single person should hold critical knowledge",
+      "Documentation is your insurance policy",
+      "Spread knowledge while you have access to it"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "pet-project",
+    "difficulty": "hard",
+    "title": "The Pet Project",
+    "category": "Managing Up",
+    "setup": "The CTO demands you prioritize their favorite feature (low business value, high technical complexity). Your team is at capacity and this will derail your actual roadmap. Refusing could mean -5 rep and a team reorganization event.",
+    "hand": [
+      "Executive Review",
+      "Data-Driven Pitch",
+      "Scope Negotiation",
+      "Risk Assessment",
+      "Tech Debt"
+    ],
+    "context": {
+      "project": "Roadmap",
+      "quarter": 4,
+      "reputation": 28
+    },
+    "question": "How do you push back on the pet project diplomatically?",
+    "solutions": [
+      {
+        "cards": [
+          "Executive Review",
+          "Data-Driven Pitch"
+        ],
+        "score": 100,
+        "feedback": "Brilliant! Use data and stakeholder visibility to make the business case. This aligns everyone's interests instead of creating conflict."
+      },
+      {
+        "cards": [
+          "Scope Negotiation"
+        ],
+        "score": 60,
+        "feedback": "Negotiation helps but might not be enough for a CTO's pet project. Showing business impact data is stronger."
+      }
+    ],
+    "hints": [
+      "Execs respond to business metrics, not technical arguments",
+      "Escalate strategically, not emotionally",
+      "Find the win-win: what's good for the company?"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "golden-handcuffs",
+    "difficulty": "medium",
+    "title": "The Golden Handcuffs",
+    "category": "Resource Management",
+    "setup": "Your contractor has been offered a full-time role elsewhere. They'll stay if you promote them to Senior (immediate +2 progress, -3 rep cost) but you can't afford the salary long-term. Or you can let them go and lose a key team member.",
+    "hand": [
+      "Retention Bonus",
+      "Contractor",
+      "Hire Full-Time",
+      "Knowledge Transfer",
+      "Cross-Training"
+    ],
+    "context": {
+      "project": "API Redesign",
+      "quarter": 6,
+      "reputation": 18
+    },
+    "question": "What's the strategic choice for your team's health?",
+    "solutions": [
+      {
+        "cards": [
+          "Knowledge Transfer",
+          "Cross-Training"
+        ],
+        "score": 100,
+        "feedback": "Wise! Use the contractor's remaining time to spread their knowledge. Short-term pain for long-term team health."
+      },
+      {
+        "cards": [
+          "Retention Bonus"
+        ],
+        "score": 70,
+        "feedback": "Keeping talent is valuable, but golden handcuffs create future problems. Consider the total cost."
+      }
+    ],
+    "hints": [
+      "Don't create dependency on unsustainable resources",
+      "Knowledge transfer reduces Bus Factor risk",
+      "Sometimes letting go creates healthier teams"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "reorg-adapt",
+    "difficulty": "medium",
+    "title": "The Reorg",
+    "category": "Adaptability",
+    "setup": "Company announces a reorg mid-quarter. Your team gets split in half, with your best 2 people reassigned to another project. You can fight it (-5 rep, 50% chance you lose anyway) or adapt and rebuild.",
+    "hand": [
+      "Team Reorg",
+      "Adaptability",
+      "Hiring Blitz",
+      "Cross-Training",
+      "Morale Boost"
+    ],
+    "context": {
+      "project": "Platform",
+      "quarter": 5,
+      "reputation": 22
+    },
+    "question": "How do you respond to the organizational change?",
+    "solutions": [
+      {
+        "cards": [
+          "Adaptability",
+          "Hiring Blitz"
+        ],
+        "score": 100,
+        "feedback": "Excellent! Accept what you can't control, then act decisively to rebuild. Fighting the inevitable wastes energy."
+      },
+      {
+        "cards": [
+          "Cross-Training",
+          "Morale Boost"
+        ],
+        "score": 80,
+        "feedback": "Good focus on team health, but you'll still need to backfill the lost talent quickly."
+      }
+    ],
+    "hints": [
+      "Reorgs are like weather—you can't stop them",
+      "Adaptability beats resistance",
+      "Protect team morale during change"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "blame-hot-potato",
+    "difficulty": "hard",
+    "title": "The Blame Hot Potato",
+    "category": "Accountability",
+    "setup": "A production outage just happened. The post-mortem meeting is tomorrow. You can: accept blame (-10 rep but +5 long-term trust), shift blame to another team (-3 rep, 30% chance it backfires), or stay silent (no immediate cost but trust erodes).",
+    "hand": [
+      "Accountability",
+      "Blame Shift",
+      "Silence",
+      "Transparency",
+      "Post-Mortem"
+    ],
+    "context": {
+      "project": "Production",
+      "quarter": 7,
+      "reputation": 24
+    },
+    "question": "How do you handle accountability in the post-mortem?",
+    "solutions": [
+      {
+        "cards": [
+          "Accountability",
+          "Post-Mortem"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Accountability builds long-term trust. Teams that blame each other never improve. Learning culture beats CYA culture."
+      },
+      {
+        "cards": [
+          "Transparency"
+        ],
+        "score": 70,
+        "feedback": "Honesty is good, but proactive accountability shows leadership."
+      }
+    ],
+    "hints": [
+      "Blame creates toxic culture",
+      "Accountability builds trust",
+      "Psychological safety requires ownership",
+      "The goal is prevention, not punishment"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "death-spiral-recovery",
+    "difficulty": "hard",
+    "title": "The Death Spiral Recovery",
+    "category": "Crisis Management",
+    "setup": "It's Q7. You're at 8 rep, dead last. Your best project just failed. Your team has 3 break tokens each and morale is low. Most players would give up—but there's still a path to win if you take big risks.",
+    "hand": [
+      "All-In",
+      "Hail Mary",
+      "Comeback Play",
+      "Risk It All",
+      "Last Stand"
+    ],
+    "context": {
+      "project": "Recovery",
+      "quarter": 7,
+      "reputation": 8
+    },
+    "question": "What's your comeback strategy?",
+    "solutions": [
+      {
+        "cards": [
+          "All-In",
+          "Comeback Play"
+        ],
+        "score": 100,
+        "feedback": "Brilliant! You recognized that safe plays won't win. Sometimes the only way out is through—taking calculated risks when you're behind is rational, not reckless."
+      },
+      {
+        "cards": [
+          "Hail Mary"
+        ],
+        "score": 60,
+        "feedback": "A single big bet might work, but you need sustained execution through Q8. Keep playing to win, not just to survive."
+      }
+    ],
+    "hints": [
+      "When behind, conventional play often loses",
+      "Calculated risks become rational",
+      "Don't give up even in Q7",
+      "Comebacks require courage AND smart plays"
+    ],
+    "role": "director"
+  },
+  {
+    "id": "favor-debt-spiral",
+    "difficulty": "medium",
+    "title": "The Favor Debt Spiral",
+    "category": "Independence",
+    "setup": "You've been asking teammates for favors every quarter. They've helped, but now you're dependent. This quarter you need help again, but you sense resentment building. You can keep asking (get help now, risk future refusal) or figure it out yourself (slower but sustainable).",
+    "hand": [
+      "Self-Reliance",
+      "Ask Again",
+      "Independence",
+      "Build Capability",
+      "Take the Hit"
+    ],
+    "context": {
+      "project": "All",
+      "quarter": 6,
+      "reputation": 15
+    },
+    "question": "How do you break the favor dependency cycle?",
+    "solutions": [
+      {
+        "cards": [
+          "Build Capability",
+          "Independence"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Building your own capability reduces future dependency. Self-reliance is sustainable. Constantly asking for help creates learned helplessness."
+      },
+      {
+        "cards": [
+          "Self-Reliance",
+          "Take the Hit"
+        ],
+        "score": 80,
+        "feedback": "Good short-term pain for long-term gain. Sometimes you need to struggle to grow."
+      }
+    ],
+    "hints": [
+      "Constant help creates dependency",
+      "Self-reliance builds capability",
+      "It's okay to struggle",
+      "Strong teams are interdependent, not dependent"
+    ],
+    "role": "eng-manager"
+  },
+  {
+    "id": "ma-integration",
+    "difficulty": "hard",
+    "title": "The M&A Integration",
+    "category": "CTO/VP Strategy",
+    "setup": "Your company just acquired a 50-person startup with incompatible tech stacks, different engineering cultures, and overlapping product lines. You have 2 quarters to integrate or the deal value evaporates. The board expects cost synergies but the teams are already clashing.",
+    "hand": [
+      "Technical Due Diligence",
+      "Culture Integration",
+      "Sunset Plan",
+      "Migration Strategy",
+      "Bridge Team"
+    ],
+    "context": {
+      "project": "M&A Integration",
+      "quarter": 3,
+      "reputation": 35
+    },
+    "question": "How do you integrate the acquisition without destroying value?",
+    "solutions": [
+      {
+        "cards": [
+          "Bridge Team",
+          "Culture Integration"
+        ],
+        "score": 100,
+        "feedback": "Brilliant! A bridge team (2 engineers from each side) builds relationships and maps systems. Culture integration focuses on people first, tech second. This preserves the startup's innovation while achieving synergies."
+      },
+      {
+        "cards": [
+          "Migration Strategy",
+          "Sunset Plan"
+        ],
+        "score": 70,
+        "feedback": "Tech-first approach risks destroying the startup's velocity. Without cultural integration, your best people will leave."
+      }
+    ],
+    "hints": [
+      "Acquisitions fail on culture, not technology",
+      "Preserve what made the startup valuable",
+      "Integration is a marathon, not a sprint",
+      "People need to feel valued or they'll walk"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "platform-strategy",
+    "difficulty": "hard",
+    "title": "The Platform Strategy Bet",
+    "category": "VP Engineering",
+    "setup": "Your CEO wants to turn your internal tooling into a platform product. It could be a $50M revenue line, but requires 12 engineers for 4 quarters and diverts resources from core product. The market is uncertain and competitors are entrenched.",
+    "hand": [
+      "Build vs Buy",
+      "Market Analysis",
+      "MVP Strategy",
+      "Resource Reallocation",
+      "Partnership"
+    ],
+    "context": {
+      "project": "Platform Product",
+      "quarter": 2,
+      "reputation": 28
+    },
+    "question": "Do you bet the company on platform strategy?",
+    "solutions": [
+      {
+        "cards": [
+          "MVP Strategy",
+          "Market Analysis"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Validate with an MVP first. Market analysis quantifies opportunity and competitive landscape. This de-risks the bet while keeping the upside."
+      },
+      {
+        "cards": [
+          "Build vs Buy",
+          "Partnership"
+        ],
+        "score": 80,
+        "feedback": "Good risk mitigation. Partnership shares investment and validates demand before full commitment."
+      }
+    ],
+    "hints": [
+      "Platform plays require deep conviction and resources",
+      "Validate before you commit 12 engineers",
+      "Consider partnership to share risk",
+      "Core product can't suffer"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "org-scaling",
+    "difficulty": "hard",
+    "title": "The Hypergrowth Org",
+    "category": "VP Engineering",
+    "setup": "Your team grew from 20 to 100 engineers in 6 months. Velocity has dropped, code quality is suffering, and your best people are complaining about process overhead. The board wants you to \"scale efficiently\" but engineers want you to \"slow down hiring\".",
+    "hand": [
+      "Architectural Review",
+      "Team Topology",
+      "Platform Team",
+      "Hiring Freeze",
+      "Enablement Team"
+    ],
+    "context": {
+      "project": "Org Transformation",
+      "quarter": 4,
+      "reputation": 32
+    },
+    "question": "How do you scale the organization without breaking it?",
+    "solutions": [
+      {
+        "cards": [
+          "Team Topology",
+          "Enablement Team"
+        ],
+        "score": 100,
+        "feedback": "Excellent! Team topology (Team Topologies) aligns org structure with architecture. An enablement team (internal tools, docs) unblocks product teams. This scales people and systems together."
+      },
+      {
+        "cards": [
+          "Platform Team",
+          "Architectural Review"
+        ],
+        "score": 70,
+        "feedback": "Platform team helps but doesn't address organizational structure. You need both technical and organizational solutions."
+      }
+    ],
+    "hints": [
+      "Conway's Law: org structure mirrors architecture",
+      "Enablement teams multiply productivity",
+      "Team Topologies provides proven patterns",
+      "Invest in internal platforms early"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "tech-debt-scale",
+    "difficulty": "hard",
+    "title": "The Technical Debt Avalanche",
+    "category": "VP Engineering",
+    "setup": "Your platform has accumulated $2M in technical debt over 3 years. Features take 3x longer, production incidents are up 400%, and new engineers take 6 months to onboard. The business expects roadmap delivery but you're drowning in fires.",
+    "hand": [
+      "Stop the Line",
+      "Refactoring Quarters",
+      "Tiger Team",
+      "Strangulation Pattern",
+      "Feature Freeze"
+    ],
+    "context": {
+      "project": "Platform Modernization",
+      "quarter": 1,
+      "reputation": 25
+    },
+    "question": "How do you pay down debt while delivering features?",
+    "solutions": [
+      {
+        "cards": [
+          "Tiger Team",
+          "Strangulation Pattern"
+        ],
+        "score": 100,
+        "feedback": "Brilliant! A tiger team (dedicated crew) tackles the worst debt. Strangulation pattern lets you refactor incrementally without a big rewrite. This balances delivery and quality."
+      },
+      {
+        "cards": [
+          "Stop the Line",
+          "Refactoring Quarters"
+        ],
+        "score": 60,
+        "feedback": "Stopping features to refactor can work but risks business pressure. Without incremental approach, you might never finish."
+      }
+    ],
+    "hints": [
+      "Big rewrites usually fail",
+      "Strangle legacy systems incrementally",
+      "Dedicated team creates focus",
+      "Balance roadmap with resilience"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "vendor-negotiation",
+    "difficulty": "hard",
+    "title": "The Vendor Lock-in Trap",
+    "category": "CTO Strategy",
+    "setup": "Your startup depends on a single vendor's API for 80% of your product. They just announced a 300% price increase. You can: accept it (destroys unit economics), migrate away (9-month project, high risk), or negotiate (they have leverage).",
+    "hand": [
+      "Dual Vendor Strategy",
+      "Migration Plan",
+      "Escrow Clause",
+      "Price Negotiation",
+      "Build In-House"
+    ],
+    "context": {
+      "project": "Vendor Strategy",
+      "quarter": 3,
+      "reputation": 30
+    },
+    "question": "How do you escape vendor lock-in?",
+    "solutions": [
+      {
+        "cards": [
+          "Dual Vendor Strategy",
+          "Migration Plan"
+        ],
+        "score": 100,
+        "feedback": "Perfect! Dual-vendor strategy (abstract the API layer) gives you options. Migration plan is your escape route. This turns a hostage situation into a business negotiation."
+      },
+      {
+        "cards": [
+          "Price Negotiation",
+          "Escrow Clause"
+        ],
+        "score": 60,
+        "feedback": "Negotiation might buy time but doesn't solve the structural problem. You need technical independence, not just better terms."
+      }
+    ],
+    "hints": [
+      "Technical abstraction creates negotiating leverage",
+      "Never be single-vendor dependent",
+      "Escrow protects against vendor bankruptcy",
+      "Options = power in negotiations"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "security-breach",
+    "difficulty": "hard",
+    "title": "The Security Breach",
+    "category": "CTO Crisis",
+    "setup": "Your SOC-2 audit found critical vulnerabilities in production. The auditor will fail you in 48 hours unless you fix them, which requires downtime during peak hours. Your CEO says 'don't impact revenue' but a breach would be catastrophic.",
+    "hand": [
+      "Full Disclosure",
+      "Patch Now",
+      "Temporary Controls",
+      "Incident Response",
+      "Executive Escalation"
+    ],
+    "context": {
+      "project": "Security",
+      "quarter": 7,
+      "reputation": 35
+    },
+    "question": "How do you handle the security crisis?",
+    "solutions": [
+      {
+        "cards": [
+          "Full Disclosure",
+          "Patch Now"
+        ],
+        "score": 100,
+        "feedback": "Correct! Full disclosure to customers builds trust. Patch immediately — the downtime cost is less than a breach. Security is non-negotiable."
+      },
+      {
+        "cards": [
+          "Temporary Controls",
+          "Incident Response"
+        ],
+        "score": 70,
+        "feedback": "Temporary controls buy time but don't fix root causes. Good for incident response but patch immediately after."
+      }
+    ],
+    "hints": [
+      "Security is a business risk, not just technical",
+      "Transparency builds customer trust",
+      "Short-term revenue < long-term viability",
+      "Compliance requirements are minimums, not goals"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "compliance-audit",
+    "difficulty": "medium",
+    "title": "The Compliance Audit",
+    "category": "VP Operations",
+    "setup": "Your SOC-2 audit is in 2 weeks. You need documentation, access controls, and monitoring that don't exist. Your team is already at capacity. You can: fake it (risk failure), hire auditors (expensive), or delay (lose enterprise deals).",
+    "hand": [
+      "Gap Analysis",
+      "Documentation Sprint",
+      "Control Implementation",
+      "Audit Prep Team",
+      "Scope Reduction"
+    ],
+    "context": {
+      "project": "Compliance",
+      "quarter": 2,
+      "reputation": 22
+    },
+    "question": "How do you pass the audit without derailing roadmap?",
+    "solutions": [
+      {
+        "cards": [
+          "Gap Analysis",
+          "Audit Prep Team"
+        ],
+        "score": 100,
+        "feedback": "Smart! Gap analysis finds the critical gaps. A dedicated prep team (2-3 people) handles audit work without stopping product delivery. This is how you scale compliance."
+      },
+      {
+        "cards": [
+          "Documentation Sprint",
+          "Control Implementation"
+        ],
+        "score": 60,
+        "feedback": "A sprint might work but burns the team. Without dedicated focus, audit prep drags on forever."
+      }
+    ],
+    "hints": [
+      "Gap analysis first — know what matters",
+      "Dedicated team prevents context switching",
+      "Compliance is a process, not a project",
+      "Start early, not 2 weeks before audit"
+    ],
+    "role": "vp-cto"
+  },
+  {
+    "id": "infrastructure-failure",
+    "difficulty": "hard",
+    "title": "The Infrastructure Collapse",
+    "category": "VP Engineering Crisis",
+    "setup": "Your primary database region went down during peak traffic. Failover didn't work. You're looking at 4-6 hours of downtime. Customers are tweeting. The CEO is in your Slack DMs. Your team is in war room but still diagnosing.",
+    "hand": [
+      "Public Status Page",
+      "War Room Protocol",
+      "Recovery Team",
+      "Customer Communication",
+      "Post-Incident Review"
+    ],
+    "context": {
+      "project": "Infrastructure",
+      "quarter": 5,
+      "reputation": 28
+    },
+    "question": "How do you lead during the outage?",
+    "solutions": [
+      {
+        "cards": [
+          "Public Status Page",
+          "Customer Communication"
+        ],
+        "score": 100,
+        "feedback": "Excellent! Transparency reduces support tickets and maintains trust. Clear communication gives customers information to make decisions. This is how you lead in crisis."
+      },
+      {
+        "cards": [
+          "War Room Protocol",
+          "Recovery Team"
+        ],
+        "score": 80,
+        "feedback": "Strong operational response but don't forget external communication. Customers in the dark will assume the worst."
+      }
+    ],
+    "hints": [
+      "Transparency beats silence",
+      "Communication is leadership in crisis",
+      "War room protocol brings focus",
+      "Post-incident review prevents recurrence"
+    ],
+    "role": "vp-cto"
+  }
+]

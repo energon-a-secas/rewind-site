@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org; img-src 'self' data: blob: https://cdn.neorgon.org https://neorgon.goatcounter.com; connect-src 'self' https://neorgon.goatcounter.com https://cloudflareinsights.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Vibe Check">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Vibe Check | Behavioral Interview Aid</title>
+  <meta name="description" content="Score candidates across 18 behavioral questions in 6 categories. Auto-detect team archetypes with the Core Five. Download markdown reports">
+  <meta property="og:title" content="Vibe Check: Behavioral Interview Scorecard">
+  <meta property="og:description" content="Score candidates across 18 behavioral questions in 6 categories. Auto-detect team archetypes, download markdown reports">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://interviews.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vibe Check: Behavioral Interview Scorecard">
+  <meta name="twitter:description" content="Score candidates across 18 behavioral questions in 6 categories. Auto-detect team archetypes, download markdown reports">
+  <meta name="twitter:image" content="https://interviews.neorgon.com/og-preview.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://interviews.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://interviews.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+    <link rel="stylesheet" href="css/style.css">
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN) -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/interview-vibes-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Vibe Check",
+    "alternateName": "Behavioral Interview Aid",
+    "headline": "Vibe Check — Quantify the vibes you get from someone",
+    "description": "A free, browser-based behavioral interview scorecard. Rate candidates across 18 questions in 6 categories, auto-detect their team archetype with the Core Five piece profile, and generate downloadable internal review and candidate feedback reports",
+    "url": "https://interviews.neorgon.com/",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Human Resources",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern web browser with JavaScript",
+    "softwareVersion": "1.0",
+    "inLanguage": "en",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "18 behavioral assessment questions across 6 categories",
+      "Real-time scoring with pass probability percentage",
+      "Core Five piece profile — auto-detect candidate archetype",
+      "Optional probe questions for deeper investigation",
+      "Anti-cheat observations to flag AI-assisted or coached answers",
+      "Downloadable internal review report (Markdown)",
+      "Downloadable candidate feedback report (Markdown)"
+    ],
+    "author": {
+      "@type": "Organization",
+      "name": "Neorgon",
+      "url": "https://neorgon.com/"
+    },
+    "datePublished": "2026-02-21",
+    "keywords": "behavioral interview aid, interview scorecard, candidate assessment, hiring rubric, core five, team archetype"
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app" role="banner">
+    <div class="header-logo">
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Vibe Check</h1>
+        <div class="header-subtitle">Behavioral Interview Scorecard</div>
+      
+        </div>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <nav class="header-actions" aria-label="Main navigation">
+        <a data-keep-mobile href="javascript:void(0)" onclick="resetAssessment()" class="active">Reset</a>
+        <a data-keep-mobile href="compare.html">Compare</a>
+        <a href="https://lucianoadonis.medium.com/list/tips-entrevistas-32c6eb8c1547" target="_blank" rel="noopener noreferrer" class="outline">Medium</a>
+    
+      </nav>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+
+  </header>
+
+  <div class="main-container" id="main">
+    <main class="content-area" aria-label="Assessment form">
+
+      <!-- Candidate Info -->
+      <div class="card">
+        <h2 class="section-title">Candidate</h2>
+        <div class="candidate-header">
+          <div class="control-group candidate-name-group">
+            <label class="control-label" for="candidate-name">Name</label>
+            <input type="text" id="candidate-name" class="text-input" placeholder="Enter candidate name">
+          </div>
+          <div class="control-group candidate-role-group">
+            <label class="control-label" for="role-select">Role</label>
+            <select id="role-select" class="text-input">
+              <option value="individual-contributor">Individual Contributor</option>
+              <option value="tech-lead">Tech Lead</option>
+              <option value="engineering-manager">Engineering Manager</option>
+            </select>
+          </div>
+        </div>
+        <div class="session-actions">
+          <button class="session-btn" id="save-session-btn" type="button">Save</button>
+          <button class="session-btn session-btn-secondary" id="sessions-btn" type="button">Sessions</button>
+          <button class="session-btn session-btn-secondary" id="new-session-btn" type="button">New</button>
+        </div>
+        <div class="session-status" id="session-status"></div>
+      </div>
+
+      <!-- Communication & Clarity -->
+      <div class="card">
+        <h2 class="section-title">Communication & Clarity <span class="category-badge" id="badge-comm">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Does this person explain themselves clearly?</label>
+            <button class="help-trigger" onclick="showHelp('comm-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Ability to articulate ideas, experiences, and technical concepts</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="comm-1-a" name="comm-1" value="2"><label for="comm-1-a">Clearly</label></div>
+            <div class="radio-option"><input type="radio" id="comm-1-b" name="comm-1" value="1" checked><label for="comm-1-b">Somewhat</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="comm-1-c" name="comm-1" value="0"><label for="comm-1-c">Barely</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Can they structure and organize their thoughts?</label>
+            <button class="help-trigger" onclick="showHelp('comm-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Logical flow when presenting ideas or answering questions</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="comm-2-a" name="comm-2" value="2"><label for="comm-2-a">Well</label></div>
+            <div class="radio-option"><input type="radio" id="comm-2-b" name="comm-2" value="1" checked><label for="comm-2-b">Partially</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="comm-2-c" name="comm-2" value="0"><label for="comm-2-c">Poorly</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do they adapt their level of detail to the conversation?</label>
+            <button class="help-trigger" onclick="showHelp('comm-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Reads the room and adjusts communication style accordingly</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="comm-3-a" name="comm-3" value="2"><label for="comm-3-a">Naturally</label></div>
+            <div class="radio-option"><input type="radio" id="comm-3-b" name="comm-3" value="1" checked><label for="comm-3-b">With effort</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="comm-3-c" name="comm-3" value="0"><label for="comm-3-c">Rigid</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story Consistency -->
+      <div class="card">
+        <h2 class="section-title">Story Consistency <span class="category-badge" id="badge-story">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Is their experience narrative consistent throughout?</label>
+            <button class="help-trigger" onclick="showHelp('story-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Timeline, roles, and responsibilities stay coherent across the conversation</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="story-1-a" name="story-1" value="2"><label for="story-1-a">Consistent</label></div>
+            <div class="radio-option"><input type="radio" id="story-1-b" name="story-1" value="1" checked><label for="story-1-b">Minor gaps</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="story-1-c" name="story-1" value="0"><label for="story-1-c">Contradictory</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do details hold when approached from different angles?</label>
+            <button class="help-trigger" onclick="showHelp('story-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Asking the same thing differently still produces a coherent answer</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="story-2-a" name="story-2" value="2"><label for="story-2-a">Solid</label></div>
+            <div class="radio-option"><input type="radio" id="story-2-b" name="story-2" value="1" checked><label for="story-2-b">Wavering</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="story-2-c" name="story-2" value="0"><label for="story-2-c">Falls apart</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Can they provide specific examples on demand?</label>
+            <button class="help-trigger" onclick="showHelp('story-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">When asked for concrete details, they deliver without hesitation</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="story-3-a" name="story-3" value="2"><label for="story-3-a">Readily</label></div>
+            <div class="radio-option"><input type="radio" id="story-3-b" name="story-3" value="1" checked><label for="story-3-b">With effort</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="story-3-c" name="story-3" value="0"><label for="story-3-c">Cannot</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Credibility -->
+      <div class="card">
+        <h2 class="section-title">Technical Credibility <span class="category-badge" id="badge-tech">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Are there technical gaps in their story?</label>
+            <button class="help-trigger" onclick="showHelp('tech-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Claimed experience vs. actual depth when probed on specifics</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="tech-1-a" name="tech-1" value="2"><label for="tech-1-a">None</label></div>
+            <div class="radio-option"><input type="radio" id="tech-1-b" name="tech-1" value="1" checked><label for="tech-1-b">Some</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="tech-1-c" name="tech-1" value="0"><label for="tech-1-c">Major</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do they understand the "why" behind their decisions?</label>
+            <button class="help-trigger" onclick="showHelp('tech-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Can explain reasoning, trade-offs, and alternatives, not just what they did</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="tech-2-a" name="tech-2" value="2"><label for="tech-2-a">Deep</label></div>
+            <div class="radio-option"><input type="radio" id="tech-2-b" name="tech-2" value="1" checked><label for="tech-2-b">Surface</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="tech-2-c" name="tech-2" value="0"><label for="tech-2-c">None</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Can they go beyond rehearsed answers?</label>
+            <button class="help-trigger" onclick="showHelp('tech-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">When pushed past their prepared talking points, do they still have substance?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="tech-3-a" name="tech-3" value="2"><label for="tech-3-a">Yes</label></div>
+            <div class="radio-option"><input type="radio" id="tech-3-b" name="tech-3" value="1" checked><label for="tech-3-b">Partially</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="tech-3-c" name="tech-3" value="0"><label for="tech-3-c">No</label></div>
+          </div>
+        </div>
+
+        <details class="probe-dropdown" id="tech-probes">
+          <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="tech-probe-tag">(Optional)</span></summary>
+          <div class="probe-content">
+            <p class="probe-hint">Use these follow-up questions to investigate technical depth further.</p>
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Does their exposure come from hands-on work?</label>
+                <button class="help-trigger" onclick="showHelp('tech-p1')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Determine if knowledge is from direct experience or observation</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="tp1-a" name="tech-p1" value="2"><label for="tp1-a">Hands-on</label></div>
+                <div class="radio-option"><input type="radio" id="tp1-b" name="tech-p1" value="1" checked><label for="tp1-b">Mixed</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="tp1-c" name="tech-p1" value="0"><label for="tp1-c">Observed</label></div>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Can they elaborate on specific implementations?</label>
+                <button class="help-trigger" onclick="showHelp('tech-p2')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Ask for concrete details about tools, configs, or code they worked with</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="tp2-a" name="tech-p2" value="2"><label for="tp2-a">Detailed</label></div>
+                <div class="radio-option"><input type="radio" id="tp2-b" name="tech-p2" value="1" checked><label for="tp2-b">Vague</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="tp2-c" name="tech-p2" value="0"><label for="tp2-c">Cannot</label></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Ownership & Accountability -->
+      <div class="card">
+        <h2 class="section-title">Ownership & Accountability <span class="category-badge" id="badge-own">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do they distinguish their work from team contributions?</label>
+            <button class="help-trigger" onclick="showHelp('own-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Can they clearly say "I did X" vs "the team did Y"?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="own-1-a" name="own-1" value="2"><label for="own-1-a">Clearly</label></div>
+            <div class="radio-option"><input type="radio" id="own-1-b" name="own-1" value="1" checked><label for="own-1-b">Vaguely</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="own-1-c" name="own-1" value="0"><label for="own-1-c">Claims all</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Does their ownership claim hold under deeper probing?</label>
+            <button class="help-trigger" onclick="showHelp('own-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">When you ask follow-ups, does the story stay solid or start crumbling?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="own-2-a" name="own-2" value="2"><label for="own-2-a">Holds up</label></div>
+            <div class="radio-option"><input type="radio" id="own-2-b" name="own-2" value="1" checked><label for="own-2-b">Partially</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="own-2-c" name="own-2" value="0"><label for="own-2-c">Falls apart</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Can they explain decisions they personally made?</label>
+            <button class="help-trigger" onclick="showHelp('own-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Specific choices, trade-offs, and reasoning that were their own call</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="own-3-a" name="own-3" value="2"><label for="own-3-a">Detailed</label></div>
+            <div class="radio-option"><input type="radio" id="own-3-b" name="own-3" value="1" checked><label for="own-3-b">Vague</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="own-3-c" name="own-3" value="0"><label for="own-3-c">Cannot</label></div>
+          </div>
+        </div>
+
+        <details class="probe-dropdown" id="own-probes">
+          <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="own-probe-tag">(Optional)</span></summary>
+          <div class="probe-content">
+            <p class="probe-hint">Ownership concerns? Dig into whether the experience is genuinely theirs.</p>
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Is this their direct experience or a coworker's?</label>
+                <button class="help-trigger" onclick="showHelp('own-p1')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">People sometimes absorb team stories as their own, probe for first-person details</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="op1-a" name="own-p1" value="2"><label for="op1-a">Their own</label></div>
+                <div class="radio-option"><input type="radio" id="op1-b" name="own-p1" value="1" checked><label for="op1-b">Shared</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="op1-c" name="own-p1" value="0"><label for="op1-c">Someone else's</label></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Problem-Solving & Pressure -->
+      <div class="card">
+        <h2 class="section-title">Problem-Solving & Pressure <span class="category-badge" id="badge-solve">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">How do they handle not knowing something?</label>
+            <button class="help-trigger" onclick="showHelp('solve-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Do they acknowledge gaps honestly and try to reason through it?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="solve-1-a" name="solve-1" value="2"><label for="solve-1-a">Reasons</label></div>
+            <div class="radio-option"><input type="radio" id="solve-1-b" name="solve-1" value="1" checked><label for="solve-1-b">Deflects</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="solve-1-c" name="solve-1" value="0"><label for="solve-1-c">Freezes</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Can they reason through problems in real-time?</label>
+            <button class="help-trigger" onclick="showHelp('solve-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Given a scenario or challenge, can they think on their feet?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="solve-2-a" name="solve-2" value="2"><label for="solve-2-a">Strong</label></div>
+            <div class="radio-option"><input type="radio" id="solve-2-b" name="solve-2" value="1" checked><label for="solve-2-b">Moderate</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="solve-2-c" name="solve-2" value="0"><label for="solve-2-c">Weak</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do they stay engaged under pressure?</label>
+            <button class="help-trigger" onclick="showHelp('solve-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">When the interview gets challenging, do they lean in or check out?</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="solve-3-a" name="solve-3" value="2"><label for="solve-3-a">Engaged</label></div>
+            <div class="radio-option"><input type="radio" id="solve-3-b" name="solve-3" value="1" checked><label for="solve-3-b">Fading</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="solve-3-c" name="solve-3" value="0"><label for="solve-3-c">Checked out</label></div>
+          </div>
+        </div>
+
+        <details class="probe-dropdown" id="solve-probes">
+          <summary class="probe-toggle">Probe Deeper <span class="probe-tag" id="solve-probe-tag">(Optional)</span></summary>
+          <div class="probe-content">
+            <p class="probe-hint">Use hypothetical scenarios to test whether they truly understand design patterns and system logic, or just memorized answers.</p>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Can they reason through a design trade-off they haven't rehearsed?</label>
+                <button class="help-trigger" onclick="showHelp('solve-p1')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Present a trade-off between two valid approaches and see if they reason through it or freeze</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="sp1-a" name="solve-p1" value="2"><label for="sp1-a">Reasons well</label></div>
+                <div class="radio-option"><input type="radio" id="sp1-b" name="solve-p1" value="1" checked><label for="sp1-b">Partial</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="sp1-c" name="solve-p1" value="0"><label for="sp1-c">Cannot</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Do they understand what breaks when you change a constraint?</label>
+                <button class="help-trigger" onclick="showHelp('solve-p2')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Change a variable in their own story and see if they can predict the consequences</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="sp2-a" name="solve-p2" value="2"><label for="sp2-a">Predicts it</label></div>
+                <div class="radio-option"><input type="radio" id="sp2-b" name="solve-p2" value="1" checked><label for="sp2-b">Guesses</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="sp2-c" name="solve-p2" value="0"><label for="sp2-c">No idea</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Can they explain when NOT to use a pattern they mentioned?</label>
+                <button class="help-trigger" onclick="showHelp('solve-p3')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Someone who really understands a tool knows its limits, not just its strengths</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="sp3-a" name="solve-p3" value="2"><label for="sp3-a">Knows limits</label></div>
+                <div class="radio-option"><input type="radio" id="sp3-b" name="solve-p3" value="1" checked><label for="sp3-b">Vague sense</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="sp3-c" name="solve-p3" value="0"><label for="sp3-c">Blindly applies</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Can they simplify an over-engineered proposal?</label>
+                <button class="help-trigger" onclick="showHelp('solve-p4')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Propose something unnecessarily complex and see if they push back or blindly agree</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="sp4-a" name="solve-p4" value="2"><label for="sp4-a">Simplifies</label></div>
+                <div class="radio-option"><input type="radio" id="sp4-b" name="solve-p4" value="1" checked><label for="sp4-b">Hesitates</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="sp4-c" name="solve-p4" value="0"><label for="sp4-c">Agrees blindly</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Can they walk through debugging a system they didn't build?</label>
+                <button class="help-trigger" onclick="showHelp('solve-p5')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Describe a broken scenario and see if they have a systematic approach or just guess</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="sp5-a" name="solve-p5" value="2"><label for="sp5-a">Systematic</label></div>
+                <div class="radio-option"><input type="radio" id="sp5-b" name="solve-p5" value="1" checked><label for="sp5-b">Ad hoc</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="sp5-c" name="solve-p5" value="0"><label for="sp5-c">Lost</label></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- The Vibe -->
+      <div class="card">
+        <h2 class="section-title">The Vibe <span class="category-badge" id="badge-vibe">3/6</span></h2>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Would you want to work with this person daily?</label>
+            <button class="help-trigger" onclick="showHelp('vibe-1')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">The gut check, personality, energy, and how they'd fit the team</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="vibe-1-a" name="vibe-1" value="2"><label for="vibe-1-a">Definitely</label></div>
+            <div class="radio-option"><input type="radio" id="vibe-1-b" name="vibe-1" value="1" checked><label for="vibe-1-b">Maybe</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="vibe-1-c" name="vibe-1" value="0"><label for="vibe-1-c">No</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Do they show genuine interest in the role?</label>
+            <button class="help-trigger" onclick="showHelp('vibe-2')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Curiosity about the team, the work, and the challenges ahead</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="vibe-2-a" name="vibe-2" value="2"><label for="vibe-2-a">Very</label></div>
+            <div class="radio-option"><input type="radio" id="vibe-2-b" name="vibe-2" value="1" checked><label for="vibe-2-b">Somewhat</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="vibe-2-c" name="vibe-2" value="0"><label for="vibe-2-c">Not really</label></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label class="control-label">Is their response pace reasonable?</label>
+            <button class="help-trigger" onclick="showHelp('vibe-3')" type="button" aria-label="Show guidance">?</button>
+          </div>
+          <p class="control-description">Confident and timely answers vs. long pauses or rambling</p>
+          <div class="radio-group">
+            <div class="radio-option opt-good"><input type="radio" id="vibe-3-a" name="vibe-3" value="2"><label for="vibe-3-a">Good pace</label></div>
+            <div class="radio-option"><input type="radio" id="vibe-3-b" name="vibe-3" value="1" checked><label for="vibe-3-b">Slow</label></div>
+            <div class="radio-option opt-bad"><input type="radio" id="vibe-3-c" name="vibe-3" value="0"><label for="vibe-3-c">Very slow</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anti-Cheat Observations -->
+      <div class="card">
+        <h2 class="section-title">Anti-Cheat Observations</h2>
+        <p class="control-description">Behavioral tells that may indicate AI-assisted or coached answers. These are not scored; use them to guide follow-up questions and the internal report.</p>
+
+        <details class="probe-dropdown" id="cheat-probes">
+          <summary class="probe-toggle">AI / Coaching Tells <span class="probe-tag" id="cheat-probe-tag">(Optional)</span></summary>
+          <div class="probe-content">
+            <p class="probe-hint">Check tells as you observe them during the interview. A single tell means little; look for clusters.</p>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Long pause, then suddenly fluent / expert answer?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-pace')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Unnatural silence followed by a polished, verbose response</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-pace-a" name="cheat-pace" value="2"><label for="cheat-pace-a">Consistent</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-pace-b" name="cheat-pace" value="1" checked><label for="cheat-pace-b">Slight lag</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-pace-c" name="cheat-pace" value="0"><label for="cheat-pace-c">Sudden shift</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Answers feel like a generic STAR or blog-post template?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-template')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Polished structure without personal texture or specifics</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-template-a" name="cheat-template" value="2"><label for="cheat-template-a">Specific</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-template-b" name="cheat-template" value="1" checked><label for="cheat-template-b">Some</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-template-c" name="cheat-template" value="0"><label for="cheat-template-c">Generic</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Tone or vocabulary shifts dramatically mid-interview?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-tone')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Casual answers that suddenly turn formal or verbose</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-tone-a" name="cheat-tone" value="2"><label for="cheat-tone-a">Consistent</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-tone-b" name="cheat-tone" value="1" checked><label for="cheat-tone-b">Occasional</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-tone-c" name="cheat-tone" value="0"><label for="cheat-tone-c">Mismatch</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Looks away from camera / appears to read or type before answering?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-device')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Second-screen glances, typing, or mouse clicks before answering</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-device-a" name="cheat-device" value="2"><label for="cheat-device-a">Engaged</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-device-b" name="cheat-device" value="1" checked><label for="cheat-device-b">Briefly</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-device-c" name="cheat-device" value="0"><label for="cheat-device-c">Sustained</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Struggles when asked an off-topic or curveball follow-up?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-offtopic')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Rehearsed answers break when the conversation pivots</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-offtopic-a" name="cheat-offtopic" value="2"><label for="cheat-offtopic-a">Handles it</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-offtopic-b" name="cheat-offtopic" value="1" checked><label for="cheat-offtopic-b">Hesitates</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-offtopic-c" name="cheat-offtopic" value="0"><label for="cheat-offtopic-c">Falls apart</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <label class="control-label">Repeats question wording back verbatim before answering?</label>
+                <button class="help-trigger" onclick="showHelp('cheat-echo')" type="button" aria-label="Show guidance">?</button>
+              </div>
+              <p class="control-description">Echoing the prompt can be a sign of reading generated text</p>
+              <div class="radio-group">
+                <div class="radio-option opt-good"><input type="radio" id="cheat-echo-a" name="cheat-echo" value="2"><label for="cheat-echo-a">No</label></div>
+                <div class="radio-option"><input type="radio" id="cheat-echo-b" name="cheat-echo" value="1" checked><label for="cheat-echo-b">Sometimes</label></div>
+                <div class="radio-option opt-bad"><input type="radio" id="cheat-echo-c" name="cheat-echo" value="0"><label for="cheat-echo-c">Often</label></div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="cheat-notes">Anti-cheat notes</label>
+              <p class="control-description">Optional free-form notes: timing oddities, specific tells, follow-up questions tried, etc.</p>
+              <button class="timestamp-btn" data-target="cheat-notes" type="button">Insert timestamp</button>
+              <textarea id="cheat-notes" class="notes-textarea" placeholder="e.g., paused for 8s then gave a polished 90s monologue..."></textarea>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Piece Profile -->
+      <div class="card" id="piece-card">
+        <h2 class="section-title">Piece Profile</h2>
+        <p class="control-description" style="margin-bottom:18px">Based on the <a href="https://minibooks.lucianoadonis.com/pages/thesis-the-core-five" target="_blank" rel="noopener" style="color:var(--accent-bright)">Core Five</a> dimensions, which chess piece does this candidate resemble? Scores auto-suggest a match, click to override.</p>
+        <div class="piece-grid">
+          <div class="piece-tile" id="piece-queen" onclick="selectPiece('queen')">
+            <div class="piece-icon">&#9819;</div>
+            <div class="piece-tile-name">Queen</div>
+            <div class="piece-tile-pct" id="pct-queen">-</div>
+          </div>
+          <div class="piece-tile" id="piece-rook" onclick="selectPiece('rook')">
+            <div class="piece-icon">&#9820;</div>
+            <div class="piece-tile-name">Rook</div>
+            <div class="piece-tile-pct" id="pct-rook">-</div>
+          </div>
+          <div class="piece-tile" id="piece-bishop" onclick="selectPiece('bishop')">
+            <div class="piece-icon">&#9821;</div>
+            <div class="piece-tile-name">Bishop</div>
+            <div class="piece-tile-pct" id="pct-bishop">-</div>
+          </div>
+          <div class="piece-tile" id="piece-knight" onclick="selectPiece('knight')">
+            <div class="piece-icon">&#9822;</div>
+            <div class="piece-tile-name">Knight</div>
+            <div class="piece-tile-pct" id="pct-knight">-</div>
+          </div>
+          <div class="piece-tile" id="piece-pawn" onclick="selectPiece('pawn')">
+            <div class="piece-icon">&#9823;</div>
+            <div class="piece-tile-name">Pawn</div>
+            <div class="piece-tile-pct" id="pct-pawn">-</div>
+          </div>
+        </div>
+        <div class="piece-detail" id="piece-detail">
+          <div class="piece-detail-header">
+            <span class="piece-detail-icon" id="piece-detail-icon">&#9819;</span>
+            <span class="piece-detail-name" id="piece-detail-name">Queen</span>
+            <span class="piece-detail-tag" id="piece-detail-tag">Best Match</span>
+          </div>
+          <p class="piece-detail-desc" id="piece-detail-desc"></p>
+          <div class="piece-dims" id="piece-dims"></div>
+        </div>
+        <div class="piece-auto-label" id="piece-auto-label">Auto-detected from scores</div>
+      </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <h2 class="section-title">Interviewer Notes</h2>
+        <div class="control-group">
+          <p class="control-description">Free-form observations, red flags, highlights, or anything else worth noting</p>
+          <button class="timestamp-btn" data-target="notes" type="button">Insert timestamp</button>
+          <textarea id="notes" class="notes-textarea" placeholder="Add your notes here..."></textarea>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="score-sidebar" aria-label="Score summary">
+      <div class="score-card" id="score-card">
+        <div class="score-label">Pass Probability</div>
+        <div class="score-value" id="score-pct">50<span>%</span></div>
+        <div class="verdict-label" id="verdict-label">Borderline</div>
+        <div class="breakdown-section">
+          <div class="breakdown-item"><span class="breakdown-label">Comm.</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-comm" style="width:50%"></div></div><span class="breakdown-val" id="val-comm">3/6</span></div>
+          <div class="breakdown-item"><span class="breakdown-label">Story</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-story" style="width:50%"></div></div><span class="breakdown-val" id="val-story">3/6</span></div>
+          <div class="breakdown-item"><span class="breakdown-label">Technical</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-tech" style="width:50%"></div></div><span class="breakdown-val" id="val-tech">3/6</span></div>
+          <div class="breakdown-item"><span class="breakdown-label">Ownership</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-own" style="width:50%"></div></div><span class="breakdown-val" id="val-own">3/6</span></div>
+          <div class="breakdown-item"><span class="breakdown-label">Problem</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-solve" style="width:50%"></div></div><span class="breakdown-val" id="val-solve">3/6</span></div>
+          <div class="breakdown-item"><span class="breakdown-label">Vibe</span><div class="breakdown-bar"><div class="breakdown-fill" id="bar-vibe" style="width:50%"></div></div><span class="breakdown-val" id="val-vibe">3/6</span></div>
+          <div class="score-total">Total: <strong><span id="score-total">18</span>/36</strong></div>
+          <div class="piece-indicator">
+            <span class="piece-indicator-icon" id="sidebar-piece-icon">&#9819;</span>
+            <span class="piece-indicator-text" id="sidebar-piece-name">Queen (67%)</span>
+          </div>
+          <div class="cheat-indicator" id="cheat-indicator" title="Click to jump to anti-cheat observations" onclick="document.getElementById('cheat-probes').scrollIntoView({behavior:'smooth'}); document.getElementById('cheat-probes').open = true;">
+            <span class="cheat-indicator-label">AI-assist risk:</span>
+            <span class="cheat-indicator-value" id="cheat-risk-label">Low</span>
+          </div>
+        </div>
+
+        <div class="timer-section" id="timer-section">
+          <div class="timer-display" id="timer-display">00:00</div>
+          <div class="timer-controls">
+            <button class="timer-btn" id="timer-start" type="button">Start</button>
+            <button class="timer-btn" id="timer-pause" type="button">Pause</button>
+            <button class="timer-btn timer-btn-secondary" id="timer-reset" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="sidebar-buttons">
+          <button class="download-btn download-btn-primary" onclick="downloadInternal()">Download Internal Review</button>
+          <button class="download-btn download-btn-secondary" onclick="downloadFeedback()">Download Candidate Feedback</button>
+          <button class="download-btn download-btn-secondary" onclick="window.print()">Print Report</button>
+        </div>
+        <button class="reset-button" onclick="resetAssessment()">Reset Assessment</button>
+      </div>
+    </aside>
+  </div>
+
+  <noscript>
+    <div style="background:var(--accent);color:#fff;padding:20px;text-align:center;font-family:sans-serif;">
+      This assessment tool requires JavaScript to calculate scores and generate reports. Please enable JavaScript to use Vibe Check.
+    </div>
+  </noscript>
+
+  <!-- Help Modal -->
+  <div class="help-overlay" id="help-overlay">
+    <div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <button class="help-modal-close" onclick="closeHelp()" type="button" aria-label="Close help">&times;</button>
+      <h3 id="help-title"></h3>
+      <div id="help-body"></div>
+    </div>
+  </div>
+
+  <!-- Sessions Drawer -->
+  <div class="sessions-overlay" id="sessions-overlay">
+    <div class="sessions-drawer" role="dialog" aria-modal="true" aria-labelledby="sessions-title">
+      <div class="sessions-drawer-header">
+        <h3 id="sessions-title">Saved Sessions</h3>
+        <button class="sessions-close" onclick="closeSessions()" type="button" aria-label="Close sessions">&times;</button>
+      </div>
+      <div class="sessions-actions">
+        <button class="session-btn" id="export-all-btn" type="button">Export All</button>
+        <label class="session-btn session-btn-secondary" style="position:relative;overflow:hidden">
+          Import
+          <input type="file" id="import-file" accept=".json" style="position:absolute;left:-9999px">
+        </label>
+      </div>
+      <div class="sessions-list" id="sessions-list"></div>
+    </div>
+  </div>
+
+  <footer class="neo-footer" data-footer-mode="minimal">
+    Behavioral interview scorecard with Core Five archetype matching Keyboard: 1 / 2 / 3 to rate, ? for help, / to focus name
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

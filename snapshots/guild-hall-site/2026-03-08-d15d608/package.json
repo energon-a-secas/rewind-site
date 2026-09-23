@@ -1,0 +1,8 @@
+{
+  "name": "guild-hall-site",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "convex": "^1.21.0"
+  }
+}

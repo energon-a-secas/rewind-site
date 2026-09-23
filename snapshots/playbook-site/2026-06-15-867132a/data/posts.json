@@ -1,0 +1,91 @@
+{
+  "cards": [
+    {
+      "type": "post",
+      "slug": "job-market",
+      "category": { "es": "Cómo entrar", "en": "Getting In" },
+      "title": { "es": "Cómo salir al mundo laboral", "en": "How to Break Into Tech" },
+      "subtitle": { "es": "Cosas que habías querido preguntar, pero preferiste no hacerlo", "en": "Things you wanted to ask but never did" },
+      "excerpt": { "es": "Cómo encontrar tu primer trabajo en tech, construir credibilidad desde cero y navegar ese primer año sin perderte en el intento.", "en": "How to land your first tech job, build credibility from zero, and navigate that first year without losing your way." },
+      "banner": "/docs/images/banner-job-market.png",
+      "date": "2019"
+    },
+    {
+      "type": "series",
+      "seriesId": "tech-interviews",
+      "category": { "es": "Entrevistas", "en": "Interviews" },
+      "title": { "es": "El Meta Cambió", "en": "The Meta Changed" },
+      "subtitle": { "es": "Guía completa para entrevistas técnicas en inglés", "en": "A complete guide to technical interviews in English" },
+      "excerpt": { "es": "Todo lo que necesitas para pasar entrevistas técnicas en inglés: preparación mental, fases del proceso y referencia de preguntas Cloud/DevOps.", "en": "Everything you need to pass technical interviews in English: mindset, process phases, and a Cloud/DevOps question reference." },
+      "banner": "/docs/images/banner-tech-interviews-1.png",
+      "date": "2023",
+      "parts": [
+        { "slug": "tech-interviews-1", "label": { "es": "Parte 1: Preparación y mentalidad", "en": "Part 1: Preparation and mindset" } },
+        { "slug": "tech-interviews-2", "label": { "es": "Parte 2: Las fases de la entrevista", "en": "Part 2: The interview phases" } },
+        { "slug": "tech-interviews-3", "label": { "es": "Parte 3: Preguntas técnicas", "en": "Part 3: Technical questions" } }
+      ]
+    },
+    {
+      "type": "post",
+      "slug": "tech-roles",
+      "category": { "es": "Los roles", "en": "The Roles" },
+      "title": { "es": "¿En qué trabajas?", "en": "What Do You Even Do?" },
+      "subtitle": { "es": "Roles tech explicados con ejemplos de gaming", "en": "Tech jobs explained with gaming examples" },
+      "excerpt": { "es": "Qué hace realmente un desarrollador, un DevOps o un ingeniero de datos, explicado con analogías de videojuegos que cualquiera puede entender.", "en": "What a developer, DevOps engineer, or data engineer actually does all day, explained with gaming analogies anyone can understand." },
+      "banner": "/docs/images/banner-tech-roles.png",
+      "date": "2025"
+    }
+  ],
+  "slugMeta": {
+    "job-market": {
+      "title": { "es": "Cómo salir al mundo laboral", "en": "How to Break Into Tech" },
+      "subtitle": { "es": "Cosas que habías querido preguntar, pero preferiste no hacerlo", "en": "Things you wanted to ask but never did" },
+      "series": null,
+      "banner": "/docs/images/banner-job-market.png",
+      "date": "2019"
+    },
+    "tech-interviews-1": {
+      "title": { "es": "El Meta Cambió — Parte 1", "en": "The Meta Changed — Part 1" },
+      "subtitle": { "es": "Preparación, mentalidad y lo que deberías saber antes", "en": "Preparation, mindset, and what to know before the call" },
+      "series": "tech-interviews",
+      "seriesTitle": { "es": "El Meta Cambió", "en": "The Meta Changed" },
+      "banner": "/docs/images/banner-tech-interviews-1.png",
+      "date": "2023",
+      "part": 1,
+      "total": 3,
+      "prevSlug": null,
+      "nextSlug": "tech-interviews-2"
+    },
+    "tech-interviews-2": {
+      "title": { "es": "El Meta Cambió — Parte 2", "en": "The Meta Changed — Part 2" },
+      "subtitle": { "es": "Las fases de la entrevista", "en": "The interview phases" },
+      "series": "tech-interviews",
+      "seriesTitle": { "es": "El Meta Cambió", "en": "The Meta Changed" },
+      "banner": "/docs/images/banner-tech-interviews-2.png",
+      "date": "2023",
+      "part": 2,
+      "total": 3,
+      "prevSlug": "tech-interviews-1",
+      "nextSlug": "tech-interviews-3"
+    },
+    "tech-interviews-3": {
+      "title": { "es": "El Meta Cambió — Parte 3", "en": "The Meta Changed — Part 3" },
+      "subtitle": { "es": "Referencia de preguntas técnicas para Cloud/DevOps", "en": "Technical question reference for Cloud/DevOps" },
+      "series": "tech-interviews",
+      "seriesTitle": { "es": "El Meta Cambió", "en": "The Meta Changed" },
+      "banner": "/docs/images/banner-tech-interviews-3.png",
+      "date": "2023",
+      "part": 3,
+      "total": 3,
+      "prevSlug": "tech-interviews-2",
+      "nextSlug": null
+    },
+    "tech-roles": {
+      "title": { "es": "¿En qué trabajas?", "en": "What Do You Even Do?" },
+      "subtitle": { "es": "Roles tech explicados con ejemplos de gaming", "en": "Tech jobs explained with gaming examples" },
+      "series": null,
+      "banner": "/docs/images/banner-tech-roles.png",
+      "date": "2025"
+    }
+  }
+}

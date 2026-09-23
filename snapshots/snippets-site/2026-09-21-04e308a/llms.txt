@@ -1,0 +1,14 @@
+# Snippets
+
+> 255 curated terminal commands — search, pin and copy
+
+- Live: https://snippets.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Covers: bash, macOS, Windows PowerShell, Git, Docker, Kubernetes, jq/yq, curl, ffmpeg, ImageMagick, PDF tooling, Claude Code
+- Filters are shareable via the URL hash, e.g. https://snippets.neorgon.com/#q=amend+author&cat=git
+- Keywords: snippets, shell, bash, powershell, git, macos, windows, ffmpeg, cheat sheet, search, copy
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

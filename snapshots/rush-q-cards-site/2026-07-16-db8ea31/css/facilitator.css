@@ -1,0 +1,345 @@
+/* Copyright (c) 2026 Luciano Adonis Villarroel. MIT License. */
+/* Game content (cards, art, mechanics) is proprietary — see LICENSE.CONTENT. */
+/* ── Facilitator Kit ─────────────────────────────────────────── */
+/* Uses shared.css tokens only. No new hardcoded brand colors. */
+
+.fk-main {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px var(--space-6) 56px;
+}
+
+/* ── Intro ─────────────────────────────────────────────────── */
+.fk-intro { margin-bottom: 32px; }
+.fk-kicker {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--accent-bright);
+  margin-bottom: 8px;
+}
+.fk-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.fk-lede {
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 60ch;
+  margin-bottom: 20px;
+}
+.fk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.fk-actions .btn { text-decoration: none; display: inline-flex; align-items: center; }
+
+.fk-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+}
+.fk-facts div {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.fk-facts dt {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.fk-facts dd { font-size: var(--text-sm); color: var(--text-primary); font-weight: 500; }
+
+/* ── Timer ─────────────────────────────────────────────────── */
+.fk-timer {
+  position: sticky;
+  top: calc(68px + 12px);
+  z-index: 50;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px;
+  margin-bottom: 36px;
+}
+.fk-timer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+.fk-timer-clock { display: flex; flex-direction: column; gap: 2px; min-width: 150px; }
+.fk-timer-phase {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.fk-timer-time {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.fk-timer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  margin-left: auto;
+}
+.fk-presets, .fk-timer-buttons { display: flex; gap: 8px; }
+.fk-timer-track {
+  flex: 1 0 100%;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.fk-timer-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s linear;
+}
+.fk-timer-status {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+/* Done cue: quiet, visual only. */
+.fk-timer.is-done {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 1px var(--accent-soft), var(--shadow-soft);
+  animation: fkDone 1.4s var(--ease-out) 3;
+}
+.fk-timer.is-done .fk-timer-time { color: var(--accent-bright); }
+.fk-timer.is-done .fk-timer-bar { background: var(--accent-bright); }
+@keyframes fkDone {
+  0%, 100% { box-shadow: 0 0 0 1px var(--accent-soft), var(--shadow-soft); }
+  50% { box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-soft); }
+}
+
+/* ── Sections ──────────────────────────────────────────────── */
+.fk-section { margin-bottom: 44px; }
+.fk-h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.fk-section-lede {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 66ch;
+  margin-bottom: 20px;
+}
+.fk-section-lede a, .fk-inline-link, .fk-run a, .fk-mode h3 a {
+  color: var(--accent-bright);
+  text-decoration: none;
+}
+.fk-section-lede a:hover, .fk-inline-link:hover, .fk-run a:hover, .fk-mode h3 a:hover {
+  text-decoration: underline;
+}
+
+/* ── Agenda ────────────────────────────────────────────────── */
+.fk-agenda { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.fk-phase {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+.fk-phase-time {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--accent-bright);
+  padding-top: 2px;
+}
+.fk-phase-body h3 { font-size: var(--text-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.fk-phase-body p { font-size: var(--text-sm); line-height: 1.6; color: var(--text-secondary); margin-bottom: 10px; }
+.fk-inline-link { font-size: var(--text-sm); font-weight: 600; }
+
+/* Time buttons (shared look for agenda + rounds) */
+.fk-time-btn, .pb-time-btn {
+  font-family: var(--font);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--accent-bright);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background var(--dur), color var(--dur);
+}
+.fk-time-btn:hover, .pb-time-btn:hover { background: rgba(232,160,74,.24); color: var(--text-primary); }
+
+/* ── Round scripts ─────────────────────────────────────────── */
+.fk-rounds { display: flex; flex-direction: column; gap: 20px; }
+.pb-round {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+.pb-round-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.pb-round-num {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--accent-bright);
+}
+.pb-prompt {
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.pb-sub {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 16px 0 8px;
+}
+.pb-moves { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pb-move {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.pb-move-text strong { color: var(--text-primary); }
+.pb-style {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  min-width: 78px;
+  text-align: center;
+}
+.pb-style-hero       { color: var(--type-quarter-event); }
+.pb-style-cautious   { color: var(--type-hard); }
+.pb-style-delegator  { color: var(--type-team); }
+.pb-style-politician { color: var(--type-power); }
+.pb-style-realistic  { color: var(--type-talent); }
+.pb-style-innovator  { color: var(--accent); }
+
+.pb-note {
+  background: var(--surface-2);
+  border-left: 3px solid var(--brand-violet);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px;
+  margin: 16px 0;
+}
+.pb-note .pb-sub { margin-top: 0; }
+.pb-note p { font-size: var(--text-sm); line-height: 1.6; color: var(--text-secondary); }
+
+.pb-discussion { padding-left: 20px; }
+.pb-discussion li { font-size: var(--text-sm); line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+.pb-run { margin-top: 14px; font-size: var(--text-sm); font-weight: 600; }
+
+/* ── Modes ─────────────────────────────────────────────────── */
+.fk-modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+.fk-mode {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+.fk-mode-primary { border-color: var(--border-strong); border-left: 3px solid var(--accent); }
+.fk-mode h3 { font-size: var(--text-lg); font-weight: 700; margin-bottom: 4px; }
+.fk-mode-when {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--accent-bright);
+  margin-bottom: 8px;
+}
+.fk-mode p { font-size: var(--text-sm); line-height: 1.6; color: var(--text-secondary); }
+
+/* ── Print-only note ───────────────────────────────────────── */
+.fk-print-note { display: none; }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .fk-title { font-size: 1.6rem; }
+  .fk-timer-time { font-size: 2.1rem; }
+  .fk-timer-controls { margin-left: 0; width: 100%; }
+  .fk-phase { grid-template-columns: 1fr; gap: 8px; }
+  .fk-phase-time { padding-top: 0; }
+}
+
+/* ── Print: one-page facilitator cheat-sheet ───────────────── */
+@media print {
+  .header-bar, .site-footer, .skip-link,
+  .fk-actions, .fk-timer, .fk-modes, .fk-inline-link,
+  .fk-time-btn, .pb-time-btn, .pb-run { display: none !important; }
+  body { background: #fff; color: #000; }
+  .fk-main { max-width: 100%; padding: 0; }
+  .fk-title, .fk-h2, .fk-phase-body h3, .pb-prompt, .pb-move-text strong,
+  .fk-facts dd, .fk-mode h3 { color: #000; }
+  .fk-lede, .fk-section-lede, .fk-phase-body p, .pb-move, .pb-note p,
+  .pb-discussion li, .fk-facts dt { color: #222; }
+  .fk-kicker, .fk-phase-time, .pb-round-num, .fk-mode-when { color: #555; }
+  .fk-section, .fk-intro { margin-bottom: 16px; page-break-inside: avoid; }
+  .fk-phase, .pb-round, .fk-facts div, .pb-note {
+    border: 1px solid #ccc; background: #fff; box-shadow: none;
+    page-break-inside: avoid;
+  }
+  .pb-style { border-color: #999; color: #000; }
+  .fk-print-note { display: block; font-size: 11px; color: #666; margin-top: 12px; }
+  .fk-h2 { border-bottom: 1px solid #ccc; }
+}

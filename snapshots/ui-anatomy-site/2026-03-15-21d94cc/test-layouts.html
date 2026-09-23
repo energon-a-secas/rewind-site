@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test New Layouts</title>
+</head>
+<body>
+    <h1>Testing New Industry Layouts</h1>
+    <div id="test-results"></div>
+    
+    <script type="module">
+        import { fortunelayout } from './js/layouts2.js';
+        import { ecommerceLayout } from './js/layouts2.js';
+        import { gamingLayout } from './js/layouts2.js';
+        import { saasLayout } from './js/layouts2.js';
+        import { fintechLayout } from './js/layouts2.js';
+        
+        const results = document.getElementById('test-results');
+        const layouts = [
+            { name: 'Fortune 500', fn: fortunelayout },
+            { name: 'Ecommerce', fn: ecommerceLayout },
+            { name: 'Gaming', fn: gamingLayout },
+            { name: 'SaaS', fn: saasLayout },
+            { name: 'Fintech', fn: fintechLayout }
+        ];
+        
+        layouts.forEach(layout => {
+            try {
+                const html = layout.fn({ dummy: true });
+                if (html && html.includes('wf-page')) {
+                    results.innerHTML += `<p style="color: green">✓ ${layout.name} layout: OK</p>`;
+                } else {
+                    results.innerHTML += `<p style="color: red">✗ ${layout.name} layout: Failed to generate valid HTML</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p style="color: red">✗ ${layout.name} layout: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

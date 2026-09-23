@@ -1,0 +1,151 @@
+// ── Shared state + localStorage persistence ──────────────────
+
+const KEY = 'proctor_v1';
+
+export const state = {
+  tests: {},       // id -> { id, title, description, category, count, addedAt, source, doc }
+  samples: [],     // loaded at boot from data/, never persisted
+  session: null,   // { testId, sample, mode, order[], responses[], checked[], flags[], pos, startedAt, timeLimitS, done }
+  lastSummary: null,
+  history: [],     // [{ title, mode, scorePct, at }] newest first, capped
+  notes: {},       // testId -> { questionId: "personal note" }
+  stats: {},       // testId -> { questionId: { seen, miss } } across every finished run
+  review: { perPage: 10, showPrompt: true, showAnswers: true, showWhy: true, showWrong: true, showNotes: false, showTags: true, showScenario: true },
+  embed: false,    // ?embed=1 iframe mode: fully in-memory, never touches storage
+};
+
+export const REVIEW_DEFAULTS = { perPage: 10, showPrompt: true, showAnswers: true, showWhy: true, showWrong: true, showNotes: false, showTags: true, showScenario: true };
+
+export function saveState() {
+  if (state.embed) return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify({
+      tests: state.tests,
+      history: state.history,
+      session: state.session,
+      notes: state.notes,
+      stats: state.stats,
+      review: state.review,
+    }));
+  } catch { /* storage full or blocked — the app still works for this session */ }
+}
+
+export function loadState() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    state.tests = data.tests || {};
+    state.history = data.history || [];
+    state.session = data.session || null;
+    if (state.session && state.session.done) state.session = null;
+    state.notes = data.notes || {};
+    state.stats = data.stats || {};
+    state.review = { ...REVIEW_DEFAULTS, ...(data.review || {}) };
+  } catch { /* corrupted storage — start fresh */ }
+}
+
+/** Stable id for a test document: slug + short content hash. */
+export function testId(doc) {
+  const slug = doc.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+  let h = 0;
+  const s = JSON.stringify(doc);
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return `${slug}-${(h >>> 0).toString(36)}`;
+}
+
+/** `notes` is the map lifted off an imported document by the parser: an export
+ *  of yours, coming home with its annotations. */
+export function addTest(doc, source, notes) {
+  const id = testId(doc);
+  if (notes && Object.keys(notes).length) {
+    state.notes[id] = { ...(state.notes[id] || {}), ...notes };
+  }
+  state.tests[id] = {
+    id,
+    title: doc.title,
+    description: doc.description,
+    category: doc.category,
+    count: doc.questions.length,
+    addedAt: Date.now(),
+    source,
+    doc,
+  };
+  saveState();
+  return id;
+}
+
+/** Replace a saved test's document **under its existing id**. The id is what
+ *  notes, per-question stats and history entries are keyed by, so re-importing
+ *  a corrected file would orphan all three — editing in place is the only way
+ *  a fix keeps its record. */
+export function updateTest(id, doc) {
+  const entry = state.tests[id];
+  if (!entry) return false;
+  state.tests[id] = {
+    ...entry,
+    title: doc.title,
+    description: doc.description,
+    category: doc.category,
+    count: doc.questions.length,
+    updatedAt: Date.now(),
+    doc,
+  };
+  saveState();
+  return true;
+}
+
+export function removeTest(id) {
+  delete state.tests[id];
+  if (state.session?.testId === id) state.session = null;
+  saveState();
+}
+
+export function getTest(id) {
+  if (state.tests[id]) return state.tests[id];
+  return state.samples.find((s) => s.id === id) || null;
+}
+
+/** `cats` is the run's primary breakdown and `facet` names it ('domain' when the
+ *  test uses one, else 'category'). Entries written before facets existed carry
+ *  no `facet` and are read as category breakdowns. */
+export function recordResult(id, title, mode, scorePct, cats, facet) {
+  state.history.unshift({ id, title, mode, scorePct, at: Date.now(), cats: cats || null, facet: facet || 'category' });
+  state.history = state.history.slice(0, 50);
+  saveState();
+}
+
+/** Fold one finished run into the per-question record: [{ qid, correct }]. */
+export function recordQuestionStats(tid, results) {
+  if (!state.stats[tid]) state.stats[tid] = {};
+  results.forEach(({ qid, correct }) => {
+    const s = state.stats[tid][qid] || { seen: 0, miss: 0 };
+    s.seen += 1;
+    if (!correct) s.miss += 1;
+    state.stats[tid][qid] = s;
+  });
+  saveState();
+}
+
+/** Indices of a test's weak questions: missed in more than half of at least
+ *  two runs — so a question heals off the list once you answer it correctly
+ *  often enough, instead of staying flagged forever. */
+export function weakIdxs(tid, doc) {
+  const stats = state.stats[tid];
+  if (!stats) return [];
+  return doc.questions
+    .map((q, i) => ({ i, s: stats[q.id] }))
+    .filter(({ s }) => s && s.seen >= 2 && s.miss * 2 > s.seen)
+    .map(({ i }) => i);
+}
+
+export function saveNote(tid, qid, text) {
+  if (!state.notes[tid]) state.notes[tid] = {};
+  if (text.trim()) state.notes[tid][qid] = text;
+  else delete state.notes[tid][qid];
+  saveState();
+}
+
+export function getNote(tid, qid) {
+  return state.notes[tid]?.[qid] || '';
+}

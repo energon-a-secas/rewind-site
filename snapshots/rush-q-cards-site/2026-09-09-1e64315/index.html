@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    /* Resolve the theme before first paint — no flash of the wrong room. */
+    (function () {
+      try {
+        var m = localStorage.getItem('rq-theme');
+        if (m !== 'light' && m !== 'dark') m = 'auto';
+        var r = m === 'auto'
+          ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+          : m;
+        document.documentElement.dataset.theme = r;
+        document.documentElement.dataset.themePref = m;
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Rush Q Cards">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://esm.sh cdn.jsdelivr.net cdnjs.cloudflare.com https://challenges.cloudflare.com https://gc.zgo.at https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.neorgon.org; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.convex.cloud https://img.clerk.com https://cdn.neorgon.org https://i.ytimg.com https://yt3.ggpht.com https://neorgon.goatcounter.com; connect-src 'self' https://*.convex.cloud https://clerk.neorgon.com https://accounts.neorgon.com https://clerk-telemetry.com https://api.clerk.com https://challenges.cloudflare.com https://*.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com; frame-src 'self' https://challenges.cloudflare.com https://clerk.neorgon.com https://accounts.neorgon.com https://www.youtube.com https://www.youtube-nocookie.com; worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Rush Q Cards | Corporate Strategy Card Game</title>
+  <meta name="description" content="Rush Q Cards: a corporate strategy card game. Manage projects, recruit talent, and outmaneuver AI opponents across 8 quarters">
+  <meta property="og:title" content="Rush Q Cards: Corporate Strategy Card Game">
+  <meta property="og:description" content="Manage projects, recruit talent, and outmaneuver AI opponents across 8 quarters">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="./">
+  <meta name="theme-color" content="#17130f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/error-boundary.css">
+  <link rel="stylesheet" href="css/hub.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rush Q Cards",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Neorgon"
+    },
+    "description": "Corporate strategy card game for management training and team building",
+    "url": "https://rush-q-cards.neorgon.com",
+    "genre": "Strategy",
+    "gamePlatform": "Web Browser"
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://neorgon.com/" target="_blank" rel="noopener noreferrer">
+        <img src="rq-logo.svg" class="header-logo-img" alt="Rush Q Logo">
+      </a>
+      <a href="./" class="header-title-link">
+        <h1>Rush Q Cards</h1>
+        <div class="header-subtitle">Corporate Strategy Card Game</div>
+      </a>
+    </div>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="/" data-route="/">Home</a>
+      <a href="/game/" data-route="/game/">Classic</a>
+      <a href="/quick/" data-route="/quick/">Quick</a>
+      <a href="/cards/" data-route="/cards/">Cards</a>
+      <a href="/rules/" data-route="/rules/">Rules</a>
+      <a href="/exercises/" data-route="/exercises/">Exercises</a>
+      <a href="/behavior/" data-route="/behavior/">Instinct</a>
+    </nav>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+  </header>
+
+  <main id="main" class="hub">
+    <section class="hub-hero">
+      <div>
+        <div class="hub-wordmark" aria-hidden="true"><span class="wm-rush">Rush</span><span class="wm-q">Q</span><span class="wm-bang">!</span></div>
+        <h1 class="hub-lede">A management game about weighing tradeoffs, not finding the one right answer.</h1>
+        <p class="hub-sub">You run a team for eight quarters. Recruit people, staff projects, and absorb whatever the company does to you. Every gain has a price attached, and the game makes you read it before you pay.</p>
+        <div class="hub-cta">
+          <a href="/starter/" class="btn btn-play">Start here &mdash; 10 minutes</a>
+          <a href="/game/" class="btn btn-ghost">Play the full game</a>
+          <p class="hub-cta-note">Played before? Jump to <a href="/quick/">Quick Mode</a> or skim the <a href="/rules/">rules</a> in five minutes.</p>
+        </div>
+      </div>
+
+      <div class="hub-fan" aria-hidden="true">
+        <article class="hub-fan-card is-left" style="--fan-hue: var(--type-talent)">
+          <span class="hub-fan-type">Talent</span>
+          <h3 class="hub-fan-name">Senior Lv.&nbsp;3</h3>
+          <div class="hub-fan-rule"></div>
+          <p class="hub-fan-text">Fills one project slot. Counts as two on anything matching their specialty.</p>
+          <span class="hub-fan-foot">3v to hire</span>
+        </article>
+        <article class="hub-fan-card is-mid" style="--fan-hue: var(--type-project)">
+          <span class="hub-fan-type">Project</span>
+          <h3 class="hub-fan-name">Architecture Modernization</h3>
+          <div class="hub-fan-rule"></div>
+          <p class="hub-fan-text">Needs 5 people held for 3 quarters. Miss the deadline and the penalty is yours.</p>
+          <span class="hub-fan-foot">+15 rep &middot; &minus;9 late</span>
+        </article>
+        <article class="hub-fan-card is-right" style="--fan-hue: var(--type-power)">
+          <span class="hub-fan-type">Power</span>
+          <h3 class="hub-fan-name">Domain Collision</h3>
+          <div class="hub-fan-rule"></div>
+          <p class="hub-fan-text">Trade a project with a rival. Both teams lose people. Someone still ships.</p>
+          <span class="hub-fan-foot">Play once</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <div class="hub-section-head">
+        <h2>Ways to play</h2>
+        <p>Same ideas, three lengths.</p>
+      </div>
+      <div class="hub-modes">
+        <a href="/starter/" class="hub-mode" style="--mode-hue: var(--type-talent)">
+          <div class="hub-mode-top">
+            <span class="hub-mode-icon"><i style="--icon: url('/assets/icons/ui/hub-starter.svg')"></i></span>
+            <div>
+              <div class="hub-mode-title">Starter Mode</div>
+              <div class="hub-mode-meta">
+                <span class="hub-tag hub-tag-lead">Start here</span>
+                <span class="hub-tag">10 min</span>
+                <span class="hub-tag">4 quarters</span>
+              </div>
+            </div>
+          </div>
+          <p class="hub-mode-desc">One rival, one decision per quarter, no card text to learn. Ship fast or protect the team &mdash; then live with it.</p>
+          <p class="hub-mode-learn"><b>You&rsquo;ll learn</b>Why a shortcut is a loan, and when the bill arrives.</p>
+        </a>
+
+        <a href="/quick/" class="hub-mode" style="--mode-hue: var(--type-power)">
+          <div class="hub-mode-top">
+            <span class="hub-mode-icon"><i style="--icon: url('/assets/icons/ui/hub-quick.svg')"></i></span>
+            <div>
+              <div class="hub-mode-title">Quick Mode</div>
+              <div class="hub-mode-meta">
+                <span class="hub-tag">15 min</span>
+                <span class="hub-tag">3 quarters</span>
+                <span class="hub-tag">vs AI</span>
+              </div>
+            </div>
+          </div>
+          <p class="hub-mode-desc">Draft a team, take a secret agenda, and survive a crisis that is guaranteed to land in Q2.</p>
+          <p class="hub-mode-learn"><b>You&rsquo;ll learn</b>How to plan around a shock you know is coming but can&rsquo;t see.</p>
+        </a>
+
+        <a href="/game/" class="hub-mode" style="--mode-hue: var(--type-project)">
+          <div class="hub-mode-top">
+            <span class="hub-mode-icon"><i style="--icon: url('/assets/icons/ui/hub-game.svg')"></i></span>
+            <div>
+              <div class="hub-mode-title">Classic Mode</div>
+              <div class="hub-mode-meta">
+                <span class="hub-tag">45 min</span>
+                <span class="hub-tag">8 quarters</span>
+                <span class="hub-tag">Full rules</span>
+              </div>
+            </div>
+          </div>
+          <p class="hub-mode-desc">The whole game. Markets, favors, layoffs from Q5, and management traits that change how your rivals play.</p>
+          <p class="hub-mode-learn"><b>You&rsquo;ll learn</b>How decisions compound &mdash; and which quarter you actually lost in.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <div class="hub-section-head">
+        <h2>Learn &amp; reference</h2>
+        <p>Read as much or as little as you want.</p>
+      </div>
+      <div class="hub-refs">
+        <a href="/perspectives/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-perspectives.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Perspectives</span>
+            <span class="hub-ref-desc">Cards are scenarios. Hands are people. The key to the whole thing.</span>
+          </span>
+        </a>
+        <a href="/rules/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-rules.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Quick Rules</span>
+            <span class="hub-ref-desc">Everything you need to start, in five minutes.</span>
+          </span>
+        </a>
+        <a href="/cards/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-gallery.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Card Gallery</span>
+            <span class="hub-ref-desc">All 132 playable cards, searchable and filterable.</span>
+          </span>
+        </a>
+        <a href="/exercises/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-exercises.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Exercises</span>
+            <span class="hub-ref-desc">One decision at a time, with the tradeoffs made visible.</span>
+          </span>
+        </a>
+        <a href="/behavior/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-instinct.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Instinct</span>
+            <span class="hub-ref-desc">Gut-check a workplace crunch, then see the pattern behind it.</span>
+          </span>
+        </a>
+        <a href="/rulebook/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-rulebook.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Full Rulebook</span>
+            <span class="hub-ref-desc">Every edge case, timing rule, and effect table.</span>
+          </span>
+        </a>
+        <a href="/facilitator/" class="hub-ref">
+          <span class="hub-ref-icon" style="--icon: url('/assets/icons/ui/hub-campaign.svg')"></span>
+          <span>
+            <span class="hub-ref-title">Facilitator Kit</span>
+            <span class="hub-ref-desc">Run it with a team: prompts, timings, and debrief questions.</span>
+          </span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">&copy; 2026 Luciano Adonis Villarroel. Game content all rights reserved. Code under MIT.</footer>
+
+  <script type="module" src="js/shared/nav.js"></script>
+  <script type="module" src="js/shared/theme.js"></script>
+  <script type="module">
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('[PWA] Service Worker registered successfully:', registration.scope);
+
+            // Listen for updates
+            registration.addEventListener('updatefound', () => {
+              console.log('[PWA] Service Worker update found');
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] New content available');
+                  showUpdateNotification();
+                }
+              });
+            });
+          })
+          .catch((error) => {
+            console.error('[PWA] Service Worker registration failed:', error);
+          });
+      });
+    }
+
+    // PWA Installation prompt
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      console.log('[PWA] Install prompt available');
+      showInstallButton();
+    });
+
+    function showInstallButton() {
+      // Install banner is intentionally suppressed for now (it reappeared on every
+      // visit and got in the way). The beforeinstallprompt event is still captured
+      // above so we can re-enable a less intrusive entry point later.
+      return;
+    }
+
+    function installPWA() {
+      if (!deferredPrompt) return;
+
+      document.querySelector('.pwa-install-banner')?.remove();
+
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('[PWA] User accepted install prompt');
+        } else {
+          console.log('[PWA] User dismissed install prompt');
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    function showUpdateNotification() {
+      const updateBanner = document.createElement('div');
+      updateBanner.className = 'pwa-update-banner';
+      updateBanner.innerHTML = `
+        <div>New version available!</div>
+        <button class="update-btn" onclick="window.location.reload()">Update Now</button>
+        <button class="dismiss-btn" aria-label="Dismiss" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      document.body.appendChild(updateBanner);
+    }
+
+    // Expose globally
+    window.installPWA = installPWA;
+  </script>
+
+  <style>
+    /* PWA Installation Banners */
+    .pwa-install-banner, .pwa-update-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #7c3aed 0%, #4f2b8a 100%);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .install-btn, .update-btn {
+      background: white;
+      color: #7c3aed;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .install-btn:hover, .update-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .dismiss-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      margin-left: 8px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pwa-install-banner, .pwa-update-banner {
+        animation: none;
+      }
+    }
+  </style>
+
+</body>
+</html>

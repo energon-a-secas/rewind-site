@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Card Tooltip | Rush Q Cards</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/card-component.css">
+  <style>
+    body { padding: 40px; background: #f3f4f6; }
+    .test-container { max-width: 800px; margin: 0 auto; }
+    .test-card { margin: 20px; display: inline-block; }
+    .instructions { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    h2 { color: #1f2937; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <div class="instructions">
+      <h2>🎯 Card Tooltip Test</h2>
+      <p>Click the "i" button on the card below. The tooltip should appear showing the skill description.</p>
+      <p><strong>Desktop:</strong> Hover over card to see tooltip</p>
+      <p><strong>Mobile/Click:</strong> Click "i" button to toggle tooltip</p>
+    </div>
+
+    <div id="card-container" class="test-card">
+      <!-- Card will be rendered here -->
+    </div>
+
+    <div id="result" style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
+      <strong>Status:</strong> <span id="status">Loading...</span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { renderCardHTML } from './js/shared/card-component.js';
+
+    // Test card data
+    const testCard = {
+      name: "Scope Negotiation",
+      type: "Soft",
+      skill: "Push back on scope changes diplomatically. Protect delivery and team focus.",
+      effectType: "block",
+      emoji: "🛡️"
+    };
+
+    try {
+      // Render the card
+      const cardHtml = renderCardHTML(testCard, { variant: 'mini' });
+      document.getElementById('card-container').innerHTML = cardHtml;
+
+      // Update status
+      document.getElementById('status').innerHTML = `
+        ✅ Card rendered successfully<br>
+        ✅ Info button should be visible at bottom-right<br>
+        ✅ Click "i" to toggle tooltip
+      `;
+      document.getElementById('status').style.color = '#10b981';
+
+      // Add global click handler for debugging
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('rc-mini-info')) {
+          console.log('Info button clicked!', e.target);
+          const card = e.target.closest('.rush-card');
+          console.log('Card element:', card);
+          console.log('Has rc-mini--tip-open:', card.classList.contains('rc-mini--tip-open'));
+          console.log('data-tip-open:', card.getAttribute('data-tip-open'));
+        }
+      });
+
+    } catch (err) {
+      document.getElementById('status').innerHTML = `
+        ❌ Error: ${err.message}<br>
+        <pre>${err.stack}</pre>
+      `;
+      document.getElementById('status').style.color = '#ef4444';
+      console.error(err);
+    }
+  </script>
+</body>
+</html>

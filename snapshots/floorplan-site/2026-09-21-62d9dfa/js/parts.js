@@ -1,0 +1,103 @@
+// ════════════════════════════════════════════════════════════
+//  parts.js: markup shared by both renderers. Seats, group headers, pct
+//  badges, vacant desks. Every interactive element carries the DnD contract
+//  attributes (data-drag / data-seat / data-drop) so dnd.js stays renderer
+//  agnostic, and data-svg roles so image-export.js can trace the DOM.
+// ════════════════════════════════════════════════════════════
+
+import { state, ui } from './state.js'
+import { escHtml, initials } from './utils.js'
+import { avatarImg, vacantImg } from './avatar.js'
+import { personTotals, bandOf, groupStats, statsLabel } from './allocation.js'
+
+let totalsCache = null
+export function beginFrame() { totalsCache = personTotals() }
+export function totals() { return totalsCache || (totalsCache = personTotals()) }
+
+export function faceHtml(person, color, { px = 32, forceInitials = false } = {}) {
+  if (ui.avatars && !forceInitials) return avatarImg(person.name, color, { px, custom: person.avatar || null })
+  return `<span class="face-disc" style="--face:${escHtml(color || '#64748b')};width:${px}px;height:${px}px" data-svg="disc">${escHtml(initials(person.name))}</span>`
+}
+
+/** One seated person inside a group. */
+export function seatHtml(group, m, { compact = false } = {}) {
+  const p = state.people[m.person]; if (!p) return ''
+  const t = totals().get(p.id)
+  const band = bandOf(t)
+  const multi = t && t.count > 1
+  const showPct = m.pct !== 100 || multi
+  const picked = ui.picked?.person === p.id && ui.picked?.from === group.id
+  const sel = ui.selection?.type === 'person' && ui.selection.id === p.id
+  const mark = ui.marks?.seats.get(`${group.id}:${p.id}`)
+  const label = `${p.name}${p.location ? ', ' + p.location : ''}, ${m.pct}% in ${group.name}${multi ? `, ${t.total}% in total` : ''}${mark ? `. Changed: ${mark.text}` : ''}. Enter to pick up, Delete to remove.`
+  return `<div class="seat${compact ? ' seat--compact' : ''}${picked ? ' is-picked' : ''}${sel ? ' is-selected' : ''}${mark ? ' diff-' + mark.kind : ''}" data-seat="${group.id}:${p.id}" data-drag="person" data-person="${p.id}" data-from="${group.id}" data-band="${band}" tabindex="0" role="button" aria-label="${escHtml(label)}" style="--seat-color:${escHtml(group.color)}" data-svg="box">
+    ${mark ? `<span class="diff-tag diff-tag--${mark.kind}" data-svg="tag">${escHtml(mark.text)}</span>` : ''}
+    ${faceHtml(p, group.color)}
+    <span class="seat-meta"><span class="seat-name" data-svg="text">${escHtml(p.name)}</span>${p.location ? `<span class="seat-loc" data-svg="text">${escHtml(p.location)}</span>` : ''}</span>
+    ${showPct ? `<button type="button" class="pct-badge" data-pct="${group.id}:${p.id}" data-band="${band}" title="Type the share" aria-label="Share ${m.pct}%, click to type a value" data-svg="badge">${m.pct}%</button>` : ''}
+    ${pctBarHtml(group, p, m.pct, band)}
+  </div>`
+}
+
+/**
+ * The draggable share bar: a segmented pixel bar, 5% steps, min 5. Drag or
+ * click sets it (dnd.js), arrows nudge it (events.js). Carries the same
+ * GROUP:PERSON key as the seat and the badge.
+ */
+export function pctBarHtml(group, p, pct, band, extra = '') {
+  return `<span class="pct-bar${extra ? ' ' + extra : ''}" data-pct-bar="${group.id}:${p.id}" role="slider" tabindex="0" aria-label="Share of ${escHtml(p.name)} in ${escHtml(group.name)}" aria-valuemin="5" aria-valuemax="100" aria-valuenow="${pct}" aria-valuetext="${pct}%" data-band="${band}" style="--p:${pct}" title="Drag to set the share (arrows nudge by 5)" data-svg="bar"><i class="pct-fill"></i><b class="pct-num">${pct}%</b></span>`
+}
+
+/** A person who was in this group in the baseline and is not now (compare mode). */
+export function ghostSeatsHtml(group, { compact = false } = {}) {
+  const list = ui.marks?.ghosts.get(group.id) || []
+  return list.map(gh => `<div class="seat seat--ghost seat--ghost-${gh.kind}${compact ? ' seat--compact' : ''}" title="${escHtml(gh.name)}: ${escHtml(gh.text)}" aria-label="${escHtml(gh.name)} ${escHtml(gh.text)} (baseline)" style="--seat-color:${escHtml(group.color)}" data-svg="box">
+    <span class="diff-tag diff-tag--${gh.kind}" data-svg="tag">${escHtml(gh.text)}</span>
+    ${state.people[gh.person] ? faceHtml(state.people[gh.person], '#475569') : `<span class="face-disc" style="--face:#475569;width:32px;height:32px">${escHtml(initials(gh.name))}</span>`}
+    <span class="seat-meta"><span class="seat-name" data-svg="text">${escHtml(gh.name)}</span><span class="seat-loc">${gh.pct}% before</span></span>
+  </div>`).join('')
+}
+
+/** Members in the document's display order: manual (YAML order), by name, or by share. */
+export function sortedMembers(group) {
+  const mode = state.meta.display?.sort || 'manual'
+  const list = [...group.members]
+  if (mode === 'name') list.sort((a, b) => (state.people[a.person]?.name || '').localeCompare(state.people[b.person]?.name || ''))
+  if (mode === 'share') list.sort((a, b) => b.pct - a.pct || (state.people[a.person]?.name || '').localeCompare(state.people[b.person]?.name || ''))
+  return list
+}
+
+export function vacantSeatsHtml(group, n, { compact = false } = {}) {
+  if (n <= 0) return ''
+  const ph = state.meta.display?.placeholder || 'desk'
+  if (ph === 'none') return ''
+  let out = ''
+  for (let i = 0; i < Math.min(n, 4); i++) out += `<div class="seat seat--vacant seat--vacant-${ph}${compact ? ' seat--compact' : ''}" title="Open seat" aria-hidden="true">${vacantImg(32, ph)}<span class="seat-meta"><span class="seat-name">open</span></span></div>`
+  if (n > 4) out += `<div class="seat seat--vacant seat--more${compact ? ' seat--compact' : ''}" aria-hidden="true"><span class="seat-meta"><span class="seat-name">+${n - 4} open</span></span></div>`
+  return out
+}
+
+export function groupHeadHtml(group, { tag = 'header', showStats = true, extra = '' } = {}) {
+  const sel = ui.selection?.type === 'group' && ui.selection.id === group.id
+  return `<${tag} class="g-head${sel ? ' is-selected' : ''}" data-group-head="${group.id}">
+    <span class="g-name" data-svg="text">${escHtml(group.name)}</span>
+    ${showStats ? `<span class="g-stats" data-svg="text" title="People in this group and its sub-groups; FTE adds their shares: two at 50% count as 1">${escHtml(statsLabel(group.id))}</span>` : ''}
+    ${group.notes ? `<span class="g-note-dot" title="Has notes" aria-label="Has notes" data-action="select-group" data-id="${group.id}"></span>` : ''}
+    ${extra}
+    <button type="button" class="g-more" data-action="select-group" data-id="${group.id}" aria-label="Group details: ${escHtml(group.name)}">···</button>
+  </${tag}>`
+}
+
+export function ownsHtml(group) {
+  if (!group.owns.length) return ''
+  return `<div class="g-owns" data-svg="owns">${group.owns.map(o => `<span class="own-tag" data-svg="tag">${escHtml(o)}</span>`).join('')}</div>`
+}
+
+export function emptyHintHtml(text = 'Drop people here') {
+  return `<div class="g-empty">${escHtml(text)}</div>`
+}
+
+export function capacityInfo(group) {
+  const s = groupStats(group.id)
+  return { vacant: s.vacant, over: s.over }
+}

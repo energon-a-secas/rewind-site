@@ -1,0 +1,12 @@
+# Hiring Pack
+
+> Interview kits and hiring resources for engineering managers
+
+- Live: https://hiringpack.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: hiring, interview, resources
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

@@ -1,0 +1,49 @@
+# Pixeldoll
+
+> Pixel character builder. Build a 16x16 character, unlock rare parts, save it as yours across every Neorgon site.
+
+- Live: https://pixeldoll.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: pixel art, avatar, character builder, sprite, dress-up, unlockables, Floorplan
+
+## Files for agents
+
+- [This file](https://pixeldoll.neorgon.com/llms.txt): the spec, the code format, the link contract, the cookies, and how to generate a character
+- [Avatar Kit source](https://github.com/energon-a-secas/pixeldoll-site/blob/main/js/neorgon-avatar.js): the engine this site and Floorplan share (canonical in the Neorgon monorepo at packages/neorgon-ui/avatar)
+
+## The spec
+
+```json
+{ "kind": "person", "skin": "#eab68a", "coat": "#f2a65a", "hair": "flat", "hairColor": "#2b1b0e", "eyes": "dot", "face": "none",
+  "outfit": "tee", "shirt": "#64748b", "head": "none", "accessory": "none", "held": "none", "pet": "none" }
+```
+
+Slots and ids:
+- kind: person, cat, dog, robot, ghost (legendary), alien (legendary)
+- hair: none, flat, tall, side, long, curly, bun, ponytail, afro (rare), mohawk (rare)
+- eyes: dot, wide, sleepy, wink (rare)
+- face: none, beard, moustache, freckles, blush
+- outfit: tee, hoodie, suit, overalls, labcoat, armor (rare), gown (legendary)
+- head: none, cap, beanie, headset, bandana, tophat (rare), horns (rare), crown (legendary), halo (legendary)
+- accessory: none, glasses, sunglasses, scarf, bowtie, badge, earrings (rare), cape (legendary)
+- held: none, laptop, coffee, book, phone, plant, sword (rare), wand (legendary)
+- pet: none, cat, dog, bird (rare), dragon (legendary)
+- skin, coat, hairColor, shirt: hex colours (coat is for cats and dogs)
+
+Unknown ids fall back to the default; a spec never fails to render.
+
+## The code and the link
+
+A character travels as `neoav1:<base64url of the JSON spec with only the non-default fields>`. Open one in the builder with `https://pixeldoll.neorgon.com/#c=<code>&name=<name>`. Floorplan's person sheet accepts the same code (or the link), and in Floorplan YAML it is `avatar: "neoav1:..."`.
+
+To generate one: write the JSON above (any subset), base64url it (standard base64, `+` to `-`, `/` to `_`, no padding), prefix `neoav1:`.
+Python: `"neoav1:" + base64.urlsafe_b64encode(json.dumps(spec, separators=(",",":")).encode()).decode().rstrip("=")`
+
+## Cookies (shared across *.neorgon.com)
+
+- `neo_character`: the visitor's own character as a code. "Save as my character" writes it; Floorplan reads it for "Use my character" and for the walker in Visit mode.
+- `neo_unlocks`: comma list of earned unlock ids: style, charm, quest, royal, spectral, visitor. Rare and legendary parts render anywhere regardless; only this site's picker gates them.
+
+## Unlocks
+
+Restless (style: afro, mohawk): shuffle ten times. Charming (charm: wink, top hat, earrings, bird): save a named character. Questing (quest: armor, horns, sword, dragon): the old console code. Royal (royal: crown, cape, gown): the family name in the secret field. Spectral (spectral: ghost, halo, wand): what a ghost says. Visitor (visitor: alien): three letters every sky-watcher knows.

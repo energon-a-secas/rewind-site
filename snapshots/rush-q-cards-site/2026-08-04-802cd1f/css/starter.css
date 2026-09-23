@@ -1,0 +1,226 @@
+/* Copyright (c) 2026 Luciano Adonis Villarroel. MIT License.
+   Game content (cards, art, mechanics) is proprietary - see LICENSE.CONTENT. */
+/* ── Starter Mode ─────────────────────────────────────────────
+   One-screen teaching mode. Reuses shared.css tokens; the health-band colors
+   intentionally match Classic's Foundation bands for vocabulary continuity. */
+
+.st-main { max-width: 960px; margin: 0 auto; padding: var(--space-10) var(--space-5) var(--space-16); width: 100%; }
+
+.st-kicker { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 1.4px; color: var(--accent-bright); font-weight: 700; }
+.st-title { font-family: var(--font-display); font-size: 1.7rem; margin: 6px 0 14px; }
+.st-title.st-win {
+  background: linear-gradient(120deg, var(--accent-bright), var(--stat-value));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.st-sub { color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: 18px; }
+
+/* ── Intro ── */
+.st-intro { padding-top: 16px; }
+.st-rules {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  font-size: var(--text-sm); line-height: 1.65; color: var(--text-secondary);
+}
+.st-rules p { margin: 8px 0; }
+.st-rules ol { padding-left: 20px; margin: 8px 0; }
+.st-rules li { margin: 6px 0; }
+.st-rules strong { color: var(--text-primary); }
+.st-pace-chip {
+  display: inline-block; padding: 1px 8px; border-radius: 8px;
+  font-size: 0.78em; font-weight: 700; margin: 0 2px;
+  border: 1px solid transparent;
+}
+.st-pace-chip.right { color: var(--pos); background: rgba(52,211,153,.1); border-color: rgba(52,211,153,.3); }
+.st-pace-chip.crunch { color: var(--type-quarter-event); background: rgba(224,96,92,.1); border-color: rgba(224,96,92,.3); }
+.st-pace-chip.recover { color: var(--type-team); background: color-mix(in srgb, var(--type-team) 10%, transparent); border-color: color-mix(in srgb, var(--type-team) 30%, transparent); }
+.st-challenge { color: var(--text-primary); font-weight: 600; }
+.st-start { margin: 18px 0 10px; font-size: 1rem; padding: 12px 34px; }
+.st-onramp-note { font-size: var(--text-xs); color: var(--text-muted); }
+.st-onramp-note a { color: var(--accent-bright); }
+
+/* ── Play screen ── */
+.st-top { display: flex; align-items: center; gap: 6px; margin: 10px 0 16px; }
+.st-top-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-right: 6px; }
+.st-q {
+  width: 30px; height: 26px; border-radius: 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700;
+  background: var(--surface-2); color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.st-q.done { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-bright); border-color: transparent; }
+.st-q.now { background: var(--accent-bright); color: var(--accent-contrast); border-color: var(--accent-bright); }
+
+.st-boards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.st-board {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+}
+.st-board.you { border-color: color-mix(in srgb, var(--accent-bright) 45%, transparent); }
+.st-board-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.st-board-name { font-weight: 700; font-size: var(--text-sm); }
+.st-board-rep { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--accent-bright); }
+.st-board-rep small { font-size: 0.55em; color: var(--text-muted); font-weight: 500; }
+.st-board-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 8px; font-size: var(--text-xs); min-height: 18px; }
+.st-tokens { color: var(--type-quarter-event); letter-spacing: 2px; cursor: help; }
+.st-quits { color: var(--type-quarter-event); font-weight: 600; }
+.st-pending { color: var(--text-secondary); }
+
+/* Health bar — same band colors as Classic's Foundation meter. */
+.st-band-solid     { --st-band: var(--pos); }
+.st-band-strained  { --st-band: var(--accent-bright); }
+.st-band-cracking  { --st-band: var(--type-trait); }
+.st-band-crumbling { --st-band: var(--type-quarter-event); }
+.st-health-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.st-health-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); }
+.st-health-band { font-size: 0.68rem; font-weight: 700; color: var(--st-band); }
+.st-health-track { height: 8px; border-radius: 4px; background: var(--film-2); overflow: hidden; }
+.st-health-fill { height: 100%; border-radius: 4px; background: var(--st-band); transition: width 0.4s var(--ease-out), background 0.3s; }
+
+/* ── Choices ── */
+.st-choices {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-4);
+}
+.st-choices-title {
+  font-size: .64rem; text-transform: uppercase; letter-spacing: .11em;
+  color: var(--text-faint); font-weight: 700; margin-bottom: var(--space-4);
+}
+/* ── Offers ────────────────────────────────────────────────────
+   Three sizes of the same decision. The card carries the whole choice: how
+   big the job is, what it pays, and what rushing it will cost you. */
+.st-offers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+.st-offer {
+  --offer-hue: var(--type-project);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--offer-hue) 28%, var(--border));
+  border-radius: var(--radius-md);
+  background: linear-gradient(165deg, color-mix(in oklab, var(--offer-hue) 8%, var(--surface-1)) 0%, var(--surface-1) 60%);
+  color: inherit;
+  font-family: var(--font);
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--dur) var(--ease-out), border-color var(--dur), box-shadow var(--dur);
+}
+.st-offer::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--offer-hue);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+.st-offer:hover { transform: translateY(-3px); border-color: var(--offer-hue); box-shadow: var(--shadow-soft); }
+.st-offer.selected {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+.st-offer-size {
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--offer-hue);
+}
+.st-offer-name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+.st-offer-reward {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--stat-reward);
+  margin-top: 2px;
+}
+.st-offer-reward small {
+  font-family: var(--font);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.st-offer-note {
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Pulling back is a real move, not a fallback — it reads as one of the
+   choices rather than a link under them. */
+.st-recover {
+  margin-top: var(--space-4);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-height: 0;
+  padding: var(--space-3) var(--space-5);
+  line-height: 1.35;
+  text-align: left;
+}
+.st-recover span { font-size: var(--text-xs); color: var(--text-muted); font-weight: 400; }
+
+.st-pace { margin-top: 14px; border-top: 1px solid var(--border-subtle); padding-top: 12px; }
+.st-pace-title { font-size: var(--text-sm); font-weight: 600; margin-bottom: 10px; }
+.st-pace-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.st-pace-btn {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 10px 16px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--surface-2);
+  min-width: 210px; text-align: left; cursor: pointer;
+}
+.st-pace-btn span { font-size: 0.66rem; color: var(--text-muted); font-weight: 400; }
+.st-pace-btn.right { border-color: rgba(52,211,153,.4); }
+.st-pace-btn.right strong { color: var(--pos); }
+.st-pace-btn.right:hover { background: rgba(52,211,153,.09); }
+.st-pace-btn.crunch { border-color: rgba(224,96,92,.4); }
+.st-pace-btn.crunch strong { color: var(--type-quarter-event); }
+.st-pace-btn.crunch:hover:not([disabled]) { background: rgba(224,96,92,.09); }
+.st-pace-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.st-pace-cancel {
+  margin-top: 10px; background: none; border: none; color: var(--text-muted);
+  font-size: var(--text-xs); cursor: pointer; text-decoration: underline; padding: 0;
+}
+
+/* ── Story ticker & recap ── */
+.st-ticker { display: flex; flex-direction: column; gap: 4px; }
+.st-beat { font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; }
+.st-beat-consequence { color: color-mix(in srgb, var(--type-quarter-event) 78%, var(--text-primary)); }
+.st-beat-shipped { color: var(--pos); }
+.st-beat-milestone { color: var(--text-primary); font-weight: 500; }
+
+.st-over { padding-top: 14px; }
+.st-recap {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 16px; margin: 16px 0;
+}
+.st-recap-title { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
+.st-recap-q { display: flex; gap: 12px; margin-bottom: 8px; }
+.st-recap-label { flex-shrink: 0; width: 28px; font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; color: var(--accent-bright); }
+.st-recap-beats { display: flex; flex-direction: column; gap: 3px; border-left: 1px solid var(--border-subtle); padding-left: 12px; }
+.st-onramp { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+
+@media (max-width: 640px) {
+  .st-boards { grid-template-columns: 1fr; }
+  .st-offers { grid-template-columns: minmax(0, 1fr); }
+  .st-pace-btn { min-width: 100%; }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Anatomy — Learn design component names</title>
+  <meta name="description" content="Hover any part of a website wireframe to learn its component name. Know what to call things when prompting AI design tools">
+  <meta property="og:title" content="UI Anatomy — Learn design component names">
+  <meta property="og:description" content="Hover a live wireframe mockup to learn UI component names, variants, and prompt tips.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://anatomy.neorgon.com/">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UI Anatomy — Learn design component names">
+  <meta name="twitter:description" content="Hover a live wireframe mockup to learn UI component names and prompt tips.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://anatomy.neorgon.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#040714">
+  <meta property="og:image" content="https://anatomy.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="icon" type="image/x-icon" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/favicon.ico" />
+  <!-- Neorgon Design Tokens (CDN) -->
+  <link rel="stylesheet" href="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/styles/base.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UI Anatomy",
+    "description": "Hover any part of a website wireframe mockup to learn its component name, variants, and AI prompt tips.",
+    "url": "https://anatomy.neorgon.com/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  
+  
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">
+        <img src="https://pub-b597cd281a384f98a47e1f043a6c4160.r2.dev/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="Neorgon">
+      </a>
+      <div>
+        <h1>UI Anatomy</h1>
+        <div class="header-subtitle">Hover to learn every component name</div>
+      </div>
+    </div>
+    <a class="header-learning" href="learning/" title="Checklist, mistakes & AI prompts">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+      Learning
+    </a>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+    </a>
+  </header>
+
+  <main id="main">
+
+    <!-- Controls bar: layout navigation + toggle buttons -->
+    <div class="controls-bar">
+      <div class="layout-nav" id="layoutNav" aria-label="Layout categories navigation"></div>
+      <button class="ctrl-btn" id="randomLayoutBtn" title="Random layout" style="margin-left: 8px; margin-right: auto;">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+          <path d="M14 7h4v4h-2V9h-2V7zm2 10v-2h2v4h-4v-2h2zm-9-6H7v2h2v2h2v-4H7zm0-6h4v2H7v2H5V5h4zm6 4h-2V5h2v2h2v2h-2z"/>
+        </svg>
+        Random
+      </button>
+      <div class="controls-right">
+        <div class="hero-bg-wrap" title="Hero background style">
+          <span class="hero-bg-label">Hero</span>
+          <div class="hero-bg-picker" id="heroBgPicker"></div>
+        </div>
+        <button class="ctrl-btn" id="dummyToggle" title="Toggle dummy content (text + images)">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
+          Dummy content
+        </button>
+        <button class="ctrl-btn" id="outlinesToggle" title="Show all component boundaries">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v8H4V6z" clip-rule="evenodd"/></svg>
+          Show outlines
+        </button>
+        <button class="ctrl-btn" id="browserToggle" title="Toggle component browser">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h8a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+          Components
+        </button>
+      </div>
+    </div>
+
+    <!-- Body: sidebar + mockup -->
+    <div class="anatomy-body" id="anatomyBody">
+
+      <!-- Component browser sidebar -->
+      <aside class="comp-browser" id="compBrowser" aria-label="Component browser">
+        <div class="browser-header">
+          <input type="search" id="compSearch" class="browser-search" placeholder="Search…" autocomplete="off" aria-label="Search components">
+        </div>
+        <div class="browser-list" id="browserList"></div>
+      </aside>
+
+      <!-- Wireframe mockup area -->
+      <div class="mockup-area" id="mockupArea">
+        <div class="mockup-hint" id="mockupHint">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z"/><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-3.446 6.032l-1.261 1.26a1 1 0 101.414 1.415l1.261-1.261A4 4 0 1011 5z" clip-rule="evenodd"/></svg>
+          Hover any element to learn its name
+        </div>
+        <div class="mockup-frame" id="mockupFrame"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Floating tooltip panel -->
+  <div class="anatomy-tooltip hidden" id="tooltip" role="tooltip">
+    <div class="tt-name-row">
+      <span class="tt-name" id="ttName"></span>
+      <span class="tt-category" id="ttCategory"></span>
+    </div>
+    <div class="tt-also" id="ttAlso"></div>
+    <p class="tt-desc" id="ttDesc"></p>
+    <div class="tt-variants-wrap" id="ttVariantsWrap">
+      <div class="tt-section-label">Variants</div>
+      <div class="tt-variants" id="ttVariants"></div>
+    </div>
+    <div class="tt-tip-wrap" id="ttTipWrap">
+      <div class="tt-section-label">Prompt tip</div>
+      <div class="tt-tip" id="ttTip"></div>
+    </div>
+    <div class="tt-frameworks-wrap" id="ttFrameworksWrap">
+      <div class="tt-section-label">Popular frameworks</div>
+      <div class="tt-frameworks" id="ttFrameworks"></div>
+    </div>
+  </div>
+
+  <footer class="info-footer">
+    Part of <a class="footer-link" href="https://neorgon.com/">Neorgon</a>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

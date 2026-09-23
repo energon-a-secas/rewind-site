@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rush Q Cards | Corporate Strategy Card Game</title>
+  <meta name="description" content="Rush Q Cards: a corporate strategy card game. Manage projects, recruit talent, and outmaneuver AI opponents across 8 quarters.">
+  <meta property="og:title" content="Rush Q Cards — Corporate Strategy Card Game">
+  <meta property="og:description" content="Manage projects, recruit talent, and outmaneuver AI opponents across 8 quarters">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="theme-color" content="#040714">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/error-boundary.css">
+  <style>
+    /* ── Hub-only styles ──────────────────────────────────────── */
+    .hub-hero {
+      text-align: center;
+      padding: 56px 24px 32px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .hub-hero-icon { font-size: 4rem; margin-bottom: 16px; }
+    .hub-hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+    .hub-hero p {
+      color: var(--text-muted);
+      font-size: var(--text-base);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+
+    .hub-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform var(--dur) var(--ease-snap),
+                  border-color var(--dur),
+                  box-shadow var(--dur);
+      animation: fadeIn 0.4s ease both;
+    }
+    .hub-card:nth-child(2) { animation-delay: 0.04s; }
+    .hub-card:nth-child(3) { animation-delay: 0.08s; }
+    .hub-card:nth-child(4) { animation-delay: 0.12s; }
+    .hub-card:nth-child(5) { animation-delay: 0.16s; }
+    .hub-card:nth-child(6) { animation-delay: 0.20s; }
+    .hub-card:nth-child(7) { animation-delay: 0.24s; }
+
+    .hub-card:hover {
+      transform: translateY(-4px) scale(1.015);
+      border-color: var(--border-strong);
+      box-shadow: 0 8px 32px rgba(0, 99, 229, 0.12);
+    }
+
+    .hub-card-icon { font-size: 2.4rem; }
+    .hub-card-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+    .hub-card-desc {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+    }
+
+    /* ── Featured card (Play) ─────────────────────────────────── */
+    .hub-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      border-color: rgba(0, 99, 229, 0.25);
+      background: linear-gradient(135deg, rgba(0, 99, 229, 0.08) 0%, var(--surface-1) 100%);
+    }
+    .hub-card.featured .hub-card-icon { font-size: 3rem; }
+    .hub-card.featured:hover {
+      border-color: rgba(0, 99, 229, 0.45);
+      box-shadow: 0 8px 40px rgba(0, 99, 229, 0.18);
+    }
+
+    /* ── New player learning path ────────────────────────────── */
+    .hub-path {
+      max-width: 900px;
+      margin: 0 auto 24px;
+      padding: 0 24px;
+    }
+    .hub-path-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .hub-path-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hub-path-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      transition: border-color var(--dur), background var(--dur);
+      cursor: pointer;
+    }
+    .hub-path-step:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-primary);
+    }
+    .hub-path-step-cta {
+      background: rgba(176, 21, 176, 0.08);
+      border-color: rgba(176, 21, 176, 0.3);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .hub-path-step-cta:hover {
+      background: rgba(176, 21, 176, 0.14);
+      border-color: rgba(176, 21, 176, 0.5);
+    }
+    .hub-path-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .hub-path-step-cta .hub-path-num {
+      background: rgba(176, 21, 176, 0.15);
+      border-color: rgba(176, 21, 176, 0.4);
+      color: #d946ef;
+    }
+    .hub-path-time {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-left: 4px;
+      font-weight: 400;
+    }
+    .hub-path-arrow {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 520px) {
+      .hub-hero { padding: 40px 20px 24px; }
+      .hub-hero h2 { font-size: 1.6rem; }
+      .hub-grid { padding: 0 16px 48px; gap: 14px; }
+      .hub-card.featured { flex-direction: column; text-align: center; }
+      .hub-path { padding: 0 16px; }
+      .hub-path-steps { gap: 6px; }
+      .hub-path-arrow { display: none; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Rush Q Cards",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Neorgon"
+    },
+    "description": "Corporate strategy card game for management training and team building",
+    "url": "https://rush-q-cards.neorgon.com",
+    "genre": "Strategy",
+    "gamePlatform": "Web Browser"
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar">
+    <div class="header-logo">
+      <a href="https://ehq.cl/" target="_blank" rel="noopener noreferrer">
+        <img src="rq-logo.svg" class="header-logo-img" alt="Rush Q Logo">
+      </a>
+      <div>
+        <h1>Rush Q Cards</h1>
+        <div class="header-subtitle">Corporate Strategy Card Game</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="/" data-route="/">Home</a>
+      <a href="/game/" data-route="/game/">Classic</a>
+      <a href="/quick/" data-route="/quick/">Quick</a>
+      <a href="/cards/" data-route="/cards/">Cards</a>
+      <a href="/rules/" data-route="/rules/">Rules</a>
+      <a href="/exercises/" data-route="/exercises/">Exercises</a>
+    </nav>
+    <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+  </header>
+
+  <main id="main">
+    <div class="hub-hero">
+      <div class="hub-hero-icon">🃏</div>
+      <h1>Rush Q Cards - Corporate Strategy Card Game for Management Training</h1>
+      <p>A corporate strategy card game. Recruit talent, deliver projects, survive events, and outmaneuver your rivals across 8 quarters to earn the promotion.</p>
+    </div>
+
+    <!-- New player path -->
+    <div class="hub-path">
+      <h2 class="hub-path-label">New here? Start here</h2>
+      <div class="hub-path-steps">
+        <a href="/rules/" class="hub-path-step">
+          <span class="hub-path-num">1</span>
+          <span class="hub-path-text">Read Quick Rules <span class="hub-path-time">5 min</span></span>
+        </a>
+        <span class="hub-path-arrow">→</span>
+        <a href="/cards/" class="hub-path-step">
+          <span class="hub-path-num">2</span>
+          <span class="hub-path-text">Browse Card Gallery <span class="hub-path-time">optional</span></span>
+        </a>
+        <span class="hub-path-arrow">→</span>
+        <a href="/game/" class="hub-path-step hub-path-step-cta">
+          <span class="hub-path-num">3</span>
+          <span class="hub-path-text">Play Your First Game</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hub-grid">
+      <a href="/game/" class="hub-card featured">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-game.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div>
+          <div class="hub-card-title">Play Game</div>
+          <div class="hub-card-desc">8 quarters, recruit talent, deliver projects</div>
+        </div>
+      </a>
+      <a href="/campaign/" class="hub-card">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-campaign.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div class="hub-card-title">Campaign</div>
+        <div class="hub-card-desc">Single player challenges: Easy, Medium, Hard modes</div>
+      </a>
+      <a href="/quick/" class="hub-card">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-quick.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div class="hub-card-title">Quick Mode</div>
+        <div class="hub-card-desc">15-minute version with secret agendas and draft</div>
+      </a>
+      <a href="/cards/" class="hub-card">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-gallery.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div class="hub-card-title">Card Gallery</div>
+        <div class="hub-card-desc">Browse 125+ cards, filter, print</div>
+      </a>
+      <a href="/rules/" class="hub-card">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-rules.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div class="hub-card-title">Quick Rules</div>
+        <div class="hub-card-desc">Learn the game in 5 minutes</div>
+      </a>
+      <a href="/exercises/" class="hub-card">
+        <div class="hub-card-icon"><img src="/assets/icons/ui/hub-exercises.svg" alt="" width="32" height="32" style="display: block;"></div>
+        <div class="hub-card-title">Exercises</div>
+        <div class="hub-card-desc">Practice scenarios with real cards</div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">&copy; 2026 Luciano Adonis Villarroel. Game content all rights reserved. Code under MIT.</footer>
+
+  <script type="module" src="js/shared/nav.js"></script>
+  <script type="module">
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('[PWA] Service Worker registered successfully:', registration.scope);
+
+            // Listen for updates
+            registration.addEventListener('updatefound', () => {
+              console.log('[PWA] Service Worker update found');
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('[PWA] New content available');
+                  showUpdateNotification();
+                }
+              });
+            });
+          })
+          .catch((error) => {
+            console.error('[PWA] Service Worker registration failed:', error);
+          });
+      });
+    }
+
+    // PWA Installation prompt
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      console.log('[PWA] Install prompt available');
+      showInstallButton();
+    });
+
+    function showInstallButton() {
+      if (!deferredPrompt) return;
+
+      const installBanner = document.createElement('div');
+      installBanner.className = 'pwa-install-banner';
+      installBanner.innerHTML = `
+        <div>Install Rush Q Cards for offline play</div>
+        <button class="install-btn" onclick="installPWA()">Install</button>
+        <button class="dismiss-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      document.body.appendChild(installBanner);
+    }
+
+    function installPWA() {
+      if (!deferredPrompt) return;
+
+      document.querySelector('.pwa-install-banner')?.remove();
+
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('[PWA] User accepted install prompt');
+        } else {
+          console.log('[PWA] User dismissed install prompt');
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    function showUpdateNotification() {
+      const updateBanner = document.createElement('div');
+      updateBanner.className = 'pwa-update-banner';
+      updateBanner.innerHTML = `
+        <div>New version available!</div>
+        <button class="update-btn" onclick="window.location.reload()">Update Now</button>
+        <button class="dismiss-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      document.body.appendChild(updateBanner);
+    }
+
+    // Expose globally
+    window.installPWA = installPWA;
+  </script>
+
+  <style>
+    /* PWA Installation Banners */
+    .pwa-install-banner, .pwa-update-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #B015B0 0%, #3D0080 100%);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .install-btn, .update-btn {
+      background: white;
+      color: #B015B0;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .install-btn:hover, .update-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .dismiss-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      margin-left: 8px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pwa-install-banner, .pwa-update-banner {
+        animation: none;
+      }
+    }
+  </style>
+</body>
+</html>

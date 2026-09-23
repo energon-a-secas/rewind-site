@@ -1,0 +1,12 @@
+# BattleCard
+
+> Customizable battle card builder with game icons, resizable sections, and PNG export
+
+- Live: https://battlecard.neorgon.com/
+- Part of the Neorgon tool suite (free, no signup, runs in your browser): https://neorgon.com/
+- Keywords: battle-card, png-export, icons
+
+## More Neorgon tools
+
+- [Neorgon hub](https://neorgon.com/): Browse and launch every tool from one page.
+- [Full suite index](https://neorgon.com/llms.txt): Machine-readable list of every Neorgon tool.

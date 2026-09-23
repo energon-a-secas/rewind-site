@@ -1,0 +1,353 @@
+// Accessibility layer over the editor's reorder controls: one live region, one
+// keyboard path, and a runtime decorator over markup this file does not own.
+//
+// WHY THIS IS IMPORTED FROM js/catalog.js, WHICH LOOKS WRONG.
+// The natural home for a self-initialising module is js/app.js. In the wave that
+// added this file, js/a11y.js and js/catalog.js had one owner and js/app.js had
+// another, so the module is pulled in by a one-line import at the top of
+// catalog.js instead. Deliberate, and frozen as contract C10 in
+// docs/delivery/CONTRACTS.md. Nothing here depends on the Catalog: if you later
+// move the import to app.js, move it, do not duplicate it, or the live region
+// and the listeners are installed twice.
+//
+// WHAT IT IS ALLOWED TO TOUCH.
+// It reads state.doc and listens on the state bus. It never writes the model and
+// never reorders anything itself: an arrow key clicks the very same
+// [data-act="move-section"] / [data-act="move-item"] button a mouse would, so
+// there is one move implementation in the app and nothing to desync. The drag
+// block in js/events.js is not read, not imported and not edited here. Drag
+// drops announce themselves anyway, because a drop ends in touch(), and touch()
+// emits the same 'doc' event the arrow buttons emit. One listener, both input
+// paths.
+//
+// NAMING THE RIGHT BLOCK NEEDS MORE THAN THE DIFF.
+// A swap moves two blocks, so the before and after order cannot say which one
+// the person moved; the first changed index is always the other one. Worse, a
+// drop into a template with a side column rebuilds the whole array, so one drop
+// can permute several entries and then the diff explains the result with the
+// wrong block or with no block at all. So this file also watches focusin and
+// pointerdown to record the block an interaction started on, and that recorded
+// grab settles both cases. Those listeners are its own: it still reads nothing
+// from the drag block and still writes nothing to the model.
+//
+// THE DETECTOR BELOW IS A WARNING, NOT A TEST.
+// A decorator that stops matching its selector fails silently, and no node test
+// in this project has a DOM. So decorate() console.warn's exactly once if a
+// content render leaves sections in the model and zero [data-drag] handles in
+// the panel, which is what a markup change in js/editor.js would look like from
+// here. It runs in a browser only, it asserts nothing, it cannot fail a build,
+// and it is not a substitute for loading the page and pressing the keys.
+import { bus, state } from './state.js';
+
+/* ── live region ─────────────────────────────────────────── */
+
+const REGION_ID = 'a11y-status';
+
+/** The one polite live region for this page. Created at module load, appended to
+ *  document.body so it stays outside every container the Catalog marks inert. */
+function region() {
+  let el = document.getElementById(REGION_ID);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = REGION_ID;
+    el.className = 'sr-only';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+/** Say one sentence politely. Clearing first is what makes a repeated message
+ *  (two moves that land on the same wording) speak twice instead of once. */
+export function announce(text) {
+  if (!text) return;
+  const el = region();
+  el.textContent = '';
+  setTimeout(() => { el.textContent = text; }, 30);
+}
+
+/* ── what moved: a diff of the model, not a hook into the mover ── */
+
+const zoneWord = (z) => (z === 'aside' ? 'side' : 'main');
+const secName = (s) => (s.title || s.type);
+
+/** A short, order-sensitive fingerprint of an item. Items carry no id, so this
+ *  stands in for one. Two identical items are indistinguishable and swapping
+ *  them announces nothing, which is correct: nothing observable changed. */
+const itemKey = (it) => Object.keys(it).sort().map((k) => {
+  const v = it[k];
+  return Array.isArray(v) ? `${k}#${v.length}` : `${k}=${String(v).slice(0, 32)}`;
+}).join('|');
+
+/** Do two orders match? Compared element by element, on purpose. The version
+ *  before this one joined each list into a single string with a NUL separator,
+ *  which is how four raw NUL bytes came to sit in this file: any tool that
+ *  decodes JSON escapes turns the six characters of an escape into one real
+ *  control byte, and a file holding one is `data` to file(1) and is skipped in
+ *  silence by grep. It exempts itself from every text audit in the monorepo,
+ *  including the em-dash check in `make smoke`. Comparing pairwise needs no
+ *  separator, so there is no escape left to mangle, and no id that happens to
+ *  contain the separator can fake a match either. */
+const sameOrder = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+
+function snapshot() {
+  const secs = state.doc?.sections || [];
+  const zones = {};
+  const items = {};
+  for (const s of secs) { zones[s.id] = s.zone; items[s.id] = (s.items || []).map(itemKey); }
+  return { ids: secs.map((s) => s.id), zones, items };
+}
+
+/** Index in `next` of the entry that moved, or -1. An entry explains the change
+ *  when removing it from both lists leaves them identical.
+ *
+ *  There can be two such entries, and that is the whole difficulty. An adjacent
+ *  swap changes the index of BOTH blocks, so "A moved down one" and "B moved up
+ *  one" describe the same pair of lists equally well. Taking the first match is
+ *  a coin toss that always loses: the first changed index is the block that slid
+ *  up to fill the gap, never the one the person grabbed. So the caller passes
+ *  `preferKey`, the block the interaction actually started on, and it wins
+ *  whenever it is one of the valid explanations. A longer move has only one
+ *  explanation and needs no help. */
+function movedIndex(prev, next, preferKey) {
+  if (prev.length !== next.length || sameOrder(prev, next)) return -1;
+  const found = [];
+  for (let i = 0; i < next.length; i++) {
+    const p = prev.indexOf(next[i]);
+    if (p === -1) continue;
+    const a = prev.slice(); a.splice(p, 1);
+    const b = next.slice(); b.splice(i, 1);
+    if (sameOrder(a, b)) found.push(i);
+  }
+  if (preferKey != null) {
+    const hit = found.find((i) => next[i] === preferKey);
+    if (hit !== undefined) return hit;
+  }
+  return found.length ? found[0] : -1;
+}
+
+/* ── which block the person grabbed ──────────────────────────
+   The tiebreaker `movedIndex` needs, and the only thing that can supply it: the
+   order before and after cannot name the grabbed block on its own.
+
+   It is recorded when the interaction starts, not read back when the diff runs,
+   because by then it is gone twice over. The drag block calls preventDefault()
+   on pointerdown, so a dragged handle never takes focus at all; and every move
+   re-renders the panel, which destroys the focused handle and drops focus to
+   the body before the 'doc' event is handled. document.activeElement is
+   therefore useless here in both input paths.
+
+   Both listeners below are our own and purely additive. js/events.js is neither
+   imported nor edited, which is what keeps this file a decorator. */
+
+let grabbed = null;   // { kind:'sec'|'item', secId, key } or null
+
+/** Note the block an interaction started on, read from the model as it stands
+ *  before the move. `key` is what the diff will look for: a section id, or an
+ *  item fingerprint, matching whichever list is being compared. */
+function remember(h) {
+  const s = (state.doc?.sections || [])[+h.dataset.sec];
+  if (!s) { grabbed = null; return; }
+  if (h.dataset.drag === 'sec') { grabbed = { kind: 'sec', secId: s.id, key: s.id }; return; }
+  const it = (s.items || [])[+h.dataset.idx];
+  grabbed = it ? { kind: 'item', secId: s.id, key: itemKey(it) } : null;
+}
+
+/** The handle an event belongs to. A press on one of the arrow buttons counts as
+ *  grabbing its block: same summary or item head, the relation the keyboard path
+ *  already relies on. Without this, clicking the arrows with a mouse would leave
+ *  a stale grab from whatever was touched last. */
+function handleFor(el) {
+  const h = el.closest?.('[data-drag]');
+  if (h) return h;
+  const btn = el.closest?.('[data-act="move-section"], [data-act="move-item"]');
+  return btn ? btn.closest('summary, .item-head')?.querySelector('[data-drag]') : null;
+}
+
+/** The grabbed section when the recorded grab is better evidence than the diff,
+ *  else null.
+ *
+ *  One drop can move more than one entry. When the template has a side column
+ *  the frozen `applyDrop` rebuilds the whole array as main-then-aside, so on a
+ *  document that was not already grouped that way (hand written YAML, an import,
+ *  the first drop after switching template) a single drop permutes several
+ *  entries at once. No single removal explains such a diff, so `movedIndex`
+ *  either returns -1, and the move is announced as nothing at all, or it returns
+ *  the one block that happens to be explainable, which is a block that only slid
+ *  over to make room. The grab was recorded when the interaction started, so it
+ *  is evidence rather than inference and it wins over both.
+ *
+ *  It has to have moved to count. Requiring a permutation (same length, changed
+ *  order) is what keeps a stale grab out of an add or a delete, where every index
+ *  after the change shifts without anything being moved. With no usable grab the
+ *  caller falls back to the diff, and if that explains nothing either the answer
+ *  is silence: naming the wrong block is worse than naming none. */
+function grabbedMover(prev, next, g) {
+  if (!g || g.kind !== 'sec') return null;
+  if (prev.ids.length !== next.ids.length || sameOrder(prev.ids, next.ids)) return null;
+  const to = next.ids.indexOf(g.secId);
+  return to !== -1 && to !== prev.ids.indexOf(g.secId) ? g.secId : null;
+}
+
+/** One sentence naming the block that moved, its new position and its column,
+ *  or '' when this change was not a reorder. */
+function describeMove(prev, next) {
+  const g = grabbed;
+  // A column change is a move even when the position in the list does not shift,
+  // and when a drag does both it is the more useful half to lead with.
+  const crossed = next.ids.filter((id) => prev.zones[id] !== undefined && prev.zones[id] !== next.zones[id]);
+  const jumped = (g && crossed.includes(g.secId)) ? g.secId : crossed[0];
+  const shifted = movedIndex(prev.ids, next.ids, g && g.kind === 'sec' ? g.key : null);
+  const moved = jumped || grabbedMover(prev, next, g) || (shifted === -1 ? null : next.ids[shifted]);
+  if (moved) {
+    const secs = state.doc.sections;
+    const s = secs.find((x) => x.id === moved);
+    if (!s) return '';
+    const inZone = secs.filter((x) => x.zone === s.zone);
+    return `Moved "${secName(s)}" to position ${inZone.indexOf(s) + 1} of ${inZone.length} in the ${zoneWord(s.zone)} column.`;
+  }
+  for (const id of next.ids) {
+    const a = prev.items[id];
+    const b = next.items[id];
+    if (!a || !b) continue;
+    const i = movedIndex(a, b, g && g.kind === 'item' && g.secId === id ? g.key : null);
+    if (i === -1) continue;
+    const s = state.doc.sections.find((x) => x.id === id);
+    return `Moved item to position ${i + 1} of ${b.length} in "${secName(s)}".`;
+  }
+  return '';
+}
+
+/* ── decorating the handles js/editor.js prints ──────────── */
+
+const PANEL = 'panel-content';
+let warned = false;
+
+function handleLabel(h) {
+  const secs = state.doc?.sections || [];
+  const s = secs[+h.dataset.sec];
+  if (!s) return '';
+  if (h.dataset.drag === 'sec') {
+    const inZone = secs.filter((x) => x.zone === s.zone);
+    return `Reorder "${secName(s)}", position ${inZone.indexOf(s) + 1} of ${inZone.length} in the ${zoneWord(s.zone)} column`;
+  }
+  const n = (s.items || []).length;
+  return `Reorder item ${+h.dataset.idx + 1} of ${n} in "${secName(s)}"`;
+}
+
+/** Make every drag grip a focusable, labelled, arrow-driven control. Idempotent:
+ *  it is cheaper to set the attributes again than to track which render they
+ *  came from. */
+export function decorate() {
+  const panel = document.getElementById(PANEL);
+  if (!panel) return;
+  const handles = panel.querySelectorAll('[data-drag]');
+  if (!handles.length) {
+    if (!warned && (state.doc?.sections || []).length) {
+      warned = true;
+      console.warn(`a11y.js decorated nothing: ${state.doc.sections.length} sections in the model, zero [data-drag] handles in #${PANEL}. Keyboard reordering and its announcements are off. Most likely the handle markup in js/editor.js changed. This is a development warning, not a test.`);
+    }
+    return;
+  }
+  handles.forEach((h) => {
+    h.setAttribute('role', 'button');
+    h.setAttribute('tabindex', '0');
+    h.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown');
+    const label = handleLabel(h);
+    if (label) h.setAttribute('aria-label', label);
+    h.title = h.dataset.drag === 'sec'
+      ? 'Drag to reorder or to the other column, or focus it and press Arrow Up or Arrow Down'
+      : 'Drag to reorder, or focus it and press Arrow Up or Arrow Down';
+  });
+}
+
+let queued = false;
+function scheduleDecorate() {
+  if (queued) return;
+  queued = true;
+  queueMicrotask(() => { queued = false; decorate(); });
+}
+
+/* ── keyboard moving, by driving the buttons that already exist ── */
+
+function focusHandle(kind, sec, idx) {
+  const panel = document.getElementById(PANEL);
+  const sel = kind === 'sec'
+    ? `[data-drag="sec"][data-sec="${sec}"]`
+    : `[data-drag="item"][data-sec="${sec}"][data-idx="${idx}"]`;
+  panel?.querySelector(sel)?.focus();
+}
+
+function onKeyDown(e) {
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey) return;      // Alt is an accepted alias, the rest are not ours
+  const h = e.target.closest?.('[data-drag]');
+  if (!h) return;
+  e.preventDefault();
+  const kind = h.dataset.drag;
+  const dir = e.key === 'ArrowUp' ? -1 : 1;
+  const act = kind === 'sec' ? 'move-section' : 'move-item';
+  const btn = h.closest('summary, .item-head')?.querySelector(`[data-act="${act}"][data-dir="${dir}"]`);
+  if (!btn) return;
+  if (btn.disabled) {
+    announce(dir === -1 ? 'Already the first one here.' : 'Already the last one here.');
+    return;
+  }
+  const sec = +h.dataset.sec;
+  const idx = +h.dataset.idx;
+  // The button is the only mover. It re-renders the panel, which destroys this
+  // handle, so the same block is found again by its new index and refocused.
+  btn.click();
+  queueMicrotask(() => {
+    decorate();
+    if (kind === 'sec') focusHandle(kind, sec + dir, 0);
+    else focusHandle(kind, sec, idx + dir);
+  });
+}
+
+/* ── init ──────────────────────────────────────────────────
+   Everything above is pure. Everything below needs a DOM, and the node test
+   runner imports this module: tests/render.test.mjs imports js/catalog.js, and
+   catalog.js imports this file. So the browser half installs only where there is
+   a browser. That is an environment check, not a fallback: in a browser it is
+   always true and nothing is skipped. */
+
+let last = snapshot();
+
+if (typeof document !== 'undefined') {
+  region();
+  // Delegated, like every other listener in this app: the panel's innerHTML is
+  // replaced on each render, so a listener bound to one handle would not survive it.
+  document.addEventListener('keydown', onKeyDown);
+
+  // Which block the person grabbed, from every path that can reorder one.
+  // focusin covers the keyboard, where the handle is focused before the arrow
+  // key arrives. pointerdown covers a drag and a mouse click on the arrows,
+  // neither of which leaves anything focused. Capture, so a handler that stops
+  // propagation cannot leave a stale grab and misname the moved block.
+  document.addEventListener('focusin', (e) => {
+    const h = e.target.closest?.('[data-drag]');
+    if (h) remember(h);
+  });
+  document.addEventListener('pointerdown', (e) => {
+    const h = handleFor(e.target);
+    if (h) remember(h);
+  }, true);
+
+  bus.addEventListener('doc', () => {
+    const next = snapshot();
+    const said = describeMove(last, next);
+    last = next;
+    if (said) announce(said);
+    scheduleDecorate();
+  });
+
+  // First pass, and the baseline for the first diff. app.js loads the saved
+  // document and renders the panel from a DOMContentLoaded listener registered
+  // after this module is evaluated, so it runs after ours would; and a microtask
+  // drains between two listeners of the same event, which would be too early as
+  // well. A timer is the first point guaranteed to be after the end of parsing,
+  // and therefore after that first render.
+  setTimeout(() => { last = snapshot(); decorate(); }, 0);
+}

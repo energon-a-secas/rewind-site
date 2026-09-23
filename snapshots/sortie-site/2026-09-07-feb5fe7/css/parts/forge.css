@@ -1,0 +1,119 @@
+/* ── Forge ───────────────────────────────────────────────────
+   Left: the 16x16 painter. Middle: metadata + stats. Right: live preview of
+   both the matrix tile and the rail card, so you see the part in both places
+   it will show up before you save it. */
+
+.forge__head { display: grid; gap: var(--space-2); }
+.forge__title {
+  font-size: var(--text-2xl);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+.forge__lead { color: var(--text-secondary); font-size: var(--text-sm); max-width: 68ch; }
+
+.forge__grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(260px, 1fr) minmax(200px, 260px);
+  gap: var(--space-6);
+  align-items: start;
+}
+.forge__col { min-width: 0; display: grid; gap: var(--space-3); align-content: start; }
+
+.paint {
+  padding: var(--space-3);
+  background: linear-gradient(160deg, var(--hud-plate), rgba(3, 6, 22, .86));
+  border: 1px solid var(--hud-line-strong);
+  border-radius: var(--radius);
+}
+
+/* The grid *is* the tile, so painting previews the real thing: an empty cell
+   shows the accent through, and inked cells show the inks they will render as. */
+.paint__grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 0;
+  aspect-ratio: 1;
+  touch-action: none;
+  background: var(--accent);
+  border-radius: var(--tile-radius);
+  overflow: hidden;
+}
+
+.paint__cell {
+  padding: 0;
+  /* The grid has to be legible before anything is painted on it — at 3% white
+     on this plate the cells were invisible and the editor looked empty. */
+  border: 1px solid rgba(var(--accent-rgb), .18);
+  border-radius: 1px;
+  background: rgba(255, 255, 255, .06);
+  cursor: crosshair;
+  transition: background var(--dur-fast) linear;
+}
+.paint__cell:hover { background: rgba(var(--accent-rgb), .38); }
+.paint__cell[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 calc(6px * var(--fx-bloom)) var(--glow-soft);
+}
+
+.sliders { display: grid; gap: var(--space-3); }
+.sliders label {
+  /* 74px so "EN LOAD" stays on one line and every row keeps the same height. */
+  display: grid; grid-template-columns: 74px 1fr 42px;
+  gap: var(--space-3); align-items: center;
+  font-family: var(--font-hud); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--text-muted);
+}
+.sliders output { text-align: right; color: var(--accent); }
+
+.forge__col--preview { position: sticky; top: 80px; }
+.forge__preview { display: grid; gap: var(--space-4); justify-items: center; }
+
+.preview-tile {
+  width: 88px; height: 88px;
+  display: grid; place-items: center;
+  background: var(--accent);
+  border-radius: var(--tile-radius);
+  color: var(--glyph-ink);
+  box-shadow: 0 0 calc(28px * var(--fx-bloom)) var(--glow-mid);
+}
+.preview-tile svg { width: 82%; height: 82%; }
+
+.forge__preview .pcard { width: 100%; cursor: default; animation: none; }
+.forge__preview .pcard:hover { transform: none; box-shadow: none; border-color: var(--hud-line-strong); }
+
+.forge__library { display: grid; gap: var(--space-3); }
+
+/* ── Ink selector ────────────────────────────────────────────
+   Four levels, shown as the swatches they actually paint. */
+.inks { display: flex; gap: var(--space-2); }
+
+.ink {
+  flex: 1;
+  padding: var(--space-2) var(--space-1);
+  font-family: var(--font-hud); font-size: 9px;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid var(--hud-line-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+/* Swatches show the ink over the tile colour, because that is the only place
+   any of them will ever be seen. */
+.ink { background: var(--accent); color: var(--on-accent); }
+.ink[data-level='0'] { background: rgba(255, 255, 255, .04); color: var(--text-secondary); }
+.ink[data-level='1'] { background: var(--glyph-key); color: #04101c; }
+.ink[data-level='2'] { background: color-mix(in srgb, var(--glyph-ink) 62%, var(--accent)); color: #fff; }
+.ink[data-level='3'] { background: var(--glyph-ink); color: #fff; }
+.ink[aria-pressed='true'] {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--hud-plate), 0 0 0 3px var(--accent);
+}
+
+/* Painter cells carry the level they hold, at the same opacities the tile
+   renders them with, so the editor previews the real thing. */
+.paint__cell[data-level='1'] { background: var(--glyph-key); }
+.paint__cell[data-level='2'] { background: color-mix(in srgb, var(--glyph-ink) 62%, transparent); }
+.paint__cell[data-level='3'] { background: var(--glyph-ink); }

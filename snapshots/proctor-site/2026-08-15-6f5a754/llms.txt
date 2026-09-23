@@ -1,0 +1,205 @@
+# Proctor
+
+> Browser exam runner at https://proctor.neorgon.com/. Loads a test from a single
+> JSON or YAML document and runs it as a study session (instant feedback with
+> corrections) or a timed simulator (score, category breakdown, review). Everything
+> runs client-side; nothing is uploaded.
+
+## Writing a test file
+
+Produce ONE JSON object (YAML also works, see limits below). Minimal viable test:
+
+    {
+      "title": "My Test",
+      "questions": [
+        {
+          "type": "single",
+          "prompt": "2 + 2?",
+          "options": ["3", "4", "5"],
+          "answer": 1,
+          "explanation": "Basic addition"
+        }
+      ]
+    }
+
+Top-level fields:
+
+- title (required string)
+- description (string) — one line, shown on the test card
+- category (string) — the test's overall topic
+- domains (array) — the blueprint sections. Each entry is a string, or an object:
+  { "name": "Agent design",
+    "description": "Shared scenario every question in this domain refers to",
+    "subdomains": ["Tool use", "Memory"] }
+- timeLimitMinutes (number) — simulator mode starts a countdown and auto-submits
+- passingScore (number, percent) — results show pass/fail against it
+- questions (required array)
+
+Question fields:
+
+- type: "single" | "multi" | "truefalse" | "fill". If omitted it is inferred:
+  boolean answer -> truefalse, "answers" array -> multi, "accept" -> fill, else single.
+- prompt (required string) — the question text ("question" is accepted as an alias)
+- options (array of strings) — required for single/multi, at least 2
+- answer — single: 0-based index into options, or the exact option text;
+  truefalse: true or false
+- answers (array) — multi only: indexes or option texts; grading is exact-set
+- accept (array of strings) — fill only: every accepted typed answer,
+  compared case-insensitively after trimming ("caseSensitive": true to override)
+- explanation (string) — the correction shown after answering; write it as
+  feedback that teaches, not a citation
+- domain (string) — the blueprint section this question belongs to; matches a
+  "domains" entry by name (a domain used here but not declared there still works,
+  it just has no description)
+- subdomain (string) — the split inside that domain
+- category (string) — per-question topic; results aggregate score per category
+- points (number, default 1) — weight in the final score
+- ensure (boolean, default false) — always included when the user runs a
+  random slice of the test ("Draw N questions"); use it for must-know items
+- id (string, optional) — auto-assigned q1..qN when omitted. Set explicit ids on
+  a bank you expect to edit: notes and per-question stats are keyed by id, so
+  reordering questions without them moves a note to whatever now sits in that
+  position.
+- note (string, optional) — a personal annotation. Written by Proctor's JSON
+  export, and lifted back out on import into the reader's own notes; it is not
+  part of the test and never travels in a share link.
+
+Recommendations for generated tests: 10-20 questions, mix the four types, give
+every question an explanation and a category, keep options plausible (the wrong
+options should be believable mistakes, not jokes, unless the test is a fun quiz).
+
+## Shared context belongs to the domain, not the prompt
+
+A scenario, a system description, a dataset, a code listing that several
+questions refer to goes in that domain's "description" — written ONCE:
+
+    {
+      "domains": [{
+        "name": "Multi-agent research system",
+        "description": "A coordinator agent delegates to specialised subagents — web search, document analysis, synthesis, report generation — to produce cited reports.",
+        "subdomains": ["Delegation", "Synthesis"]
+      }],
+      "questions": [
+        { "domain": "Multi-agent research system", "subdomain": "Delegation",
+          "prompt": "Which failure does a shared scratchpad prevent?", "options": [...] }
+      ]
+    }
+
+Proctor renders that description in its own slot: a fold-out panel above the
+question in the runner, and a banner above the group in Review. Do NOT copy the
+scenario into the start of each "prompt" — it then appears in front of every
+question on screen, which is the exact problem these fields exist to solve.
+Each "prompt" holds only what that question asks.
+
+Domains and subdomains also drive the run filter (pick which sections to sit),
+the Review filter, and their own score breakdowns — so they are worth setting
+even when no question needs shared context.
+
+## Markdown
+
+prompt, options, explanation (and the user's own notes) render a strict
+markdown subset: **bold**, *italic*, `inline code`, fenced ``` code blocks,
+[text](https://url) links, - bullet and 1. numbered lists, # headings.
+Raw HTML never renders (everything is escaped first); links must be http(s).
+options are inline-only — no fenced blocks or lists inside an option.
+Use fenced blocks freely in prompts and explanations for technical tests:
+
+    {
+      "prompt": "What does this print?\n\n```python\nprint(2 ** 3)\n```",
+      "options": ["`6`", "`8`", "`9`"],
+      "answer": 1,
+      "explanation": "`**` is exponentiation — see [docs](https://docs.python.org/3/)"
+    }
+
+In JSON, a multi-line prompt is one string with \n; in YAML use a | block scalar.
+
+## Other input formats
+
+Beyond JSON/YAML, the importer detects and converts:
+
+- Aiken (Moodle): question text, "A. option" lines, "ANSWER: B". Single-choice only.
+- GIFT (Moodle, subset): "::title:: prompt {=right ~wrong #feedback}", {T}/{F},
+  {=fill =fill2} for typed answers, "####" general feedback. Not supported:
+  numeric ranges, matching pairs; "%weights%" are read but ignored.
+- CSV: header row names the columns — prompt (or question), options (| separated),
+  answer (index, text, or true/false), answers (| separated, for multi),
+  accept (| separated, for fill), explanation, category, domain, subdomain,
+  type, points.
+
+Formats with no title of their own are titled from the file name. JSON stays
+the canonical format — generate JSON unless the source system speaks these.
+
+## YAML limits
+
+The built-in YAML parser is a subset: plain indentation (2 spaces), block lists
+with "- ", "key: value" maps, quoted or plain scalars, inline [a, b] arrays, and
+"|" block scalars. NOT supported: anchors/aliases, flow maps {a: b}, multi-doc
+"---", tabs. When in doubt, emit JSON — it is the canonical format.
+
+## Review mode
+
+The Review button (also the third card in the mode picker) renders the entire
+test at once: answer key with the ✓ option, the explanation under every question,
+personal notes (markdown, rendered in place — click a note to edit), and a
+Per page dropdown whose steps are sized to the bank (never an option larger than
+the test). A "Visible" menu holds every show/hide switch — question text,
+answer key, explanations, wrong options, notes, tags, scenario — with a badge
+counting what is hidden. Hiding the question text leaves the number, tags and
+answers: a compact key, or a reverse-recall drill where you infer the question
+from its options; the facet chips above the list filter it. Left/Right arrows walk the
+list one question at a time and turn the page when they reach the end of one;
+Home/End jump to the first and last.
+
+The Share menu holds the five ways out. Export PDF goes through the browser's
+print dialog and prints every page, not just the one on screen — but it does
+respect the facet filter and the Visible switches, so an answer sheet, a blank
+practice sheet, and one domain on its own are all the same button. Download JSON
+writes the filtered test back out with your notes folded in as `note` fields,
+which import restores. Download Markdown writes the same slice as readable text
+— domain headings with their scenario, the correct option marked, explanations,
+and your notes. Both downloads follow the facet filter but ignore the Visible
+switches, which are a reading aid: PDF is the export that mirrors the screen. Copy share link puts the test in a #t=<base64url(JSON)> URL: no
+server, no account, the link is the data — and no notes, because that copy is
+someone else's. Copy embed code produces the iframe snippet described below.
+
+Edit source opens the test's own JSON in an editor and saves it back **under the
+same id**, so notes, per-question stats and run history survive a correction
+that a remove-and-reimport would throw away. It refuses a document that does not
+parse, and discards an in-progress run on that test (whose question indexes the
+edit would invalidate) after saying so.
+
+## Notes
+
+Any question can carry a personal note, written in the runner while you sit the
+test, on the results recap, or in Review — one note per question, the same one
+in all three places, markdown, stored only in the browser. Review's "Noted (N)"
+chip filters down to the questions you annotated, which is how you come back to
+them; both downloads carry them, and share links never do.
+
+## Loading
+
+- Drag the file onto the page, or paste the document via the Paste dialog
+- https://proctor.neorgon.com/?src=URL fetches a test from a CORS-enabled URL
+- Share links encode the whole test in the fragment: #t=<base64url(JSON)>
+
+## Embedding (iframe)
+
+Any site can embed a runnable test — no account, no backend, the test rides
+in the URL:
+
+    <iframe src="https://proctor.neorgon.com/?embed=1&mode=study#t=<base64url(JSON)>"
+      width="100%" height="640" loading="lazy" style="border:0"
+      title="My Test — Proctor"></iframe>
+
+- embed=1 strips the site chrome to a slim bar with an "Open in Proctor" link
+- mode=study | exam | review picks how it auto-starts (default study)
+- draw=N runs a random N-question slice ("ensure" questions always included)
+- time=N sets a simulator countdown of N minutes (0 = no timer), overriding
+  the test's own timeLimitMinutes; applies to mode=exam only
+- The test comes from #t= (data in the URL) or ?src= (fetched, needs CORS)
+- Embed runs are fully in-memory: nothing is written to the visitor's storage
+- The Review view has a "Copy embed code" button that generates this snippet
+
+## Related
+
+- The Neorgon fleet index: https://neorgon.com/llms.txt

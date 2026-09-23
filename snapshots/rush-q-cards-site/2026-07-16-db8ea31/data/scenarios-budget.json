@@ -1,0 +1,57 @@
+[
+  {
+    "id": "lean-startup",
+    "name": "Lean Startup",
+    "description": "Limited budget, high expectations. Complete 3 projects with minimal spending.",
+    "capExBase": 8,
+    "opExBase": 5,
+    "targetProjects": 3,
+    "targetRep": 30,
+    "quarters": 6,
+    "aiCount": 2
+  },
+  {
+    "id": "corporate-crunch",
+    "name": "Corporate Crunch",
+    "description": "Budget cuts across the board. Stretch every dollar while competing against 3 aggressive opponents.",
+    "capExBase": 10,
+    "opExBase": 6,
+    "targetProjects": 4,
+    "targetRep": 40,
+    "quarters": 8,
+    "aiCount": 3
+  },
+  {
+    "id": "growth-mode",
+    "name": "Growth Mode",
+    "description": "Generous funding but fierce competition. Invest wisely to outpace 4 rivals.",
+    "capExBase": 20,
+    "opExBase": 18,
+    "targetProjects": 5,
+    "targetRep": 60,
+    "quarters": 8,
+    "aiCount": 4
+  },
+  {
+    "id": "sprint-budget",
+    "name": "Sprint Budget",
+    "description": "Quick 4-quarter sprint with tight finances. Every decision counts.",
+    "capExBase": 12,
+    "opExBase": 8,
+    "targetProjects": 2,
+    "targetRep": 20,
+    "quarters": 4,
+    "aiCount": 2
+  },
+  {
+    "id": "balanced-books",
+    "name": "Balanced Books",
+    "description": "Standard budget with a focus on efficiency. No room for waste over 6 quarters.",
+    "capExBase": 14,
+    "opExBase": 10,
+    "targetProjects": 3,
+    "targetRep": 35,
+    "quarters": 6,
+    "aiCount": 3
+  }
+]

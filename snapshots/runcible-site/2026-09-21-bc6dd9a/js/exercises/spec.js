@@ -1,0 +1,252 @@
+// ── Spec checking ────────────────────────────────────────────
+// The C2.1 table as data, plus the checks that can be made without a browser.
+// A1a's tools/validate-book.mjs imports validateExerciseSpec from index.js so
+// that a chapter with a missing field fails at the command line rather than at
+// the moment a learner opens it. Nothing in this file touches the DOM.
+
+/** The nine, in the order C2.1 lists them. */
+export const GENERIC_TYPES = Object.freeze([
+  'read', 'choice', 'typed', 'match', 'order', 'listen', 'speak', 'deck', 'quiz', 'custom',
+]);
+
+/** C2.1, "Required spec fields", verbatim. */
+export const REQUIRED_FIELDS = Object.freeze({
+  read: ['pages'],
+  choice: ['items', 'prompt', 'answer', 'distractors'],
+  typed: ['items', 'prompt', 'answer'],
+  match: ['items', 'left', 'right', 'n'],
+  order: ['items', 'sequence'],
+  listen: ['items', 'speak', 'answer', 'respond'],
+  speak: ['items', 'expect'],
+  deck: ['src'],
+  quiz: ['game', 'src'],
+  custom: ['module'],
+});
+
+/**
+ * C12 A19. A `deck` exercise names a file with `src`; the shell's own personal
+ * deck (js/misses.js, "Your misses") is built in the page and has no file, so
+ * it carries the whole `neo-deck/1` document in `load` instead and js/embed.js
+ * posts it with `rappel:load`. The prefix is reserved by A19 for exactly this:
+ * a document a host built, never a deck a Book ships.
+ */
+export const PERSONAL_DECK_PREFIX = 'personal:';
+export const DECK_FORMAT = 'neo-deck/1';
+
+/** Which types can never report true or false, whatever the learner does. */
+export const NEVER_GRADED = Object.freeze(['read', 'speak']);
+
+/**
+ * The item fields a quiz `filter` may name. The set format calls row, column,
+ * group and rule labels, and says a bilingual or numeric field never filters,
+ * so the list is closed rather than "any field that happens to hold a string":
+ * a filter on `kana` would match nothing and the learner would meet the
+ * engine's filter-empty screen with no idea which side was wrong.
+ */
+export const QUIZ_FILTER_FIELDS = Object.freeze(['row', 'column', 'group', 'rule']);
+
+/**
+ * The clock a quiz exercise may ask for (quiz.neorgon.com/llms.txt, "Timed
+ * rounds"): true is the engine's own default budget, a number is seconds. The
+ * range is the engine's, and it is checked here rather than left to the engine
+ * because a value the engine discards is a chapter that silently runs untimed.
+ *
+ * An untimed round omits the field. `false` is not a value: turning a clock
+ * off is the learner's own control on the round, under WCAG 2.2.1, and a Book
+ * writing it would be making that choice for them.
+ */
+export const QUIZ_TIMED_DEFAULT = 8;
+export const QUIZ_TIMED_MIN = 3;
+export const QUIZ_TIMED_MAX = 30;
+
+/** A label, as the set format defines one: ASCII letters, digits and dashes. */
+const LABEL = /^[A-Za-z0-9-]+$/;
+
+/**
+ * Read a quiz exercise's `filter` against the engine's URL grammar,
+ * `<field>:<value>[,<value>...]`. One field per round; the engine reads only
+ * the first `filter=` it is given, so a spec carries one string.
+ *
+ * This is the grammar half, which needs no files. Whether the set actually
+ * holds items with those labels is tools/validate-book.mjs's, because only the
+ * CLI can open the set.
+ *
+ * @param {unknown} value
+ * @returns {{ field: string|null, values: string[], problem: string|null }}
+ */
+export function parseQuizFilter(value) {
+  const no = (problem) => ({ field: null, values: [], problem });
+  if (typeof value !== 'string' || value.trim() === '') {
+    return no('must be a non-empty string, for example "row:k" or "group:greetings"');
+  }
+  const raw = value.trim();
+  const cut = raw.indexOf(':');
+  if (cut < 0) return no(`"${raw}" has no ":": the grammar is "<field>:<value>[,<value>...]"`);
+  const field = raw.slice(0, cut);
+  const rest = raw.slice(cut + 1);
+  if (!QUIZ_FILTER_FIELDS.includes(field)) {
+    return no(`"${field}" is not a field a filter can name (${QUIZ_FILTER_FIELDS.join(', ')})`);
+  }
+  if (rest === '') return no(`"${raw}" names no value, and an empty value list is filter-empty`);
+  const values = rest.split(',');
+  const seen = new Set();
+  for (const v of values) {
+    if (!LABEL.test(v)) {
+      return no(`"${v}" is not a label: a label is ASCII letters, digits and dashes, never prose`);
+    }
+    if (seen.has(v)) return no(`names "${v}" twice`);
+    seen.add(v);
+  }
+  return { field, values, problem: null };
+}
+
+function present(spec, field) {
+  const v = spec[field];
+  if (v === undefined || v === null) return false;
+  if (typeof v === 'string') return v !== '';
+  if (Array.isArray(v)) return v.length > 0;
+  return true;
+}
+
+/**
+ * Check one exercise spec.
+ * @param {object} spec
+ * @param {{ transforms?: string[], modules?: string[] }} [known] ids the Book registered
+ * @returns {string[]} problems, empty when the spec is usable
+ */
+export function validateExerciseSpec(spec, known) {
+  const k = known || {};
+  const out = [];
+  if (!spec || typeof spec !== 'object') return ['exercise is not an object'];
+
+  if (!spec.id) out.push('missing "id"');
+  const type = spec.type;
+  if (!type) out.push('missing "type"');
+  else if (!GENERIC_TYPES.includes(type)) {
+    out.push(`"type": "${type}" is not one of the ten generic types (${GENERIC_TYPES.join(', ')}). ` +
+      'A Book module is used as { "type": "custom", "module": "<id>" }');
+  }
+  if (!spec.skill) out.push('missing "skill". C2.3 makes it a required part of every attempt');
+
+  if (type && REQUIRED_FIELDS[type]) {
+    for (const field of REQUIRED_FIELDS[type]) {
+      // A19: a deck carried in the spec has no file, so it needs no src.
+      if (type === 'deck' && field === 'src' && present(spec, 'load')) continue;
+      if (present(spec, field)) continue;
+      out.push(type === 'deck' && field === 'src'
+        ? '"deck" needs "src", the file it embeds, or "load", a document the shell built'
+        : `"${type}" needs "${field}"`);
+    }
+  }
+
+  if (spec.load !== undefined) {
+    if (type !== 'deck') {
+      out.push('"load" belongs to a deck exercise: no other type carries a document');
+    } else if (!spec.load || typeof spec.load !== 'object' || Array.isArray(spec.load)) {
+      out.push(`"load" must be a whole ${DECK_FORMAT} document, which js/embed.js posts with rappel:load`);
+    } else if (spec.load.format !== DECK_FORMAT) {
+      out.push(`"load.format" must be "${DECK_FORMAT}", got ${JSON.stringify(spec.load.format)}`);
+    } else if (typeof spec.load.id !== 'string' || !spec.load.id.startsWith(PERSONAL_DECK_PREFIX)) {
+      out.push(`"load.id" must start with "${PERSONAL_DECK_PREFIX}": A19 reserves that prefix for a deck a host builds, and the engine refuses it anywhere else`);
+    } else if (typeof spec.load.version !== 'string' || !spec.load.version) {
+      out.push('"load.version" is what A19 rule 5 compares, so a document with none would restart the schedule on every rebuild');
+    }
+  }
+
+  if (type === 'listen' && spec.respond && !['choice', 'typed'].includes(spec.respond)) {
+    out.push(`"respond": "${spec.respond}" must be "choice" or "typed"`);
+  }
+  if (type === 'choice' && spec.distractors && typeof spec.distractors !== 'object') {
+    out.push('"distractors" must be an object, for example { "from": "siblings", "n": 3 }');
+  }
+  if (type === 'match' && spec.n !== undefined && !Number.isFinite(spec.n)) {
+    out.push('"n" must be a number');
+  }
+  if (spec.count !== undefined && !Number.isFinite(spec.count)) {
+    out.push('"count" must be a number');
+  }
+  if (spec.filter !== undefined) {
+    // A filter on any other type is silently ignored by the engine that reads
+    // it, which is the whole reason to say so here.
+    if (type !== 'quiz') out.push('"filter" belongs to a quiz exercise: no other type narrows a set');
+    else {
+      const { problem } = parseQuizFilter(spec.filter);
+      if (problem) out.push(`"filter" ${problem}`);
+    }
+  }
+  if (spec.timed !== undefined) {
+    // Same reasoning as filter: a clock on any other type is a field the
+    // engine that reads it will never see, so it is said here.
+    if (type !== 'quiz') out.push('"timed" belongs to a quiz exercise: no other type carries a clock');
+    else if (spec.timed !== true
+      && !(Number.isInteger(spec.timed) && spec.timed >= QUIZ_TIMED_MIN && spec.timed <= QUIZ_TIMED_MAX)) {
+      out.push(`"timed" must be true (${QUIZ_TIMED_DEFAULT} seconds) or an integer ${QUIZ_TIMED_MIN} to `
+        + `${QUIZ_TIMED_MAX}, the seconds each item gets. An untimed round omits it`);
+    }
+  }
+  if (spec.pass !== undefined) {
+    if (typeof spec.pass !== 'object' || !Number.isFinite(spec.pass.accuracy)) {
+      out.push('"pass" must be an object with a numeric "accuracy"');
+    }
+  }
+
+  if (spec.transform !== undefined) {
+    if (typeof spec.transform !== 'string' || spec.transform === '') {
+      out.push('"transform" must be a registered transform id');
+    } else if (Array.isArray(k.transforms) && !k.transforms.includes(spec.transform)) {
+      out.push(`"transform": "${spec.transform}" is not registered by this Book. ` +
+        'The shell ships no transforms (C2.4)');
+    }
+  }
+  if (type === 'custom' && spec.module && Array.isArray(k.modules) && !k.modules.includes(spec.module)) {
+    out.push(`"module": "${spec.module}" is not registered by this Book`);
+  }
+
+  if (NEVER_GRADED.includes(type) && spec.pass) {
+    out.push(`"${type}" records correct: null always (C2.1), so a "pass" threshold can never be met`);
+  }
+
+  return out;
+}
+
+/**
+ * The id rules from C2.2, for an **exercise** id: it must contain a dot and
+ * must not start with a generic type name.
+ *
+ * "Start with" is read as the first dot separated segment, not a raw prefix
+ * match: the point of the rule is that a Book cannot shadow `typed`, and a raw
+ * prefix would also refuse `reading.aloud` for beginning with `read`.
+ *
+ * C12 A10: this is an exercise id rule and always was. A transform id goes
+ * through checkTransformId below.
+ *
+ * @returns {string|null} the problem, or null when the id is fine
+ */
+export function checkRegisteredId(id) {
+  if (typeof id !== 'string' || id === '') return 'a registered id must be a non-empty string';
+  if (!id.includes('.')) return `"${id}" must contain a dot, for example "jp.loanword"`;
+  const head = id.split('.')[0];
+  if (GENERIC_TYPES.includes(head)) {
+    return `"${id}" starts with the generic type name "${head}", which a Book may not shadow`;
+  }
+  return null;
+}
+
+/**
+ * The id rule for a transform id, which is only that there is one.
+ *
+ * C12 A10 (2026-09-04): the dot rule above is an exercise id rule. Its stated
+ * purpose in C2.2 is that "a Book cannot shadow `typed`", a namespace concern
+ * for the ten generic types, and C2.4 says the shell ships no transforms, so a
+ * transform id has no generic namespace to shadow. Requiring a dot there
+ * protected nothing and refused C1.2's own worked example,
+ * `"transforms": ["kana", "kana-katakana"]`. Transform ids are free-form.
+ *
+ * @returns {string|null} the problem, or null when the id is fine
+ */
+export function checkTransformId(id) {
+  if (typeof id !== 'string' || id === '') {
+    return 'with no usable id: a transform id must be a non-empty string';
+  }
+  return null;
+}

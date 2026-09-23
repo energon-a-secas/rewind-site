@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="neo-analytics" content="off">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Antenne">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://cdn.neorgon.org; connect-src 'self'; upgrade-insecure-requests">
+  <title>Antenne Desk | Draft Approval</title>
+  <meta name="description" content="Review, edit, and approve Antenne drafts before they publish. Drafts exist on the machine that wrote them, so real work happens on localhost">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#040714">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <meta name="neo-repo" content="energon-a-secas/dispatch-site">
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header-bar" data-header-mode="app">
+    <div class="header-logo">
+      <a href="desk.html" class="header-title-link">
+        <img src="https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+        <h1>Antenne Desk</h1>
+        <div class="header-subtitle">Approve drafts before they ship</div>
+      
+        </div>
+      </a>
+    </div>
+    <div class="header-right">
+      <div class="header-actions">
+        <a class="btn btn--ghost btn--sm" href="./" data-keep-mobile>Open the feed</a>
+      </div>
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container stack">
+      <section class="section" aria-label="Desk status">
+        <div class="card desk-banner" id="deskBanner">Checking for drafts…</div>
+      </section>
+
+      <section class="section" aria-labelledby="draftsTitle" id="draftsSection" hidden>
+        <div class="section__titles">
+          <h2 class="section__title" id="draftsTitle">Drafts</h2>
+          <p class="section__lead">Edit in place, then approve or spike each story.
+            Your edits and verdicts live in this browser until you publish.</p>
+        </div>
+        <div class="stack stack--tight" id="drafts"></div>
+        <div class="desk-publishbar" id="publishBar" hidden>
+          <span class="desk-publishbar__count" id="publishCount"></span>
+          <div class="desk-publishbar__actions">
+            <button type="button" class="btn btn--ghost btn--sm" id="resetDeskBtn">Reset desk</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="copyJsonBtn">Copy posts.json</button>
+            <button type="button" class="btn btn--primary btn--sm" id="publishBtn">Publish approved</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="publishedTitle">
+        <div class="section__titles">
+          <h2 class="section__title" id="publishedTitle">Already published</h2>
+        </div>
+        <div class="card" style="margin-bottom:0;">
+          <ul class="published-list" id="published"></ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="neo-footer" data-footer-mode="app">
+    The desk reads drafts from data/drafts/, a path that never gets committed.
+  </footer>
+
+  <script type="module" src="js/desk.js"></script>
+</body>
+</html>

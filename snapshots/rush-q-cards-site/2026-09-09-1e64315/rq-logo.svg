@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="RushQ">
+  <defs>
+    <linearGradient id="tile" x1="6" y1="6" x2="66" y2="66" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="58%" stop-color="#6d3fd6"/>
+      <stop offset="100%" stop-color="#3a2570"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="0" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f4b968"/>
+      <stop offset="100%" stop-color="#e8a04a"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="64" height="64" rx="17" fill="url(#tile)"/>
+  <rect x="4.75" y="4.75" width="62.5" height="62.5" rx="16.25" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5"/>
+  <!-- motion streaks: the "rush" -->
+  <g fill="#ffffff" fill-opacity="0.14">
+    <rect x="11" y="24" width="16" height="3.5" rx="1.75"/>
+    <rect x="11" y="34.25" width="11" height="3.5" rx="1.75"/>
+    <rect x="11" y="44.5" width="7" height="3.5" rx="1.75"/>
+  </g>
+  <!-- Q ring -->
+  <circle cx="44" cy="36" r="16" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <!-- Q tail as an amber spark -->
+  <path d="M44 44 L57 57" stroke="url(#spark)" stroke-width="6.5" stroke-linecap="round"/>
+  <!-- exclamation accent -->
+  <circle cx="60" cy="16" r="4.5" fill="url(#spark)"/>
+</svg>

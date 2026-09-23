@@ -1,0 +1,71 @@
+// ── Print sheet (contract C7) ────────────────────────────────
+// Fills #printSheet with one .print-cell per physical card (copies expanded),
+// 9 per A4 page; print.css does the paging. Nothing here is visible on
+// screen. The caller decides which cards and whether to add backs.
+
+import { cardFace, cardBack } from './face.js';
+
+/**
+ * Which back belongs to a card. Backs are not interchangeable: a life card's
+ * back carries its own element colour and the break that means Broken, while
+ * every other card gets the unbroken pool back.
+ *
+ * Exported because the browse grid shows backs on screen too, and a screen that
+ * previews a back the printer will not produce is worse than one that shows no
+ * back at all. One mapping, imported twice, so the two cannot drift.
+ */
+const FACE_KIND = { red: 'fire', blue: 'water', green: 'earth', grey: 'wind', white: 'extra', black: 'boss' };
+/**
+ * Which back a card takes. Life cards take their own element, broken across the
+ * middle. Everything else takes its DECK's back, so the four face-down piles on
+ * a table are four different piles: RULES.md section 10 used to say they all
+ * shared one, and printed that way the skill pool, the Advantage deck, the
+ * biomes and the two aids were indistinguishable face down.
+ */
+// The expansion decks take the BRICKS back, and both for the reason RULES.md
+// section 10 already gives for the biomes: a pile face down should say which
+// pile it is. A Hazard is a place, like a biome. A Mark is literally a brick.
+// Without these rows both fell through to the book, so a face-down stack of
+// hazards claimed to be skills you were learning.
+const DECK_BACK = {
+  advantage: 'advantage', mode: 'advantage', biome: 'biome', aid: 'aid',
+  hazard: 'biome', mark: 'biome', prop: 'biome',
+};
+export const backKind = (c) => (c.deck === 'life'
+  ? (c.element || FACE_KIND[c.face] || 'extra')
+  : DECK_BACK[c.deck] || 'skill');
+
+/**
+ * @param {object[]} physical  cards with copies already expanded (data/cards.js)
+ * @param {{backs?: boolean, aid?: object, paper?: 'a4'|'letter'}} opts
+ * @returns {number} pages filled
+ */
+export function renderPrintSheet(physical, opts = {}) {
+  const host = document.getElementById('printSheet');
+  if (!host) return 0;
+  // A selector-scoped @page (html.sk-letter @page {...}) is invalid CSS and was
+  // silently dropped, so the Letter toggle printed A4. The size is set here: a
+  // later @page overrides print.css's A4 base. Letter portrait is 279.4mm tall;
+  // 3 rows of 88mm + two 2mm gutters need 268mm, so Letter gets 5mm margins.
+  let pageStyle = document.getElementById('pageSizeStyle');
+  if (!pageStyle) { pageStyle = document.createElement('style'); pageStyle.id = 'pageSizeStyle'; document.head.appendChild(pageStyle); }
+  pageStyle.textContent = opts.paper === 'letter' ? '@page { size: Letter portrait; margin: 5mm; }' : '';
+  const cells = physical.map((c) => `<div class="print-cell">${cardFace(c, { size: 'sheet', aid: opts.aid })}</div>`);
+  // 'all' mirrors the run card for card so each front has its matching back;
+  // 'few' prints one per element, which is what a single fight actually turns
+  // face down. Which back a card takes is backKind, above.
+  if (opts.backs === 'all') {
+    for (const c of physical) cells.push(`<div class="print-cell">${cardBack(backKind(c), { light: opts.lightInk })}</div>`);
+  } else if (opts.backs === 'few') {
+    for (const k of ['fire', 'water', 'earth', 'wind']) {
+      cells.push(`<div class="print-cell">${cardBack(k, { light: opts.lightInk })}</div>`);
+    }
+  }
+  host.innerHTML = cells.join('');
+  return Math.ceil(cells.length / 9);
+}
+
+export function clearPrintSheet() {
+  const host = document.getElementById('printSheet');
+  if (host) host.innerHTML = '';
+}

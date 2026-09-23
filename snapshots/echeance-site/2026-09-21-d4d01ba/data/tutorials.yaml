@@ -1,0 +1,589 @@
+# Renewal tutorials: the real steps to obtain, renew and revoke each
+# kind of credential the fleet depends on. One entry per tutorial.
+#
+# This file feeds two consumers:
+#   - the Tutorials view in the site (fetched at runtime)
+#   - llms.txt at the site root (regenerate with `make llms`)
+# Edit here, never in llms.txt.
+#
+# Rules for entries: steps and insights carry commands and traps, never
+# secret values, never IP addresses, never account emails.
+
+tutorials:
+  - id: convex-cli
+    title: Renew Convex CLI auth
+    service: Convex
+    applies_to: oauth-session
+    signals:
+      - "`npx convex deploy` or `npx convex dev` fails with an authentication error"
+      - "Convex deploys have been blocked since the last login went stale"
+    steps:
+      - "Diagnose first, and do not assume expiry: `npx convex login status` prints the account's reachable teams. If the team listed is not the one that owns the project, the token is fine and belongs to the WRONG ACCOUNT, which is a different fix."
+      - "Open a real interactive terminal. The login is a browser OAuth flow; it cannot run from a non-interactive session, so an agent must hand this step to a person."
+      - "From the Convex project directory (for the fleet: `projects/memes-site`), run `npx convex login --force`."
+      - "Complete the browser prompt with the account that owns the project's team, not merely any Convex account."
+    verify: "`npx convex dev --once` from the project directory completes without an auth error."
+    revoke: "Log out with `npx convex logout`, or revoke the session from the Convex dashboard settings."
+    insights:
+      - "`npx convex login` SHORT-CIRCUITS. With any token already in ~/.convex/config.json it answers 'this device has previously been authorized and is ready for use' and changes nothing, without checking which account that token belongs to. Only `--force` re-authorizes. This cost two sessions in 2026-09."
+      - "'You don't have access to the selected project' is an ACCOUNT mismatch, not an expiry. Convex says the same thing whether the project moved, was deleted, or your token is for another account; `login status` is what tells them apart."
+      - "The fleet's own entry claimed a ~90 day token lifetime, inferred from the config file's date. It was wrong: the token had not expired at all. Do not infer a lifetime from a file mtime."
+      - "Renewal is the one step in the fleet's deploy chain that cannot be automated; schedule it, do not discover it."
+    links:
+      - label: Convex dashboard
+        url: https://dashboard.convex.dev/
+
+  - id: wrangler-oauth
+    title: Renew the Cloudflare wrangler session
+    service: Cloudflare
+    applies_to: oauth-session
+    signals:
+      - "`wrangler deploy` or `wrangler secret put` fails with an auth error"
+    steps:
+      - "Check who the CLI thinks you are: `wrangler whoami`."
+      - "If the session is stale, run `wrangler login` (browser OAuth; needs an interactive terminal)."
+      - "Worker secrets are written from the worker's own directory with `wrangler secret put NAME`; `worker/wrangler.toml` names the worker."
+    verify: "`wrangler whoami` reports the expected account."
+    revoke: "`wrangler logout`, or revoke the authorization under the Cloudflare dashboard's API tokens page."
+    insights:
+      - "No long-lived token is stored anywhere in the repo; the OAuth session is cached locally. When a deploy fails, check `wrangler whoami` before touching any secret."
+      - "Deploys and secret writes are per-account, so a whoami mismatch explains most sudden 403s."
+    links:
+      - label: Cloudflare dashboard
+        url: https://dash.cloudflare.com/
+
+  - id: r2-cdn-token
+    title: Rotate the R2 API token behind the CDN publish
+    service: Cloudflare R2
+    applies_to: api-key
+    signals:
+      - "`upload-assets.js` fails, or the cdn repo's Actions publish run fails"
+    steps:
+      - "Decode the error first; most failures are not a dead credential. `Unauthorized`: token dead or revoked. `SignatureDoesNotMatch`: secret mis-pasted (R2 secrets are exactly 64 hex chars, check the length). `code 9109 Cannot use the access token from location`: client IP allowlist rejection, not a credential problem."
+      - "To rotate: Cloudflare dashboard, R2, Manage R2 API Tokens. One R2 API token issues both the S3 key pair and the Cloudflare API token; they share one lifecycle."
+      - "Update the local `.env` in `projects/neorgon-cdn-site/` (`CLOUDFLARE_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`)."
+      - "Update the same values as GitHub Actions secrets on the cdn repo; the Actions pipeline publishes on push."
+    verify: "Push to the cdn repo and watch the Actions publish run, or run `upload-assets.js` locally."
+    revoke: "Delete the token under Manage R2 API Tokens; both halves die together."
+    insights:
+      - "The IP-filter trap (hit 2026-08-03): allowlisting the machine's IPv6 address breaks within hours, because IPv6 privacy extensions rotate the suffix. Allowlist the stable IPv4, or a CIDR block."
+      - "The CI token must have no client IP allowlist at all: GitHub runners rotate IPs, so an allowlisted token fails every run with code 9109. Mint a separate unfiltered token for CI if the interactive one is filtered."
+
+  - id: gh-cli
+    title: Fix GitHub CLI auth and account switching
+    service: GitHub
+    applies_to: oauth-session
+    signals:
+      - "`gh repo create` fails with a permissions error"
+      - "`gh` commands act as the wrong account"
+    steps:
+      - "See every logged-in account and which is active: `gh auth status`."
+      - "Switch with `gh auth switch --user <name>`; log a missing account in with `gh auth login` (browser flow)."
+      - "Repo creation in the fleet's org must run as the account that owns it; switch before `gh repo create`, not after it fails."
+    verify: "`gh auth status` shows the intended account as active."
+    revoke: "`gh auth logout --user <name>`, or revoke the device under GitHub Settings, Applications."
+    insights:
+      - "Two personas are logged in on this machine and only one has repo-create rights in the org; `gh auth status` first is cheaper than a failed create."
+      - "git identity is separate from gh identity: commits need the right `user.name`/`user.email` per repo even when gh is on the right account."
+
+  - id: github-ssh
+    title: Verify SSH push access to GitHub
+    service: GitHub
+    applies_to: ssh-key
+    signals:
+      - "`git push` asks for credentials or is refused"
+    steps:
+      - "Test the key: `ssh -T git@github.com` (expect the greeting with the right username)."
+      - "If refused, check the agent has the key loaded: `ssh-add -l`."
+      - "Remotes should use the SSH form (`git@github.com:owner/repo.git`); check with `git remote -v`."
+    verify: "`ssh -T git@github.com` greets the expected account."
+    revoke: "Remove the key under GitHub Settings, SSH and GPG keys."
+    insights:
+      - "SSH pushes work from agent sessions since 2026-08-18; the old HTTPS token workaround is retired. If a session claims it cannot push, the remote URL form is the first suspect."
+
+  - id: namecheap-dns
+    title: Restore Namecheap DNS API access
+    service: Namecheap
+    applies_to: ip-whitelist
+    signals:
+      - "DNS tooling fails with an API error after changing networks"
+    steps:
+      - "The API is IP-whitelisted and breaks on every network change, not only first setup. Check what IP you present: `make -C tooling/dns whoami` (run it in the current shell)."
+      - "Add that IP at Namecheap, Profile, Tools, API Access."
+      - "The key itself lives in a gitignored `.env` (`NAMECHEAP_API_KEY`); it does not rotate with the IP."
+    verify: "Re-run the DNS command that failed; then commit the fresh zone backup the tooling writes."
+    revoke: "Disable API access on the same Namecheap page."
+    insights:
+      - "Treat the whitelist as the credential: the key survives network changes, the allowlisted IP does not."
+      - "After any DNS change, commit the zone backup file; its git history is the zone's only portable backup."
+
+  - id: steam-web-api
+    title: Obtain or rotate a Steam Web API key
+    service: Valve Steam
+    applies_to: api-key
+    signals:
+      - "The Steam-backed endpoint answers NOT_CONFIGURED or upstream 401s"
+    steps:
+      - "Request the key at steamcommunity.com/dev/apikey with a non-limited Steam account (Valve lifts the limit only after USD 5 spent from the store)."
+      - "The form's domain field is an identifier, not a technical binding."
+      - "Store it as a worker secret, never in a file: `wrangler secret put STEAM_API_KEY` from the worker directory, then `wrangler deploy`."
+    verify: "Call the worker endpoint from outside; expect a JSON envelope, with NOT_CONFIGURED meaning the secret did not land."
+    revoke: "The same page has Revoke My Steam Web API Key. Revoke immediately if the key ever appears in a commit, a log or a paste, then re-put the secret."
+    insights:
+      - "A bare `Forbidden` from the endpoint means the old worker is still deployed, not that the key is bad."
+      - "Registering or revoking may require confirming in the Steam Mobile app."
+    links:
+      - label: Steam API key page
+        url: https://steamcommunity.com/dev/apikey
+
+  - id: github-enforcer-token
+    title: Renew the github-enforcer GitHub token
+    service: GitHub
+    applies_to: api-key
+    signals:
+      - "`make -C tooling/github-enforcer check` stops with 401 Bad credentials"
+      - "The enforcer warns at startup that the token is not 40 or 93 characters long"
+      - "Repo policy drift stops being reported, so descriptions, homepages and topics quietly stop being enforced across the fleet"
+    steps:
+      - "Read the length before minting anything. A classic PAT is exactly 40 characters and a fine-grained one is 93. Any other length means the line in .env is malformed and the credential may be perfectly alive, so repair the line first and mint nothing."
+      - 'Confirm the token itself is dead before replacing it: curl -sS -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/user . A 200 means the token is alive and the fault is elsewhere; a 401 means it is genuinely gone.'
+      - "Mint the replacement at github.com/settings/tokens. A classic token needs the `repo` scope. A fine-grained token needs, on the energon-a-secas repos: Administration read and write, Contents read and write, Metadata read, Pages read and write, Pull requests read and write."
+      - "Install it by replacing the whole GITHUB_TOKEN line in `tooling/github-enforcer/.env`. Paste it as one line with nothing after it: no trailing comment, no wrapped remainder, no second value."
+      - "Restrict the file: `chmod 600 tooling/github-enforcer/.env`. Gitignored is not the same as private, and this token can delete repositories."
+      - "Record the new expiry date on the inventory entry github-enforcer-token, so the reminder fires before the next failure instead of after it."
+    verify: "`make -C tooling/github-enforcer check-repo REPO=energon-a-secas/neorgon-site` prints all checks passed, with no length warning at startup."
+    revoke: "Delete it under github.com/settings/tokens. A classic token is not scoped to a repo, so it dies everywhere at once."
+    insights:
+      - "401 Bad credentials does not mean expired. On 2026-09-05 the .env line held a valid 40-character classic PAT with 75 characters of pasted text stuck to the end, so the whole 115-character string went out and GitHub rejected it. The token had been alive the entire time, and this inventory had already recorded the credential as dead and told a future reader to mint a replacement. Check the length before believing the 401."
+      - "The enforcer now says this itself: it warns at startup on a wrong-length value, and on a 401 it prints malformed rather than expired whenever the length matches no documented shape."
+      - "Prefer a fine-grained token. A classic one carries every scope you tick across every repo the account can reach, delete_repo included, which is a wide blast radius for a tool whose job is editing descriptions and topics."
+      - "Pages read and write is the permission most easily left off, and its absence used to pass as success: GitHub answers 404 rather than 403 for a Pages endpoint the token cannot see, which is the same answer as Pages being switched off. The enforcer now separates the two and warns when a repo has Pages enabled but the token cannot read it."
+    links:
+      - label: GitHub personal access tokens
+        url: https://github.com/settings/tokens
+      - label: Permissions required for fine-grained tokens
+        url: https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens
+
+  - id: reddit-data-api-app
+    title: Obtain or reuse a Reddit Data API app (Bouquin)
+    service: Reddit
+    applies_to: api-key
+    signals:
+      - "bouquin.neorgon.com reports its last scan came from the archive, not from Reddit"
+      - "`npx convex run ingest:scan --prod` returns status skipped, or a token error mentioning 401"
+      - "Reddit's app-registration deadline (2026-09-30) is approaching and an existing app is not registered"
+    steps:
+      - "Know what changed before touching anything. Reddit closed self-service Data API registration on 2025-11-11 (r/redditdev post 1oug31u, 'Introducing the Responsible Builder Policy'); every new OAuth app is approved by a person, and personal read-only requests reportedly wait weeks. The site does not depend on this: `convex/ingest.ts` reads the Arctic Shift archive until the env vars exist."
+      - "Check for an app you already own: log in and open reddit.com/prefs/apps. An app of type script or web app listed under 'developed applications' shows its client id under its name and its secret in the edit view. That is the fast path."
+      - "If one exists, register it at developers.reddit.com/app-registration before 2026-09-30 (asked for in the 2026-08-05 admin post 1vgbm9c, 'to remain in good standing'). Describe it as personal, non-commercial, read-only, one subreddit, about 60 requests per hour."
+      - "If none exists, file the access request at support.reddithelp.com/hc/en-us/requests/new?ticket_form_id=14868593862164 (the link Reddit's own 'Accessing Reddit Data' article gives for non-commercial use), and note the date on this inventory entry. Trying 'create another app' on prefs/apps costs nothing, but r/redditdev has reported that form resetting silently or failing with a 500 since July 2026."
+      - "With an id and secret in hand, run `bash scripts/setup-reddit.sh` from `projects/bouquin-site`. It captures the id, the secret (hidden), and your username for the User-Agent `web:com.neorgon.bouquin:v1.0 (by /u/NAME)`, writes them to the gitignored `.env`, and runs `npx convex env set` for REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET and REDDIT_USER_AGENT on the deployment you choose (prod, dev or both)."
+      - "Nothing else changes: the next cron run picks the Reddit source by itself because `credsFromEnv()` now returns a value."
+    verify: "`npx convex run ingest:scan --prod '{\"maxThreads\": 3}'` returns status ok and source reddit, and the stats line under the site's hero says the last scan came from Reddit."
+    revoke: "Delete the app at reddit.com/prefs/apps (the id and secret die together), then `npx convex env remove REDDIT_CLIENT_ID REDDIT_CLIENT_SECRET REDDIT_USER_AGENT --prod`; the next scan falls back to the archive with no other change."
+    insights:
+      - "The credential is optional for the site and only improves it: live scores and comment counts instead of the archive's 16-minute lag and 36-hour score refresh. Do not block a launch on it."
+      - "App-only OAuth (grant_type=client_credentials) is all the cron uses, so no Reddit password ever reaches Convex; the token endpoint answers 401, not 403, from outside Reddit, which is how you tell a dead credential from a network block. The unauthenticated .json endpoints answer 403 to everything now and the RSS feed is limited to one request per minute, so neither is a fallback worth building."
+      - "Reddit blocks generic User-Agents at the network edge. The 403 that produces looks like a credential failure and is not one; check the User-Agent before rotating anything."
+      - "Token lifetime is 24 hours and the cron caches it in the kv table; a 401 on a read drops the cached token so the next run mints a fresh one. A 401 on the token endpoint itself is the id or secret."
+      - "Two deadlines live on this entry: the 2026-09-30 registration of any existing app, and, after that, Reddit's stated plan to move third-party apps onto its Developer Platform 'gradually' with nothing changing in 2026. Re-read the r/redditdev admin posts before the next renewal rather than this note."
+    links:
+      - label: Your Reddit apps
+        url: https://www.reddit.com/prefs/apps
+      - label: App registration (deadline 2026-09-30)
+        url: https://developers.reddit.com/app-registration
+      - label: Data API access request form
+        url: https://support.reddithelp.com/hc/en-us/requests/new?ticket_form_id=14868593862164
+      - label: Responsible Builder Policy
+        url: https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
+      - label: Research report (fleet)
+        url: https://github.com/energon-a-secas/bouquin-site
+
+  - id: clerk-instance
+    title: Recover or promote the Clerk instance
+    service: Clerk
+    applies_to: other
+    signals:
+      - "Sign-in fails on a Clerk-backed site, or Convex rejects the JWT as an untrusted issuer"
+      - "You need the publishable key for a new site and cannot remember where it comes from"
+      - "Sign-ups stop working after 100 accounts"
+    steps:
+      - "You almost never need the dashboard. The publishable key is PUBLIC by design and already ships in the fleet: copy the `clerk-publishable-key` meta tag from an existing site's index.html (memes, character-sheet or buyhacks)."
+      - "The issuer domain is not stored separately anywhere: it is base64 inside the key. Decode the part after `pk_test_` or `pk_live_` and strip the trailing `$` to get the Frontend API host."
+      - "Every Convex deployment must set the same host as `CLERK_JWT_ISSUER_DOMAIN`, and each app's convex/auth.config.ts must name it. A site whose config disagrees will reject every token."
+      - "For a NEW key, or to promote: dashboard.clerk.com, then API keys for the key, or Domains to create a production instance. Promotion needs a domain you own and five DNS records it will show you, which are per-instance and not knowable in advance."
+    verify: "Sign in on the site, then confirm a Convex function that calls `ctx.auth.getUserIdentity()` returns a subject rather than null."
+    revoke: "Rotating the publishable key means updating every site's meta tag and every Convex issuer at once; there is no partial cutover. Clerk documents that the publishable key does not need rotating even though it is public."
+    insights:
+      - "A development instance is capped at 100 users and its users CANNOT be moved to a production instance. Every account created before promotion is lost, and Convex rows keyed by the Clerk subject are orphaned when new user ids are issued. Promote before inviting anyone, not after."
+      - "A production instance is free on Clerk's Hobby plan. Pro is forced only by paid features, none of which the fleet uses."
+      - "Promotion changes the Frontend API host from the accounts.dev one to a subdomain of your own domain, so every Content-Security-Policy naming the old host stops matching. Grep the fleet before cutting over; it appears far more widely than the sites that actually run Clerk."
+      - "If the domain already sends mail, Clerk's SPF record must be MERGED into the existing one. RFC 7208 allows exactly one v=spf1 record per domain, and adding a second breaks mail delivery outright."
+      - "A stalled certificate at promotion is usually a CAA record on the domain; an empty `dig <domain> CAA` means you are clear."
+    links:
+      - label: Clerk dashboard
+        url: https://dashboard.clerk.com/
+      - label: Deploy to production
+        url: https://clerk.com/docs/guides/development/deployment/production
+      - label: Development vs production instances
+        url: https://clerk.com/docs/guides/development/managing-environments
+
+  - id: google-oauth-clerk
+    title: Google sign-in for a Clerk production instance
+    service: Google Cloud
+    applies_to: api-key
+    signals:
+      - "The Google button returns Google's own error: 'Missing required parameter: client_id', Error 400 invalid_request"
+      - "Google sign-in works for you and silently fails for everyone else"
+      - "Clerk's OAuth verification refuses the consent screen over the privacy policy or terms URL"
+    steps:
+      - "Confirm the cause from a terminal before touching a dashboard. POST an anonymous sign-in attempt to the Frontend API and read the Google URL back: the client_id is empty when no credential is configured. Same command verifies the fix afterwards."
+      - "Set the Clerk Dashboard's instance switcher to Production first. Dashboard links resolve to whichever instance you were last in, and configuring development by mistake is silent: development works on Clerk's shared credentials, so nothing errors and production stays broken."
+      - "Clerk Dashboard, SSO connections (this page merged the old 'Social Connections' and 'Enterprise Connections' in October 2024, so older tutorials name screens that no longer exist). Select the existing Google connection rather than adding one, then turn on 'Use custom credentials'."
+      - "Copy the Authorized Redirect URI the panel then shows, and leave that tab open."
+      - "Google Cloud Console, APIs and Services, Credentials, Create Credentials, OAuth client ID, application type Web application. Paste Clerk's redirect URI into Authorized redirect URIs, and the site origin into Authorized JavaScript origins."
+      - "Create. Google shows the client id and client secret once. Copy both now."
+      - "Back in Clerk, paste both into the connection and save. Leave the Scopes field empty: Clerk already sends what sign-in needs, and that field is for additions."
+      - "In Google Cloud, set the OAuth app's publishing status to 'In production'."
+    verify: "Re-run the sign-in probe and confirm client_id is no longer empty, then sign in through the Account Portal rather than your own frontend, which removes your site from the equation."
+    revoke: "Delete the OAuth client in Google Cloud Console, Credentials. Sign-in with Google breaks immediately for everyone, so create the replacement first if you are rotating rather than retiring."
+    insights:
+      - "A DEVELOPMENT Clerk instance uses Clerk's own shared Google credentials; a PRODUCTION one refuses to. That is why the button works for months and breaks the day you promote, with an error that points at Google rather than at Clerk."
+      - "THE CLIENT SECRET IS SHOWN ONCE. There is no way to read it again later. Losing it means creating a new client, not recovering the old one."
+      - "Publishing status 'Testing' caps the app at 100 users and only lets explicitly listed test users in. It will work perfectly for whoever set it up and fail for everyone else, with no error anyone can see. This is the single easiest thing to leave half-done."
+      - "The three scopes sign-in needs (openid, userinfo.email, userinfo.profile) are Google's basic non-sensitive ones, so going to production triggers no verification review. Asking for anything more does."
+      - "Verification still checks the consent screen's links: the homepage must link the privacy policy, the policy URL must respond, and the page must actually describe what is collected. A stub page fails on the third count even when the first two pass."
+      - "No billing account is needed. Creating an OAuth client and using it for sign-in is free."
+    links:
+      - label: Google Cloud credentials
+        url: https://console.cloud.google.com/apis/credentials
+      - label: Clerk SSO connections
+        url: https://dashboard.clerk.com/last-active?path=user-authentication/sso-connections
+      - label: Clerk's Google social connection guide
+        url: https://clerk.com/docs/guides/configure/auth-strategies/social-connections/google
+
+  - id: vitrina-clerk-webhook
+    title: Connect or rotate the Vitrina Clerk webhook secret
+    service: Clerk
+    applies_to: secret
+    signals:
+      - "A Neorgon account was deleted in Clerk and its Vitrina profile or books are still in the production `profiles` or `entries` table"
+      - "The endpoint's Message Attempts in the Clerk Dashboard show 503 (`CLERK_WEBHOOK_SECRET` is not set on the deployment the endpoint URL names, for example because it was set on dev instead) or 400 (the value there is not this endpoint's signing secret)"
+      - "Svix reports the endpoint as disabled"
+      - "The inventory row vitrina-clerk-webhook-secret still says pending, while neorgon.com/privacy already promises that deleting a Neorgon account erases its Vitrina data, normally within a day"
+    steps:
+      - "Find the deployment first: `make -C projects/vitrina-site where` prints the production URL the pages call, `https://fantastic-chickadee-557.convex.cloud` on 2026-09-14. The webhook goes to the same name on the `.convex.site` host: `https://fantastic-chickadee-557.convex.site/clerk-users-webhook`. The `.convex.cloud` host does not serve HTTP actions, and the `CONVEX_DEPLOYMENT` line `where` also prints is the dev deployment, not this one."
+      - "In the Clerk Dashboard, set the instance switcher to Production, open Webhooks and select Add Endpoint. Dashboard links open whichever instance you used last, and an endpoint on the development instance never hears about a production deletion."
+      - "Paste the URL into Endpoint URL, select only `user.deleted` under Message Filtering, and select Create. Clerk opens the endpoint's settings page; leave it open."
+      - "Reveal and copy the Signing Secret on that page, `whsec_` prefix included."
+      - "Set it on production in the same sitting, from `projects/vitrina-site` with the secret on the clipboard: `pbpaste | npx convex env set --prod CLERK_WEBHOOK_SECRET`. Piping keeps it out of shell history. The Convex dashboard works too: project vitrina-site, the Production deployment, Settings, Environment Variables."
+      - "Check it landed without printing it: `npx convex env get --prod CLERK_WEBHOOK_SECRET | tr -d '\\n' | shasum -a 256`, then `pbpaste | tr -d '\\n' | shasum -a 256`. The hashes must match. Clear the clipboard afterwards with `pbcopy < /dev/null`. Never `npx convex env list`: it prints every value on the deployment."
+      - "On the endpoint page's Testing tab, send an example `user.deleted` and confirm Message Attempts shows 200 (Succeeded)."
+      - "Update the inventory row vitrina-clerk-webhook-secret: status active, and a created date."
+    verify: "The example `user.deleted` shows 200 in the endpoint's Message Attempts, and the two hashes match. A hash beginning `e3b0c442` is the hash of empty input: the variable is not set on the deployment you asked."
+    revoke: "Clerk's documented rotation adds a second endpoint with the same URL and the `user.deleted` filter, sets its secret as `CLERK_WEBHOOK_SECRET`, checks it the same way, then deletes the old endpoint from its ... menu. While both exist the old endpoint's deliveries answer 400 and are retried; deleting it stops them. To retire the webhook, delete the endpoint first and only then run `npx convex env remove --prod CLERK_WEBHOOK_SECRET`; in the other order the endpoint spends 5 days failing with 503 before Svix disables it."
+    insights:
+      - "A 200 proves the secret by itself. The handler answers 503 while `CLERK_WEBHOOK_SECRET` is unset; 400 when the `svix-id`, `svix-timestamp` or `svix-signature` header is missing, the timestamp is more than 300 seconds from the deployment's clock, or the signature does not verify; and 200 only after verification. A 400 on the example event is the value or the deployment it went to, so compare the hashes before suspecting the code."
+      - "Only a verified `user.deleted` whose `data.id` matches `^user_[A-Za-z0-9]+$` erases anything, through `purge:eraseSubject`, the same path Delete my Vitrina data takes. Any other verified event, and signed JSON that is not an event, is answered 200 and ignored, so a filter left wider than `user.deleted` costs deliveries, never data."
+      - "The example event is safe on production. It names a user id no Vitrina account has, so the erasure it starts finds no profile and no books, and `purge:sweep` deletes its `erasures` row about 5 minutes later. A second example inside those 5 minutes is answered 200 and starts nothing."
+      - "Failures are retried, not lost. Svix retries after 5 seconds, 5 minutes, 30 minutes, 2 hours, 5 hours, then 10 hours twice, and disables an endpoint that keeps failing for 5 days. The 503 while the secret is unset is deliberate: a deletion that lands between Create and setting the secret is delivered again once it is set. An erasure that throws answers 500 and is retried the same way, and erasing twice is safe."
+      - "`npx convex env get` ends its output with a newline and `pbpaste` does not. Without `tr -d '\\n'` on both sides the hashes never match, and a correct secret looks wrong."
+      - "A webhook signing secret does not expire, so the inventory row says `expires: never`. What goes stale is the pairing: every new endpoint (a rotation, or one recreated after a delete) has a new secret, and the old value on the deployment then fails every delivery with 400."
+      - "If the endpoint page offers to rotate the secret in place instead, Svix keeps signing with the old secret as well for 24 hours by default, sending one `v1` signature per secret. Vitrina's `convex/lib/webhookVerify.ts` accepts any one that verifies, so there is no gap as long as the new value is set within that day."
+    links:
+      - label: Clerk webhooks
+        url: https://dashboard.clerk.com/~/webhooks
+      - label: Rotate a webhook signing secret (Clerk)
+        url: https://clerk.com/docs/guides/secure/rotate-api-keys
+      - label: Svix retry schedule
+        url: https://docs.svix.com/retries
+      - label: Convex dashboard
+        url: https://dashboard.convex.dev/
+
+  - id: vitrina-admin-subjects
+    title: Set the Vitrina admin ids (ADMIN_SUBJECTS)
+    service: Convex
+    applies_to: other
+    signals:
+      - "An `admin:` function on Vitrina answers `not-admin` for you"
+      - "Public shelves are about to open: `npx convex env set --prod PUBLISHING open` must not run before this list is set"
+      - "A shelf has to be hidden or erased (an abuse report, or an erasure request for an account that is already gone) and nobody is listed to do it"
+    steps:
+      - "Copy your Clerk user id from the PRODUCTION instance: Clerk Dashboard, instance switcher on Production, Users, select the account, copy the id that starts with `user_`. An id from the development instance matches nobody on production, because Clerk users do not move between instances."
+      - "Confirm the deployment: `make -C projects/vitrina-site where` prints the production URL the pages call (`fantastic-chickadee-557` on 2026-09-14). In the Convex dashboard it is the Production deployment of project vitrina-site."
+      - "Set the list from `projects/vitrina-site`: `npx convex env set --prod ADMIN_SUBJECTS user_...`. Several admins are one comma-separated value, `user_a,user_b`, and setting it again replaces the whole list. The dashboard works too: the Production deployment, Settings, Environment Variables."
+      - "Check it landed without listing the deployment: `npx convex env get --prod ADMIN_SUBJECTS | tr -d '\\n' | shasum -a 256` against `printf '%s' 'user_...' | shasum -a 256` over exactly the text you set. The value is not a secret, but `npx convex env list` would print the secrets stored beside it."
+      - "Only after this, and after the decision to open publishing, run `npx convex env set --prod PUBLISHING open`."
+    verify: "The two hashes match. To prove the gate itself, call `admin:releaseHandle` as your subject with a handle nobody holds: `npx convex run --prod --identity '{\"subject\":\"user_...\",\"issuer\":\"https://clerk.neorgon.com\"}' admin:releaseHandle '{\"handle\":\"no-such-hold\"}'`. A listed id gets ok true with released false, anyone else gets code not-admin, and nothing changes either way."
+    revoke: "Set the list again without the id; `npx convex env remove --prod ADMIN_SUBJECTS` leaves nobody an admin, which is safe. No deploy is needed, because the handlers read `process.env.ADMIN_SUBJECTS` on every call. Deleting someone's Clerk account stops them signing in but leaves their id listed here, so remove it in both places."
+    insights:
+      - "The list gates five mutations: `admin:setSuspended` and `admin:purgeByHandle` by handle; `admin:setSubjectSuspended` and `admin:purgeBySubject` by Clerk user id, for a shelf that never had a handle or a suspended person who already erased their data; and `admin:releaseHandle`, which lifts a 30-day hold early. Each checks the caller before reading anything, so an unlisted caller, signed out included, gets `not-admin` and learns nothing about whether a handle exists."
+      - "An unset or empty list means nobody is an admin, never everybody. Matching is exact against the Convex token's subject, which is the Clerk user id; spaces around commas and empty items are ignored, and an email or a username matches nobody. `user_a, user_b` works the same as `user_a,user_b` but hashes differently, so a hash mismatch can be spacing rather than a wrong id."
+      - "There is no admin page. Vitrina's `js/backend.js` names the five functions and nothing calls them; an admin runs them as a listed subject, from the command line as in the verify step, or from the Convex dashboard's function runner with Act as a user."
+      - "The gate trusts `ctx.auth`. A browser cannot forge a subject, but anyone with deploy access to the Convex project can act as any subject with `--identity` or Act as a user, so the real set of admins is this list plus the Convex team."
+      - "Never put a synthetic id on production. Dev lists `user_vitrina_dev_admin` for Vitrina's `scripts/convex_smoke.py --dev`, and the production smoke run refuses to start if its own subject, `user_vitrina_smoke`, is listed, because it ends by erasing everything that subject owns."
+      - "Publishing ships closed, and this list is the one setting it needs first. Once shelves are public, hiding a reported one or honouring an erasure request needs a listed admin, and the privacy and terms pages already say the operator can do both."
+    links:
+      - label: Clerk users
+        url: https://dashboard.clerk.com/~/users
+      - label: Convex dashboard
+        url: https://dashboard.convex.dev/
+      - label: Acting as a user in the Convex dashboard
+        url: https://docs.convex.dev/dashboard/deployments/functions
+
+  # ── A second project family ─────────────────────────────────────────────────
+  # Three Convex-backed static sites outside the Neorgon fleet, sharing one
+  # Airtable account and one Cloudinary cloud between them. Added 2026-09-18
+  # from a service audit. This file is public: the sites are deliberately not
+  # named here, and which credential belongs to which lives in the private
+  # inventory instead.
+
+  - id: airtable-pat
+    title: Rotate the shared Airtable personal access token
+    service: Airtable
+    applies_to: api-key
+    signals:
+      - "A migration or image script exits on a 401 or 403 from `api.airtable.com`"
+      - "The token was served publicly, or is sitting hardcoded in a script, and has to be replaced rather than merely hidden"
+      - "One site's migration works and another's fails: the PAT is scoped per base, not per account"
+    steps:
+      - "Decide the blast radius first. This one token is read by three sites, so replacing it fixes and breaks all three at once. Know which scripts read it before you delete anything."
+      - "Create the replacement at <https://airtable.com/create/tokens>: name it per consumer, add the narrowest scopes the script needs (`data.records:read`, plus `data.records:write` only for the image and metadata migrations, plus `schema.bases:read` if it discovers tables), and grant access to the specific bases rather than to all workspaces."
+      - "Copy the value once. Airtable shows a PAT exactly once at creation and never again; there is no reveal."
+      - "Put it where the consumer reads it and nowhere else: a gitignored `.env` for local scripts, or `npx convex env set AIRTABLE_PAT ...` for anything running in a Convex action. Never a literal in a `scripts/*.mjs` file."
+      - "Only then delete the old token from the same page. Deletion is the step that actually ends the exposure; every earlier step just stops making it worse."
+      - "Scrub the source: `grep -rn 'pat[0-9a-zA-Z]' scripts/` in each repo, and replace any hit with `process.env.AIRTABLE_PAT`, with an exit when it is unset."
+    verify: "A read call returns records against the new token, and `grep -rnE 'pat[0-9a-zA-Z]{10,}' scripts/` is empty in all three repos. Then confirm the old token is gone from the tokens page, which is the only place that can prove it."
+    revoke: "Delete the token at <https://airtable.com/create/tokens>. There is no disable-but-keep state, so deletion is both the revoke and the rotate."
+    insights:
+      - "REMOVING A TOKEN FROM A FILE IS NOT ROTATION. This token was served publicly as a plain string inside a migration script from two live domains, and the fix applied at the time was a hosting change that stopped serving the file. The value itself stayed valid, stayed in the working tree, and stayed in git history under commits that are still reachable. Anyone who fetched it during the exposure window still holds a working token. Only deleting it at Airtable ends that."
+      - "Assume it is unrotated until the tokens page says otherwise. Two separate audits, months apart, both concluded rotation was unverifiable from inside the repo and both recommended treating it as live. No repo can answer this question; only the Airtable account can."
+      - "A PAT can be created with or without an expiry date. One created without expiry never appears in any renewal report, which is why an entry for it in an inventory is the only thing that surfaces it at all."
+      - "Scope it to the bases it needs. The old token's scope is unknown from the repo side, and a token that can read every base turns one leaked script into an account-wide disclosure."
+    links:
+      - label: Airtable personal access tokens
+        url: https://airtable.com/create/tokens
+      - label: Airtable PAT scopes reference
+        url: https://airtable.com/developers/web/api/scopes
+
+  - id: gsc-service-account
+    title: Provision or rotate a Search Console service account key
+    service: Google Search Console
+    applies_to: secret
+    signals:
+      - "A search-query connector returns 403 on every call, with no clue which of three separate permissions is missing"
+      - "A new site property needs API reads and there is no service account for it yet"
+      - "A private key was printed to a terminal or into a model's context and has to be replaced"
+    steps:
+      - "Verify the property first, and note WHICH KIND you verified. A domain property (`sc-domain:example.com`, verified by DNS TXT) and a URL-prefix property (`https://example.com/`) are different objects with different data, and an API call naming the wrong one returns 403, not a helpful error."
+      - "In the Google Cloud project, create a service account with no project roles at all. Search Console permission is not an IAM role: it is granted inside Search Console, so a service account with zero IAM roles is correct here."
+      - "Create a JSON key for it and download it once. Google shows the private key only at creation."
+      - "Grant the service account access to the property: Search Console, Settings, Users and permissions, add the service account's own generated email address as a user with Full permission."
+      - "Enable the Search Console API on that same Cloud project. Enabling it is separate from creating the account and separate from the property grant; all three must be true."
+      - "Store the whole file contents as one environment variable, for example `npx convex env set GSC_SERVICE_ACCOUNT_JSON \"$(cat ~/Downloads/key.json)\"`, then delete the downloaded file."
+    verify: "Ask the integration rather than the variable. The connector's own diagnose function reports identity, API enablement and property grant as three separate results, which is the only way to tell which layer is failing. A bare 403 cannot distinguish them."
+    revoke: "Delete the key from the service account in IAM, then remove the service account from the property's users list. Deleting the key alone leaves an account that can be given a new key by anyone with project access."
+    insights:
+      - "NEVER RUN `npx convex env list`, with or without a filter. A service-account JSON is a multi-line value, so every line-oriented filter (`sed`, `cut`, `awk`, `grep`) masks the `NAME=` line and lets the twenty lines underneath through, private key included. This has cost two key rotations on one project. The output starts with a clean list of names, which is exactly what a working redaction looks like."
+      - "`convex env get` EXITS 0 FOR NAMES THAT DO NOT EXIST, so `env get NAME >/dev/null 2>&1 && echo set` reports every name as set, including invented ones. Presence has to be read from stdout bytes: `[ \"$(npx convex env get NAME 2>/dev/null | wc -c | tr -d ' ')\" -gt 0 ]`. The obvious check produced a confident false reading that seven connector keys were provisioned when two were. Test any such check against a name you know is absent before trusting it."
+      - "There are THREE independent permissions wearing one Google logo: the service account can sign, the API can be enabled on the project, and the account can hold a grant on the property. A 403 means at least one is false and says nothing about which. Diagnose them separately or spend a session guessing."
+      - "Search Console keeps only 16 MONTHS of history and does not backfill. Every day a property waits for its connector is a day of data that will age out before anything reads it, which makes this the one credential here where delay is permanent loss rather than deferred work."
+      - "The key does not expire. What this needs tracking for is the opposite problem: a long-lived private key with no renewal date, sitting in an environment variable, that nothing will ever remind you about."
+    links:
+      - label: Search Console settings and users
+        url: https://search.google.com/search-console/users
+      - label: Service accounts in Google Cloud
+        url: https://console.cloud.google.com/iam-admin/serviceaccounts
+      - label: Search Console API
+        url: https://developers.google.com/webmaster-tools/v1/api_reference_index
+
+  - id: bing-webmaster-api
+    title: Obtain or rotate the Bing Webmaster Tools API key
+    service: Bing Webmaster Tools
+    applies_to: api-key
+    signals:
+      - "The keyword-demand connector returns unauthorized, or has never run"
+      - "Country-level keyword volume is wanted and Google Trends has no usable API"
+    steps:
+      - "Sign in at <https://www.bing.com/webmasters> with a Microsoft account."
+      - "Add the site. If the same domain is already verified in Search Console, use Import from Google Search Console: it carries the verification across and is faster than a fresh DNS record."
+      - "Settings, API access, API Key, then generate."
+      - "Store it as an environment variable on the deployment that calls it, for example `npx convex env set BING_WMT_API_KEY \"...\"`."
+    verify: "A `GetKeyword` call for a known term returns a numeric impressions figure for the country asked about. An empty result set is a valid answer and not an auth failure; unauthorized is the auth failure."
+    revoke: "Regenerate the key on the same API access page. Regeneration invalidates the previous value immediately, so set the new one on the deployment in the same sitting."
+    insights:
+      - "This is the free replacement for Google Trends, and for demand comparison it is better rather than merely cheaper: `GetKeyword` returns ABSOLUTE impressions with a country parameter, while Trends returns a 0 to 100 relative index that cannot be summed or divided by anything. Bing's traffic share is small, but keyword demand correlates across engines well enough to be directional."
+      - "Verification and the API key are separate gates. Importing the property from Search Console satisfies the first and does nothing about the second, so a successfully imported site still returns unauthorized until a key is generated."
+      - "The key does not expire on a schedule. It is worth an inventory row because regenerating it is the only rotation path and that breaks the connector the moment it happens."
+    links:
+      - label: Bing Webmaster Tools
+        url: https://www.bing.com/webmasters
+      - label: Bing Webmaster API reference
+        url: https://learn.microsoft.com/en-us/dotnet/api/microsoft.bing.webmaster.api.interfaces
+
+  - id: youtube-data-api-key
+    title: Create or rotate a YouTube Data API key
+    service: Google Cloud
+    applies_to: api-key
+    signals:
+      - "A comment-mining or channel connector fails with a quota or key error"
+      - "`quotaExceeded` appears partway through a nightly run and the rest of the pass is lost"
+    steps:
+      - "Use the Cloud project that already holds the site's other Google credentials rather than a new one, so quota and billing stay in one place."
+      - "Library, enable YouTube Data API v3."
+      - "Credentials, Create credentials, API key, then RESTRICT IT to the YouTube Data API v3 under API restrictions. An unrestricted key works against every enabled API on the project, so a leak is as wide as the project."
+      - "Store it as an environment variable on the deployment, for example `npx convex env set YOUTUBE_API_KEY \"...\"`."
+    verify: "A `channels.list` call for one known channel returns a result and costs 1 unit. Prefer that over `search.list` for the smoke test, because a failed search still spends 100 units."
+    revoke: "Delete the key in the Cloud console credentials page. Keys have no expiry, so deletion is the only revocation."
+    insights:
+      - "THE QUOTA IS THE REAL CONSTRAINT, NOT THE KEY. 10,000 units per day, where `channels.list`, `videos.list`, `playlistItems.list` and `commentThreads.list` cost 1 unit each and `search.list` costs 100. A connector written around search burns the day's budget in 100 calls; one written around a channel's uploads playlist reads thousands of videos for the same spend."
+      - "A quota failure looks like a credential failure in logs and is not one. Check the Cloud console quota page before rotating anything, or you will replace a working key and still be broken tomorrow."
+      - "Restriction is the whole security story for an API key, because there is no scope, no expiry and no per-caller identity. A key restricted to one read-only API is a nuisance if leaked; an unrestricted one on a project with several APIs enabled is not."
+    links:
+      - label: Google Cloud credentials
+        url: https://console.cloud.google.com/apis/credentials
+      - label: YouTube Data API quota costs
+        url: https://developers.google.com/youtube/v3/determine_quota_cost
+
+  - id: google-signin-client
+    title: Create or replace a Google Sign-In client for a self-hosted site
+    service: Google Cloud
+    applies_to: api-key
+    signals:
+      - "The Google button does not render, or renders and then fails verification server-side"
+      - "Sign-in works locally and not in production, or the reverse: the origins list is per-URL"
+      - "A new site in the family needs its own sign-in and there is no client for it yet"
+    steps:
+      - "Google Cloud Console, APIs and Services, Credentials, Create credentials, OAuth client ID, Web application."
+      - "Add every origin that will render the button to Authorised JavaScript origins, production and the local dev port both. An origin is scheme plus host plus port, so `http://localhost:8080` and `http://localhost:8000` are different entries."
+      - "Copy the Client ID. It ends `.apps.googleusercontent.com`, it is public, and it appears in plain sight in every sign-in request the browser makes."
+      - "Set it in BOTH places, because they are checked against each other: the frontend module that renders the button, and the backend environment (`npx convex env set GOOGLE_CLIENT_ID \"...\" --prod`) so a token minted for a different app is rejected."
+      - "Fill the consent screen's app name and support email. External and unpublished is fine here: unpublished only restricts sensitive scopes, and basic profile is not one."
+    verify: "Sign in on production and confirm the account is matched rather than duplicated. Then confirm the backend rejects a token minted for another client: with the frontend and backend ids deliberately mismatched, sign-in must fail. If it succeeds, the audience check is not being enforced and that is a takeover path, not a cosmetic bug."
+    revoke: "Delete the client in the credentials page. Every session it minted stops verifying on the next check, so this signs everyone out. Removing an origin is the narrower move when only one deployment should stop working."
+    insights:
+      - "THERE IS NO CLIENT SECRET IN THIS FLOW. This is the ID-token flow: Google Identity Services renders the button, the browser receives a signed JWT, and the backend verifies the signature against Google's published keys. Nothing secret is stored, so there is nothing to leak and nothing to rotate on a schedule. What an inventory row tracks is existence and origins, not expiry."
+      - "THE AUDIENCE CHECK IS THE ONE THAT MATTERS. Without verifying `aud` against your own client id, a genuine, correctly signed Google token minted for ANY other application the person has ever used would sign them in here as that email. Signature, issuer and expiry all passing is not enough on its own."
+      - "An unverified email must never match an existing account. If it can, claiming someone's address at an identity provider becomes account takeover here. Match on Google's permanent subject id first, then on a verified email only."
+      - "An empty client id should turn the feature OFF rather than half on. With it unset the button is not rendered and Google's script is never loaded, so a deployment that has not configured sign-in also runs no third-party code."
+      - "SIBLING SITES DO NOT NECESSARILY SHARE ONE CLIENT. Two of the three here carry distinguishable client ids, and the third reads its own from the environment with no literal in the repo, so it is either a third client or a copy of one of those two. Compare ids by fingerprint (`shasum`) rather than by eye, and never assume one row covers a whole family."
+    links:
+      - label: Google Cloud credentials
+        url: https://console.cloud.google.com/apis/credentials
+      - label: Google Identity Services for web
+        url: https://developers.google.com/identity/gsi/web/guides/overview
+
+  - id: cloudinary-keys
+    title: Rotate the Cloudinary API key and secret
+    service: Cloudinary
+    applies_to: api-key
+    signals:
+      - "An image upload or migration script fails to authenticate against `api.cloudinary.com`"
+      - "The key and secret were exposed and need replacing, not just hiding"
+      - "Two sites stop uploading at once, which is the signature of a shared cloud"
+    steps:
+      - "Open Settings, API Keys at <https://console.cloudinary.com/settings/api-keys>."
+      - "Prefer the single-value form the dashboard offers under API environment variable: `CLOUDINARY_URL=cloudinary://<key>:<secret>@<cloud>`. One value instead of two means one thing to set and one thing to get wrong."
+      - "If the existing secret will not reveal, use Generate New Access Key rather than hunting for it. Cloudinary shows a new secret once, at creation."
+      - "Write it to the gitignored `.env` of each consuming repo, then run the migration scripts with `node --env-file=.env ...` so the value never enters shell history."
+      - "Disable the previous access key from the same page once both sites are confirmed working."
+    verify: "A dry-run migration authenticates and reports the images it would upload. Note that fetching a `res.cloudinary.com` delivery URL proves nothing: that is the public address of an already-uploaded asset and authenticates nobody."
+    revoke: "Disable or delete the access key in the API Keys page. Rotating affects every consumer of that cloud simultaneously."
+    insights:
+      - "A DELIVERY URL IS NOT A CREDENTIAL. `https://res.cloudinary.com/<cloud>/image/upload/...` contains the cloud name and is meant to be public. The credential is the part that starts `cloudinary://`. Confusing the two leads to treating a harmless public string as a leak, and sometimes to the reverse."
+      - "ONE CLOUD CAN SERVE SEVERAL SITES. Two of the three here deliver from the same cloud name, so one rotation breaks or fixes both, and a per-site inventory row would misrepresent the blast radius. Check the cloud name in each repo before deciding how many rows the credential needs."
+      - "This repo family has leaked Cloudinary keys once already. The lesson recorded at the time was about how they were stored, not about Cloudinary: a credential in a script that a static host might serve is one hosting misconfiguration away from public."
+      - "Nothing here expires. The reason to track it is the free tier's credit ceiling and the fact that an exposed secret has no deadline of its own to force the rotation."
+    links:
+      - label: Cloudinary API keys
+        url: https://console.cloudinary.com/settings/api-keys
+
+  - id: igdb-twitch-client
+    title: Obtain IGDB credentials through Twitch
+    service: Twitch
+    applies_to: api-key
+    signals:
+      - "A release-calendar connector is planned or failing and there are no IGDB credentials"
+      - "IGDB's own site sends you to Twitch and it is not obvious why"
+    steps:
+      - "Enable 2FA on the Twitch account first. Application registration is refused without it, and discovering that halfway through is the usual delay."
+      - "Register the application at <https://dev.twitch.tv/console/apps> with an OAuth redirect of `http://localhost:3000` and category Application Integration. The redirect is required by the form and unused by a server-to-server client."
+      - "Copy the Client ID, then create a New Secret. The secret is shown once."
+      - "Set both on the deployment: `npx convex env set IGDB_CLIENT_ID \"...\"` and `npx convex env set IGDB_CLIENT_SECRET \"...\"`."
+    verify: "A client-credentials token request returns an access token, and one IGDB query with that token plus the client id returns a game record. Both headers are required; the token alone is rejected."
+    revoke: "Delete the secret, or the whole application, in the Twitch developer console. Existing app access tokens keep working until they expire, so revocation is not instant."
+    insights:
+      - "IGDB IS OWNED BY TWITCH, so the credential is a Twitch application and the docs live in two places. There is no IGDB-side account to manage."
+      - "The client secret is long-lived and the access token it mints is not. A connector must exchange the secret for a token and cache that token, rather than treating the secret as the API key."
+      - "AniList needs no account at all for the anime side, with a public GraphQL API around 90 requests a minute. Preferred over MyAnimeList, which wants a client id for less. Reach for IGDB when the question is a game RELEASE DATE with a character list, which is the part no free alternative covers."
+    links:
+      - label: Twitch developer console
+        url: https://dev.twitch.tv/console/apps
+      - label: IGDB API docs
+        url: https://api-docs.igdb.com/
+
+  - id: gemini-api-key
+    title: Create, find or revoke a Gemini API key
+    service: Google AI Studio
+    applies_to: api-key
+    signals:
+      - "A key sits in a `.env` and nothing in the repo reads it, so its purpose is unknown"
+      - "A generation call returns an invalid-key or permission error"
+    steps:
+      - "List what exists before creating anything: <https://aistudio.google.com/apikey> shows every key on the account and which Cloud project each belongs to. A forgotten key is more common than a missing one."
+      - "Establish whether anything still uses it: `grep -rl GEMINI_API_KEY --exclude-dir=node_modules .` in each repo that holds the value. A key with no consumer is a liability, not an asset."
+      - "Create a key only for a consumer that exists, and prefer a separate key per consumer so one can be revoked without auditing the others."
+      - "Store it in a gitignored `.env` or as a deployment environment variable, never in a committed script."
+    verify: "A minimal generate call returns content. If it 403s while the key looks right, check that the key's Cloud project has the Generative Language API enabled, which is a project setting rather than a key property."
+    revoke: "Delete the key at <https://aistudio.google.com/apikey>. Deletion takes effect immediately and there is no disable state."
+    insights:
+      - "AN ORPHANED KEY IS THE COMMON CASE HERE. Two keys were found in one site's environment file with no consumer anywhere in the repo, the only mention being a document copied in from an unrelated project. They still authenticate. Delete rather than tidy: a key nobody uses cannot be noticed when it starts being used by someone else."
+      - "Free-tier keys are rate limited per model and per minute, so a working key can look broken under a burst. Check the rate-limit response before concluding the credential is wrong."
+      - "The key is tied to a Cloud project even when created from AI Studio, which is why enablement and quota questions get answered in a console the key was never created in."
+    links:
+      - label: Google AI Studio API keys
+        url: https://aistudio.google.com/apikey
+
+  - id: removebg-api-key
+    title: Rotate or revoke a remove.bg API key
+    service: remove.bg
+    applies_to: api-key
+    signals:
+      - "An image-cutout step fails with 402 or 403"
+      - "A key exists in an environment file and no code calls it"
+    steps:
+      - "Check the account's keys and remaining credits at <https://www.remove.bg/dashboard#api-key>. A 402 is exhausted credits, not a bad key, and rotating will not fix it."
+      - "Confirm a consumer exists: `grep -rl REMOVEBG_API_KEY --exclude-dir=node_modules .`. If nothing reads it, revoke rather than rotate."
+      - "Create a new key on the same page and store it in a gitignored `.env`."
+      - "Delete the old key once the consumer is confirmed working."
+    verify: "One cutout request returns an image and the dashboard's credit count decreases by one. The credit decrement is what proves the call was authenticated rather than cached."
+    revoke: "Delete the key from the API key section of the dashboard."
+    insights:
+      - "402 AND 403 MEAN DIFFERENT THINGS and both look like an auth failure in a log line. 402 is credits, 403 is the key. Reading the status code saves a pointless rotation."
+      - "Free credits are monthly and small, so a pipeline that retries on failure can spend the month's allowance on one bad batch. Cap retries around a paid, metered call."
+      - "Found orphaned in one site's environment file alongside a Gemini key, with no code path in the repo. Treated here as a revoke candidate rather than a renewal."
+    links:
+      - label: remove.bg API dashboard
+        url: https://www.remove.bg/dashboard#api-key
+
+  - id: moonshot-api-key
+    title: Rotate the Moonshot (Kimi) API key used through an Anthropic-compatible endpoint
+    service: Moonshot AI
+    applies_to: api-key
+    signals:
+      - "A wrapper script that points a Claude-compatible client at a third-party base URL stops authenticating"
+      - "A live `sk-` token is found in an untracked shell script inside a repo directory"
+    steps:
+      - "Locate the consumer. The pattern is a shell script exporting `ANTHROPIC_BASE_URL` at a non-Anthropic host together with `ANTHROPIC_AUTH_TOKEN`, so the token is a Moonshot key despite every variable name saying Anthropic."
+      - "Confirm the file is untracked before touching git history: `git ls-files --error-unmatch <script>`. Untracked means the exposure is local only, which is a much cheaper problem."
+      - "Move the value out of the script into a gitignored `.env` or the shell environment, and have the script fail loudly when it is unset."
+      - "Rotate at the Moonshot console if the file was ever tracked, ever committed, or ever synced to a cloud folder."
+    verify: "The script still runs with the value supplied from the environment, and `grep -cE 'sk-[A-Za-z0-9_-]{10,}' <script>` returns 0."
+    revoke: "Delete the key in the Moonshot platform console. An Anthropic-shaped variable name does not mean Anthropic can revoke it."
+    insights:
+      - "THE VARIABLE NAMES LIE ABOUT THE VENDOR. `ANTHROPIC_AUTH_TOKEN` beside an overridden `ANTHROPIC_BASE_URL` is a third-party key wearing Anthropic's variable names, because the client reads those names and the endpoint is API-compatible. A secret sweep that maps variable names to vendors will attribute it to the wrong account and send you to the wrong console to rotate it."
+      - "Untracked but present is still a real credential. It does not appear in `git log`, no history scrubber will find it, and no repo audit that only reads tracked files will report it. It is also exactly the file a cloud-sync daemon will happily copy."
+      - "Found at the top level of one site's repo directory, outside both git and the publish allowlist, so it was never served and never committed. That is the good case and it is luck rather than design."
+    links:
+      - label: Moonshot platform console
+        url: https://platform.moonshot.ai/console/api-keys
