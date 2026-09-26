@@ -63,6 +63,31 @@ Vendored from `packages/neorgon-ui/`: never edit in place, run the sync script i
 
 ## Gotchas
 
+**Snapshots run in an opaque origin, on purpose.** The stage iframe's sandbox is
+`allow-scripts allow-popups allow-forms` (`FRAME_SANDBOX` in `js/render.js`). Until
+2026-09-26 it also carried `allow-same-origin`, so every archived page ran as
+rewind.neorgon.com: it could read the browser captures in IndexedDB, rewind's
+localStorage and the `.neorgon.com` cookies, reach `parent.document`, strip its own
+`sandbox` attribute, and make credentialed calls Clerk accepts from any `*.neorgon.com`
+origin. The archived emoji pages carry the stored-name `innerHTML` sink emoji-site fixed
+that day, so this was a live path. Never add `allow-same-origin` back, and never add
+`allow-popups-to-escape-sandbox`: a popup opened on the same snapshot URL would then run
+unsandboxed as rewind.
+
+The cost, measured over all 369 snapshots in Chromium: any archived line that touches
+`localStorage`, `sessionStorage`, `indexedDB` or `document.cookie` outside a try/catch now
+throws SecurityError. The header kit dies on its theme-cookie read (the static header
+stays; the vector logo, the `⋯` overflow menu and auto-hide do not), and 26 snapshots that
+read storage while starting up show only their HTML shell: buyhacks (5), stash (3),
+tubestack (3), neokeys (3), pixeldoll (3), fitprofile (2), guild-hall (2), rappel (2),
+slides (2), quiz (1). Modules, fonts and same-host fetches still load only because GitHub
+Pages sends `Access-Control-Allow-Origin: *`. `scripts/serve.py` sends it too; the plain
+`python3 -m http.server` fallback in the Makefile does not, and under it every
+module-based snapshot fails on CORS.
+
+The sandbox covers the stage only. **Open ↗** and any direct link still load a snapshot
+top-level on rewind's own origin, unsandboxed.
+
 **Headless Chrome writes the screenshot and then refuses to exit.** Measured on an
 emoji-site snapshot: the PNG landed at 6.5s, the process was still alive at 120s.
 `--timeout` and `--virtual-time-budget` do not end it, and this is true of

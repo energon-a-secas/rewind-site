@@ -8,6 +8,16 @@ import { $, escHtml, fmtDate, fmtBytes } from './utils.js';
 
 const blobUrls = new Map();               // browser-capture id -> object URL
 
+// Snapshots are frozen copies of old pages, and some carry sinks their live
+// sites have since fixed (the archived emoji pages wrote stored names into
+// innerHTML). Without allow-same-origin a framed snapshot runs in an opaque
+// origin: its scripts still run, but it cannot read rewind's localStorage,
+// cookies or IndexedDB (browser captures), reach parent.document, or strip
+// its own sandbox attribute. Adding allow-same-origin back undoes all of
+// that, and so does allow-popups-to-escape-sandbox: a popup opened on the
+// same snapshot URL would run unsandboxed on rewind's origin.
+const FRAME_SANDBOX = 'allow-scripts allow-popups allow-forms';
+
 export function srcFor(snap) {
   if (snap.source !== 'browser') return snap.path;
   if (!blobUrls.has(snap.id)) {
@@ -88,7 +98,7 @@ function pane(snap, slot, timeline) {
     ${slot ? `<div class="rw-pane-head">${picker}${badge(snap)}</div>` : ''}
     <div class="rw-viewport">
       <iframe class="rw-frame" src="${escHtml(srcFor(snap))}" title="Snapshot ${escHtml(snap.id)}"
-              sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
+              sandbox="${FRAME_SANDBOX}" loading="lazy"></iframe>
     </div>
   </div>`;
 }
