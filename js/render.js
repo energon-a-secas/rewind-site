@@ -5,18 +5,9 @@
 
 import { WIDTHS, sitesList, timelineFor, snapById } from './state.js';
 import { $, escHtml, fmtDate, fmtBytes } from './utils.js';
+import { FRAME_SANDBOX, FRAME_ALLOW } from './frame.js';
 
 const blobUrls = new Map();               // browser-capture id -> object URL
-
-// Snapshots are frozen copies of old pages, and some carry sinks their live
-// sites have since fixed (the archived emoji pages wrote stored names into
-// innerHTML). Without allow-same-origin a framed snapshot runs in an opaque
-// origin: its scripts still run, but it cannot read rewind's localStorage,
-// cookies or IndexedDB (browser captures), reach parent.document, or strip
-// its own sandbox attribute. Adding allow-same-origin back undoes all of
-// that, and so does allow-popups-to-escape-sandbox: a popup opened on the
-// same snapshot URL would run unsandboxed on rewind's origin.
-const FRAME_SANDBOX = 'allow-scripts allow-popups allow-forms';
 
 export function srcFor(snap) {
   if (snap.source !== 'browser') return snap.path;
@@ -98,7 +89,7 @@ function pane(snap, slot, timeline) {
     ${slot ? `<div class="rw-pane-head">${picker}${badge(snap)}</div>` : ''}
     <div class="rw-viewport">
       <iframe class="rw-frame" src="${escHtml(srcFor(snap))}" title="Snapshot ${escHtml(snap.id)}"
-              sandbox="${FRAME_SANDBOX}" loading="lazy"></iframe>
+              sandbox="${FRAME_SANDBOX}" allow="${FRAME_ALLOW}" allowfullscreen loading="lazy"></iframe>
     </div>
   </div>`;
 }
@@ -106,7 +97,9 @@ function pane(snap, slot, timeline) {
 function stageSingle(state, timeline, snap) {
   const idx = timeline.findIndex((t) => t.id === snap.id);
   const isLocal = snap.source === 'browser';
-  const openHref = isLocal ? '#' : escHtml(snap.path);
+  // Open goes through view.html, never to snap.path: loaded top-level, the
+  // snapshot would run unsandboxed on rewind's own origin.
+  const openHref = isLocal ? '#' : escHtml(`view.html#${snap.id}`);
   return `
   <div class="rw-stage-bar">
     <div class="rw-stage-info">

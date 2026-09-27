@@ -82,6 +82,7 @@ Screenshots need Chrome or any Chromium (`CHROME_BIN` overrides autodetection).
 ```
 rewind-site/
 ├── index.html                  # Shell: header/footer kits, capture + help modals
+├── view.html                   # Full-size viewer behind Open ↗ (same sandbox as the stage)
 ├── css/
 │   └── style.css               # Accent + rail, filmstrip, stage, compare styles
 ├── js/
@@ -90,6 +91,8 @@ rewind-site/
 │   ├── data.js                 # manifest.json fetch + IndexedDB for browser captures
 │   ├── capture.js              # In-browser capture engine (inlines CSS, images, scripts)
 │   ├── render.js               # Rail, filmstrip, stage, compare, iframe scaling
+│   ├── frame.js                # The sandbox and allow values every snapshot frame uses
+│   ├── view.js                 # view.html: frames one manifest snapshot full size
 │   └── events.js               # Clicks, keyboard scrubbing, capture and import flows
 ├── tools/
 │   └── capture.py              # Archive builder: git / live / shot / adopt / fleet / list / rm

@@ -41,11 +41,13 @@ per run. `fleet-git` is the registry-wide counterpart that was missing.
 | Module | Lines | Owns |
 |---|---:|---|
 | `js/events.js` | 328 | `openModal`, `closeModal`, `applyHash`, `bindEvents` |
-| `js/render.js` | 211 | `srcFor`, `dropBlobUrl`, `layoutStages`, `render` |
+| `js/render.js` | 213 | `srcFor`, `dropBlobUrl`, `layoutStages`, `render` |
 | `js/capture.js` | 196 | `normalizeUrl`, `captureLive`, `exportCapture` |
 | `js/state.js` | 64 | `state`, `WIDTHS`, `loadSaved`, `save`, `sitesList` |
 | `js/utils.js` | 58 | `$`, `escHtml`, `showToast`, `fmtDate`, `fmtBytes` |
 | `js/data.js` | 55 | `loadManifest`, `localAll`, `localPut`, `localDelete` |
+| `js/view.js` | 53 | full-size viewer behind Open ↗ (`view.html`) |
+| `js/frame.js` | 23 | `FRAME_SANDBOX`, `FRAME_ALLOW` |
 | `js/app.js` | 23 | none |
 
 Vendored from `packages/neorgon-ui/`: never edit in place, run the sync script instead: `js/neorgon-footer.js`, `js/neorgon-header.js`.
@@ -63,8 +65,9 @@ Vendored from `packages/neorgon-ui/`: never edit in place, run the sync script i
 
 ## Gotchas
 
-**Snapshots run in an opaque origin, on purpose.** The stage iframe's sandbox is
-`allow-scripts allow-popups allow-forms` (`FRAME_SANDBOX` in `js/render.js`). Until
+**Snapshots run in an opaque origin, on purpose.** Every snapshot frame's sandbox is
+`allow-scripts allow-popups allow-forms` (`FRAME_SANDBOX` in `js/frame.js`, used by the
+stage in `js/render.js` and the full-size viewer in `js/view.js`). Until
 2026-09-26 it also carried `allow-same-origin`, so every archived page ran as
 rewind.neorgon.com: it could read the browser captures in IndexedDB, rewind's
 localStorage and the `.neorgon.com` cookies, reach `parent.document`, strip its own
@@ -85,8 +88,34 @@ Pages sends `Access-Control-Allow-Origin: *`. `scripts/serve.py` sends it too; t
 `python3 -m http.server` fallback in the Makefile does not, and under it every
 module-based snapshot fails on CORS.
 
-The sandbox covers the stage only. **Open ↗** and any direct link still load a snapshot
-top-level on rewind's own origin, unsandboxed.
+The frame is cross-origin to rewind, so clipboard writes and fullscreen are off unless
+delegated: the iframe carries `allow="clipboard-write; fullscreen *"` (`FRAME_ALLOW`) plus
+`allowfullscreen`. That grants no read access; `execCommand('copy')` already worked there.
+Keep the `*` on fullscreen: Firefox does not match the default `'src'` allowlist against
+the frame's opaque origin, and its `allow` attribute overrides `allowfullscreen`, so plain
+`fullscreen` leaves Firefox with fullscreen off.
+
+**Open ↗ goes to `view.html#<id>`, never to the snapshot file.** view.html frames the
+snapshot full size with the same sandbox, and shows only ids in the committed manifest.
+Loaded top-level, a snapshot runs unsandboxed as rewind.neorgon.com. What that leaves
+open: a **direct link** to `snapshots/<site>/<stamp>/index.html` still loads it top-level,
+and GitHub Pages cannot send a `Content-Security-Policy: sandbox` header to stop it. The
+three git copies of rewind itself under `snapshots/rewind-site/` are the sharpest case:
+opened directly, each is the old app on the live origin, reading the live IndexedDB and
+framing captures with `allow-same-origin`. Framed (stage or view.html), their nested
+frames inherit the outer sandbox and stay opaque. Closing the direct-link path needs a
+separate snapshot origin or not publishing those copies; both are the owner's call. Do
+not try a service worker for it: it guards nothing on a first visit, and stale workers
+are a known failure in this fleet.
+
+**New tabs opened from a snapshot inherit its sandbox, and live sites break there.** The
+frame keeps `allow-popups` without `allow-popups-to-escape-sandbox`, so a `target=_blank`
+link or a `window.open` inside a snapshot (the hub snapshots' card arrows, every
+footer-kit outbound link) opens a tab with an opaque origin. A live fleet site opened that
+way loses localStorage and cookies and fails the way the 26 snapshots above do; a link
+without a target that navigates the frame to a live site breaks the same way. This is the
+accepted price: with the escape flag, a popup that opens a snapshot URL would run it
+unsandboxed on rewind's origin. To reach a live site, open its domain yourself.
 
 **Headless Chrome writes the screenshot and then refuses to exit.** Measured on an
 emoji-site snapshot: the PNG landed at 6.5s, the process was still alive at 120s.

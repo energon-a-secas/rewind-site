@@ -889,6 +889,22 @@ button:active,
 }
 .rw-empty .card { display: flex; flex-direction: column; gap: var(--space-3); }
 
+/* ── Full-size viewer (view.html) ──────────────────────────── */
+body.rw-view { height: 100dvh; overflow: hidden; }
+.rw-view-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+}
+.rw-view-label { font-size: var(--text-sm); color: var(--text-primary); min-width: 0; }
+.rw-view-note { font-size: var(--text-xs); color: var(--text-muted); margin-left: auto; }
+.rw-view-stage { flex: 1; min-height: 0; display: flex; }
+.rw-view-frame { flex: 1; width: 100%; border: 0; display: block; background: #05070e; }
+
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 940px) {
   .rw-shell { grid-template-columns: 1fr; padding: var(--space-4); }

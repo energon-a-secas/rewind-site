@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Rewind">
+  <link rel="manifest" href="/site.webmanifest">
+  <title>Snapshot | Rewind</title>
+  <meta name="description" content="One archived Neorgon page, replayed full size in a sandbox">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#040714">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="rw-view">
+  <!-- Where Open ↗ lands. The snapshot gets the stage's sandbox at full size;
+       loaded top-level instead it would run on rewind's own origin. -->
+  <div class="rw-view-bar">
+    <a class="btn btn--ghost btn--sm" id="viewBack" href="./">← Rewind</a>
+    <span class="rw-view-label" id="viewLabel" role="status">Loading snapshot…</span>
+    <span class="rw-view-note">Archived page, sandboxed: it cannot read this site's data</span>
+  </div>
+  <div class="rw-view-stage" id="viewStage"></div>
+  <script type="module" src="js/view.js"></script>
+</body>
+</html>
