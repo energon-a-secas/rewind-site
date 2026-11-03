@@ -117,6 +117,20 @@ without a target that navigates the frame to a live site breaks the same way. Th
 accepted price: with the escape flag, a popup that opens a snapshot URL would run it
 unsandboxed on rewind's origin. To reach a live site, open its domain yourself.
 
+**Five Stack Rank snapshots carry a write to live data, switched off only by a
+root path.** The git snapshots under `snapshots/stack-rank-site/` (all but
+`2026-09-23-0953-live`) hold the pre-fix Stack Rank, whose `init()` inserts an
+empty row into the live deployment (`industrious-hare-401`) on every render
+without a hash. The sandbox does not stop it: served from its own root, the same
+page called `lists:createList` from inside `FRAME_SANDBOX`. They write nothing
+here only because their `index.html` loads `/js/app.js` from the root, which on
+rewind is rewind's own app; the live copy lacks five of the modules its `app.js`
+imports. Measured 2026-11-03 in Chromium with every Convex request intercepted.
+Anything that makes a git snapshot load its own modules (rewriting root-absolute
+paths, a `<base>`, a separate snapshot origin) switches those writes on, so cut
+them off first. Stack Rank's CLAUDE.md "Still open" counts what such writes leave
+behind. Other Convex sites' snapshots were not checked.
+
 **Headless Chrome writes the screenshot and then refuses to exit.** Measured on an
 emoji-site snapshot: the PNG landed at 6.5s, the process was still alive at 120s.
 `--timeout` and `--virtual-time-budget` do not end it, and this is true of
