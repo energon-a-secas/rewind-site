@@ -187,8 +187,21 @@ function renderContent(state) {
     <div class="rw-stage" id="stageEl">
       ${state.compare.on && timeline.length > 1 ? stageCompare(state, timeline) : (snap ? stageSingle(state, timeline, snap) : '')}
     </div>`;
-  const active = el.querySelector('.rw-card.active');
-  if (active) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  // Bring the active card into view by scrolling the filmstrip only (scrollIntoView
+  // also scrolls the page, which opened it scrolled sideways). Land on a card's
+  // start, the strip's snap point, so snapping cannot push the card back out.
+  const strip = el.querySelector('.rw-filmstrip');
+  const active = strip && strip.querySelector('.rw-card.active');
+  if (active) {
+    const s = strip.getBoundingClientRect();
+    const a = active.getBoundingClientRect();
+    if (a.left < s.left) strip.scrollLeft += a.left - s.left;
+    else if (a.right > s.right) {
+      const need = a.right - s.right;
+      const starts = [...strip.children].map((c) => c.getBoundingClientRect().left - s.left);
+      strip.scrollLeft += starts.find((x) => x >= need) ?? need;
+    }
+  }
 }
 
 // ── Iframe scaling ───────────────────────────────────────────

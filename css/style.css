@@ -907,7 +907,9 @@ body.rw-view { height: 100dvh; overflow: hidden; }
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 940px) {
-  .rw-shell { grid-template-columns: 1fr; padding: var(--space-4); }
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track grows to its content's min-content
+     width, and the nowrap rail and filmstrip made the page 1700px wide at 390. */
+  .rw-shell { grid-template-columns: minmax(0, 1fr); padding: var(--space-4); }
   .rw-rail {
     position: static;
     flex-direction: row;
