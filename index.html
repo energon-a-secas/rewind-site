@@ -25,6 +25,7 @@
   <meta name="theme-color" content="#040714">
   <meta name="neo-repo" content="https://github.com/energon-a-secas/rewind-site">
   <meta name="neo-updated" content="2026-08-11">
+  <meta name="neo-category" content="neorgon">
   <meta property="og:image" content="https://rewind.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -160,6 +161,16 @@ python3 tools/capture.py list                       # what is in the archive</pr
 
   <footer class="neo-footer" data-footer-mode="app">
     Snapshots are static copies committed to this repo. Browser captures never leave your browser until you export them.
+    <!-- neo-fleet:more -->
+    <nav class="neo-more" aria-label="More in Neorgon" data-category="neorgon" data-label-en="Neorgon" data-label-es="Neorgon">
+      <span class="neo-more__label" aria-hidden="true"><svg class="neo-more__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 12h12.2V7L12 2 3.3 7v10l8.7 5 7-4"/></svg><span class="neo-more__title">More in Neorgon</span></span>
+      <ul class="neo-more__list">
+        <li><a href="https://antenne.neorgon.com/">Antenne</a></li>
+        <li><a href="https://apps.neorgon.com/">Neorgon Apps</a></li>
+        <li><a class="neo-more__all" href="https://neorgon.com/neorgon/">All Neorgon tools</a></li>
+      </ul>
+    </nav>
+    <!-- /neo-fleet:more -->
   </footer>
 
   <script type="module" src="js/app.js"></script>
